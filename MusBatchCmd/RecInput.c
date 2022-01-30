@@ -1,5 +1,5 @@
 /*
-	RecInput.exe /R REC-FILE SAMPLING-MILLIS R-CTRL-AND-END
+	RecInput.exe /R REC-FILE R-CTRL-AND-END
 
 		REC-FILE       ... 保存ファイル
 		R-CTRL-AND-END ... 右コントロール押下で停止するか, 0 or not 0
@@ -11,16 +11,31 @@
 
 #pragma comment(lib, "user32.lib")
 
-#include "C:\Factory\Common\all.h"
+#include <windows.h>
+#include <stdio.h>
+
+typedef unsigned char uchar;
+typedef signed int sint;
+typedef unsigned int uint;
+
+static void error(void)
+{
+	printf("ERROR\n");
+	exit(1);
+}
+static void errorCase(int status)
+{
+	if (status)
+		error();
+}
 
 #define REC_MAX 360000
-#define REC_MARGIN 10 // HACK
+#define REC_MARGIN 10
 
 static uint MtxProc;
 static uint EvStop;
 static char *RecFile;
 static int RCtrlAndEnd;
-static uint SamplingMillis;
 
 typedef struct Record_st
 {
@@ -41,16 +56,15 @@ static void DoRecInput(void)
 	Record_t *prevRecord;
 	FILE *fp;
 
-	for(vk = 0; vk <= 0xff; vk++)
+	for (vk = 0; vk <= 0xff; vk++)
 		GetAsyncKeyState(vk);
 
-	Records = memCalloc((REC_MAX + REC_MARGIN) * sizeof(Record_t));
+	Records = calloc(REC_MAX + REC_MARGIN, sizeof(Record_t));
+	errorCase(!Records);
 
-	LOGPOS();
-
-	for(recIndex = 0; ; recIndex++)
+	for (recIndex = 0; ; recIndex++)
 	{
-		errorCase_m(REC_MAX <= recIndex, "記憶領域の上限を超えました。");
+		errorCase(REC_MAX <= recIndex); // 記憶領域の上限を超えました。
 
 		record = Records + recIndex;
 
@@ -63,65 +77,66 @@ static void DoRecInput(void)
 			record->Y = pos.y;
 		}
 
-		for(vk = 0; vk <= 0xff; vk++)
+		for (vk = 0; vk <= 0xff; vk++)
 			record->States[vk] = GetAsyncKeyState(vk) ? 1 : 0;
 
-		if(RCtrlAndEnd && record->States[VK_RCONTROL])
+		if (RCtrlAndEnd && record->States[VK_RCONTROL])
 			break;
 
-		if(handleWaitForMillis(EvStop, 10))
+		if (WaitForSingleObject((HANDLE)EvStop, 10) == WAIT_OBJECT_0)
 			break;
 	}
 
-	LOGPOS();
-
 	recCount = recIndex + 1;
-	fp = fileOpen(RecFile, "wb");
+	fp = fopen(RecFile, "wb");
+	errorCase(!fp);
 
-	if(recCount)
+	if (recCount)
 	{
-		writeLine_x(fp, xcout("M %d %d", record->X, record->Y));
+		fprintf(fp, "M %d %d\n", record->X, record->Y);
 
-		for(recIndex = 1; recIndex < recCount; recIndex++)
+		for (recIndex = 1; recIndex < recCount; recIndex++)
 		{
 			record = Records + recIndex;
 			prevRecord = Records + recIndex - 1;
 
-			if(prevRecord->X != record->X || prevRecord->Y != record->Y)
-				writeToken_x(fp, xcout("M %d %d", record->X, record->Y));
+			if (prevRecord->X != record->X || prevRecord->Y != record->Y)
+				fprintf(fp, "M %d %d", record->X, record->Y);
 
-			for(vk = 0; vk <= 0xff; vk++)
-				if(prevRecord->States[vk] ? !record->States[vk] : record->States[vk])
-					writeToken_x(fp, xcout(" %c %u", record->States[vk] ? 'D' : 'U', vk));
+			for (vk = 0; vk <= 0xff; vk++)
+				if (prevRecord->States[vk] ? !record->States[vk] : record->States[vk])
+					fprintf(fp, " %c %u", record->States[vk] ? 'D' : 'U', vk);
 
-			writeChar(fp, '\n');
+			fprintf(fp, "\n");
 		}
 	}
-	fileClose(fp);
-	memFree(Records);
-
-	LOGPOS();
+	fclose(fp);
+	free(Records);
 }
 int main(int argc, char **argv)
 {
-	MtxProc = mutexOpen("{2ccc9820-c8dd-4c43-b8ec-02c97a0fb31f}");
-	EvStop  = eventOpen("{e2be109b-c282-40fc-86de-d86f383127a0}"); // shared_uuid
+	MtxProc = (uint)CreateMutexA(NULL, FALSE, "{2ccc9820-c8dd-4c43-b8ec-02c97a0fb31f}");
+	errorCase(!MtxProc);
+	EvStop = (uint)CreateEventA(NULL, FALSE, FALSE, "{e2be109b-c282-40fc-86de-d86f383127a0}");
+	errorCase(!EvStop);
 
-	if(argIs("/R"))
+	printf("%d\n", argc);
+
+	if (argc == 4 && !_stricmp(argv[1], "/R"))
 	{
-		RecFile = nextArg();
-		RCtrlAndEnd = atoi(nextArg());
+		RecFile = argv[2];
+		RCtrlAndEnd = atoi(argv[3]);
 
-		if(handleWaitForMillis(MtxProc, 0))
+		if (WaitForSingleObject((HANDLE)MtxProc, 0) == WAIT_OBJECT_0)
 		{
 			DoRecInput();
-			mutexRelease(MtxProc);
+			ReleaseMutex((HANDLE)MtxProc);
 		}
 	}
-	else if(argIs("/S"))
+	else if (argc == 2 && !_stricmp(argv[1], "/S"))
 	{
-		eventSet(EvStop);
+		SetEvent((HANDLE)EvStop);
 	}
-	handleClose(MtxProc);
-	handleClose(EvStop);
+	CloseHandle((HANDLE)MtxProc);
+	CloseHandle((HANDLE)EvStop);
 }
