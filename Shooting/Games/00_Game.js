@@ -96,16 +96,6 @@ function @@_Drawîwåi()
 	}
 }
 
-function @@_E_Drawîwåi_Main()
-{
-	var y = 0;
-
-	for (; ; )
-	{
-		Draw(P_Wall_0002, 100, 100, 1.0, 0.0, 1.0);
-	}
-}
-
 function @@_DrawPlayer()
 {
 	DrawPlayer();

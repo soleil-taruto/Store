@@ -6,7 +6,7 @@
 	爆発
 
 	x: 中心-X
-	x: 中心-Y
+	y: 中心-Y
 */
 function* Effect_Explode(x, y)
 {
@@ -23,7 +23,7 @@ function* Effect_Explode(x, y)
 	自機消滅
 
 	x: 中心-X
-	x: 中心-Y
+	y: 中心-Y
 */
 function* Effect_PlayerDead(x, y)
 {
