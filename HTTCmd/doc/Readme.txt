@@ -48,6 +48,10 @@
 
 　　　⇒ カレントディレクトリをドキュメントルートにして、ポート番号 8080 でサーバーを起動する。
 
+　　HTTCmd.exe D:\HP 58946
+
+　　　⇒ "D:\HP" をドキュメントルートにして、ポート番号 58946 でサーバーを起動する。
+
 　　HTTCmd.exe
 
 　　　⇒ カレントディレクトリをドキュメントルートにして、ポート番号 80 でサーバーを起動する。
@@ -143,7 +147,7 @@
 
 　ソースがこの辺にあります。
 
-　　https://github.com/soleil-taruto/wb2/tree/main/t20211005_HTTCmd
+　　https://github.com/soleil-taruto/Store/tree/main/HTTCmd
 
 
 ■取り扱い種別
