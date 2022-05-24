@@ -139,7 +139,7 @@ namespace Charlotte.WebServices
 							}
 						}
 
-						//GC.Collect(); // GeoDemo の Server.sln が重くなるため、暫定削除 @ 2019.4.9
+						GC.Collect();
 
 						if (0 < waitMillis)
 							Thread.Sleep(waitMillis);
