@@ -31,7 +31,7 @@ namespace Charlotte
 			{
 				Main4(ar);
 			}
-			Common.OpenOutputDirIfCreated();
+			//Common.OpenOutputDirIfCreated();
 		}
 
 		private void Main3()
@@ -246,8 +246,18 @@ namespace Charlotte
 
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "要求パス：" + urlPath);
 
-			string[] pTkns = urlPath.Split('/').Where(v => v != "").Select(v => Common.ToFairLocalPath(v, 0)).ToArray();
-			string path = Path.Combine(new string[] { docRoot }.Concat(pTkns).ToArray());
+			string relPath;
+			string path;
+			if (urlPath == "/")
+			{
+				relPath = "_ROOT"; // ダミーで何か入れておく
+				path = docRoot;
+			}
+			else
+			{
+				relPath = SCommon.ToFairRelPath(urlPath, docRoot.Length);
+				path = Path.Combine(docRoot, relPath);
+			}
 
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "目的パス：" + path);
 
@@ -264,7 +274,7 @@ namespace Charlotte
 					throw new Exception("No HOST header value");
 
 				channel.ResStatus = 301;
-				channel.ResHeaderPairs.Add(new string[] { "Location", "http://" + host + "/" + string.Join("", pTkns.Select(v => EncodeUrl(v) + "/")) });
+				channel.ResHeaderPairs.Add(new string[] { "Location", "http://" + host + "/" + string.Join("", relPath.Split('\\').Select(v => EncodeUrl(v) + "/")) });
 				//channel.ResBody = null;
 
 				goto endFunc;
