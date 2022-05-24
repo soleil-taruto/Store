@@ -4,42 +4,75 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Charlotte.Commons;
+using Charlotte.Utilities;
 
 namespace Charlotte.WebServices
 {
 	public class HTTPBodyOutputStream : IDisposable
 	{
-#if true
-		public void Write(byte[] data)
+		private class InnerInfo : IDisposable
 		{
-			throw new Exception("REJECT-BODY");
-		}
+			public WorkingDir WD = new WorkingDir();
+			public string BufferFile;
+			public int WroteSize = 0;
+			public CtrCipher CtrCipher = CtrCipher.CreateTemporary();
 
-		public readonly int Count = 0;
-
-		public byte[] ToByteArray()
-		{
-			return SCommon.EMPTY_BYTES;
-		}
-
-		public void Dispose()
-		{
-			// noop
-		}
-#else
-		private WorkingDir WD = null;
-		private string BuffFile = null;
-		private int WroteSize = 0;
-
-		private string GetBuffFile()
-		{
-			if (this.WD == null)
+			public InnerInfo()
 			{
-				this.WD = new WorkingDir();
-				this.BuffFile = this.WD.MakePath();
+				this.BufferFile = this.WD.MakePath();
 			}
-			return this.BuffFile;
+
+			public void Write(byte[] data, int offset = 0)
+			{
+				this.Write(data, offset, data.Length - offset);
+			}
+
+			public void Write(byte[] data, int offset, int count)
+			{
+				this.CtrCipher.Mask(data, offset, count);
+
+				using (FileStream writer = new FileStream(this.BufferFile, FileMode.Append, FileAccess.Write))
+				{
+					writer.Write(data, offset, count);
+				}
+				this.WroteSize += count;
+			}
+
+			public int Count
+			{
+				get
+				{
+					return this.WroteSize;
+				}
+			}
+
+			public byte[] ToByteArray()
+			{
+				byte[] data = File.ReadAllBytes(this.BufferFile);
+				SCommon.DeletePath(this.BufferFile);
+				this.WroteSize = 0;
+
+				this.CtrCipher.Reset();
+				this.CtrCipher.Mask(data);
+				this.CtrCipher.Reset();
+
+				return data;
+			}
+
+			public void Dispose()
+			{
+				if (this.WD != null)
+				{
+					this.WD.Dispose();
+					this.WD = null;
+
+					this.CtrCipher.Dispose();
+					this.CtrCipher = null;
+				}
+			}
 		}
+
+		private InnerInfo Inner = null;
 
 		public void Write(byte[] data, int offset = 0)
 		{
@@ -48,46 +81,32 @@ namespace Charlotte.WebServices
 
 		public void Write(byte[] data, int offset, int count)
 		{
-			using (FileStream writer = new FileStream(this.GetBuffFile(), FileMode.Append, FileAccess.Write))
-			{
-				writer.Write(data, offset, count);
-			}
-			this.WroteSize += count;
+			if (this.Inner == null)
+				this.Inner = new InnerInfo();
+
+			this.Inner.Write(data, offset, count);
 		}
 
 		public int Count
 		{
 			get
 			{
-				return this.WroteSize;
+				return this.Inner == null ? 0 : this.Inner.WroteSize;
 			}
 		}
 
 		public byte[] ToByteArray()
 		{
-			byte[] data;
-
-			if (this.WroteSize == 0)
-			{
-				data = SCommon.EMPTY_BYTES;
-			}
-			else
-			{
-				data = File.ReadAllBytes(this.BuffFile);
-				File.WriteAllBytes(this.BuffFile, SCommon.EMPTY_BYTES);
-				this.WroteSize = 0;
-			}
-			return data;
+			return this.Inner == null ? SCommon.EMPTY_BYTES : this.Inner.ToByteArray();
 		}
 
 		public void Dispose()
 		{
-			if (this.WD != null)
+			if (this.Inner != null)
 			{
-				this.WD.Dispose();
-				this.WD = null;
+				this.Inner.Dispose();
+				this.Inner = null;
 			}
 		}
-#endif
 	}
 }

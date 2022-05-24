@@ -64,7 +64,7 @@ namespace Charlotte.WebServices
 					}
 					catch (Exception e)
 					{
-						throw new Exception(string.Format("バインド失敗 - ポート番号 {0} は使用中です。", this.PortNo), e);
+						throw new Exception("バインドに失敗しました。指定されたポート番号は使用中です。", e);
 					}
 					listener.Listen(this.Backlog);
 					listener.Blocking = false;
@@ -87,7 +87,7 @@ namespace Charlotte.WebServices
 
 							waitMillis = 0; // reset
 
-							SockCommon.TimeWaitMonitor.Connected();
+							SockCommon.TimeWaitMonitor.I.Connected();
 
 							{
 								SockChannel channel = new SockChannel();
@@ -135,7 +135,7 @@ namespace Charlotte.WebServices
 								this.Disconnect(channel);
 								SCommon.FastDesertElement(this.Channels, index);
 
-								SockCommon.TimeWaitMonitor.Disconnect();
+								SockCommon.TimeWaitMonitor.I.Disconnect();
 							}
 						}
 

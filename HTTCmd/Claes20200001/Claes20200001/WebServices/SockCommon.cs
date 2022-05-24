@@ -22,7 +22,7 @@ namespace Charlotte.WebServices
 		public static void WriteLog(ErrorLevel_e errorLevel, object message)
 		{
 			if (message is Exception)
-				message = ((Exception)message).Message; // 他のメッセージが見えなくなるのでスタックトレースを抑止
+				message = ((Exception)message).Message;
 
 			switch (errorLevel)
 			{
@@ -59,7 +59,7 @@ namespace Charlotte.WebServices
 		{
 #if true
 			return routine();
-#else // 遅延モニタ_抑止
+#else
 			DateTime startedTime = DateTime.Now;
 			try
 			{
@@ -148,8 +148,10 @@ namespace Charlotte.WebServices
 
 		public static class IDIssuer
 		{
-			private static Queue<int> Stocks = new Queue<int>(Enumerable.Range(1, 9));
-			private static int Counter = 10;
+			private const int INIT_COUNTER_NUM = 9;
+
+			private static Queue<int> Stocks = new Queue<int>(Enumerable.Range(1, INIT_COUNTER_NUM));
+			private static int Counter = INIT_COUNTER_NUM + 1;
 
 			public static int Issue()
 			{
@@ -165,7 +167,7 @@ namespace Charlotte.WebServices
 			}
 		}
 
-		public static class TimeWaitMonitor
+		public class TimeWaitMonitor
 		{
 			// 参考値：
 			// 動的ポートの数 16384 (49152 ～ 65535), TIME_WAIT-タイムアウト 4 min (240 sec) の場合 (Windowsの既定値)
@@ -178,20 +180,35 @@ namespace Charlotte.WebServices
 			// COUNTER_NUM = 3       -- 直近 1 ～ 1.5 分間の切断回数を保持
 			// COUNT_LIMIT = 60000   -- 50 ミリ秒間隔で接続＆切断し続けた場合 1 分間に 1200 回 --> TIME_WAIT 数 61200 (COUNT_LIMIT + 1200) を超えない。
 
-			private const int CTR_ROT_SEC = 60;
-			private const int COUNTER_NUM = 5;
-			private const int COUNT_LIMIT = 10000;
+			public static int CTR_ROT_SEC = 60;
+			public static int COUNTER_NUM = 5;
+			public static int COUNT_LIMIT = 10000;
 
-			private static int ConnectedCount = 0;
-			private static int[] TWCounters = new int[COUNTER_NUM]; // 直近数分間に発生した切断(TIME_WAIT)の回数
-			private static int TWCounterIndex = 0;
-			private static DateTime NextRotateTime = GetNextRotateTime();
+			// ----
 
-			public static void Connected()
+			private static TimeWaitMonitor _i = null;
+
+			public static TimeWaitMonitor I
 			{
-				KickCounter(1, 0);
+				get
+				{
+					if (_i == null)
+						_i = new TimeWaitMonitor();
 
-				if (COUNT_LIMIT < ConnectedCount + TWCounters.Sum()) // ? TIME_WAIT 多すぎ -> 時間当たりの接続数を制限する。-- TIME_WAIT を減らす。
+					return _i;
+				}
+			}
+
+			private int ConnectedCount = 0;
+			private int[] TWCounters = new int[COUNTER_NUM]; // 直近数分間に発生した切断(TIME_WAIT)の回数
+			private int TWCounterIndex = 0;
+			private DateTime NextRotateTime = GetNextRotateTime();
+
+			public void Connected()
+			{
+				this.KickCounter(1, 0);
+
+				if (COUNT_LIMIT < this.ConnectedCount + this.TWCounters.Sum()) // ? TIME_WAIT 多すぎ -> 時間当たりの接続数を制限する。-- TIME_WAIT を減らす。
 				{
 					SockCommon.WriteLog(SockCommon.ErrorLevel_e.WARNING, "PORT-EXHAUSTION");
 
@@ -199,26 +216,26 @@ namespace Charlotte.WebServices
 				}
 			}
 
-			public static void Disconnect()
+			public void Disconnect()
 			{
-				KickCounter(-1, 1);
+				this.KickCounter(-1, 1);
 			}
 
-			private static void KickCounter(int connAdd, int twAdd)
+			private void KickCounter(int connAdd, int twAdd)
 			{
-				ConnectedCount += connAdd;
+				this.ConnectedCount += connAdd;
 
-				if (NextRotateTime < DateTime.Now)
+				if (this.NextRotateTime < DateTime.Now)
 				{
-					TWCounterIndex++;
-					TWCounterIndex %= TWCounters.Length;
-					TWCounters[TWCounterIndex] = twAdd;
-					NextRotateTime = GetNextRotateTime();
+					this.TWCounterIndex++;
+					this.TWCounterIndex %= this.TWCounters.Length;
+					this.TWCounters[this.TWCounterIndex] = twAdd;
+					this.NextRotateTime = GetNextRotateTime();
 				}
 				else
-					TWCounters[TWCounterIndex] += twAdd;
+					this.TWCounters[this.TWCounterIndex] += twAdd;
 
-				SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "TIME-WAIT-MONITOR: " + twAdd + ", " + ConnectedCount + " + " + TWCounters.Sum() + " = " + (ConnectedCount + TWCounters.Sum()));
+				SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "TIME-WAIT-MONITOR: " + twAdd + ", " + this.ConnectedCount + " + " + this.TWCounters.Sum() + " = " + (ConnectedCount + TWCounters.Sum()));
 			}
 
 			private static DateTime GetNextRotateTime()
