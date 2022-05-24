@@ -4,12 +4,29 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Charlotte.Commons;
-using Charlotte.Utilities;
 
 namespace Charlotte.WebServices
 {
 	public class HTTPBodyOutputStream : IDisposable
 	{
+#if true
+		public void Write(byte[] data)
+		{
+			throw new Exception("REJECT-BODY");
+		}
+
+		public readonly int Count = 0;
+
+		public byte[] ToByteArray()
+		{
+			return SCommon.EMPTY_BYTES;
+		}
+
+		public void Dispose()
+		{
+			// noop
+		}
+#else
 		private class InnerInfo : IDisposable
 		{
 			public WorkingDir WD = new WorkingDir();
@@ -108,5 +125,6 @@ namespace Charlotte.WebServices
 				this.Inner = null;
 			}
 		}
+#endif
 	}
 }

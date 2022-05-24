@@ -72,8 +72,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Test0001.cs" />
-    <Compile Include="Utilities\AESCipher.cs" />
-    <Compile Include="Utilities\CtrCipher.cs" />
     <Compile Include="WebServices\HTTPBodyOutputStream.cs" />
     <Compile Include="WebServices\HTTPServer.cs" />
     <Compile Include="WebServices\HTTPServerChannel.cs" />
