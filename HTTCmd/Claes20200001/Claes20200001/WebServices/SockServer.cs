@@ -48,6 +48,14 @@ namespace Charlotte.WebServices
 
 		private List<SockChannel> Channels = new List<SockChannel>();
 
+		public int ChannelCount
+		{
+			get
+			{
+				return this.Channels.Count;
+			}
+		}
+
 		public void Perform()
 		{
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "サーバーを開始しています...");
@@ -98,6 +106,7 @@ namespace Charlotte.WebServices
 								channel.ID = SockCommon.IDIssuer.Issue();
 								channel.Connected = SCommon.Supplier(this.E_Connected(channel));
 								channel.BodyOutputStream = new HTTPBodyOutputStream();
+								channel.Parent = this;
 
 								this.Channels.Add(channel);
 
