@@ -679,18 +679,20 @@ namespace Charlotte.Commons
 		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L503-L552
 		/// </summary>
 		/// <param name="str">対象文字列(対象パス)</param>
-		/// <param name="dirSize">対象パスが存在するディレクトリのフルパスの長さ、考慮しない場合は 0 を指定すること。</param>
+		/// <param name="dirSize">対象パスが存在するディレクトリのフルパスの長さ、考慮しない場合は -1 を指定すること。</param>
 		/// <returns>ローカル名</returns>
 		public static string ToFairLocalPath(string str, int dirSize)
 		{
 			const string CHRS_NG = "\"*/:<>?\\|";
 			const string CHR_ALT = "_";
 
-			int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
+			if (dirSize != -1)
+			{
+				int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
 
-			if (maxLen < str.Length)
-				str = str.Substring(0, maxLen);
-
+				if (maxLen < str.Length)
+					str = str.Substring(0, maxLen);
+			}
 			str = SCommon.ToJString(str, true, false, false, true);
 
 			string[] words = str.Split('.');
@@ -729,15 +731,17 @@ namespace Charlotte.Commons
 				ptkns = new string[] { "_" };
 
 			for (int index = 0; index < ptkns.Length; index++)
-				ptkns[index] = ToFairLocalPath(ptkns[index], 0);
+				ptkns[index] = ToFairLocalPath(ptkns[index], -1);
 
 			path = string.Join("\\", ptkns);
 
-			int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
+			if (dirSize != -1)
+			{
+				int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
 
-			if (maxLen < path.Length)
-				path = ToFairLocalPath(path, dirSize);
-
+				if (maxLen < path.Length)
+					path = ToFairLocalPath(path, dirSize);
+			}
 			return path;
 		}
 

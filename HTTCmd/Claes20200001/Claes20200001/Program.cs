@@ -255,7 +255,7 @@ namespace Charlotte
 			}
 			else
 			{
-				relPath = SCommon.ToFairRelPath(urlPath, docRoot.Length);
+				relPath = SCommon.ToFairRelPath(urlPath, -1);
 				path = Path.Combine(docRoot, relPath);
 			}
 
