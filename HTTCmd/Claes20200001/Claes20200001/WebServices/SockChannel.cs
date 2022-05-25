@@ -130,6 +130,13 @@ namespace Charlotte.WebServices
 
 		public IEnumerable<int> Send(byte[] data)
 		{
+			// test test test test test test test test test test
+			{
+				byte[] dataNew = new byte[data.Length];
+				Array.Copy(data, 0, dataNew, 0, data.Length);
+				data = dataNew;
+			}
+
 			int offset = 0;
 			int size = data.Length;
 
@@ -157,6 +164,8 @@ namespace Charlotte.WebServices
 				try
 				{
 					int sentSize = SockCommon.NB("send", () => this.Handler.Send(data, offset, size, SocketFlags.None));
+
+					for (int i = 0; i < sentSize; i++) data[offset + i] = 0x00;	// test test test test test test test test test test
 
 					if (sentSize <= 0)
 					{
