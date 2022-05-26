@@ -131,22 +131,21 @@ namespace Charlotte.WebServices
 
 		public IEnumerable<int> Send(byte[] data)
 		{
-			// zantei zantei zantei zantei zantei @ 2022.5.25
-			{
-				byte[] dataNew = new byte[data.Length];
-				Array.Copy(data, 0, dataNew, 0, data.Length);
-				data = dataNew;
-			}
-
 			int offset = 0;
 			int size = data.Length;
 
 			while (1 <= size)
 			{
-				int ts_size = Math.Min(4000000 / this.Parent.ChannelCount, size);
+				int vsDenom = this.Parent.ChannelCount;
+				vsDenom = Math.Max(1, vsDenom); // 2bs
+
+				int vSize = 4000000;
+				vSize /= vsDenom;
+				vSize = Math.Min(vSize, size);
+
 				int? sentSize = null;
 
-				foreach (int relay in this.TrySend(data, offset, ts_size, ret => sentSize = ret))
+				foreach (int relay in this.TrySend(data, offset, vSize, ret => sentSize = ret))
 					yield return relay;
 
 				size -= sentSize.Value;
@@ -166,12 +165,6 @@ namespace Charlotte.WebServices
 				try
 				{
 					int sentSize = SockCommon.NB("send", () => this.Handler.Send(data, offset, size, SocketFlags.None));
-
-					// zantei zantei zantei zantei zantei @ 2022.5.25
-					{
-						if (0 < sentSize)
-							Array.Clear(data, offset, sentSize);
-					}
 
 					if (sentSize <= 0)
 					{

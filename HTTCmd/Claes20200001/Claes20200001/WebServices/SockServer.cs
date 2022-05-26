@@ -84,7 +84,12 @@ namespace Charlotte.WebServices
 					while (this.Interlude())
 					{
 						if (waitMillis < 100)
+						{
+							if (waitMillis == 70)
+								SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "GOING TO IDLING");
+
 							waitMillis++;
+						}
 
 						for (int c = 0; c < 30; c++) // HACK: 繰り返し回数_適当
 						{
