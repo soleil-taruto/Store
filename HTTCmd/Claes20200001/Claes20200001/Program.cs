@@ -99,6 +99,10 @@ namespace Charlotte
 				HTTPServerChannel.IdleTimeoutMillis = 600000; // 10 min
 				HTTPServerChannel.BodySizeMax = 0;
 
+				//SockCommon.TimeWaitMonitor.CTR_ROT_SEC = 60;
+				//SockCommon.TimeWaitMonitor.COUNTER_NUM = 5;
+				//SockCommon.TimeWaitMonitor.COUNT_LIMIT = 10000;
+
 				// サーバーの設定ここまで
 
 				if (ar.ArgIs("/S"))
@@ -297,10 +301,6 @@ namespace Charlotte
 					channel.ResBody = E_ReadFile(this.Page404File);
 				}
 			}
-
-		endFunc:
-			channel.ResHeaderPairs.Add(new string[] { "Server", "HTTCmd" });
-
 			if (head && channel.ResBody != null)
 			{
 				FileInfo fileInfo = new FileInfo(path);
@@ -310,6 +310,9 @@ namespace Charlotte
 
 				channel.ResBody = null;
 			}
+
+		endFunc:
+			channel.ResHeaderPairs.Add(new string[] { "Server", "HTTCmd" });
 
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "RES-STATUS " + channel.ResStatus);
 
