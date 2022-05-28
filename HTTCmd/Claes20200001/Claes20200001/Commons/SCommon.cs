@@ -1003,6 +1003,17 @@ namespace Charlotte.Commons
 			}
 		}
 
+		/// <summary>
+		/// 文字列をSJIS(CP-932)の文字列に変換する。
+		/// 以下の関数を踏襲した。(慣習的実装)
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L320-L388
+		/// </summary>
+		/// <param name="str">文字列</param>
+		/// <param name="okJpn">日本語(2バイト文字)を許可するか</param>
+		/// <param name="okRet">改行を許可するか</param>
+		/// <param name="okTab">水平タブを許可するか</param>
+		/// <param name="okSpc">半角空白を許可するか</param>
+		/// <returns>SJIS(CP-932)の文字列</returns>
 		public static string ToJString(string str, bool okJpn, bool okRet, bool okTab, bool okSpc)
 		{
 			if (str == null)
@@ -1083,6 +1094,17 @@ namespace Charlotte.Commons
 
 		#endregion
 
+		/// <summary>
+		/// バイト列をSJIS(CP-932)の文字列に変換する。
+		/// 以下の関数を踏襲した。(慣習的実装)
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L320-L388
+		/// </summary>
+		/// <param name="src">バイト列</param>
+		/// <param name="okJpn">日本語(2バイト文字)を許可するか</param>
+		/// <param name="okRet">改行を許可するか</param>
+		/// <param name="okTab">水平タブを許可するか</param>
+		/// <param name="okSpc">半角空白を許可するか</param>
+		/// <returns>SJIS(CP-932)の文字列</returns>
 		public static string ToJString(byte[] src, bool okJpn, bool okRet, bool okTab, bool okSpc)
 		{
 			if (src == null)

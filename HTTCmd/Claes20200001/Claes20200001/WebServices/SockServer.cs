@@ -85,9 +85,7 @@ namespace Charlotte.WebServices
 					{
 						if (waitMillis < 100)
 						{
-							if (waitMillis == 70)
-								SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "GOING TO IDLING");
-
+							//if (waitMillis == 70) SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "GOING TO IDLING");
 							waitMillis++;
 						}
 
