@@ -129,7 +129,15 @@ namespace Charlotte
 							if (ar.ArgIs("/K"))
 							{
 								Func<bool> baseEvent = hs.Interlude;
-								hs.Interlude = () => baseEvent() && !Console.KeyAvailable;
+								hs.Interlude = () =>
+								{
+									if (Console.KeyAvailable)
+									{
+										ProcMain.WriteLog("ANY KEY PRESSED");
+										return false;
+									}
+									return baseEvent();
+								};
 								ProcMain.WriteLog("キー入力を検出するとサーバーは停止します。");
 								continue;
 							}

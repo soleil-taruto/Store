@@ -153,6 +153,8 @@ namespace Charlotte.WebServices
 							}
 						}
 
+						SockCommon.Shuffle_7(this.Channels); // 順序による何らかの偏りを懸念...
+
 						GC.Collect();
 
 						if (0 < waitMillis)
