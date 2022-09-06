@@ -96,7 +96,7 @@
     <Compile Include="GameTools\AppSaveDataUtils.cs" />
     <Compile Include="GameTools\TableMenu.cs" />
     <Compile Include="GameCommons\DDTouch.cs" />
-    <Compile Include="GameProgressMasters\GameProgressMaster.cs" />
+    <Compile Include="Games\GameProgressMaster.cs" />
     <Compile Include="Games\Attacks\Attack.cs" />
     <Compile Include="Games\Attacks\AttackCommon.cs" />
     <Compile Include="Games\Attacks\Tests\Attack_B0001.cs" />

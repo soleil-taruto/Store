@@ -97,7 +97,7 @@
     <Compile Include="GameTools\AppSaveDataUtils.cs" />
     <Compile Include="GameTools\TableMenu.cs" />
     <Compile Include="GameCommons\DDTouch.cs" />
-    <Compile Include="GameProgressMasters\GameProgressMaster.cs" />
+    <Compile Include="Games\GameProgressMaster.cs" />
     <Compile Include="Games\Attacks\Attack_Cirno_しゃがみ中攻撃.cs" />
     <Compile Include="Games\Attacks\Attack_Cirno_しゃがみ弱攻撃.cs" />
     <Compile Include="Games\Attacks\Attack_Cirno_しゃがみ強攻撃.cs" />

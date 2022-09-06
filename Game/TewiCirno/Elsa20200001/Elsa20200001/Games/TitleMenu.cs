@@ -190,16 +190,9 @@ namespace Charlotte.Games
 							{
 								this.LeaveTitleMenu();
 
-								using (new Novel())
+								using (new GameProgressMaster())
 								{
-									Novel.I.Status.Scenario = new Scenario("Start");
-									Novel.I.Perform();
-								}
-								using (new WorldGameMaster())
-								{
-									WorldGameMaster.I.World = new World("Start");
-									WorldGameMaster.I.Status = new GameStatus();
-									WorldGameMaster.I.Perform();
+									GameProgressMaster.I.StartGame();
 								}
 								this.ReturnTitleMenu();
 							}
@@ -213,12 +206,9 @@ namespace Charlotte.Games
 								{
 									this.LeaveTitleMenu();
 
-									using (new WorldGameMaster())
+									using (new GameProgressMaster())
 									{
-										WorldGameMaster.I.World = new World(saveDataSlot.MapName);
-										WorldGameMaster.I.Status = saveDataSlot.GameStatus.GetClone();
-										WorldGameMaster.I.Status.StartPointDirection = 101; // スタート地点を「ロード地点」にする。
-										WorldGameMaster.I.Perform();
+										GameProgressMaster.I.ContinueGame(saveDataSlot);
 									}
 									this.ReturnTitleMenu();
 								}

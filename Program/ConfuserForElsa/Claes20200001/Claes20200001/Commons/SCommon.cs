@@ -2542,6 +2542,11 @@ namespace Charlotte.Commons
 
 		#region GetOutputDir
 
+		// memo:
+		// 慣習的に C:\1, C:\2, C:\3, ... C:\999 をテンポラリ・暗黙の出力先として使用している。
+		// https://github.com/stackprobe/Factory/blob/master/DevTools/zz.bat -- 定期的に全削除する運用 -- 際限なく溜まらない想定
+		// あくまで個人的な慣習なので、使用する際は注意すること。
+
 		private static string GOD_Dir;
 
 		public static string GetOutputDir()
