@@ -10,16 +10,15 @@ namespace Charlotte.Utilities
 	{
 		private Func<string> Generator;
 		private bool IgnoreCase;
-		private Dictionary<string, object> KnownValueSet;
-		private static object DUMMY_VALUE = new object();
+		private HashSet<string> KnownValueSet;
 
 		public UniqueIssuer(Func<string> generator, bool ignoreCase = false)
 		{
 			this.Generator = generator;
 			this.IgnoreCase = ignoreCase;
 			this.KnownValueSet = ignoreCase ?
-				SCommon.CreateDictionaryIgnoreCase<object>() :
-				SCommon.CreateDictionary<object>();
+				SCommon.CreateSetIgnoreCase() :
+				SCommon.CreateSet();
 		}
 
 		/// <summary>
@@ -34,7 +33,7 @@ namespace Charlotte.Utilities
 			{
 				string value = this.Generator();
 
-				if (!this.KnownValueSet.ContainsKey(value))
+				if (!this.KnownValueSet.Contains(value))
 				{
 					if (1 <= retrycnt)
 					{
@@ -48,7 +47,7 @@ namespace Charlotte.Utilities
 					{
 						this.FirstCollisionStress = Math.Max(0, this.FirstCollisionStress - 1);
 					}
-					this.KnownValueSet[value] = DUMMY_VALUE;
+					this.KnownValueSet.Add(value);
 					return value;
 				}
 			}
