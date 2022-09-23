@@ -27,7 +27,8 @@ C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Array.js(140) : RemoveAll // ŠÖ”
 C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Array.js(164) : RemoveFalse // ŠÖ”
 C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Array.js(179) : ClearArray // ŠÖ”
 C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Array.js(187) : ToArray // ŠÖ”
-C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Array.js(201) : NextVal // ŠÖ”
+C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Array.js(201) : ToGenerator // ŠÖ”
+C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Array.js(212) : NextVal // ŠÖ”
 C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Common.js(5) : Supplier // ŠÖ”
 C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Common.js(15) : Repeat // ŠÖ”
 C:\Dev\GameJS\Marisa\Gattonero20200001\Commons\Common.js(23) : Wait // ŠÖ”

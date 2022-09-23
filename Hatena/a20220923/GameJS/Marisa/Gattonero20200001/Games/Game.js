@@ -562,13 +562,17 @@ function* <generatorForTask> @@_DeadAndRestartMotion(<boolean> restartRequested)
 
 	// 再スタートのための処理
 	{
+		// 敵をクリアする前にちゃんと殺しておく。
+		// -- 敵の死亡をモニタして終了(自滅)するタスクのため。
+		@@_Enemies.forEach(enemy => enemy.HP = -1);
+
 		@@_Enemies = [];
 		@@_Shots = [];
 		@@_RequestRestart = false;
 
 		ResetPlayer();
 
-		ClearAllTask(GameTasks);
+//		ClearAllTask(GameTasks); // dont
 		ClearAllTask(FrontTasks);
 		ClearAllTask(PlayerDrawTasks);
 

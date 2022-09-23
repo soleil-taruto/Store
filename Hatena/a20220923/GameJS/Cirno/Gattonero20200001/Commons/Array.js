@@ -196,6 +196,17 @@ function <T[]> ToArray(<T[]> src)
 }
 
 /*
+	配列またはジェネレータをジェネレータに変換する。
+*/
+function* <T[]> ToGenerator(<T[]> src)
+{
+	for (var<T> element of src)
+	{
+		yield element;
+	}
+}
+
+/*
 	ジェネレータの次の値を取得する。
 */
 function <T> NextVal(generator)
