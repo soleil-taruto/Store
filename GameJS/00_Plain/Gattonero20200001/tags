@@ -27,7 +27,8 @@ C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Array.js(140) : RemoveAll // ä÷
 C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Array.js(164) : RemoveFalse // ä÷êî
 C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Array.js(179) : ClearArray // ä÷êî
 C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Array.js(187) : ToArray // ä÷êî
-C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Array.js(201) : NextVal // ä÷êî
+C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Array.js(201) : ToGenerator // ä÷êî
+C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Array.js(212) : NextVal // ä÷êî
 C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Common.js(5) : Supplier // ä÷êî
 C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Common.js(15) : Repeat // ä÷êî
 C:\Dev\GameJS\00_Plain\Gattonero20200001\Commons\Common.js(23) : Wait // ä÷êî
@@ -240,4 +241,3 @@ C:\Dev\GameJS\00_Plain\Gattonero20200001\GameTools\SimpleMenu.js(25) : DrawSimpl
 C:\Dev\GameJS\00_Plain\Gattonero20200001\GameTools\SimpleMenu.js(30) : DrawSimpleMenu_CPNP // ä÷êî
 C:\Dev\GameJS\00_Plain\Gattonero20200001\GameTools\SimpleMenu.js(10) : DSM_Desided // ïœêî
 C:\Dev\GameJS\00_Plain\Gattonero20200001\Tests\Test0001.js(5) : Test01 // ä÷êî
-C:\Dev\GameJS\00_Plain\Gattonero20200001\Tests\Test0001.js(13) : Test02 // ä÷êî

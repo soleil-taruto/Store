@@ -22,6 +22,14 @@ function <void> AddElement(<T[]> arr, <T> element)
 	InsertElement(arr, arr.length, element);
 }
 
+function <void> AddElements(<T[]> arr, <T[]> elements)
+{
+	for (var<T> element of elements)
+	{
+		AddElement(arr, element);
+	}
+}
+
 function <void> DesertElement(<T[]> arr, <int> index)
 {
 	if (index < 0 || arr.length <= index)
@@ -120,7 +128,7 @@ function <T[]> GetTrailArray(<T[]> arr, <int> offset)
 */
 function <T[]> CloneArray(<T[]> arr)
 {
-	return GetSubArray(arr, 0, arr.length);
+	return GetTrailArray(arr, 0);
 }
 
 /*
@@ -161,4 +169,47 @@ function <void> RemoveFalse(<T[]> arr)
 	};
 
 	RemoveAll(arr, match);
+}
+
+/*
+	配列の要素を全て削除する。
+
+	arr: 配列
+*/
+function <void> ClearArray(<T[]> arr)
+{
+	arr.length = 0;
+}
+
+/*
+	配列またはジェネレータを配列に変換する。
+*/
+function <T[]> ToArray(<T[]> src)
+{
+	var<T[]> dest = [];
+
+	for (var<T> element of src)
+	{
+		dest.push(element);
+	}
+	return dest;
+}
+
+/*
+	配列またはジェネレータをジェネレータに変換する。
+*/
+function* <T[]> ToGenerator(<T[]> src)
+{
+	for (var<T> element of src)
+	{
+		yield element;
+	}
+}
+
+/*
+	ジェネレータの次の値を取得する。
+*/
+function <T> NextVal(generator)
+{
+	return generator.next().value;
 }
