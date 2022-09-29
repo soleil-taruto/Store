@@ -164,7 +164,7 @@ namespace Charlotte.Commons
 			if (file != SJIS.GetString(SJIS.GetBytes(file)))
 			{
 				MessageBox.Show(
-					"Shift_JIS に変換出来ない文字を含むパスからは実行できません。",
+					"Shift_JIS に変換できない文字を含むパスからは実行できません。",
 					APP_TITLE + " / エラー",
 					MessageBoxButtons.OK,
 					MessageBoxIcon.Error

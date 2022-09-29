@@ -79,7 +79,7 @@ namespace Charlotte
 
 		private void Main5(ArgsReader ar)
 		{
-			// 複数のサーバーを起動していた場合、全て停止出来るようにマニュアル・リセットとする。
+			// 複数のサーバーを起動していた場合、全て停止できるようにマニュアル・リセットとする。
 			using (EventWaitHandle evStop = new EventWaitHandle(false, EventResetMode.ManualReset, Consts.SERVER_STOP_EVENT_NAME))
 			{
 				HTTPServer hs = new HTTPServer()

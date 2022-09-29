@@ -575,13 +575,13 @@ namespace Charlotte.Commons
 				catch (Exception ex)
 				{
 					if (IO_TRY_MAX <= trycnt)
-						throw new Exception("ディレクトリを作成出来ません。" + dir + "\r\n" + ex);
+						throw new Exception("ディレクトリを作成できません。" + dir + "\r\n" + ex);
 				}
 				if (Directory.Exists(dir))
 					break;
 
 				if (IO_TRY_MAX <= trycnt)
-					throw new Exception("ディレクトリを作成出来ません。" + dir);
+					throw new Exception("ディレクトリを作成できません。" + dir);
 
 				ProcMain.WriteLog("ディレクトリの作成をリトライします。" + dir);
 				Thread.Sleep(trycnt * 100);
@@ -682,7 +682,7 @@ namespace Charlotte.Commons
 				throw null;
 
 			if (path.StartsWith("\\\\"))
-				throw new Exception("ネットワークパスまたはデバイス名は使用出来ません。");
+				throw new Exception("ネットワークパスまたはデバイス名は使用できません。");
 
 			if (path.Substring(1, 2) != ":\\") // ネットワークパスでないならローカルパスのはず。
 				throw null;
@@ -710,7 +710,7 @@ namespace Charlotte.Commons
 		#region ToFairLocalPath, ToFairRelPath
 
 		/// <summary>
-		/// ローカル名に使用出来ない予約名のリストを返す。(慣習的実装)
+		/// ローカル名に使用できない予約名のリストを返す。(慣習的実装)
 		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L460-L491
 		/// </summary>
 		/// <returns>予約名リスト</returns>
@@ -1628,7 +1628,7 @@ namespace Charlotte.Commons
 
 		public static int Comp(string a, string b)
 		{
-			// MEMO: a.CompareTo(b) -- 三すくみの一件以来今でも信用出来ないので使わない。
+			// MEMO: a.CompareTo(b) -- 三すくみの一件以来今でも信用できないので使わない。
 
 			return Comp(Encoding.UTF8.GetBytes(a), Encoding.UTF8.GetBytes(b));
 		}
