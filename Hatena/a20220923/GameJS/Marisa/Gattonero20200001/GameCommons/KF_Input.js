@@ -44,16 +44,16 @@ function* <int[]> @@_Counts()
 
 function <void> @(UNQN)_EACH()
 {
-	@@_Count_2     = @@_Check(@@_Count_2,     PadInputIndex_2,     [ 40,  98, 83 ]); // カーソル下 , テンキー2 , S
-	@@_Count_4     = @@_Check(@@_Count_4,     PadInputIndex_4,     [ 37, 100, 65 ]); // カーソル左 , テンキー4 , A
-	@@_Count_6     = @@_Check(@@_Count_6,     PadInputIndex_6,     [ 39, 102, 68 ]); // カーソル右 , テンキー6 , D
-	@@_Count_8     = @@_Check(@@_Count_8,     PadInputIndex_8,     [ 38, 104, 87 ]); // カーソル上 , テンキー8 , W
-	@@_Count_A     = @@_Check(@@_Count_A,     PadInputIndex_A,     [ 90 ]); // Z
-	@@_Count_B     = @@_Check(@@_Count_B,     PadInputIndex_B,     [ 88 ]); // X
-	@@_Count_Pause = @@_Check(@@_Count_Pause, PadInputIndex_Pause, [ 32 ]); // スペース
+	@@_Count_2     = @@_Check(@@_Count_2,     false,           PadInputIndex_2,     [ 40,  98, 83 ]); // カーソル下 , テンキー2 , S
+	@@_Count_4     = @@_Check(@@_Count_4,     false,           PadInputIndex_4,     [ 37, 100, 65 ]); // カーソル左 , テンキー4 , A
+	@@_Count_6     = @@_Check(@@_Count_6,     1 <= @@_Count_4, PadInputIndex_6,     [ 39, 102, 68 ]); // カーソル右 , テンキー6 , D
+	@@_Count_8     = @@_Check(@@_Count_8,     1 <= @@_Count_2, PadInputIndex_8,     [ 38, 104, 87 ]); // カーソル上 , テンキー8 , W
+	@@_Count_A     = @@_Check(@@_Count_A,     false,           PadInputIndex_A,     [ 90 ]); // Z
+	@@_Count_B     = @@_Check(@@_Count_B,     false,           PadInputIndex_B,     [ 88 ]); // X
+	@@_Count_Pause = @@_Check(@@_Count_Pause, false,           PadInputIndex_Pause, [ 32 ]); // スペース
 }
 
-function <int> @@_Check(<int> counter, <int> padInputIndex, <int[]> keyCodes)
+function <int> @@_Check(<int> counter, <boolean> oppositeInput, <int> padInputIndex, <int[]> keyCodes)
 {
 	var<boolean> statusPad = GetPadInput(padInputIndex);
 	var<boolean> statusKey = false;
@@ -65,7 +65,7 @@ function <int> @@_Check(<int> counter, <int> padInputIndex, <int[]> keyCodes)
 			statusKey = true;
 		}
 	}
-	var<boolean> status = statusPad || statusKey;
+	var<boolean> status = !oppositeInput && (statusPad || statusKey);
 
 	if (status) // ? 押している。
 	{

@@ -47,7 +47,7 @@ function* <generatorForTask> CreateAttack_Ladder()
 
 		// 移動
 		//
-		if (shootingFrame == 0) // 射撃モーション時は移動出来ない。
+		if (shootingFrame == 0) // 射撃モーション時は移動できない。
 		{
 			var<double> SPEED = 2.5;
 			var<double> ACCEL_RATE = 0.5;
