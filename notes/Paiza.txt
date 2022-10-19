@@ -62,6 +62,107 @@ public class Hello
 }
 
 ----
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Security.Cryptography;
+
+public class Hello
+{
+    public static void Main()
+	{
+		for (int testcnt = 0; testcnt < 100; testcnt++)
+		{
+			ulong a = GetULongRand();
+			ulong b = GetULongRand();
+			ulong m = GetULongRandNonZero();
+			ulong c = ModPow64(a, b, m);
+
+			Console.WriteLine("ModPow ( " + a + " , " + b + " , " + m + " ) == " + c);
+		}
+	}
+
+	private static ulong ModPow64(ulong b, ulong e, ulong m)
+	{
+		ulong a = 1;
+
+		for (; 1 <= e; e >>= 1)
+		{
+			if ((e & 1) != 0)
+				a = ModMul64(a, b, m);
+
+			b = ModMul64(b, b, m);
+		}
+		return a % m;
+	}
+
+	private static ulong ModMul64(ulong b, ulong e, ulong m)
+	{
+		ulong a = 0;
+
+		for (; 1 <= e; e >>= 1)
+		{
+			if ((e & 1) != 0)
+				a = ModAdd64(a, b, m);
+
+			b = ModAdd64(b, b, m);
+		}
+		return a;
+	}
+
+	private static ulong ModAdd64(ulong a, ulong b, ulong m)
+	{
+		ulong r = (ulong.MaxValue % m + 1) % m;
+
+		while (ulong.MaxValue - a < b)
+		{
+			unchecked { a += b; }
+			b = r;
+		}
+		return (a + b) % m;
+	}
+
+	// ====
+	// Random
+	// ====
+
+	private static RandomNumberGenerator Csprng = new RNGCryptoServiceProvider();
+
+	private static ulong GetULongRand()
+	{
+		byte[] data = new byte[8];
+		ulong value = 0;
+
+		Csprng.GetBytes(data);
+
+		foreach (byte b in data)
+		{
+			value <<= 8;
+			value |= b;
+		}
+		return value;
+	}
+
+	private static ulong GetULongRandNonZero()
+	{
+		ulong value;
+
+		do
+		{
+			value = GetULongRand();
+		}
+		while (value == 0);
+
+		return value;
+	}
+
+	// ====
+}
+
+----
 西暦日付から曜日を取得する。
 
 #include <stdio.h>
@@ -777,7 +878,15 @@ int main(void)
 }
 
 ----
-GetOuterRange()
+
+#include <stdio.h>
+
+int main(void)
+{
+    printf("Hello, Happy World!\n");
+}
+
+----
 
 using System;
 using System.Collections.Generic;
@@ -1023,7 +1132,75 @@ public class Hello
 }
 
 ----
-ラングレーの問題 (整角四角形) を解く。(C#)
+例の除雪車問題を二分探索で解く。
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+	private const int MILLIS_PER_HOUR = 3600000;
+	private const double SNOW_INIT = 1.0;
+	private const double SNOWPLOW_POWER = 1.0;
+
+    public static void Main()
+    {
+        double l = 0.0;
+        double r = SNOW_INIT;
+
+        for (int c = 0; c < 50; c++)
+        {
+            double m = (l + r) / 2;
+            double rate = GetDistanceRate(m);
+
+            if (1.5 < rate)
+            {
+                l = m;
+            }
+            else
+            {
+                r = m;
+            }
+        }
+
+        {
+            double m = (l + r) / 2;
+            double millis = SNOW_INIT / m;
+
+            TimeSpan t = new TimeSpan(12, 0, 0);
+            t -= TimeSpan.FromMilliseconds(millis);
+
+            Console.WriteLine(t.ToString("hh\\:mm\\:ss\\.fff"));
+        }
+    }
+
+    private static double GetDistanceRate(double snowPerMillis)
+    {
+        double snow = SNOW_INIT;
+        double d = 0.0;
+
+        for (int t = 0; t < MILLIS_PER_HOUR; t++)
+        {
+            d += SNOWPLOW_POWER / snow;
+            snow += snowPerMillis;
+        }
+        double d1 = d;
+
+        for (int t = 0; t < MILLIS_PER_HOUR; t++)
+        {
+            d += SNOWPLOW_POWER / snow;
+            snow += snowPerMillis;
+        }
+        double d2 = d;
+
+        return d2 / d1;
+    }
+}
+
+----
+ラングレーの問題 (整角四角形) を解く。
 
 using System;
 using System.Collections.Generic;
@@ -1130,7 +1307,7 @@ public class Hello
 		if (x < y) return Math.PI / 2.0 - GetAngle(y, x);
 		//if (x < 1E-9) return 0.0; // 極端に原点に近い座標の場合、常に 0.0 を返す。
 
-		if (y <= 0.0) return 0.0;
+		if (y == 0.0) return 0.0;
 		if (y == x) return Math.PI / 4.0;
 
 		double r1 = 0.0;
@@ -1142,7 +1319,7 @@ public class Hello
 		{
 			rm = (r1 + r2) / 2.0;
 
-			if (50 <= c)
+			if (50 < c)
 				break;
 
 			double rmt = Math.Tan(rm);
@@ -1154,73 +1331,6 @@ public class Hello
 		}
 		return rm;
 	}
-}
-
-----
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-public class Hello
-{
-	private const int MILLIS_PER_HOUR = 3600000;
-	private const double SNOW_INIT = 1.0;
-	private const double SNOWPLOW_POWER = 1.0;
-
-    public static void Main()
-    {
-        double l = 0.0;
-        double r = 1.0;
-
-        for (int c = 0; c < 50; c++)
-        {
-            double m = (l + r) / 2;
-            double rate = GetDistanceRate(m);
-
-            if (1.5 < rate)
-            {
-                l = m;
-            }
-            else
-            {
-                r = m;
-            }
-        }
-
-        {
-            double m = (l + r) / 2;
-            double millis = SNOW_INIT / m;
-
-            TimeSpan t = new TimeSpan(12, 0, 0);
-            t -= TimeSpan.FromMilliseconds(millis);
-
-            Console.WriteLine(t.ToString("hh\\:mm\\:ss\\.fff"));
-        }
-    }
-
-    private static double GetDistanceRate(double snowPerMillis)
-    {
-        double snow = SNOW_INIT;
-        double d = 0.0;
-
-        for (int t = 0; t < MILLIS_PER_HOUR; t++)
-        {
-            d += SNOWPLOW_POWER / snow;
-            snow += snowPerMillis;
-        }
-        double d1 = d;
-
-        for (int t = 0; t < MILLIS_PER_HOUR; t++)
-        {
-            d += SNOWPLOW_POWER / snow;
-            snow += snowPerMillis;
-        }
-        double d2 = d;
-
-        return d2 / d1;
-    }
 }
 
 ----
@@ -1288,20 +1398,102 @@ public class Hello
 
 ----
 
-function* Fibonacci() {
-    var a = 1;
-    var b = 0;
-
+function* Endless(v) {
     for (; ; ) {
-        yield a += b;
-        yield b += a;
+        yield v;
     }
 }
 
-var g = Fibonacci();
+function* Repeat(v, n) {
+    for (var i = 0; i < n; i++) {
+        yield v;
+    }
+}
 
-for (var c = 0; c < 50; c++) {
-    console.log(g.next().value);
+function* Gaps(n) {
+    yield n * (n - 1) - 1;
+    yield* Endless(n - 1);
+}
+
+function* Sieve(gaps) {
+    for (; ; ) {
+        yield* Repeat(1, gaps());
+        yield 0;
+    }
+}
+
+function Supplier(e) {
+    return () => e.next().value;
+}
+
+function Both(a, b) {
+    return () => a() & b();
+}
+
+function* Primes(max) {
+    var s = () => 1;
+
+    for (var n = 2; n <= max; n++) {
+        if (s()) {
+            s = Both(s, Supplier(Sieve(Supplier(Gaps(n)))));
+            yield n;
+        }
+    }
+}
+
+for (var n of Primes(100)) {
+    console.log(n);
+}
+
+----
+
+#include <stdio.h>
+int main(void){
+    char p[] = "12345678HelloWorld";
+    *(char **)p = p;
+    printf("%s\n", ******************************(char *******************************)p + 8);
+}
+
+----
+
+#include <stdio.h>
+
+int main()
+{
+	int n;
+
+	for(n = 1; n <= 100; n++)
+	{
+		printf("%d\n\0Fizz\n\0______FizzBuzz\n" + (n % 3 + 1 >> 1 ^ 1 ^ ((n % 5 + 3 >> 2 ^ 1) * 5)) * 4, n);
+	}
+}
+
+----
+
+#include <stdio.h>
+
+main()
+{
+	void *a[2];
+	void ********************************************************************************************************************************
+         ********************************************************************************************************************************p;
+	void *q;
+
+	p = (void *)a;
+
+	a[0] = p;
+	a[1] = p;
+
+	q = *++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*p++;
+
+	printf("%p\n%p\n%p\n%p\n%p\n", a + 1, a[0], a[1], p, q);
 }
 
 ----
@@ -1554,194 +1746,20 @@ public class Hello
 
 ----
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Security.Cryptography;
+function* Fibonacci() {
+    var a = 1;
+    var b = 0;
 
-public class Hello
-{
-    public static void Main()
-	{
-		for (int testcnt = 0; testcnt < 100; testcnt++)
-		{
-			ulong a = GetULongRand();
-			ulong b = GetULongRand();
-			ulong m = GetULongRandNonZero();
-			ulong c = ModPow64(a, b, m);
-
-			Console.WriteLine("ModPow ( " + a + " , " + b + " , " + m + " ) == " + c);
-		}
-	}
-
-	private static ulong ModPow64(ulong b, ulong e, ulong m)
-	{
-		ulong a = 1;
-
-		for (; 1 <= e; e >>= 1)
-		{
-			if ((e & 1) != 0)
-				a = ModMul64(a, b, m);
-
-			b = ModMul64(b, b, m);
-		}
-		return a % m;
-	}
-
-	private static ulong ModMul64(ulong b, ulong e, ulong m)
-	{
-		ulong a = 0;
-
-		for (; 1 <= e; e >>= 1)
-		{
-			if ((e & 1) != 0)
-				a = ModAdd64(a, b, m);
-
-			b = ModAdd64(b, b, m);
-		}
-		return a;
-	}
-
-	private static ulong ModAdd64(ulong a, ulong b, ulong m)
-	{
-		ulong r = (ulong.MaxValue % m + 1) % m;
-
-		while (ulong.MaxValue - a < b)
-		{
-			unchecked { a += b; }
-			b = r;
-		}
-		return (a + b) % m;
-	}
-
-	// ====
-	// Random
-	// ====
-
-	private static RandomNumberGenerator Csprng = new RNGCryptoServiceProvider();
-
-	private static ulong GetULongRand()
-	{
-		byte[] data = new byte[8];
-		ulong value = 0;
-
-		Csprng.GetBytes(data);
-
-		foreach (byte b in data)
-		{
-			value <<= 8;
-			value |= b;
-		}
-		return value;
-	}
-
-	private static ulong GetULongRandNonZero()
-	{
-		ulong value;
-
-		do
-		{
-			value = GetULongRand();
-		}
-		while (value == 0);
-
-		return value;
-	}
-
-	// ====
-}
-
-----
-
-function* Endless(v) {
     for (; ; ) {
-        yield v;
+        yield a += b;
+        yield b += a;
     }
 }
 
-function* Repeat(v, n) {
-    for (var i = 0; i < n; i++) {
-        yield v;
-    }
-}
+var g = Fibonacci();
 
-function* Gaps(n) {
-    yield n * (n - 1) - 1;
-    yield* Endless(n - 1);
-}
-
-function* Sieve(gaps) {
-    for (; ; ) {
-        yield* Repeat(1, gaps());
-        yield 0;
-    }
-}
-
-function Supplier(e) {
-    return () => e.next().value;
-}
-
-function Both(a, b) {
-    return () => a() & b();
-}
-
-function* Primes(max) {
-    var s = () => 1;
-
-    for (var n = 2; n <= max; n++) {
-        if (s()) {
-            s = Both(s, Supplier(Sieve(Supplier(Gaps(n)))));
-            yield n;
-        }
-    }
-}
-
-for (var n of Primes(100)) {
-    console.log(n);
-}
-
-----
-
-#include <stdio.h>
-
-main()
-{
-	void *a[2];
-	void ********************************************************************************************************************************
-         ********************************************************************************************************************************p;
-	void *q;
-
-	p = (void *)a;
-
-	a[0] = p;
-	a[1] = p;
-
-	q = *++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
-		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
-		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
-		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
-		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
-		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
-		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
-		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*p++;
-
-	printf("%p\n%p\n%p\n%p\n%p\n", a + 1, a[0], a[1], p, q);
-}
-
-----
-
-#include <stdio.h>
-
-int main()
-{
-	int n;
-
-	for(n = 1; n <= 100; n++)
-	{
-		printf("%d\n\0Fizz\n\0______FizzBuzz\n" + (n % 3 + 1 >> 1 ^ 1 ^ ((n % 5 + 3 >> 2 ^ 1) * 5)) * 4, n);
-	}
+for (var c = 0; c < 50; c++) {
+    console.log(g.next().value);
 }
 
 ----
@@ -1833,14 +1851,3 @@ int main(void) {
         DoPrint(N, exp);
     }
 }
-
-----
-
-#include <stdio.h>
-int main(void){
-    char p[] = "12345678HelloWorld";
-    *(char **)p = p;
-    printf("%s\n", ******************************(char *******************************)p + 8);
-}
-
-----
