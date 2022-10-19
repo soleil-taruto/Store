@@ -1132,6 +1132,14 @@ public class Hello
 }
 
 ----
+
+public class Hello
+{
+    public static void Main()
+    { }
+}
+
+----
 —á‚ÌœáÔ–â‘è‚ğ“ñ•ª’Tõ‚Å‰ğ‚­B
 
 using System;
@@ -1746,6 +1754,14 @@ public class Hello
 
 ----
 
+main(){}
+
+----
+
+main(){}
+
+----
+
 function* Fibonacci() {
     var a = 1;
     var b = 0;
@@ -1761,6 +1777,10 @@ var g = Fibonacci();
 for (var c = 0; c < 50; c++) {
     console.log(g.next().value);
 }
+
+----
+
+console.log(1 + 2);
 
 ----
 
