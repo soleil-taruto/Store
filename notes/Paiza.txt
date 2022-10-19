@@ -1,0 +1,1846 @@
+----
+ëgçáÇπ Combination
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+    public static void Main()
+    {
+        //Test01(5, 3);
+        Test01(10, 4);
+    }
+
+    private static void Test01(int n, int r)
+    {
+        Console.WriteLine($"{n} å¬ (0 .. {n - 1}) ÇÃíÜÇ©ÇÁ {r} å¬ëIÇ‘ {Combination(n, r).Count()} í ÇËÇÃëgçáÇπÇÕà»â∫ÇÃÇ∆Ç®ÇËÅB");
+
+        foreach (int[] indexes in Combination(n, r))
+            Console.WriteLine($"({string.Join(", ", indexes)})");
+    }
+
+    // ----
+
+	public static IEnumerable<int[]> Combination(int n, int r)
+	{
+		if (r < 1 || n < r)
+			throw new Exception(); // Bad params
+
+		int[] indexes = Enumerable.Range(0, r).ToArray();
+
+		for (; ; )
+		{
+			yield return indexes;
+
+			for (int d = 0; ; d++)
+			{
+				indexes[d]++;
+
+				if (d + 1 < r)
+				{
+					if (indexes[d] < indexes[d + 1])
+						break;
+				}
+				else
+				{
+					if (indexes[d] < n)
+						break;
+
+					yield break;
+				}
+
+				if (1 <= d)
+					indexes[d] = indexes[d - 1] + 1;
+				else
+					indexes[d] = 0;
+			}
+		}
+	}
+}
+
+----
+êºóÔì˙ïtÇ©ÇÁójì˙ÇéÊìæÇ∑ÇÈÅB
+
+#include <stdio.h>
+
+int DateToDay(int y, int m, int d)
+{
+    int day;
+
+	if (m <= 2)
+	{
+		y--;
+	}
+	day = y / 400;
+	day *= 365 * 400 + 97;
+	y %= 400;
+	day += y * 365;
+	day += y / 4;
+	day -= y / 100;
+
+	if (2 < m)
+	{
+		day -= 31 * 10 - 4;
+		m -= 3;
+		day += (m / 5) * (31 * 5 - 2);
+		m %= 5;
+		day += (m / 2) * (31 * 2 - 1);
+		m %= 2;
+		day += m * 31;
+	}
+	else
+	{
+		day += (m - 1) * 31;
+	}
+	day += d - 1;
+
+	return day;
+}
+
+char *DateToWeekday(int y, int m, int d)
+{
+    static char *weekdays[] =
+    {
+        "åé", "âŒ", "êÖ", "ñÿ", "ã‡", "ìy", "ì˙"
+    };
+
+    return weekdays[DateToDay(y, m, d) % 7];
+}
+
+// ----
+
+static void Test01(int y, int m, int d)
+{
+    printf("êºóÔ%04dîN%02dåé%02dì˙ÇÕ%sójì˙Ç≈Ç∑ÅB\n", y, m, d, DateToWeekday(y, m, d));
+}
+
+int main(void)
+{
+    Test01(1970,  1,  1);
+    Test01(1999, 12, 31);
+    Test01(2000,  1,  1);
+    Test01(2000, 12, 31);
+    Test01(2001,  1,  1);
+    Test01(2013,  4, 15);
+    Test01(2022, 10, 18);
+    Test01(2222,  2,  2);
+}
+
+----
+êºóÔì˙ïtÇòaóÔÇ…ïœä∑Ç∑ÇÈÅB
+
+#include <stdio.h>
+#include <stdlib.h> // for rand()
+#include <time.h> // for srand SEED
+
+typedef struct EraInfo_st
+{
+    int FirstYMD;
+    char *Name;
+}
+EraInfo_t;
+
+extern EraInfo_t EraInfos[];
+extern size_t EraInfosLen;
+
+void DateToJapaneseDate(int y, int m, int d, char **pName, char **pNen)
+{
+    int l = 0;
+    int r = EraInfosLen;
+    EraInfo_t *i;
+
+    while (l + 1 < r)
+    {
+        int mid = (l + r) / 2;
+
+        if (EraInfos[mid].FirstYMD <= y * 10000 + m * 100 + d)
+            l = mid;
+        else
+            r = mid;
+    }
+
+    i = EraInfos + l;
+
+    if (i->Name)
+    {
+        *pName = i->Name;
+        y -= i->FirstYMD / 10000 - 1;
+    }
+    else
+    {
+        *pName = "êºóÔ";
+    }
+
+    if (2 <= y)
+    {
+        static char nenBuff[11];
+
+        *pNen = nenBuff;
+        sprintf(nenBuff, "%d", y);
+    }
+    else
+    {
+        *pNen = "å≥";
+    }
+}
+
+// ----
+
+static void Test01(int y, int m, int d)
+{
+    char *name;
+    char *nen;
+
+    DateToJapaneseDate(y, m, d, &name, &nen);
+
+    printf("êºóÔ%04dîN%02dåé%02dì˙ÇÕ%s%sîN%02dåé%02dì˙Ç≈Ç∑ÅB\n", y, m, d, name, nen, m, d);
+}
+
+static void Test02(void)
+{
+    int c;
+
+    srand(time(NULL));
+
+    for (c = 0; c < 1000; c++)
+    {
+        int y = rand() % 3000 + 1;
+        int m = rand() % 12 + 1;
+        int d = rand() % 28 + 1;
+
+        Test01(y, m, d);
+    }
+}
+
+int main(void)
+{
+    Test01(1865,  5,  1);
+    Test01(1867, 12, 31);
+    Test01(1868,  1,  1);
+    Test01(1912,  7, 29);
+    Test01(1912,  7, 30);
+    Test01(1926, 12, 24);
+    Test01(1926, 12, 25);
+    Test01(1989,  1,  7);
+    Test01(1989,  1,  8);
+    Test01(2019,  4, 30);
+    Test01(2019,  5,  1);
+    Test01(2022, 10, 18);
+
+    Test02();
+}
+
+// ----
+
+EraInfo_t EraInfos[] =
+{
+	{        0, NULL   },
+	{  6450717, "ëÂâª" },
+	{  6500322, "îíË≥" },
+	{  6541124, NULL   },
+	{  6860814, "éÈíπ" },
+	{  6861001, NULL   },
+	{  7010503, "ëÂïÛ" },
+	{  7040616, "åcâ_" },
+	{  7080207, "òaì∫" },
+	{  7151003, "óÏãT" },
+	{  7171224, "ó{òV" },
+	{  7240303, "ê_ãT" },
+	{  7290902, "ìVïΩ" },
+	{  7490504, "ìVïΩä¥ïÛ" },
+	{  7490819, "ìVïΩèüïÛ" },
+	{  7570906, "ìVïΩïÛéö" },
+	{  7650201, "ìVïΩê_åÏ" },
+	{  7670913, "ê_åÏåiâ_" },
+	{  7701023, "ïÛãT" },
+	{  7810130, "ìVâû" },
+	{  7820930, "âÑóÔ" },
+	{  8060608, "ëÂìØ" },
+	{  8101020, "çOêm" },
+	{  8240208, "ìVí∑" },
+	{  8340214, "è≥òa" },
+	{  8480716, "â√èÀ" },
+	{  8510601, "êméı" },
+	{  8541223, "êƒçt" },
+	{  8570320, "ìVà¿" },
+	{  8590520, "íÂäœ" },
+	{  8770601, "å≥åc" },
+	{  8850311, "êmòa" },
+	{  8890530, "ä∞ïΩ" },
+	{  8980520, "èπë◊" },
+	{  9010831, "âÑäÏ" },
+	{  9230529, "âÑí∑" },
+	{  9310516, "è≥ïΩ" },
+	{  9380622, "ìVåc" },
+	{  9470515, "ìVóÔ" },
+	{  9571121, "ìVìø" },
+	{  9610305, "âûòa" },
+	{  9640819, "çNï€" },
+	{  9680908, "à¿òa" },
+	{  9700503, "ìVò\" },
+	{  9740116, "ìVâÑ" },
+	{  9760811, "íÂå≥" },
+	{  9781231, "ìVå≥" },
+	{  9830529, "âiäœ" },
+	{  9850519, "ä∞òa" },
+	{  9870505, "âiâÑ" },
+	{  9890910, "âi‚N" },
+	{  9901126, "ê≥óÔ" },
+	{  9950325, "í∑ìø" },
+	{  9990201, "í∑ï€" },
+	{ 10040808, "ä∞çO" },
+	{ 10130208, "í∑òa" },
+	{ 10170521, "ä∞êm" },
+	{ 10210317, "é°à¿" },
+	{ 10240819, "ñúéı" },
+	{ 10280818, "í∑å≥" },
+	{ 10370509, "í∑óÔ" },
+	{ 10401216, "í∑ãv" },
+	{ 10441216, "ä∞ìø" },
+	{ 10460522, "âiè≥" },
+	{ 10530202, "ìVäÏ" },
+	{ 10580919, "çNïΩ" },
+	{ 10650904, "é°óÔ" },
+	{ 10690506, "âÑãv" },
+	{ 10740916, "è≥ï€" },
+	{ 10771205, "è≥óÔ" },
+	{ 10810322, "âiï€" },
+	{ 10840315, "âûìø" },
+	{ 10870511, "ä∞é°" },
+	{ 10950123, "â√ï€" },
+	{ 10970103, "âií∑" },
+	{ 10971227, "è≥ìø" },
+	{ 10990915, "çNòa" },
+	{ 11040308, "í∑é°" },
+	{ 11060513, "â√è≥" },
+	{ 11080909, "ìVêm" },
+	{ 11100731, "ìVâi" },
+	{ 11130825, "âiãv" },
+	{ 11180425, "å≥âi" },
+	{ 11200509, "ï€à¿" },
+	{ 11240518, "ìVé°" },
+	{ 11260215, "ëÂé°" },
+	{ 11310228, "ìVè≥" },
+	{ 11320921, "í∑è≥" },
+	{ 11350610, "ï€âÑ" },
+	{ 11410813, "âié°" },
+	{ 11420525, "çNé°" },
+	{ 11440328, "ìVó{" },
+	{ 11450812, "ãvà¿" },
+	{ 11510214, "êmïΩ" },
+	{ 11541204, "ãvéı" },
+	{ 11560518, "ï€å≥" },
+	{ 11590509, "ïΩé°" },
+	{ 11600218, "âióÔ" },
+	{ 11610924, "âûï€" },
+	{ 11630504, "í∑ä∞" },
+	{ 11650714, "âiñú" },
+	{ 11660923, "êmà¿" },
+	{ 11690506, "â√âû" },
+	{ 11710527, "è≥à¿" },
+	{ 11750816, "à¿å≥" },
+	{ 11770829, "é°è≥" },
+	{ 11810825, "ó{òa" },
+	{ 11820629, "éıâi" },
+	{ 11840527, "å≥óÔ" },
+	{ 11850909, "ï∂é°" },
+	{ 11900516, "åöãv" },
+	{ 11990523, "ê≥é°" },
+	{ 12010319, "åöêm" },
+	{ 12040323, "å≥ãv" },
+	{ 12060605, "åöâi" },
+	{ 12071116, "è≥å≥" },
+	{ 12110423, "åöóÔ" },
+	{ 12140118, "åöï€" },
+	{ 12190527, "è≥ãv" },
+	{ 12220525, "íÂâû" },
+	{ 12241231, "å≥êm" },
+	{ 12250528, "â√ò\" },
+	{ 12280118, "à¿íÂ" },
+	{ 12290331, "ä∞äÏ" },
+	{ 12320423, "íÂâi" },
+	{ 12330525, "ìVïü" },
+	{ 12341127, "ï∂óÔ" },
+	{ 12351101, "â√íı" },
+	{ 12381230, "óÔêm" },
+	{ 12390313, "âÑâû" },
+	{ 12400805, "êmé°" },
+	{ 12430318, "ä∞å≥" },
+	{ 12470405, "ïÛé°" },
+	{ 12490502, "åöí∑" },
+	{ 12561024, "çNå≥" },
+	{ 12570331, "ê≥â√" },
+	{ 12590420, "ê≥å≥" },
+	{ 12600524, "ï∂âû" },
+	{ 12610322, "çOí∑" },
+	{ 12640327, "ï∂âi" },
+	{ 12750522, "åöé°" },
+	{ 12780323, "çOà¿" },
+	{ 12880529, "ê≥âû" },
+	{ 12930906, "âiêm" },
+	{ 12990525, "ê≥à¿" },
+	{ 13021210, "ä£å≥" },
+	{ 13030916, "â√å≥" },
+	{ 13070118, "ìøé°" },
+	{ 13081122, "âÑåc" },
+	{ 13110517, "âûí∑" },
+	{ 13120427, "ê≥òa" },
+	{ 13170316, "ï∂ï€" },
+	{ 13190518, "å≥âû" },
+	{ 13210322, "å≥ãú" },
+	{ 13241225, "ê≥íÜ" },
+	{ 13260528, "â√óÔ" },
+	{ 13290922, "å≥ìø" },
+	{ 13310911, "å≥çO" },
+	{ 13320523, "ê≥åc" },
+	{ 13340305, "åöïê" },
+	{ 13360411, "âÑå≥" },
+	{ 13400525, "ãªçë" },
+	{ 13470120, "ê≥ïΩ" },
+	{ 13700816, "åöìø" },
+	{ 13720500, "ï∂íÜ" },
+	{ 13750626, "ìVéˆ" },
+	{ 13810306, "çOòa" },
+	{ 13840518, "å≥íÜ" },
+	{ 13381011, "óÔâû" },
+	{ 13420601, "çNâi" },
+	{ 13451115, "íÂòa" },
+	{ 13500404, "äœâû" },
+	{ 13521104, "ï∂òa" },
+	{ 13560429, "âÑï∂" },
+	{ 13610504, "çNà¿" },
+	{ 13621011, "íÂé°" },
+	{ 13680307, "âûà¿" },
+	{ 13750329, "âiòa" },
+	{ 13790409, "çNóÔ" },
+	{ 13810320, "âiìø" },
+	{ 13840319, "éäìø" },
+	{ 13871005, "â√åc" },
+	{ 13890307, "çNâû" },
+	{ 13900412, "ñæìø" },
+	{ 13940802, "âûâi" },
+	{ 14280610, "ê≥í∑" },
+	{ 14291003, "âiãù" },
+	{ 14410310, "â√ãg" },
+	{ 14440223, "ï∂à¿" },
+	{ 14490816, "ïÛìø" },
+	{ 14520810, "ãùìø" },
+	{ 14550906, "çNê≥" },
+	{ 14571016, "í∑ò\" },
+	{ 14610201, "ä∞ê≥" },
+	{ 14660314, "ï∂ê≥" },
+	{ 14670409, "âûêm" },
+	{ 14690608, "ï∂ñæ" },
+	{ 14870809, "í∑ãù" },
+	{ 14890916, "âÑìø" },
+	{ 14920812, "ñæâû" },
+	{ 15010318, "ï∂ãT" },
+	{ 15040316, "âiê≥" },
+	{ 15210923, "ëÂâi" },
+	{ 15280903, "ãùò\" },
+	{ 15320829, "ìVï∂" },
+	{ 15551107, "çOé°" },
+	{ 15580318, "âiò\" },
+	{ 15700527, "å≥ãT" },
+	{ 15730825, "ìVê≥" },
+	{ 15930110, "ï∂ò\" },
+	{ 15961216, "åcí∑" },
+	{ 16150905, "å≥òa" },
+	{ 16240417, "ä∞âi" },
+	{ 16450113, "ê≥ï€" },
+	{ 16480407, "åcà¿" },
+	{ 16521020, "è≥âû" },
+	{ 16550518, "ñæóÔ" },
+	{ 16580821, "ñúé°" },
+	{ 16610523, "ä∞ï∂" },
+	{ 16731030, "âÑïÛ" },
+	{ 16811109, "ìVòa" },
+	{ 16840405, "íÂãù" },
+	{ 16881023, "å≥ò\" },
+	{ 17040416, "ïÛâi" },
+	{ 17110611, "ê≥ìø" },
+	{ 17160809, "ãùï€" },
+	{ 17360607, "å≥ï∂" },
+	{ 17410412, "ä∞ï€" },
+	{ 17440403, "âÑãù" },
+	{ 17480805, "ä∞âÑ" },
+	{ 17511214, "ïÛóÔ" },
+	{ 17640630, "ñæòa" },
+	{ 17721210, "à¿âi" },
+	{ 17810425, "ìVñæ" },
+	{ 17890219, "ä∞ê≠" },
+	{ 18010319, "ãùòa" },
+	{ 18040322, "ï∂âª" },
+	{ 18180526, "ï∂ê≠" },
+	{ 18310123, "ìVï€" },
+	{ 18450109, "çOâª" },
+	{ 18480401, "â√âi" },
+	{ 18550115, "à¿ê≠" },
+	{ 18600408, "ñúâÑ" },
+	{ 18610329, "ï∂ãv" },
+	{ 18640327, "å≥é°" },
+	{ 18650501, "åcâû" },
+	{ 18680101, "ñæé°" },
+	{ 19120730, "ëÂê≥" },
+	{ 19261225, "è∫òa" },
+	{ 19890108, "ïΩê¨" },
+	{ 20190501, "óﬂòa" },
+};
+
+size_t EraInfosLen = sizeof(EraInfos) / sizeof(EraInfo_t);
+
+----
+êºóÔ1/1/1Ç©ÇÁÇÃì˙êîÇêºóÔì˙ïtÇ…ïœä∑Ç∑ÇÈÅB
+
+#include <stdio.h>
+
+void DayToDate(int day, int *py, int *pm, int *pd)
+{
+	int y = day;
+	int m = 1;
+	int d;
+	int w;
+
+	y /= 146097;
+	y *= 400;
+	y += 1;
+    day %= 146097;
+	w = (day + 306) / 36524;
+	day += w < 3 ? w : 3;
+	y += (day / 1461) * 4;
+	day %= 1461;
+    w = (day + 306) / 365;
+	day += w < 3 ? w : 3;
+	y += day / 366;
+	day %= 366;
+
+	if (60 <= day)
+	{
+		m += 2;
+		day -= 60;
+		m += (day / 153) * 5;
+		day %= 153;
+		m += (day / 61) * 2;
+		day %= 61;
+	}
+	m += day / 31;
+	day %= 31;
+	d = day + 1;
+
+    *py = y;
+    *pm = m;
+    *pd = d;
+}
+
+// ----
+
+#define IsUrudoshi(y) \
+    (y % 400 == 0 || (y % 4 == 0 && y % 100 != 0))
+
+static void Error(void)
+{
+    printf("Error\n");
+    exit(1);
+}
+
+static int GetDayOfMonth(int y, int m)
+{
+    switch (m)
+    {
+    case  1: return 31;
+    case  2: return IsUrudoshi(y) ? 29 : 28;
+    case  3: return 31;
+    case  4: return 30;
+    case  5: return 31;
+    case  6: return 30;
+    case  7: return 31;
+    case  8: return 31;
+    case  9: return 30;
+    case 10: return 31;
+    case 11: return 30;
+    case 12: return 31;
+
+    default:
+        Error();
+    }
+}
+
+static void Test02(void)
+{
+    int y = 1;
+    int m = 1;
+    int d = 1;
+    int day = 0;
+
+    while (y < 10000)
+    {
+        int ry;
+        int rm;
+        int rd;
+
+        DayToDate(day, &ry, &rm, &rd);
+
+        //if (day % 10000 == 0) printf("%d/%d/%d (%d) -> %d/%d/%d\n", y, m, d, day, ry, rm, rd);
+
+        if (ry != y)
+            Error();
+
+        if (rm != m)
+            Error();
+
+        if (rd != d)
+            Error();
+
+        #define DAY_STEP 13
+
+        d   += DAY_STEP;
+        day += DAY_STEP;
+
+        #undef DAY_STEP
+
+        {
+            int dom = GetDayOfMonth(y, m);
+
+            if (dom < d)
+            {
+                d -= dom;
+                m++;
+
+                if (12 < m)
+                {
+                    m = 1;
+                    y++;
+                }
+            }
+        }
+    }
+}
+
+static void Test01(int day)
+{
+    int y;
+    int m;
+    int d;
+
+    DayToDate(day, &y, &m, &d);
+
+    printf("(ÉOÉåÉSÉäÉIóÔä∑éZÇ≈)êºóÔ1îN1åé1ì˙Ç©ÇÁêîÇ¶Çƒ%dì˙å„ÇÕêºóÔ%04dîN%02dåé%02dì˙Ç≈Ç∑ÅB\n", day, y, m, d);
+}
+
+int main(void)
+{
+    //Test02();
+
+    Test01(0);
+    Test01(1000);
+    Test01(10000);
+    Test01(100000);
+    Test01(1000000);
+    Test01(1500000);
+    Test01(2000000);
+    Test01(2500000);
+}
+
+----
+êºóÔì˙ïtÇêºóÔ1/1/1Ç©ÇÁÇÃì˙êîÇ…ïœä∑Ç∑ÇÈÅB
+
+#include <stdio.h>
+
+int DateToDay(int y, int m, int d)
+{
+    int day;
+
+	if (m <= 2)
+	{
+		y--;
+	}
+	day = y / 400;
+	day *= 365 * 400 + 97;
+	y %= 400;
+	day += y * 365;
+	day += y / 4;
+	day -= y / 100;
+
+	if (2 < m)
+	{
+		day -= 31 * 10 - 4;
+		m -= 3;
+		day += (m / 5) * (31 * 5 - 2);
+		m %= 5;
+		day += (m / 2) * (31 * 2 - 1);
+		m %= 2;
+		day += m * 31;
+	}
+	else
+	{
+		day += (m - 1) * 31;
+	}
+	day += d - 1;
+
+	return day;
+}
+
+// ----
+
+#define IsUrudoshi(y) \
+    (y % 400 == 0 || (y % 4 == 0 && y % 100 != 0))
+
+static void Error(void)
+{
+    printf("Error\n");
+    exit(1);
+}
+
+static int GetDayOfMonth(int y, int m)
+{
+    switch (m)
+    {
+    case  1: return 31;
+    case  2: return IsUrudoshi(y) ? 29 : 28;
+    case  3: return 31;
+    case  4: return 30;
+    case  5: return 31;
+    case  6: return 30;
+    case  7: return 31;
+    case  8: return 31;
+    case  9: return 30;
+    case 10: return 31;
+    case 11: return 30;
+    case 12: return 31;
+
+    default:
+        Error();
+    }
+}
+
+static void Test02(void)
+{
+    int y = 1;
+    int m = 1;
+    int d = 1;
+    int day = 0;
+
+    while (y < 10000)
+    {
+        int ret = DateToDay(y, m, d);
+
+        //if (ret % 10000 == 0) printf("%d/%d/%d (%d) -> %d\n", y, m, d, day, ret);
+
+        if (ret != day)
+            Error();
+
+        #define DAY_STEP 13
+
+        d   += DAY_STEP;
+        day += DAY_STEP;
+
+        #undef DAY_STEP
+
+        {
+            int dom = GetDayOfMonth(y, m);
+
+            if (dom < d)
+            {
+                d -= dom;
+                m++;
+
+                if (12 < m)
+                {
+                    m = 1;
+                    y++;
+                }
+            }
+        }
+    }
+}
+
+static void Test01(int y, int m, int d)
+{
+    printf("êºóÔ%04dîN%02dåé%02dì˙ÇÕ(ÉOÉåÉSÉäÉIóÔä∑éZÇ≈)êºóÔ1îN1åé1ì˙Ç©ÇÁêîÇ¶Çƒ%dì˙å„Ç≈Ç∑ÅB\n", y, m, d, DateToDay(y, m, d));
+}
+
+int main(void)
+{
+    //Test02();
+
+    Test01(   1,  1,  1);
+    Test01(  10,  1,  1);
+    Test01( 100,  1,  1);
+    Test01(1000,  1,  1);
+    Test01(1970,  1,  1);
+    Test01(1999, 12, 31);
+    Test01(2013,  4, 15);
+    Test01(2022, 10, 18);
+}
+
+----
+GetOuterRange()
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Security.Cryptography;
+
+public class Hello
+{
+    public static void Main()
+    {
+		Comparison<int> comp = (a, b) => a - b;
+
+		for (int testcnt = 0; testcnt < 3000; testcnt++)
+		{
+			int[] arr = GetRandIntList().ToArray();
+			int target = GetRandInt(100);
+
+			Array.Sort(arr, comp);
+
+			int[] range1 = GetOuterRange_v1(arr, target, comp);
+			int[] range2 = GetOuterRange_v2(arr, target, comp);
+
+			//Console.WriteLine(string.Join(", ", range1[0], range1[1], range1[1] - range1[0]));
+
+			if (
+			    range1.Length != 2 ||
+			    range2.Length != 2 ||
+			    range1[0] != range2[0] ||
+			    range1[1] != range2[1]
+			    )
+			    throw null;
+		}
+		Console.WriteLine("OK!");
+    }
+
+    // É\Å[ÉgçœÇ›ÇÃÉäÉXÉgì‡Ç≈äÓèÄílÇ…É}ÉbÉ`Ç∑ÇÈîÕàÕÇï‘Ç∑ÅB
+    // list: ÉäÉXÉg
+    // target: äÓèÄíl
+    // comp: î‰ärÉÅÉ\ÉbÉh
+    // ret: { äÓèÄílñ¢ñûÇÃç≈å„ÇÃà íu, äÓèÄílÇí¥Ç¶ÇÈç≈èâÇÃà íu }
+	private static int[] GetOuterRange_v1<T>(IList<T> list, T target, Comparison<T> comp)
+	{
+		int l = -1;
+		int r = list.Count;
+
+		while (l + 1 < r)
+		{
+			int m = (l + r) / 2;
+			int ret = comp(list[m], target);
+
+			if (ret < 0)
+			{
+				l = m;
+			}
+			else if (ret > 0)
+			{
+				r = m;
+			}
+			else
+			{
+				l = GetBorder(list, v => comp(v, target) != 0, l, m);
+				r = GetBorder(list, v => comp(v, target) == 0, m, r) + 1;
+				break;
+			}
+		}
+		return new int[] { l, r };
+	}
+
+	private static int GetBorder<T>(IList<T> list, Predicate<T> matchForLeft, int l, int r)
+	{
+		while (l + 1 < r)
+		{
+			int m = (l + r) / 2;
+
+			if (matchForLeft(list[m]))
+			{
+				l = m;
+			}
+			else
+			{
+				r = m;
+			}
+		}
+		return l;
+	}
+
+	// ÉeÉXÉgóp
+	private static int[] GetOuterRange_v2<T>(IList<T> list, T target, Comparison<T> comp)
+	{
+		int l;
+		int r;
+
+		for (l = list.Count - 1; 0 <= l; l--)
+			if (comp(list[l], target) < 0)
+				break;
+
+		for (r = 0; r < list.Count; r++)
+			if (comp(list[r], target) > 0)
+				break;
+
+		return new int[] { l, r };
+	}
+
+    // ====
+    // Random
+    // ====
+
+	private static RandomNumberGenerator Csprng = new RNGCryptoServiceProvider();
+
+	private static uint GetRandUInt()
+	{
+		byte[] data = new byte[4];
+		uint value = 0;
+
+		Csprng.GetBytes(data);
+
+		foreach (byte b in data)
+		{
+			value <<= 8;
+			value |= b;
+		}
+		return value;
+	}
+
+	private static int GetRandInt(int modulo)
+	{
+		return (int)(GetRandUInt() % (uint)modulo);
+	}
+
+	private static IEnumerable<int> GetRandIntList()
+	{
+		int count = GetRandInt(200);
+		int limit = GetRandInt(200) + 1;
+
+		for (int index = 0; index < count; index++)
+			yield return GetRandInt(limit);
+	}
+
+	// ====
+}
+
+----
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+    // Question:
+    // https://twitter.com/potetoichiro/status/1576887286691639296
+
+    public static void Main()
+    {
+        double RATE_DEGREE_RAD = Math.PI / 180.0;
+        int angle = 0;
+
+        D2Point pA = new D2Point(0.0, 0.0);
+		D2Point pB = new D2Point(1.0, 0.0);
+		D2Point pC = pB + AngleToPoint((angle += 180 - 140) * RATE_DEGREE_RAD, 1.0);
+		D2Point pD = pC + AngleToPoint((angle += 180 - 110) * RATE_DEGREE_RAD, 1.0);
+		D2Point pE = pD + AngleToPoint((angle +  180 - 130) * RATE_DEGREE_RAD, 1.0);
+        D2Point pF = pA + AngleToPoint(100 * RATE_DEGREE_RAD, 1.0);
+
+		double ed = GetAngle(pD - pE);
+		double ef = GetAngle(pF - pE);
+
+		double x = ed - ef;
+
+		x /= RATE_DEGREE_RAD;
+
+		Console.WriteLine($"x is {x} degrees.");
+    }
+
+	public struct D2Point
+	{
+		public double X;
+		public double Y;
+
+		public D2Point(double x, double y)
+		{
+			this.X = x;
+			this.Y = y;
+		}
+
+		public static D2Point operator +(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X + b.X, a.Y + b.Y);
+		}
+
+		public static D2Point operator -(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X - b.X, a.Y - b.Y);
+		}
+	}
+
+	public static D2Point AngleToPoint(double angle, double distance)
+	{
+		return new D2Point(
+			distance * Math.Cos(angle),
+			distance * Math.Sin(angle)
+			);
+	}
+
+	public static double GetAngle(D2Point pt)
+	{
+        return GetAngle(pt.X, pt.Y);
+	}
+
+	public static double GetAngle(double x, double y)
+	{
+		if (y < 0.0) return Math.PI * 2.0 - GetAngle(x, -y);
+		if (x < 0.0) return Math.PI - GetAngle(-x, y);
+
+		if (x < y) return Math.PI / 2.0 - GetAngle(y, x);
+
+		if (y == 0.0) return 0.0;
+		if (y == x) return Math.PI / 4.0;
+
+		double r1 = 0.0;
+		double r2 = Math.PI / 4.0;
+		double t = y / x;
+		double rm;
+
+		for (int c = 1; ; c++)
+		{
+			rm = (r1 + r2) / 2.0;
+
+			if (50 < c)
+				break;
+
+			double rmt = Math.Tan(rm);
+
+			if (t < rmt)
+				r2 = rm;
+			else
+				r1 = rm;
+		}
+		return rm;
+	}
+}
+
+----
+ÉâÉìÉOÉåÅ[ÇÃñ‚ëË (êÆäpéläpå`) ÇâÇ≠ÅB(C#)
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+    // ÉâÉìÉOÉåÅ[ÇÃñ‚ëË (êÆäpéläpå`) Wiki:
+    // https://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%B3%E3%82%B0%E3%83%AC%E3%83%BC%E3%81%AE%E5%95%8F%E9%A1%8C#%E6%95%B4%E8%A7%92%E5%9B%9B%E8%A7%92%E5%BD%A2
+
+    public static void Main()
+    {
+        LangleyTetragonTest(20, 60, 50, 30);
+        LangleyTetragonTest(20, 60, 40, 40);
+    }
+
+    private static void LangleyTetragonTest(double a, double b, double c, double d)
+    {
+        Console.WriteLine($"(a, b, c, d) == ({a:F9}, {b:F9}, {c:F9}, {d:F9}) ÇÃÇ∆Ç´ ...");
+
+		// degree -> rad
+		a *= Math.PI / 180.0;
+		b *= Math.PI / 180.0;
+		c *= Math.PI / 180.0;
+		d *= Math.PI / 180.0;
+
+		D2Point pB = new D2Point(0.0, 0.0);
+		D2Point pC = new D2Point(1.0, 0.0);
+		D2Point pA = GetCrossPoint(pB, pB + AngleToPoint((a + b), 1.0), pC, pC + AngleToPoint(Math.PI - c, 1.0));
+		D2Point pD = GetCrossPoint(pB, pB + AngleToPoint(b, 1.0), pC, pC + AngleToPoint(Math.PI - (c + d), 1.0));
+
+		double da = GetAngle(pA - pD);
+		double db = GetAngle(pB - pD);
+
+		double e = db - da;
+
+		// rad -> degree
+		e *= 180.0 / Math.PI;
+
+		Console.WriteLine($"... e == {e:F9} Ç…Ç»ÇËÇ‹Ç∑ÅB");
+    }
+
+    // ïΩñ ç¿ïW
+	public struct D2Point
+	{
+		public double X;
+		public double Y;
+
+		public D2Point(double x, double y)
+		{
+			this.X = x;
+			this.Y = y;
+		}
+
+		public static D2Point operator +(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X + b.X, a.Y + b.Y);
+		}
+
+		public static D2Point operator -(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X - b.X, a.Y - b.Y);
+		}
+	}
+
+    // p1-p2 Çí ÇÈíºê¸Ç∆ q1-q2 Çí ÇÈíºê¸ÇÃåì_Çï‘Ç∑ÅB
+	private static D2Point GetCrossPoint(D2Point p1, D2Point p2, D2Point q1, D2Point q2)
+	{
+		double pxd = p2.X - p1.X;
+		double qxd = q2.X - q1.X;
+		double pyd = p2.Y - p1.Y;
+		double qyd = q2.Y - q1.Y;
+
+		double pn = p1.Y * p2.X - p1.X * p2.Y;
+		double qn = q1.Y * q2.X - q1.X * q2.Y;
+
+		double d = pyd * qxd - pxd * qyd;
+
+		double x = (qn * pxd - pn * qxd) / d;
+		double y = (qn * pyd - pn * qyd) / d;
+
+		return new D2Point(x, y);
+	}
+
+	public static D2Point AngleToPoint(double angle, double distance)
+	{
+		return new D2Point(
+			distance * Math.Cos(angle),
+			distance * Math.Sin(angle)
+			);
+	}
+
+	public static double GetAngle(D2Point pt)
+	{
+        return GetAngle(pt.X, pt.Y);
+	}
+
+	public static double GetAngle(double x, double y)
+	{
+		if (y < 0.0) return Math.PI * 2.0 - GetAngle(x, -y);
+		if (x < 0.0) return Math.PI - GetAngle(-x, y);
+
+		if (x < y) return Math.PI / 2.0 - GetAngle(y, x);
+		//if (x < 1E-9) return 0.0; // ã…í[Ç…å¥ì_Ç…ãﬂÇ¢ç¿ïWÇÃèÍçáÅAèÌÇ… 0.0 Çï‘Ç∑ÅB
+
+		if (y <= 0.0) return 0.0;
+		if (y == x) return Math.PI / 4.0;
+
+		double r1 = 0.0;
+		double r2 = Math.PI / 4.0;
+		double t = y / x;
+		double rm;
+
+		for (int c = 1; ; c++)
+		{
+			rm = (r1 + r2) / 2.0;
+
+			if (50 <= c)
+				break;
+
+			double rmt = Math.Tan(rm);
+
+			if (t < rmt)
+				r2 = rm;
+			else
+				r1 = rm;
+		}
+		return rm;
+	}
+}
+
+----
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+	private const int MILLIS_PER_HOUR = 3600000;
+	private const double SNOW_INIT = 1.0;
+	private const double SNOWPLOW_POWER = 1.0;
+
+    public static void Main()
+    {
+        double l = 0.0;
+        double r = 1.0;
+
+        for (int c = 0; c < 50; c++)
+        {
+            double m = (l + r) / 2;
+            double rate = GetDistanceRate(m);
+
+            if (1.5 < rate)
+            {
+                l = m;
+            }
+            else
+            {
+                r = m;
+            }
+        }
+
+        {
+            double m = (l + r) / 2;
+            double millis = SNOW_INIT / m;
+
+            TimeSpan t = new TimeSpan(12, 0, 0);
+            t -= TimeSpan.FromMilliseconds(millis);
+
+            Console.WriteLine(t.ToString("hh\\:mm\\:ss\\.fff"));
+        }
+    }
+
+    private static double GetDistanceRate(double snowPerMillis)
+    {
+        double snow = SNOW_INIT;
+        double d = 0.0;
+
+        for (int t = 0; t < MILLIS_PER_HOUR; t++)
+        {
+            d += SNOWPLOW_POWER / snow;
+            snow += snowPerMillis;
+        }
+        double d1 = d;
+
+        for (int t = 0; t < MILLIS_PER_HOUR; t++)
+        {
+            d += SNOWPLOW_POWER / snow;
+            snow += snowPerMillis;
+        }
+        double d2 = d;
+
+        return d2 / d1;
+    }
+}
+
+----
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+    public static void Main()
+    {
+        double l = 0.0;
+        double r = 1.0;
+
+        for (int c = 0; c < 50; c++)
+        {
+            double m = (l + r) / 2;
+            double rate = GetDistanceRate(m);
+
+            if (1.5 < rate)
+            {
+                l = m;
+            }
+            else
+            {
+                r = m;
+            }
+        }
+
+        {
+            double m = (l + r) / 2;
+            double millis = 1.0 / m;
+
+            TimeSpan t = new TimeSpan(12, 0, 0);
+            t -= TimeSpan.FromMilliseconds(millis);
+
+            Console.WriteLine(t.ToString("hh\\:mm\\:ss\\.fff"));
+        }
+    }
+
+    private static double GetDistanceRate(double snowPerMillis)
+    {
+        double snow = 1.0;
+        double d = 0.0;
+
+        for (int t = 0; t < 3600000; t++)
+        {
+            d += 1.0 / snow;
+            snow += snowPerMillis;
+        }
+        double d1 = d;
+
+        for (int t = 0; t < 3600000; t++)
+        {
+            d += 1.0 / snow;
+            snow += snowPerMillis;
+        }
+        double d2 = d;
+
+        return d2 / d1;
+    }
+}
+
+----
+
+function* Fibonacci() {
+    var a = 1;
+    var b = 0;
+
+    for (; ; ) {
+        yield a += b;
+        yield b += a;
+    }
+}
+
+var g = Fibonacci();
+
+for (var c = 0; c < 50; c++) {
+    console.log(g.next().value);
+}
+
+----
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Security.Cryptography;
+
+public class Hello
+{
+    public static void Main()
+    {
+		for (int testcnt = 0; testcnt < 100; testcnt++)
+		{
+			ulong a = GetULongRand();
+			ulong b = GetULongRand();
+			ulong ans1;
+			ulong ans2;
+
+			ans1 = Add64(a, b);
+			unchecked { ans2 = a + b; }
+
+			if (ans1 != ans2)
+				throw null;
+
+			ans1 = Sub64(a, b);
+			unchecked { ans2 = a - b; }
+
+			if (ans1 != ans2)
+				throw null;
+
+			ans1 = Mul64(a, b);
+			unchecked { ans2 = a * b; }
+
+			if (ans1 != ans2)
+				throw null;
+
+			b &= ChooseOne(
+				ulong.MaxValue,
+				0x0000ffffffffffffUL,
+				0x00000000ffffffffUL,
+				0x000000000000ffffUL
+				);
+
+			if (b == 0)
+				b = 1;
+
+			ans1 = Div64(a, b);
+			ans2 = a / b;
+
+			if (ans1 != ans2)
+				throw null;
+
+			//Console.WriteLine("OK");
+		}
+		Console.WriteLine("OK!");
+	}
+
+	private static ulong Add64(ulong a, ulong b)
+	{
+		while (b != 0)
+		{
+			ulong na = a ^ b;
+			b = (a & b) << 1;
+			a = na;
+		}
+		return a;
+	}
+
+	private static ulong Sub64(ulong a, ulong b)
+	{
+		b ^= ulong.MaxValue;
+		b = Add64(b, 1);
+		return Add64(a, b);
+	}
+
+	private static ulong Mul64(ulong a, ulong b)
+	{
+		ulong c = 0;
+
+		for (; b != 0; b >>= 1, a <<= 1)
+			if ((b & 1) != 0)
+				c = Add64(c, a);
+
+		return c;
+	}
+
+	private static ulong Div64(ulong a, ulong b)
+	{
+		ulong c = 0;
+		ulong d = 1;
+
+		while ((b & (1UL << 63)) == 0)
+		{
+			b <<= 1;
+			d <<= 1;
+		}
+		while (d != 0)
+		{
+			if (a >= b)
+			{
+				a = Sub64(a, b);
+				c |= d;
+			}
+			b >>= 1;
+			d >>= 1;
+		}
+		return c;
+	}
+
+	// ====
+	// Random
+	// ====
+
+	private static RandomNumberGenerator Csprng = new RNGCryptoServiceProvider();
+
+	private static ulong GetULongRand()
+	{
+		byte[] data = new byte[8];
+		ulong value = 0;
+
+		Csprng.GetBytes(data);
+
+		foreach (byte b in data)
+		{
+			value <<= 8;
+			value |= b;
+		}
+		return value;
+	}
+
+	private static T ChooseOne<T>(params T[] values)
+	{
+		return values[(int)(GetULongRand() % (ulong)values.Length)];
+	}
+
+	// ====
+}
+
+----
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Security.Cryptography;
+
+public class Hello
+{
+    public static void Main()
+    {
+		for (int testcnt = 0; testcnt < 30; testcnt++)
+		{
+			int[] arr1 = GetRandIntList().ToArray();
+			int[] arr2 = arr1.ToArray(); // Cloning
+
+			Array.Sort(arr1, (a, b) => a - b);
+
+			CombSort(arr2, (a, b) => a - b);
+
+			for (int index = 0; index < arr1.Length; index++)
+				if (arr1[index] != arr2[index])
+					throw null;
+
+			//Console.WriteLine("OK");
+		}
+		Console.WriteLine("OK!");
+    }
+
+	private static void CombSort<T>(IList<T> list, Comparison<T> comp)
+	{
+		for (int h = list.Count; ; ) // comb sort
+		{
+			h = (int)(h / 1.3);
+
+			//if (h < 2) // ñ{óàÇÕÇ±ÇøÇÁ
+			if (h < 7) // Ç±ÇÃÇ†ÇΩÇËÇ™ó«Ç¢ÇÁÇµÇ¢ÅB
+				break;
+
+			for (int index = h; index < list.Count; index++)
+			{
+				if (comp(list[index - h], list[index]) > 0) // ãtèáÇ©
+				{
+					// ì¸ÇÍë÷Ç¶
+					T tmp = list[index - h];
+					list[index - h] = list[index];
+					list[index] = tmp;
+				}
+			}
+		}
+		for (int h = 1; h < list.Count; h++) // gnome sort
+		{
+			for (int index = h; 0 < index; index--)
+			{
+				if (comp(list[index - 1], list[index]) > 0) // ãtèáÇ©
+				{
+					// ì¸ÇÍë÷Ç¶
+					T tmp = list[index - 1];
+					list[index - 1] = list[index];
+					list[index] = tmp;
+				}
+				else // ê≥èáÇ©
+				{
+					break;
+				}
+			}
+		}
+	}
+
+    // ====
+    // Random
+    // ====
+
+	private static RandomNumberGenerator Csprng = new RNGCryptoServiceProvider();
+
+	private static uint GetRandUInt()
+	{
+		byte[] data = new byte[4];
+		uint value = 0;
+
+		Csprng.GetBytes(data);
+
+		foreach (byte b in data)
+		{
+			value <<= 8;
+			value |= b;
+		}
+		return value;
+	}
+
+	private static int GetRandInt(int modulo)
+	{
+		return (int)(GetRandUInt() % (uint)modulo);
+	}
+
+	private static IEnumerable<int> GetRandIntList()
+	{
+		int count = GetRandInt(10000);
+		int limit = GetRandInt(10000) + 1;
+
+		for (int index = 0; index < count; index++)
+			yield return GetRandInt(limit);
+	}
+
+	// ====
+}
+
+----
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Security.Cryptography;
+
+public class Hello
+{
+    public static void Main()
+	{
+		for (int testcnt = 0; testcnt < 100; testcnt++)
+		{
+			ulong a = GetULongRand();
+			ulong b = GetULongRand();
+			ulong m = GetULongRandNonZero();
+			ulong c = ModPow64(a, b, m);
+
+			Console.WriteLine("ModPow ( " + a + " , " + b + " , " + m + " ) == " + c);
+		}
+	}
+
+	private static ulong ModPow64(ulong b, ulong e, ulong m)
+	{
+		ulong a = 1;
+
+		for (; 1 <= e; e >>= 1)
+		{
+			if ((e & 1) != 0)
+				a = ModMul64(a, b, m);
+
+			b = ModMul64(b, b, m);
+		}
+		return a % m;
+	}
+
+	private static ulong ModMul64(ulong b, ulong e, ulong m)
+	{
+		ulong a = 0;
+
+		for (; 1 <= e; e >>= 1)
+		{
+			if ((e & 1) != 0)
+				a = ModAdd64(a, b, m);
+
+			b = ModAdd64(b, b, m);
+		}
+		return a;
+	}
+
+	private static ulong ModAdd64(ulong a, ulong b, ulong m)
+	{
+		ulong r = (ulong.MaxValue % m + 1) % m;
+
+		while (ulong.MaxValue - a < b)
+		{
+			unchecked { a += b; }
+			b = r;
+		}
+		return (a + b) % m;
+	}
+
+	// ====
+	// Random
+	// ====
+
+	private static RandomNumberGenerator Csprng = new RNGCryptoServiceProvider();
+
+	private static ulong GetULongRand()
+	{
+		byte[] data = new byte[8];
+		ulong value = 0;
+
+		Csprng.GetBytes(data);
+
+		foreach (byte b in data)
+		{
+			value <<= 8;
+			value |= b;
+		}
+		return value;
+	}
+
+	private static ulong GetULongRandNonZero()
+	{
+		ulong value;
+
+		do
+		{
+			value = GetULongRand();
+		}
+		while (value == 0);
+
+		return value;
+	}
+
+	// ====
+}
+
+----
+
+function* Endless(v) {
+    for (; ; ) {
+        yield v;
+    }
+}
+
+function* Repeat(v, n) {
+    for (var i = 0; i < n; i++) {
+        yield v;
+    }
+}
+
+function* Gaps(n) {
+    yield n * (n - 1) - 1;
+    yield* Endless(n - 1);
+}
+
+function* Sieve(gaps) {
+    for (; ; ) {
+        yield* Repeat(1, gaps());
+        yield 0;
+    }
+}
+
+function Supplier(e) {
+    return () => e.next().value;
+}
+
+function Both(a, b) {
+    return () => a() & b();
+}
+
+function* Primes(max) {
+    var s = () => 1;
+
+    for (var n = 2; n <= max; n++) {
+        if (s()) {
+            s = Both(s, Supplier(Sieve(Supplier(Gaps(n)))));
+            yield n;
+        }
+    }
+}
+
+for (var n of Primes(100)) {
+    console.log(n);
+}
+
+----
+
+#include <stdio.h>
+
+main()
+{
+	void *a[2];
+	void ********************************************************************************************************************************
+         ********************************************************************************************************************************p;
+	void *q;
+
+	p = (void *)a;
+
+	a[0] = p;
+	a[1] = p;
+
+	q = *++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--
+		*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*--*--*++*++*p++;
+
+	printf("%p\n%p\n%p\n%p\n%p\n", a + 1, a[0], a[1], p, q);
+}
+
+----
+
+#include <stdio.h>
+
+int main()
+{
+	int n;
+
+	for(n = 1; n <= 100; n++)
+	{
+		printf("%d\n\0Fizz\n\0______FizzBuzz\n" + (n % 3 + 1 >> 1 ^ 1 ^ ((n % 5 + 3 >> 2 ^ 1) * 5)) * 4, n);
+	}
+}
+
+----
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+#define N 3
+#define EXP_MAX 1000
+#define BLOCKSZ 10
+#define VALSZ 10000000000000000000ul
+
+typedef unsigned long uint64;
+typedef unsigned __int128 uint128;
+
+typedef struct B_st {
+    uint64 Vals[BLOCKSZ];
+    struct B_st *Prev;
+    struct B_st *Next;
+}
+B_t;
+
+static B_t Top;
+static B_t *Last;
+
+static void MulN(uint64 n) {
+    B_t *b = &Top;
+    B_t *bn;
+    int index;
+    uint128 v = 0;
+
+    for(; ; ) {
+        for(index = 0; index < BLOCKSZ; index++) {
+            v += (uint128)b->Vals[index] * n;
+            b->Vals[index] = (uint64)(v % VALSZ);
+            v /= VALSZ;
+        }
+        bn = b->Next;
+
+        if(!bn) {
+            if(!v) {
+                break;
+            }
+            bn = (B_t *)calloc(1, sizeof(B_t));
+
+            if(!bn)
+                exit(1);
+
+            b->Next = bn;
+            bn->Prev = b;
+            Last = bn;
+        }
+        b = bn;
+    }
+}
+
+static void DoPrint(uint64 n, uint64 exp) {
+    B_t *b = Last;
+    int index;
+
+    printf("%lu^%lu=", n, exp);
+
+    for(index = BLOCKSZ - 1; !b->Vals[index]; index--);
+
+    printf("%lu", b->Vals[index]);
+
+    while(0 <= --index) {
+        printf("%019lu", b->Vals[index]);
+    }
+    while(b = b->Prev) {
+        for(index = BLOCKSZ - 1; 0 <= index; index--) {
+            printf("%019lu", b->Vals[index]);
+        }
+    }
+    printf("\n");
+}
+
+int main(void) {
+    uint64 exp;
+
+    Top.Vals[0] = 1;
+    Last = &Top;
+
+    DoPrint(N, 0);
+
+    for(exp = 1; exp <= EXP_MAX; exp++) {
+        MulN(N);
+        DoPrint(N, exp);
+    }
+}
+
+----
+
+#include <stdio.h>
+int main(void){
+    char p[] = "12345678HelloWorld";
+    *(char **)p = p;
+    printf("%s\n", ******************************(char *******************************)p + 8);
+}
+
+----
