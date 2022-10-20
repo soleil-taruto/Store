@@ -26,7 +26,7 @@ public class Hello
 		HashSet<string> hs1 = new HashSet<string>();
 		HashSet<int[]> hs2 = new HashSet<int[]>(new IntsIEC());
 
-		for (int testcnt = 0; testcnt < 30000; testcnt++)
+		for (int testcnt = 0; testcnt < 10000; testcnt++)
 		{
 			int[] value = GetRandIntList(GetRandInt(valueScale));
 			string strValue = ToString(value);
