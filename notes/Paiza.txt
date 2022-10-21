@@ -1,4 +1,206 @@
 ----
+IntSqrt UIntSqrt
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Security.Cryptography;
+
+public class Hello
+{
+    public static void Main()
+    {
+		Test01_a(uint.MaxValue - 3, (ulong)(uint.MaxValue - 3) * (uint.MaxValue - 3), (ulong)(uint.MaxValue - 2) * (uint.MaxValue - 2) - 1);
+		Test01_a(uint.MaxValue - 2, (ulong)(uint.MaxValue - 2) * (uint.MaxValue - 2), (ulong)(uint.MaxValue - 1) * (uint.MaxValue - 1) - 1);
+		Test01_a(uint.MaxValue - 1, (ulong)(uint.MaxValue - 1) * (uint.MaxValue - 1), (ulong)(uint.MaxValue - 0) * (uint.MaxValue - 0) - 1);
+		Test01_a(uint.MaxValue - 0, (ulong)(uint.MaxValue - 0) * (uint.MaxValue - 0), ulong.MaxValue);
+
+		Test01_b(10000, 100);
+		Test01_b(10000, 10000);
+		Test01_b(10000, 1000000);
+		Test01_b(10000, 100000000);
+		Test01_b(10000, 10000000000);
+		Test01_b(10000, 1000000000000);
+		Test01_b(10000, 100000000000000);
+		Test01_b(10000, 10000000000000000);
+		Test01_b(10000, 1000000000000000000);
+		Test01_b(10000, 18440000000000000000);
+
+		Test01_c(int.MaxValue - 3, (long)(int.MaxValue - 3) * (int.MaxValue - 3), (long)(int.MaxValue - 2) * (int.MaxValue - 2) - 1);
+		Test01_c(int.MaxValue - 2, (long)(int.MaxValue - 2) * (int.MaxValue - 2), (long)(int.MaxValue - 1) * (int.MaxValue - 1) - 1);
+		Test01_c(int.MaxValue - 1, (long)(int.MaxValue - 1) * (int.MaxValue - 1), (long)(int.MaxValue - 0) * (int.MaxValue - 0) - 1);
+		Test01_c(int.MaxValue - 0, (long)(int.MaxValue - 0) * (int.MaxValue - 0), ((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) - 1);
+
+		ToThrowPrint(() => IntSqrt(((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) + 0));
+		ToThrowPrint(() => IntSqrt(((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) + 1));
+		ToThrowPrint(() => IntSqrt(((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) + 2));
+		ToThrowPrint(() => IntSqrt(((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) + 3));
+		ToThrowPrint(() => IntSqrt(long.MaxValue - 0));
+		ToThrowPrint(() => IntSqrt(long.MaxValue - 1));
+		ToThrowPrint(() => IntSqrt(long.MaxValue - 2));
+		ToThrowPrint(() => IntSqrt(long.MaxValue - 3));
+
+		Test01_d(10000, 100);
+		Test01_d(10000, 10000);
+		Test01_d(10000, 1000000);
+		Test01_d(10000, 100000000);
+		Test01_d(10000, 10000000000);
+		Test01_d(10000, 1000000000000);
+		Test01_d(10000, 100000000000000);
+		Test01_d(10000, 10000000000000000);
+		Test01_d(10000, 1000000000000000000);
+		Test01_d(10000, 4610000000000000000);
+
+		Console.WriteLine("OK!");
+	}
+
+	private static void Test01_a(uint expectRet, ulong minPrm, ulong maxPrm)
+	{
+		for (ulong prm = minPrm; ; prm++)
+		{
+			uint ret = UIntSqrt(prm);
+
+			if (ret != expectRet)
+				throw null; // BUG !!!
+
+			// ----
+
+			if (maxPrm <= prm)
+				break;
+
+			if (minPrm + 3000 < maxPrm) // 多い -> 中スキップ
+				if (minPrm + 1000 < prm && prm < maxPrm - 1000)
+					prm += (maxPrm - prm) / 2;
+		}
+		Console.WriteLine("OK");
+	}
+
+	private static void Test01_b(int testCount, ulong prmScale)
+	{
+		for (int testcnt = 0; testcnt < testCount; testcnt++)
+		{
+			ulong prm = GetULongRand() % prmScale;
+			uint ret = UIntSqrt(prm);
+
+			if ((ulong)ret * ret > prm)
+				throw null; // BUG !!!
+
+			if ((ulong)(ret + 1) * (ret + 1) <= prm)
+				throw null; // BUG !!!
+		}
+		Console.WriteLine("OK");
+	}
+
+	private static void Test01_c(int expectRet, long minPrm, long maxPrm)
+	{
+		for (long prm = minPrm; ; prm++)
+		{
+			int ret = IntSqrt(prm);
+
+			if (ret != expectRet)
+				throw null; // BUG !!!
+
+			// ----
+
+			if (maxPrm <= prm)
+				break;
+
+			if (minPrm + 3000 < maxPrm) // 多い -> 中スキップ
+				if (minPrm + 1000 < prm && prm < maxPrm - 1000)
+					prm += (maxPrm - prm) / 2;
+		}
+		Console.WriteLine("OK");
+	}
+
+	private static void Test01_d(int testCount, long prmScale)
+	{
+		for (int testcnt = 0; testcnt < testCount; testcnt++)
+		{
+			long prm = (long)(GetULongRand() % (ulong)prmScale);
+			int ret = IntSqrt(prm);
+
+			if ((long)ret * ret > prm)
+				throw null; // BUG !!!
+
+			if ((long)(ret + 1) * (ret + 1) <= prm)
+				throw null; // BUG !!!
+		}
+		Console.WriteLine("OK");
+	}
+
+	// ----
+
+	public static Exception ToThrow(Action routine)
+	{
+		try
+		{
+			routine();
+		}
+		catch (Exception ex)
+		{
+			return ex;
+		}
+		throw new Exception("例外を投げませんでした。");
+	}
+
+	public static void ToThrowPrint(Action routine)
+	{
+		Console.WriteLine("想定された例外：" + ToThrow(routine).Message);
+	}
+
+	private static RandomNumberGenerator Csprng = new RNGCryptoServiceProvider();
+
+	private static ulong GetULongRand()
+	{
+		byte[] data = new byte[8];
+		ulong value = 0;
+
+		Csprng.GetBytes(data);
+
+		foreach (byte b in data)
+		{
+			value <<= 8;
+			value |= b;
+		}
+		return value;
+	}
+
+	// ====
+	// ====
+	// ====
+
+	public static int IntSqrt(long value)
+	{
+		if (value < 0 || (1L << 62) <= value)
+			throw new ArgumentException();
+
+		return (int)UIntSqrt((ulong)value);
+	}
+
+	public static uint UIntSqrt(ulong value)
+	{
+		ulong l = 0;
+		ulong r = (ulong)uint.MaxValue + 1;
+
+		while (l + 1 < r)
+		{
+			ulong m = (l + r) / 2;
+
+			if (m * m <= value)
+			{
+				l = m;
+			}
+			else
+			{
+				r = m;
+			}
+		}
+		return (uint)l;
+	}
+}
+
+----
 Sin Cos from 0 to 90 degree (Queue)
 
 using System;
