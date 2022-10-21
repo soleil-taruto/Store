@@ -30,18 +30,18 @@ public class Hello
 	{
 		AngleInfo last = angles.Dequeue();
 
-		angles.Enqueue(null);
+		angles.Enqueue(null); // put ender
 
 		for (; ; )
 		{
 			AngleInfo next = angles.Dequeue();
 
-			if (next == null)
+			if (next == null) // is ender
 				break;
 
 			double mDeg = (last.Degree + next.Degree) / 2.0;
 			D2Point mPt = (last.Point + next.Point) / 2.0;
-			double d = Math.Sqrt(mPt.X * mPt.X + mPt.Y * mPt.Y);
+			double d = M_Sqrt(mPt.X * mPt.X + mPt.Y * mPt.Y);
 			mPt /= d;
 
 			angles.Enqueue(last);
@@ -50,6 +50,32 @@ public class Hello
 			last = next;
 		}
 		angles.Enqueue(last);
+	}
+
+	private static double M_Sqrt(double value)
+	{
+		if (value < 0.0)
+			throw new ArgumentException();
+
+		double l = 0.0;
+		double r = Math.Max(1.0, value);
+
+		for (int c = 0; c < 50; c++)
+		{
+			double m = (l + r) / 2.0;
+			double mv = m * m;
+
+			if (mv < value)
+				l = m;
+			else
+				r = m;
+		}
+
+		{
+			double m = (l + r) / 2.0;
+
+			return m;
+		}
 	}
 
 	private class AngleInfo
@@ -134,7 +160,7 @@ public class Hello
 
 			double mDeg = (last.Degree + next.Degree) / 2.0;
 			D2Point mPt = (last.Point + next.Point) / 2.0;
-			double d = Math.Sqrt(mPt.X * mPt.X + mPt.Y * mPt.Y);
+			double d = M_Sqrt(mPt.X * mPt.X + mPt.Y * mPt.Y);
 			mPt /= d;
 
 			yield return last;
@@ -143,6 +169,32 @@ public class Hello
 			last = next;
 		}
 		yield return last;
+	}
+
+	private static double M_Sqrt(double value)
+	{
+		if (value < 0.0)
+			throw new ArgumentException();
+
+		double l = 0.0;
+		double r = Math.Max(1.0, value);
+
+		for (int c = 0; c < 50; c++)
+		{
+			double m = (l + r) / 2.0;
+			double mv = m * m;
+
+			if (mv < value)
+				l = m;
+			else
+				r = m;
+		}
+
+		{
+			double m = (l + r) / 2.0;
+
+			return m;
+		}
 	}
 
 	private class AngleInfo
