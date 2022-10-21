@@ -14,10 +14,10 @@ public class Hello
 		{
 			new AngleInfo() { Degree =  0.0, Point = new D2Point(1.0, 0.0) },
 			new AngleInfo() { Degree = 90.0, Point = new D2Point(0.0, 1.0) },
+			null, // ender
 		});
 
-		for (int c = 0; c < 10; c++)
-			Subdivide(angles);
+		Subdivide(angles, 10);
 
 		foreach (AngleInfo angle in angles)
 		{
@@ -26,18 +26,25 @@ public class Hello
 		}
 	}
 
-	private static void Subdivide(Queue<AngleInfo> angles)
+	private static void Subdivide(Queue<AngleInfo> angles, int depth)
 	{
 		AngleInfo last = angles.Dequeue();
-
-		angles.Enqueue(null); // put ender
 
 		for (; ; )
 		{
 			AngleInfo next = angles.Dequeue();
 
 			if (next == null) // is ender
-				break;
+			{
+				angles.Enqueue(last);
+
+				if (--depth <= 0)
+					break;
+
+				angles.Enqueue(null); // put ender
+				last = angles.Dequeue();
+				continue;
+			}
 
 			double mDeg = (last.Degree + next.Degree) / 2.0;
 			D2Point mPt = (last.Point + next.Point) / 2.0;
@@ -49,7 +56,6 @@ public class Hello
 
 			last = next;
 		}
-		angles.Enqueue(last);
 	}
 
 	private static double M_Sqrt(double value)
@@ -84,7 +90,7 @@ public class Hello
 		public D2Point Point;
 	}
 
-	public struct D2Point
+    public struct D2Point
 	{
 		public double X;
 		public double Y;
@@ -115,6 +121,14 @@ public class Hello
 			return new D2Point(a.X / b, a.Y / b);
 		}
 	}
+}
+
+----
+
+public class Hello
+{
+    public static void Main()
+    { }
 }
 
 ----
