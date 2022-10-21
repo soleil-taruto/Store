@@ -1,4 +1,190 @@
 ----
+Sin Cos from 0 to 90 degree (Queue)
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+    public static void Main()
+    {
+		Queue<AngleInfo> angles = new Queue<AngleInfo>(new AngleInfo[]
+		{
+			new AngleInfo() { Degree =  0.0, Point = new D2Point(1.0, 0.0) },
+			new AngleInfo() { Degree = 90.0, Point = new D2Point(0.0, 1.0) },
+		});
+
+		for (int c = 0; c < 10; c++)
+			Subdivide(angles);
+
+		foreach (AngleInfo angle in angles)
+		{
+			Console.WriteLine($"Cos {angle.Degree:F9} degree is {angle.Point.X:F15}");
+			Console.WriteLine($"Sin {angle.Degree:F9} degree is {angle.Point.Y:F15}");
+		}
+	}
+
+	private static void Subdivide(Queue<AngleInfo> angles)
+	{
+		AngleInfo last = angles.Dequeue();
+
+		angles.Enqueue(null);
+
+		for (; ; )
+		{
+			AngleInfo next = angles.Dequeue();
+
+			if (next == null)
+				break;
+
+			double mDeg = (last.Degree + next.Degree) / 2.0;
+			D2Point mPt = (last.Point + next.Point) / 2.0;
+			double d = Math.Sqrt(mPt.X * mPt.X + mPt.Y * mPt.Y);
+			mPt /= d;
+
+			angles.Enqueue(last);
+			angles.Enqueue(new AngleInfo() { Degree = mDeg, Point = mPt });
+
+			last = next;
+		}
+		angles.Enqueue(last);
+	}
+
+	private class AngleInfo
+	{
+		public double Degree;
+		public D2Point Point;
+	}
+
+	public struct D2Point
+	{
+		public double X;
+		public double Y;
+
+		public D2Point(double x, double y)
+		{
+			this.X = x;
+			this.Y = y;
+		}
+
+		public static D2Point operator +(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X + b.X, a.Y + b.Y);
+		}
+
+		public static D2Point operator -(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X - b.X, a.Y - b.Y);
+		}
+
+		public static D2Point operator *(D2Point a, double b)
+		{
+			return new D2Point(a.X * b, a.Y * b);
+		}
+
+		public static D2Point operator /(D2Point a, double b)
+		{
+			return new D2Point(a.X / b, a.Y / b);
+		}
+	}
+}
+
+----
+Sin Cos from 0 to 90 degree
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+    public static void Main()
+    {
+		IEnumerable<AngleInfo> angles = new AngleInfo[]
+		{
+			new AngleInfo() { Degree =  0.0, Point = new D2Point(1.0, 0.0) },
+			new AngleInfo() { Degree = 90.0, Point = new D2Point(0.0, 1.0) },
+		};
+
+		for (int c = 0; c < 10; c++)
+			angles = Subdivide(angles);
+
+		foreach (AngleInfo angle in angles)
+		{
+			Console.WriteLine($"Cos {angle.Degree:F9} degree is {angle.Point.X:F15}");
+			Console.WriteLine($"Sin {angle.Degree:F9} degree is {angle.Point.Y:F15}");
+		}
+	}
+
+	private static IEnumerable<AngleInfo> Subdivide(IEnumerable<AngleInfo> angles)
+	{
+		IEnumerator<AngleInfo> reader = angles.GetEnumerator();
+
+		if (!reader.MoveNext())
+			throw new Exception("angles is empty");
+
+		AngleInfo last = reader.Current;
+
+		while (reader.MoveNext())
+		{
+			AngleInfo next = reader.Current;
+
+			double mDeg = (last.Degree + next.Degree) / 2.0;
+			D2Point mPt = (last.Point + next.Point) / 2.0;
+			double d = Math.Sqrt(mPt.X * mPt.X + mPt.Y * mPt.Y);
+			mPt /= d;
+
+			yield return last;
+			yield return new AngleInfo() { Degree = mDeg, Point = mPt };
+
+			last = next;
+		}
+		yield return last;
+	}
+
+	private class AngleInfo
+	{
+		public double Degree;
+		public D2Point Point;
+	}
+
+	public struct D2Point
+	{
+		public double X;
+		public double Y;
+
+		public D2Point(double x, double y)
+		{
+			this.X = x;
+			this.Y = y;
+		}
+
+		public static D2Point operator +(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X + b.X, a.Y + b.Y);
+		}
+
+		public static D2Point operator -(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X - b.X, a.Y - b.Y);
+		}
+
+		public static D2Point operator *(D2Point a, double b)
+		{
+			return new D2Point(a.X * b, a.Y * b);
+		}
+
+		public static D2Point operator /(D2Point a, double b)
+		{
+			return new D2Point(a.X / b, a.Y / b);
+		}
+	}
+}
+
+----
 
 using System;
 using System.Collections.Generic;
