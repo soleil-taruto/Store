@@ -272,6 +272,28 @@ public class Hello
 		}
 	}
 
+    //*
+	private static double M_Sqrt(double value)
+	{
+		if (value < 0.0)
+			throw new ArgumentException();
+
+		double l = 0.0;
+		double r = Math.Max(1.0, value);
+
+		for (int c = 0; c < 50; c++)
+		{
+			double m = (l + r) / 2.0;
+			double mv = m * m;
+
+			if (mv <= value)
+				l = m;
+			else
+				r = m;
+		}
+		return l;
+	}
+    /*/
 	private static double M_Sqrt(double value)
 	{
 		if (value < 0.0)
@@ -297,6 +319,7 @@ public class Hello
 			return m;
 		}
 	}
+	//*/
 
 	private class AngleInfo
 	{
@@ -399,6 +422,28 @@ public class Hello
 		yield return last;
 	}
 
+    //*
+	private static double M_Sqrt(double value)
+	{
+		if (value < 0.0)
+			throw new ArgumentException();
+
+		double l = 0.0;
+		double r = Math.Max(1.0, value);
+
+		for (int c = 0; c < 50; c++)
+		{
+			double m = (l + r) / 2.0;
+			double mv = m * m;
+
+			if (mv <= value)
+				l = m;
+			else
+				r = m;
+		}
+		return l;
+	}
+    /*/
 	private static double M_Sqrt(double value)
 	{
 		if (value < 0.0)
@@ -424,6 +469,7 @@ public class Hello
 			return m;
 		}
 	}
+	//*/
 
 	private class AngleInfo
 	{
