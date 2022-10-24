@@ -272,7 +272,7 @@ public class Hello
 		}
 	}
 
-    //*
+    /*
 	private static double M_Sqrt(double value)
 	{
 		if (value < 0.0)
@@ -422,7 +422,7 @@ public class Hello
 		yield return last;
 	}
 
-    //*
+    /*
 	private static double M_Sqrt(double value)
 	{
 		if (value < 0.0)
