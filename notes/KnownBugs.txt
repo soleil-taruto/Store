@@ -1,6 +1,6 @@
 ----
 2022.10.19
-Extension.cs, SCommon.cs ÇÃ ForEach
+Extensions.cs, SCommon.cs ÇÃ ForEach
 
 åÎÅF
 	public static IEnumerable<T> ForEach<T>(this IEnumerable<T> src, Action<T> action)
