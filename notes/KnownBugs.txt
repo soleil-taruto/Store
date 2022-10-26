@@ -14,10 +14,11 @@ Extensions.cs, SCommon.cs ÇÃ ForEach
 ê≥ÅF
 	public static IEnumerable<T> ForEach<T>(this IEnumerable<T> src, Action<T> action)
 	{
-		foreach (T element in src)
-		{
+		List<T> list = src.ToList();
+
+		foreach (T element in list)
 			action(element);
-			yield return element;
-		}
+
+		return list;
 	}
 
