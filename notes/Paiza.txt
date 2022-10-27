@@ -1,4 +1,75 @@
 ----
+Sin Cos from 0 to 90 degree Part2
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+    public static void Main()
+    {
+		D2Point[] Points = Enumerable.Range(0, 91).Select(dummy => new D2Point(0.0, 1.0)).ToArray();
+
+		Points[0].X = 1.0;
+		Points[0].Y = 0.0;
+
+		for (int c = 0; c < 24000; c++)
+		{
+			for (int d = 1; d <= 89; d++)
+			{
+				Points[d] = (Points[d - 1] + Points[d + 1]) / 2.0;
+				Points[d] /= GetDistance(Points[d]);
+			}
+		}
+
+		for (int d = 0; d <= 90; d++)
+		{
+			Console.WriteLine($"Cos {d} degree is {Points[d].X:F12}");
+			Console.WriteLine($"Sin {d} degree is {Points[d].Y:F12}");
+		}
+	}
+
+	private static double GetDistance(D2Point pt)
+	{
+		return Math.Sqrt(pt.X * pt.X + pt.Y * pt.Y);
+	}
+
+	public struct D2Point
+	{
+		public double X;
+		public double Y;
+
+		public D2Point(double x, double y)
+		{
+			this.X = x;
+			this.Y = y;
+		}
+
+		public static D2Point operator +(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X + b.X, a.Y + b.Y);
+		}
+
+		public static D2Point operator -(D2Point a, D2Point b)
+		{
+			return new D2Point(a.X - b.X, a.Y - b.Y);
+		}
+
+		public static D2Point operator *(D2Point a, double b)
+		{
+			return new D2Point(a.X * b, a.Y * b);
+		}
+
+		public static D2Point operator /(D2Point a, double b)
+		{
+			return new D2Point(a.X / b, a.Y / b);
+		}
+	}
+}
+
+----
 IntSqrt UIntSqrt
 
 using System;
