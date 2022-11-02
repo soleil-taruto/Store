@@ -1,4 +1,210 @@
 ----
+PrimeVoid_k
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+	//private const int RANGE_SCALE = 10000;
+	//private const int RANGE_SCALE = 100000;
+	//private const int RANGE_SCALE = 1000000;
+	private const int RANGE_SCALE = 3000000;
+	//private const int RANGE_SCALE = 10000000;
+	//private const int RANGE_SCALE = 100000000;
+	//private const int RANGE_SCALE = 1000000000;
+
+	private static int[] Primes =
+		Enumerable.Range(0, RANGE_SCALE).Where(n => IsPrime((ulong)n))
+		.Concat(new int[] {
+		Enumerable.Range(RANGE_SCALE, int.MaxValue - RANGE_SCALE).First(n => IsPrime((ulong)n)) })
+		.ToArray();
+
+    public static void Main()
+    {
+		for (int k = 1; k <= 100; k++)
+			PrintPrimeVoid(k);
+    }
+
+	private static void PrintPrimeVoid(int k)
+	{
+		Console.WriteLine($"2 以上 {Primes[Primes.Length - 1]} 以下の異なる 2 つの素数についてその間にある素数の個数が {k} 未満のもののうち差が最大となるものは：");
+
+		int maxDiff = Enumerable.Range(0, Primes.Length - k).Select(i => Primes[i + k] - Primes[i]).Max();
+
+		foreach (int i in Enumerable.Range(0, Primes.Length - k))
+			if (maxDiff == Primes[i + k] - Primes[i])
+				Console.WriteLine($"{Primes[i]} と {Primes[i + k]} その差は {Primes[i + k] - Primes[i]}");
+
+		Console.WriteLine("");
+	}
+
+	// ====
+	// MillerRabin
+	// ====
+
+	public static bool IsPrime(ulong n)
+	{
+		if (n <= 61)
+			return new uint[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61 }.Contains((uint)n);
+
+		if (n % 2 == 0)
+			return false;
+
+		ulong d = n;
+		int r;
+		for (r = 0; ((d >>= 1) & 1) == 0; r++) ;
+
+		// memo:
+		// -- https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
+		// if n < 4,759,123,141, it is enough to test a = 2, 7, and 61;
+		// if n < 18,446,744,073,709,551,616 = 2^64, it is enough to test a = 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, and 37.
+
+		if (n <= uint.MaxValue)
+			return !new uint[] { 2, 7, 61 }
+				.Any(x => !MillerRabinTest32(x, (uint)d, r, (uint)n));
+		else
+			return !new uint[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37 }
+				.Any(x => !MillerRabinTest64((ulong)x, d, r, n));
+	}
+
+	private static bool MillerRabinTest32(uint x, uint d, int r, uint n)
+	{
+		x = ModPow32(x, d, n);
+
+		if (x != 1 && x != n - 1)
+		{
+			for (int s = r; ; s--)
+			{
+				if (s <= 0)
+					return false;
+
+				x = (uint)(((ulong)x * x) % n);
+
+				if (x == n - 1)
+					break;
+			}
+		}
+		return true;
+	}
+
+	private static uint ModPow32(uint b, uint e, uint m)
+	{
+		uint a = 1;
+
+		for (; 1 <= e; e >>= 1)
+		{
+			if ((e & 1) != 0)
+				a = (uint)(((ulong)a * b) % m);
+
+			b = (uint)(((ulong)b * b) % m);
+		}
+		return a;
+	}
+
+	private static bool MillerRabinTest64(ulong x, ulong d, int r, ulong n)
+	{
+		x = ModPow64(x, d, n);
+
+		if (x != 1 && x != n - 1)
+		{
+			for (int c = r; ; c--)
+			{
+				if (c <= 0)
+					return false;
+
+				x = ModPow64(x, 2, n);
+
+				if (x == n - 1)
+					break;
+			}
+		}
+		return true;
+	}
+
+	private static ulong ModPow64(ulong b, ulong e, ulong m)
+	{
+		ulong a = 1;
+
+		for (; 1 <= e; e >>= 1)
+		{
+			if ((e & 1) != 0)
+				a = ModMul64(a, b, m);
+
+			b = ModMul64(b, b, m);
+		}
+		return a;
+	}
+
+	private static ulong ModMul64(ulong b, ulong e, ulong m)
+	{
+		ulong a = 0;
+
+		for (; 1 <= e; e >>= 1)
+		{
+			if ((e & 1) != 0)
+				a = ModAdd64(a, b, m);
+
+			b = ModAdd64(b, b, m);
+		}
+		return a;
+	}
+
+	private static ulong ModAdd64(ulong a, ulong b, ulong m)
+	{
+		ulong r = (ulong.MaxValue % m + 1) % m;
+
+		while (ulong.MaxValue - a < b)
+		{
+			unchecked { a += b; }
+			b = r;
+		}
+		return (a + b) % m;
+	}
+
+	// =====
+}
+
+----
+Xorshift-64 コピペ用
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class Hello
+{
+    public static void Main()
+    {
+		RndCtr = (ulong)DateTime.Now.Ticks;
+
+		for (int c = 0; c < 100; c++)
+		{
+			Console.WriteLine(GetRandULong());
+		}
+	}
+
+	// ====
+	// Random
+	// ====
+
+	public static ulong RndCtr = 1;
+
+	public static ulong GetRandULong()
+	{
+		RndCtr ^= RndCtr << 13;
+		RndCtr ^= RndCtr >> 7;
+		RndCtr ^= RndCtr << 17;
+		return RndCtr;
+	}
+
+	// ====
+}
+
+----
 Sin Cos from 0 to 90 degree Part2
 
 using System;
