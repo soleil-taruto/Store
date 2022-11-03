@@ -1,4 +1,119 @@
 ----
+PrimeVoid_k (2)
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <malloc.h>
+
+// ====
+// Eratosthenes
+// ====
+
+//	#define N 1875000000 // 3.0E+10 / 16
+//	#define N 187500000
+//	#define N 18750000
+//	#define N 6250000 // 1.0E+8 / 16
+	#define N 6250001 // (1.0E+8 + 16) / 16
+
+#define N_P13 15015
+
+void GetPrimes(int *p)
+{
+	unsigned char *t = (unsigned char *)malloc(N); // 8-bit uint array
+	unsigned long c;
+	unsigned long d;
+	unsigned int i; // 32-bit uint
+
+	if(!t)
+		exit(1); // fatal
+
+	memset(t, 0x00, N_P13);
+
+//	printf("2\n");
+    *p++ = 2;
+
+	for (c = 3; c <= 13; c += 2)
+	{
+		if (c != 9)
+		{
+//			printf("%llu\n", c);
+            *p++ = (int)c;
+
+			for (d = c; d / 16 < N_P13; d += c * 2)
+			{
+				t[d / 16] |= 1 << d / 2 % 8;
+			}
+		}
+	}
+	for (i = N_P13; i + N_P13 <= N; i += N_P13)
+	{
+		memcpy(t + i, t, N_P13);
+	}
+	for (; i < N; i++)
+	{
+		t[i] = t[i - N_P13];
+	}
+	for (c = 17; c / 16 < N; c += 2)
+	{
+		if (!(t[c / 16] & (1 << c / 2 % 8)))
+		{
+//			printf("%llu\n", c);
+            *p++ = (int)c;
+
+			if (c < 0x100000000) // If c < 2^32
+			{
+				for(d = c * c; d / 16 < N; d += c * 2)
+				{
+					t[d / 16] |= 1 << d / 2 % 8;
+				}
+			}
+		}
+	}
+	free(t);
+
+	*p = 0; // put ender
+}
+
+// ====
+
+static void PrintPrimeVoid(int *primes, int primeCount, int k)
+{
+    printf("2 ˆÈã %d ˆÈ‰º‚ÌˆÙ‚È‚é 2 ‚Â‚Ì‘f”‚É‚Â‚¢‚Ä‚»‚ÌŠÔ‚É‚ ‚é‘f”‚ÌŒÂ”‚ª %d –¢–ž‚Ì‚à‚Ì‚Ì‚¤‚¿·‚ªÅ‘å‚Æ‚È‚é‚à‚Ì‚ÍF\n", primes[primeCount - 1], k);
+
+    int maxDiff = 0;
+
+    for (int c = 0; c + k < primeCount; c++)
+        if (maxDiff < primes[c + k] - primes[c])
+            maxDiff = primes[c + k] - primes[c];
+
+    for (int c = 0; c + k < primeCount; c++)
+        if (maxDiff == primes[c + k] - primes[c])
+            printf("%d ‚Æ %d ‚»‚Ì·‚Í %d\n", primes[c], primes[c + k], primes[c + k] - primes[c]);
+
+    printf("\n");
+}
+
+int main()
+{
+    int *primes = (int *)malloc(10000000 * sizeof(int)); // HACK: rough size
+    int primeCount;
+    int c;
+
+    if (!primes)
+        exit(1); // fatal
+
+    GetPrimes(primes);
+    for (c = 0; primes[c]; c++);
+    primeCount = c;
+
+    for (int k = 1; k <= 100; k++)
+    {
+        PrintPrimeVoid(primes, primeCount, k);
+    }
+}
+
+----
 PrimeVoid_k
 
 using System;
