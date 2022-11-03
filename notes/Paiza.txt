@@ -11,8 +11,8 @@ PrimeVoid_k (2)
 // ====
 
 //	#define N 1875000000 // 3.0E+10 / 16
-//	#define N 187500000
-//	#define N 18750000
+//	#define N 187500000 // 3.0E+9 / 16
+//	#define N 18750000 // 3.0E+8 / 16
 //	#define N 6250000 // 1.0E+8 / 16
 	#define N 6250001 // (1.0E+8 + 16) / 16
 
@@ -21,8 +21,8 @@ PrimeVoid_k (2)
 void GetPrimes(int *p)
 {
 	unsigned char *t = (unsigned char *)malloc(N); // 8-bit uint array
-	unsigned long c;
-	unsigned long d;
+	unsigned long c; // 64-bit uint
+	unsigned long d; // 64-bit uint
 	unsigned int i; // 32-bit uint
 
 	if(!t)
