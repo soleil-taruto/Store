@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Numerics;
 using Charlotte.Commons;
 
 namespace Charlotte.Tests
@@ -10,95 +11,86 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			for (double distance = 0.0001; distance < 10000.0; distance *= 3.16)
+			for (int n = 1; n < 9998; n++)
 			{
-				for (double angle = 0.0; angle < Math.PI * 2.0; angle += 0.0001)
-				{
-					double x = Math.Cos(angle) * distance;
-					double y = Math.Sin(angle) * distance;
-
-					double ret = GetAngle(x, y);
-					double diff = ret - angle;
-
-					Console.WriteLine(distance.ToString("F9") + ", " + angle.ToString("F9") + " ==> " + diff.ToString("F9"));
-
-					if (Math.Abs(diff) > SCommon.MICRO)
-						throw null; // BUG !!!
-				}
-				//Console.WriteLine("OK");
+				Console.WriteLine(n + " --> " + Collatz(n));
 			}
-			Console.WriteLine("OK!");
 		}
 
 		public void Test02()
 		{
-			const double distance = 100.0;
+			Dictionary<int, int> dict = new Dictionary<int, int>();
 
-			for (int a = 1; a < 8; a++)
+			for (int n = 1; n < 1000000; n++)
 			{
-				for (int b = 0; b < 10000; b++)
-				{
-					for (int bSgn = -1; bSgn <= 1; bSgn += 2)
-					{
-						double angle = (Math.PI / 4.0) * a + b * 0.00000001 * bSgn;
+				//if (n % 1000 == 0) Console.WriteLine(n); // cout
 
-						double x = Math.Cos(angle) * distance;
-						double y = Math.Sin(angle) * distance;
+				int c = Collatz(n);
 
-						double ret = GetAngle(x, y);
-						double diff = ret - angle;
-
-						Console.WriteLine(distance.ToString("F9") + ", " + angle.ToString("F9") + " ==> " + diff.ToString("F9"));
-
-						if (Math.Abs(diff) > SCommon.MICRO)
-							throw null; // BUG !!!
-					}
-				}
+				if (!dict.ContainsKey(c))
+					dict[c] = n; // 最小値を記憶
 			}
-			Console.WriteLine("OK!");
+
+			foreach (int c in dict.Keys.OrderBy(SCommon.Comp))
+			{
+				Console.WriteLine(dict[c] + " --> " + c);
+			}
 		}
 
-		/// <summary>
-		/// 原点から指定座標への角度を返す。
-		/// ラジアン角 (0.0 ～ Math.PI * 2.0)
-		/// 右真横 (0,0 -> 1,0 方向) を 0.0 として時計回り。但し、X軸プラス方向は右、Y軸プラス方向は下である。
-		/// 1周は Math.PI * 2.0
-		/// </summary>
-		/// <param name="x">X座標</param>
-		/// <param name="y">Y座標</param>
-		/// <returns>角度</returns>
-		public static double GetAngle(double x, double y)
+		public void Test03()
 		{
-			if (y < 0.0) return Math.PI * 2.0 - GetAngle(x, -y);
-			if (x < 0.0) return Math.PI - GetAngle(-x, y);
+			Dictionary<int, int[]> dict = new Dictionary<int, int[]>();
 
-			if (x < y) return Math.PI / 2.0 - GetAngle(y, x);
-			if (x < SCommon.MICRO) return 0.0; // 極端に原点に近い座標の場合、常に右真横を返す。
-
-			if (y == 0.0) return 0.0;
-			if (y == x) return Math.PI / 4.0;
-
-			double r1 = 0.0;
-			double r2 = Math.PI / 4.0;
-			double t = y / x;
-			double rm;
-
-			for (int c = 1; ; c++)
+			for (int n = 1; n < 65535; n++)
+			//for (int n = 1; n < 255; n++)
+			//for (int n = 1; n < 1000000; n++)
 			{
-				rm = (r1 + r2) / 2.0;
+				//if (n % 1000 == 0) Console.WriteLine(n); // cout
 
-				//if (10 <= c) // for Game
-				if (50 < c)
-					break;
+				int c = Collatz(n);
 
-				double rmt = Math.Tan(rm);
+				if (!dict.ContainsKey(c))
+					dict[c] = new int[2];
 
-				if (t < rmt)
-					r2 = rm;
-				else
-					r1 = rm;
+				dict[c][0] = n;
+				dict[c][1]++;
 			}
-			return rm;
+
+			foreach (int c in dict.Keys.OrderBy(SCommon.Comp))
+			{
+				Console.WriteLine(dict[c][0] + " --> " + c + " (" + dict[c][1] + ")");
+			}
+		}
+
+		private int Collatz(BigInteger n)
+		{
+			int c;
+
+#if true // 割る２を何回行うか -> c
+			c = 0;
+			while (n % 2 == 0) { n /= 2; c++; }
+			while (n != 1)
+			{
+				n = n * 3 + 1;
+				while (n % 2 == 0) { n /= 2; c++; }
+			}
+#elif true // 奇数から次の奇数を求める処理を何回行うか -> c
+			while (n % 2 == 0) n /= 2;
+			for (c = 0; n != 1; c++)
+			{
+				n = n * 3 + 1;
+				while (n % 2 == 0) n /= 2;
+			}
+#else // コラッツ関数を何回行うか -> c
+			for (c = 0; n != 1; c++)
+			{
+				if (n % 2 == 1)
+					n = n * 3 + 1;
+				else
+					n /= 2;
+			}
+#endif
+			return c;
 		}
 	}
 }

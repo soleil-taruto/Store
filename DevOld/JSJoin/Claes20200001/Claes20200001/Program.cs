@@ -132,7 +132,7 @@ namespace Charlotte
 
 				string[] lines = SCommon.TextToLines(text);
 
-				lines = ReplaceSpecialCode_01(lines, file, releaseMode);
+				lines = ReplaceSpecialCode_01(lines, file, index, releaseMode);
 
 				this.JSLines.Add("// ここから " + file);
 				this.JSLines.AddRange(lines);
@@ -259,9 +259,10 @@ namespace Charlotte
 		/// </summary>
 		/// <param name="lines">コード行リスト</param>
 		/// <param name="sourceFilePath">このソースファイルのパス</param>
+		/// <param name="sourceFileIndex">このソースファイルのインデックス(0～)</param>
 		/// <param name="releaseMode">リリースモードか</param>
 		/// <returns>処理後のコード行リスト</returns>
-		private string[] ReplaceSpecialCode_01(string[] lines, string sourceFilePath, bool releaseMode)
+		private string[] ReplaceSpecialCode_01(string[] lines, string sourceFilePath, int sourceFileIndex, bool releaseMode)
 		{
 			List<string> extendLines = new List<string>();
 
@@ -336,6 +337,7 @@ namespace Charlotte
 			text = Common.Replace(text, "@(UNQN)", () => Common.CreateRandIdent());
 			text = Common.Replace(text, "@(UUID)", () => Guid.NewGuid().ToString("B"));
 			text = Common.Replace(text, "@(APID)", () => appIdent);
+			text = Common.Replace(text, "@(SRCN)", () => "" + (sourceFileIndex + 1));
 
 			lines = SCommon.TextToLines(text);
 

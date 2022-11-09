@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+using Charlotte.Utilities;
+using System.Drawing;
 using Charlotte.Commons;
 
 namespace Charlotte.Tests
@@ -10,129 +13,92 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			for (int c = 0; c < 20; c++)
+			foreach (string file in Directory.GetFiles(@"C:\temp"))
 			{
-				Test01_a();
-			}
-		}
+				Canvas canvas = Canvas.LoadFromFile(file);
 
-		public void Test01_a()
-		{
-			const int TEST_COUNT = 10000;
-			int p = 0;
+				const int PIC_W = 1000;
+				const int PIC_H = 1872;
 
-			for (int testcnt = 0; testcnt < TEST_COUNT; testcnt++)
-			{
-				if (Test01_b())
+				canvas = canvas.Expand(25, 50);
+				canvas = canvas.Expand(PIC_W, PIC_H);
+
+				// W : 1000 == 20 x 50 == 10 x 100
+				// H : 1872 == 26 x 72 == 13 x 144
+
+				const int TILE_W = 100;
+				const int TILE_H = 144;
+
+				Canvas[] drChrImgs = "MASKED!".Select(chr =>
 				{
-					p++;
-				}
-			}
-			Console.WriteLine(((double)p / TEST_COUNT).ToString("F9"));
-		}
+					Canvas drChrImg = new Canvas(TILE_W, TILE_H);
 
-		private bool Test01_b()
-		{
-			bool[] seats = new bool[100];
+					const int ZURE = 10;
 
-			seats[SCommon.CRandom.GetInt(100)] = true;
-
-			for (int i = 1; i < 99; i++)
-			{
-				if (seats[i])
-				{
-					int r;
-
-					do
+					drChrImg.Fill(new I4Color(0, 0, 0, 0));
+					drChrImg.DrawString(
+						"" + chr,
+						400,
+						"Impact",
+						FontStyle.Bold,
+						new I3Color(
+							0,
+							0,
+							0
+							),
+						new I4Rect(
+							0,
+							0,
+							TILE_W - ZURE,
+							TILE_H - ZURE
+							),
+						8
+						);
+					drChrImg.DrawString(
+						"" + chr,
+						400,
+						"Impact",
+						FontStyle.Bold,
+						new I3Color(
+							255,
+							255,
+							255
+							),
+						new I4Rect(
+							ZURE,
+							ZURE,
+							TILE_W - ZURE,
+							TILE_H - ZURE
+							),
+						8
+						);
+					drChrImg.ForEachDot(dot =>
 					{
-						r = SCommon.CRandom.GetInt(100);
+						dot.A = (int)(dot.A * 0.3);
+						return dot;
+					});
+
+					return drChrImg;
+				})
+				.ToArray();
+
+				{
+					int drChrIdx = 0;
+
+					for (int drT = 0; drT < PIC_H; drT += TILE_H)
+					{
+						for (int drL = 0; drL < PIC_W; drL += TILE_W)
+						{
+							canvas.DrawImage(drChrImgs[drChrIdx], drL, drT, true);
+
+							drChrIdx++;
+							drChrIdx %= drChrImgs.Length;
+						}
 					}
-					while (seats[r]);
-
-					seats[r] = true;
 				}
-				else
-				{
-					seats[i] = true;
-				}
+
+				canvas.Save(Path.Combine(SCommon.GetOutputDir(), Path.GetFileNameWithoutExtension(file) + ".png"));
 			}
-			return !seats[99];
-		}
-
-		public void Test02()
-		{
-			double l = 1.0;
-			double r = 2.0;
-
-			//while (SCommon.MICRO < (r - l))
-			//for (int c = 0; c < 30; c++)
-			//for (int c = 0; c < 100; c++)
-			for (int c = 0; c < 300; c++)
-			{
-				double m = (l + r) / 2;
-
-				if (m * m < 2.0)
-				{
-					l = m;
-				}
-				else
-				{
-					r = m;
-				}
-			}
-
-			{
-				double m = (l + r) / 2;
-
-				Console.WriteLine(m.ToString("F20"));
-			}
-		}
-
-		public void Test03()
-		{
-			double SPEED = 0.0001;
-
-			for (double rate = -0.9; rate < 0.9; rate += 0.01)
-			{
-				Test03_a(SPEED, SPEED * rate);
-			}
-		}
-
-		private void Test03_a(double speed, double wind)
-		{
-			double t = 0.0;
-
-			t += 1.0 / (speed + wind);
-			t += 1.0 / (speed - wind);
-
-			Console.WriteLine(speed.ToString("F6") + " + " + wind.ToString("F6") + " ==> " + t.ToString("F9"));
-		}
-
-		public void Test04()
-		{
-			Console.WriteLine(1.0 / SCommon.MICRO);
-			Console.WriteLine(1.0 / 1E-200);
-			Console.WriteLine(1E+200 / 1E-200);
-
-			double inf = 1E+200 / 1E-200;
-
-			Console.WriteLine(inf < 0.0); // False
-			Console.WriteLine(inf > 0.0); // True
-			Console.WriteLine(inf < SCommon.IMAX); // False
-			Console.WriteLine(inf > SCommon.IMAX); // True
-			Console.WriteLine(inf < 1E+200); // False
-			Console.WriteLine(inf > 1E+200); // True
-			Console.WriteLine(0.0 < 1E+200); // True
-			Console.WriteLine(0.0 > 1E+200); // False
-		}
-
-		public void Test05()
-		{
-			string version = typeof(System.String).Assembly.GetName().Version.ToString();
-
-			//string version = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
-
-			Console.WriteLine(version);
 		}
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using Charlotte.Commons;
 
 namespace Charlotte.Tests
@@ -10,126 +11,114 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			Test01_a(20, 60, 50, 30); // -> 30
-			Test01_a(20, 60, 40, 40); // -> 16.91751...
-		}
+			string[] lLines = File.ReadAllLines(@"C:\temp\左側ファイル.txt");
+			string[] rLines = File.ReadAllLines(@"C:\temp\右側ファイル.txt");
 
-		private void Test01_a(double a, double b, double c, double d)
-		{
-			// https://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%B3%E3%82%B0%E3%83%AC%E3%83%BC%E3%81%AE%E5%95%8F%E9%A1%8C
-			// https://upload.wikimedia.org/wikipedia/commons/7/73/Int_quadrangle.jpg
+			int lNearly = 0;
+			int rNearly = 0;
 
-			// degree -> rad
-			//
-			a *= Math.PI / 180.0;
-			b *= Math.PI / 180.0;
-			c *= Math.PI / 180.0;
-			d *= Math.PI / 180.0;
-
-			D2Point pB = new D2Point(0.0, 0.0);
-			D2Point pC = new D2Point(1.0, 0.0);
-
-			// Y-軸のプラス方向は下とすることに注意！
-
-			D2Point pA = GetCrossPoint(pB, pB + AngleToPoint(-(a + b), 1.0), pC, pC + AngleToPoint(Math.PI + c, 1.0));
-			D2Point pD = GetCrossPoint(pB, pB + AngleToPoint(-b, 1.0), pC, pC + AngleToPoint(Math.PI + (c + d), 1.0));
-
-			Console.WriteLine("B: " + pB);
-			Console.WriteLine("C: " + pC);
-			Console.WriteLine("A: " + pA);
-			Console.WriteLine("D: " + pD);
-
-			double angDA = GetAngle(pA - pD);
-			double angDB = GetAngle(pB - pD);
-
-			double e = angDA - angDB;
-
-			// rad -> degree;
-			//
-			e *= 180.0 / Math.PI;
-
-			Console.WriteLine(e.ToString("F9"));
-		}
-
-		/// <summary>
-		/// p1, p2 が通る直線と q1, q2 が通る直線の交点を返す。
-		/// </summary>
-		/// <param name="p1">点の座標</param>
-		/// <param name="p2">点の座標</param>
-		/// <param name="q1">点の座標</param>
-		/// <param name="q2">点の座標</param>
-		/// <returns>交点の座標</returns>
-		private D2Point GetCrossPoint(D2Point p1, D2Point p2, D2Point q1, D2Point q2)
-		{
-			double pxd = p2.X - p1.X;
-			double qxd = q2.X - q1.X;
-			double pyd = p2.Y - p1.Y;
-			double qyd = q2.Y - q1.Y;
-
-			double pn = p1.Y * p2.X - p1.X * p2.Y;
-			double qn = q1.Y * q2.X - q1.X * q2.Y;
-
-			double d = pyd * qxd - pxd * qyd;
-
-			Console.WriteLine("d: " + d.ToString("F9")); // test
-
-			double x = (qn * pxd - pn * qxd) / d;
-			double y = (qn * pyd - pn * qyd) / d;
-
-			return new D2Point(x, y);
-		}
-
-		public static D2Point AngleToPoint(double angle, double distance)
-		{
-			return new D2Point(
-				distance * Math.Cos(angle),
-				distance * Math.Sin(angle)
-				);
-		}
-
-		public static double GetAngle(D2Point pt)
-		{
-			return GetAngle(pt.X, pt.Y);
-		}
-
-		/// <summary>
-		/// 原点から指定座標への角度を返す。
-		/// ラジアン角 (0.0 ～ Math.PI * 2.0)
-		/// 右真横 (0,0 -> 1,0 方向) を 0.0 として時計回り。但し、X軸プラス方向は右、Y軸プラス方向は下である。
-		/// 1周は Math.PI * 2.0
-		/// </summary>
-		/// <param name="x">X座標</param>
-		/// <param name="y">Y座標</param>
-		/// <returns>角度</returns>
-		public static double GetAngle(double x, double y)
-		{
-			if (y < 0.0) return Math.PI * 2.0 - GetAngle(x, -y);
-			if (x < 0.0) return Math.PI - GetAngle(-x, y);
-
-			if (x < y) return Math.PI / 2.0 - GetAngle(y, x);
-			if (x < SCommon.MICRO) return 0.0; // 極端に原点に近い座標の場合、常に右真横を返す。
-
-			double r1 = 0.0;
-			double r2 = Math.PI / 2.0;
-			double t = y / x;
-			double rm;
-
-			for (int c = 1; ; c++)
+			for (int index = 0; index < lLines.Length; index++)
 			{
-				rm = (r1 + r2) / 2.0;
+				string[] lTokens = SCommon.Tokenize(lLines[index], " ", false, true);
+				string[] rTokens = SCommon.Tokenize(rLines[index], " ", false, true);
 
-				//if (10 <= c)
-				if (50 <= c)
-					break;
+				bool sinFlag = lTokens[0][0] == 'S';
+				double degree = double.Parse(lTokens[1]);
+				double lValue = double.Parse(lTokens[4]);
+				double rValue = double.Parse(rTokens[4]);
 
-				double rmt = Math.Tan(rm);
+				double mathClsValue = sinFlag ?
+					Math.Sin(degree * (Math.PI / 180.0)) :
+					Math.Cos(degree * (Math.PI / 180.0));
 
-				if (t < rmt)
-					r2 = rm;
-				else
-					r1 = rm;
+				double lDiff = Math.Abs(lValue - mathClsValue);
+				double rDiff = Math.Abs(rValue - mathClsValue);
+
+				if (lDiff < rDiff)
+					lNearly++;
+
+				if (rDiff < lDiff)
+					rNearly++;
+
+				Console.WriteLine(string.Format("{0:F20} {1:F20}", lDiff, rDiff));
 			}
-			return rm;
+			Console.WriteLine(lNearly);
+			Console.WriteLine(rNearly);
+		}
+
+		public void Test02()
+		{
+			for (int c = 0; c < 10; c++)
+			{
+				File.WriteAllText(ToCreatablePath(Path.Combine(SCommon.GetOutputDir(), "Test02.txt")), "Test02.txt " + c, Encoding.ASCII);
+				File.WriteAllText(ToCreatablePath(Path.Combine(SCommon.GetOutputDir(), "Test02-Text")), "Test02-Text " + c, Encoding.ASCII);
+				File.WriteAllText(ToCreatablePath(Path.Combine(SCommon.GetOutputDir(), "Test02-Text.dat")), "Test02-Text.dat " + c, Encoding.ASCII);
+				File.WriteAllText(ToCreatablePath(Path.Combine(SCommon.GetOutputDir(), "Test02-Text.dat.txt")), "Test02-Text.dat.txt " + c, Encoding.ASCII);
+			}
+		}
+
+		// memo: 連番の前の文字を '~' にしたところ Test02.txt -> Test02~1.txt , Test02~3.txt が存在しないのにスキップされる謎現象に遭遇。@ 2022.10.24
+		// -- よくわからんので無難な文字列にしておく。
+
+		public static string ToCreatablePath(string path)
+		{
+			string newPath = path;
+			int n = 1;
+
+			while (File.Exists(newPath) || Directory.Exists(newPath))
+			{
+				newPath = SCommon.EraseExt(path) + "-DUP-" + n + Path.GetExtension(path);
+				n++;
+			}
+			return newPath;
+		}
+
+		public void Test03()
+		{
+			for (int c = 0; c < 10; c++)
+			{
+				File.WriteAllText(ToCreatablePath_v2(Path.Combine(SCommon.GetOutputDir(), "Test02.txt")), "Test02.txt " + c, Encoding.ASCII);
+				File.WriteAllText(ToCreatablePath_v2(Path.Combine(SCommon.GetOutputDir(), "Test02-Text")), "Test02-Text " + c, Encoding.ASCII);
+				File.WriteAllText(ToCreatablePath_v2(Path.Combine(SCommon.GetOutputDir(), "Test02-Text.dat")), "Test02-Text.dat " + c, Encoding.ASCII);
+				File.WriteAllText(ToCreatablePath_v2(Path.Combine(SCommon.GetOutputDir(), "Test02-Text.dat.txt")), "Test02-Text.dat.txt " + c, Encoding.ASCII);
+			}
+		}
+
+		private static long TCP_LastTime = -1L;
+
+		public static string ToCreatablePath_v2(string path)
+		{
+			string newPath = path;
+
+			while (File.Exists(newPath) || Directory.Exists(newPath))
+			{
+				if (TCP_LastTime == -1L)
+				{
+					long epoch = SCommon.TimeStampToSec.ToSec(19700101000000);
+					long now = SCommon.SimpleDateTime.Now().ToSec();
+
+					TCP_LastTime = (now - epoch) * 1000;
+				}
+				else
+				{
+					TCP_LastTime++;
+				}
+
+				newPath = SCommon.EraseExt(path) + "_" + TCP_LastTime + Path.GetExtension(path);
+				//newPath = path + "_" + TCP_Count;
+			}
+			return newPath;
+		}
+
+		public void Test04()
+		{
+			for (int c = 0; c < 108; c++)
+			{
+				File.WriteAllText(SCommon.ToCreatablePath(Path.Combine(SCommon.GetOutputDir(), "Test02.txt")), "Test02.txt " + c, Encoding.ASCII);
+				File.WriteAllText(SCommon.ToCreatablePath(Path.Combine(SCommon.GetOutputDir(), "Test02-Text")), "Test02-Text " + c, Encoding.ASCII);
+				File.WriteAllText(SCommon.ToCreatablePath(Path.Combine(SCommon.GetOutputDir(), "Test02-Text.dat")), "Test02-Text.dat " + c, Encoding.ASCII);
+				File.WriteAllText(SCommon.ToCreatablePath(Path.Combine(SCommon.GetOutputDir(), "Test02-Text.dat.txt")), "Test02-Text.dat.txt " + c, Encoding.ASCII);
+			}
 		}
 	}
 }
