@@ -381,15 +381,17 @@ $chrListFuncs
 		{
 			ProcMain.WriteLog("RenameEx-ST");
 
-			EditableString text = new EditableString(SCommon.LinesToText(this.JSLines));
-			CrossStringDictionary wordFilter = new CrossStringDictionary();
+			string text = SCommon.LinesToText(this.JSLines);
 
-			text.Add(" "); // 番兵設置
+			text += " "; // 番兵設置
+
+			StringSpliceSequencer sss = new StringSpliceSequencer(text);
+			CrossDictionary knownWordPairs = new CrossDictionary();
 
 			foreach (string word in JSResource.予約語リスト)
-				wordFilter.Add(word, word);
+				knownWordPairs.Add(word, word);
 
-			for (int index = 0; index < text.Count; )
+			for (int index = 0; index < text.Length; )
 			{
 				// ? 文字列の開始
 				if (text[index] == '"')
@@ -432,9 +434,9 @@ $chrListFuncs
 					{
 						index = end;
 					}
-					else if (wordFilter.ContainsKey(word))
+					else if (knownWordPairs.ContainsKey(word))
 					{
-						string destWord = wordFilter[word];
+						string destWord = knownWordPairs[word];
 
 						if (word == destWord) // ? 予約語である。
 						{
@@ -458,24 +460,25 @@ $chrListFuncs
 						}
 						else // ? 予約語ではない。既知の置き換え
 						{
-							text.Replace(index, end - index, destWord);
-							index += destWord.Length;
+							sss.Splice(index, end - index, destWord);
+							index = end;
 						}
 					}
 					else // ? 未知の置き換え
 					{
-						string destWord = JSCommon.CreateNewIdent(v => !wordFilter.ContainsValue(v));
+						string destWord = JSCommon.CreateNewIdent(v => !knownWordPairs.ContainsValue(v));
 
-						wordFilter.Add(word, destWord);
+						knownWordPairs.Add(word, destWord);
 
-						text.Replace(index, end - index, destWord);
-						index += destWord.Length;
+						sss.Splice(index, end - index, destWord);
+						index = end;
 					}
 					continue;
 				}
 				index++;
 			}
-			this.JSLines = SCommon.TextToLines(text.ToString()).ToList();
+			text = sss.GetString();
+			this.JSLines = SCommon.TextToLines(text).ToList();
 			ProcMain.WriteLog("RenameEx-ED");
 		}
 
