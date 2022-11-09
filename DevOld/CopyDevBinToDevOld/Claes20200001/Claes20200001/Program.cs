@@ -113,6 +113,7 @@ namespace Charlotte
 		}
 
 		private List<ProjectInfo> Projects = new List<ProjectInfo>();
+		private List<string> Logs = new List<string>();
 
 		private void Main5(ArgsReader ar)
 		{
@@ -161,6 +162,8 @@ namespace Charlotte
 				}
 			}
 
+			q = null;
+
 			SCommon.DeletePath(OUTPUT_ROOT_DIR);
 			SCommon.CreateDir(OUTPUT_ROOT_DIR);
 
@@ -168,39 +171,32 @@ namespace Charlotte
 
 			string[] titles = Projects.Select(v => v.Title).DistinctOrderBy(SCommon.CompIgnoreCase).ToArray();
 
-			List<string> logs = new List<string>();
-
-			using (WriteLogSection((message, writeLogOrig) =>
+			foreach (string title in titles)
 			{
-				writeLogOrig(message);
-				logs.Add("" + message);
-			}
-			))
-			{
-				foreach (string title in titles)
-				{
-					ProjectInfo[] titleProjects = Projects.Where(v => SCommon.EqualsIgnoreCase(v.Title, title)).ToArray();
+				ProjectInfo[] titleProjects = Projects.Where(v => SCommon.EqualsIgnoreCase(v.Title, title)).ToArray();
 
-					Array.Sort(titleProjects, (a, b) => a.Date - b.Date);
+				Array.Sort(titleProjects, (a, b) => a.Date - b.Date);
 
-					ProjectInfo lastProject = titleProjects[titleProjects.Length - 1];
+				ProjectInfo lastProject = titleProjects[titleProjects.Length - 1];
 
-					string rDir = lastProject.SourceDir;
-					string wDir = Path.Combine(OUTPUT_ROOT_DIR, lastProject.Title, Path.GetFileName(lastProject.SourceDir));
+				string rDir = lastProject.SourceDir;
+				string wDir = Path.Combine(OUTPUT_ROOT_DIR, lastProject.Title, Path.GetFileName(lastProject.SourceDir));
 
-					ProcMain.WriteLog("< " + rDir);
-					ProcMain.WriteLog("> " + wDir);
+				ProcMain.WriteLog("< " + rDir);
+				ProcMain.WriteLog("> " + wDir);
 
-					SCommon.CopyDir(rDir, wDir);
+				Logs.Add("< " + rDir);
+				Logs.Add("> " + wDir);
 
-					// ----
+				SCommon.CopyDir(rDir, wDir);
 
-					CopyResourceDir(rDir, wDir, "dat", true);
-					CopyResourceDir(rDir, wDir, "doc", false);
-				}
+				// ----
+
+				CopyResourceDir(rDir, wDir, "dat", true);
+				CopyResourceDir(rDir, wDir, "doc", false);
 			}
 
-			File.WriteAllLines(Path.Combine(OUTPUT_ROOT_DIR, "Copy.log"), logs, Encoding.UTF8);
+			File.WriteAllLines(Path.Combine(OUTPUT_ROOT_DIR, "Copy.log"), Logs, Encoding.UTF8);
 
 			ProcMain.WriteLog("COPY-ED");
 		}
@@ -226,6 +222,9 @@ namespace Charlotte
 					ProcMain.WriteLog("< " + rDir);
 					ProcMain.WriteLog("T " + wDir);
 
+					Logs.Add("< " + rDir);
+					Logs.Add("T " + wDir);
+
 					string treeFile = Path.Combine(wDir, "_Tree.txt");
 					string[] treeFileData = MakeTreeFileData(rDir);
 
@@ -237,6 +236,9 @@ namespace Charlotte
 				{
 					ProcMain.WriteLog("< " + rDir);
 					ProcMain.WriteLog("> " + wDir);
+
+					Logs.Add("< " + rDir);
+					Logs.Add("> " + wDir);
 
 					SCommon.CopyDir(rDir, wDir);
 				}
