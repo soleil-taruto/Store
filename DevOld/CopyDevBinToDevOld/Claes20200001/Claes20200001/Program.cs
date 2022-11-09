@@ -193,6 +193,7 @@ namespace Charlotte
 				// ----
 
 				CopyResourceDir(rDir, wDir, "dat", true);
+				CopyResourceDir(rDir, wDir, "res", true);
 				CopyResourceDir(rDir, wDir, "doc", false);
 			}
 
