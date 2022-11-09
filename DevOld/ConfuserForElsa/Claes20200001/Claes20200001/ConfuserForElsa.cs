@@ -26,11 +26,9 @@ namespace Charlotte
 			string workSolutionDir = Path.Combine(workDir, "tmpsol");
 			string workSolutionFile = Path.Combine(workSolutionDir, Path.GetFileName(solutionFile));
 			string workSolutionDir_mid = workSolutionDir + "_mid";
-			string fileCsv置き換え禁止ワード処理履歴 = Path.Combine(workDir, "置き換え禁止ワード処理履歴.csv");
 
 			SCommon.DeletePath(workSolutionDir);
 			SCommon.DeletePath(workSolutionDir_mid);
-			SCommon.DeletePath(fileCsv置き換え禁止ワード処理履歴);
 
 			SCommon.CopyDir(solutionDir, workSolutionDir);
 
@@ -45,8 +43,7 @@ namespace Charlotte
 				{
 					SCommon.CopyDir(workSolutionDir, workSolutionDir_mid);
 				},
-				rvf,
-				fileCsv置き換え禁止ワード処理履歴
+				rvf
 				);
 			sol.Rebuild();
 
@@ -88,10 +85,7 @@ namespace Charlotte
 			{
 				SCommon.CreateDir(masterSol.GetBinDir());
 
-				MessageBox.Show(@"ビルドに失敗しました。
-難読化してはいけないキーワードの登録が不足しているか、
-難読化してはいけない行指定が不足している可能性があります。
-作業フォルダ """ + workSolutionDir_mid + @""" の内容を確認して下さい。", "ビルド失敗", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				throw new Exception("ビルドに失敗しました。");
 			}
 		}
 	}

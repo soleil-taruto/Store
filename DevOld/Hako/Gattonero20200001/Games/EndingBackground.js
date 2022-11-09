@@ -11,10 +11,7 @@ function <void> DrawEndingBackground()
 		@@_Task = @@_CreateTask();
 	}
 
-	if (!NextVal(@@_Task))
-	{
-		error();
-	}
+	NextRun(@@_Task);
 }
 
 function* <generatorForTask> @@_CreateTask()

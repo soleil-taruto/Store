@@ -306,6 +306,7 @@ namespace Charlotte
 			string text = SCommon.LinesToText(lines.Concat(extendLines).ToArray());
 
 			text = RSC_ProcessWord(text, "@(AUTO)", () => "" + (AutoCounter++));
+			text = RSC_ProcessWord(text, "@(UNQN)", () => Common.CreateRandIdent());
 			text = RSC_ProcessWord(text, "@(UUID)", () => Guid.NewGuid().ToString("B"));
 
 			lines = SCommon.TextToLines(text);
@@ -436,23 +437,22 @@ namespace Charlotte
 
 		private IEnumerable<string> CreateHtmlLines()
 		{
-			yield return "<html>";
-			yield return "<head>";
-			yield return "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Shift_JIS\" />";
-			yield return "<script>";
-			yield return "";
-			yield return "'use strict'";
-			yield return "";
+			string srcHtmlFile = Path.Combine(this.SourceDir, "_index.html.js");
 
-			foreach (string line in this.JSLines)
-				yield return line;
+			string[] srcHtmlLines = File.ReadAllLines(srcHtmlFile, SCommon.ENCODING_SJIS);
 
-			yield return "";
-			yield return "</script>";
-			yield return "</head>";
-			yield return "<body>";
-			yield return "</body>";
-			yield return "</html>";
+			foreach (string srcHtmlLine in srcHtmlLines)
+			{
+				if (srcHtmlLine == "@(SCRIPT)")
+				{
+					foreach (string line in this.JSLines)
+						yield return line;
+				}
+				else
+				{
+					yield return srcHtmlLine;
+				}
+			}
 		}
 	}
 }

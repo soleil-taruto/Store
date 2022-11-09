@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Charlotte.Commons;
 
 namespace Charlotte.CSSolutions
 {
@@ -12,21 +13,7 @@ namespace Charlotte.CSSolutions
 		/// <summary>
 		/// ここに含まれる単語は置き換えない。
 		/// </summary>
-		public static string 予約語リスト = @"
-
-; ====
-; 特別扱い
-; ====
-
-; 定番の名前空間
-Charlotte
-
-; デザイナで自動生成されるメソッド
-;InitializeComponent
-
-; 何処にも無い場合もあるけど使うこともあるやつ
-NotImplementedException
-
+		private static string RES_予約語リスト = @"
 
 ; ====
 ; C#の予約語
@@ -128,312 +115,13 @@ where
 yield
 when
 
-
-; ====
-; 名前空間 / クラス名 / 型名 / メンバー名
-; ====
-
-AccessControlType
-Action
-Add
-AddAccessRule
-AddrOfPinnedObject
-AggregateException
-AllDirectories
-Alloc
-Allow
-Anchor
-Any
-AppDomain
-Append
-Application
-ArgumentException
-Assembly
-AutoScaleDimensions
-AutoScaleMode
-AutoSize
-Begin
-BeginInvoke
-CheckState
-Checked
-CheckedChanged
-Clear
-Click
-ClientSize
-Close
-Collect
-Color
-Comparison
-Compress
-CompressionMode
-ComputeHash
-Concat
-Contains
-ContainsKey
-Controls
-Convert
-CopyTo
-Count
-Create
-Current
-CurrentDomain
-DateTime
-Decompress
-Dequeue
-Dictionary
-Dispose
-Distinct
-DllImport
-DropDownStyle
-DxLibDLL
-EnableVisualStyles
-Encoding
-EndsWith
-Enqueue
-Enter
-Enum
-Enumerable
-Environment
-Equals
-Error
-EventArgs
-Exception
-ExceptionObject
-Exit
-FileAccess
-FileMode
-FileStream
-First
-FirstOrDefault
-Flags
-Font
-Form
-FormClosed
-FormClosedEventArgs
-FormClosing
-FormClosingEventArgs
-FormattingEnabled
-Free
-FromArgb
-FullControl
-Func
-GC
-GCHandle
-GCHandleType
-GZipStream
-GetByteCount
-GetBytes
-GetCommandLineArgs
-GetCurrentProcess
-GetEncoding
-GetEntryAssembly
-GetEnumerator
-GetEnvironmentVariable
-GetHashCode
-GetObject
-GetString
-GetValues
-Guid
-Handle
-HashSet
-IDisposable
-IEnumerable
-IEnumerator
-IEqualityComparer
-IList
-Icon
-Id
-IndexOf
-IntPtr
-IsMatch
-IsNaN
-Items
-Key
-KeyValuePair
-Keys
-LayoutKind
-Length
-LinkDemand
-List
-Load
-Location
-Main
-Margin
-MaxDropDownItems
-MaximizeBox
-MemoryStream
-Message
-MessageBox
-MessageBoxButtons
-MessageBoxIcon
-MethodInvoker
-Microsoft
-MinimizeBox
-MinimumSize
-MoveNext
-Msg
-Mutex
-MutexAccessRule
-MutexRights
-MutexSecurity
-Name
-NewGuid
-Now
-OK
-Open
-PerformLayout
-Pinned
-Position
-Predicate
-Process
-Queue
-RNGCryptoServiceProvider
-RandomNumberGenerator
-Range
-Read
-Regex
-ReleaseMutex
-Remove
-RemoveAll
-RemoveAt
-Replace
-ResumeLayout
-Reverse
-Run
-SHA512
-STAThread
-SearchOption
-SecurityAction
-SecurityIdentifier
-SecurityPermission
-SecurityPermissionFlag
-Seek
-SeekOrigin
-Select
-SelectedIndex
-SelectedIndexChanged
-Sequential
-SessionEnding
-SessionEndingEventArgs
-SessionEndingEventHandler
-SetCompatibleTextRenderingDefault
-Show
-ShowInTaskbar
-Shown
-Size
-SizeGripStyle
-Skip
-Sleep
-Split
-Start
-StartPosition
-StartsWith
-Stream
-StreamReader
-StreamWriter
-StringBuilder
-StructLayout
-Substring
-SuspendLayout
-SystemEvents
-TabIndex
-TabStop
-Take
-Text
-Thread
-ThreadException
-ThreadExceptionEventArgs
-ThreadExceptionEventHandler
-ToArray
-ToInt64
-ToList
-ToLower
-ToString
-ToUpper
-TopMost
-Trim
-UInt16
-UInt64
-UTF8
-UnhandledException
-UnhandledExceptionEventArgs
-UnhandledExceptionEventHandler
-UnmanagedCode
-UseVisualStyleBackColor
-Value
-Values
-Visible
-WParam
-WaitOne
-WellKnownSidType
-Where
-Win32
-WndProc
-WorldSid
-Write
-WriteByte
-WriteLine
-Zero
-
-; ★★★ 新しい予約語をここへ追加する。
-
-";
-
-		#endregion
-
-		#region 予約語クラス名リスト
-
-		/// <summary>
-		/// ここに含まれる単語は置き換えない。
-		/// (この単語).(後続の単語).(後続の単語).(後続の単語) ... の「後続の単語」についても置き換えない。
-		/// 名前空間も差し支えないので含める。
-		/// -- System
-		/// </summary>
-		public static string 予約語クラス名リスト = @"
-
-; 名前空間
-
-DX
-System
-
-; 型名
-
-sbyte
-byte
-short
-ushort
-int
-uint
-long
-ulong
-char
-float
-double
-bool
-decimal
-string
-
-; 静的メンバーを多用するクラス名
-
-Array
-Console
-Directory
-File
-Math
-Path
-
-; ★★★ 新しい予約語クラス名をここへ追加する。
-; 注意：ここへ追加したワードは、
-; 同名のアプリ固有のワードとそのメンバーも置き換え禁止になるため影響が大きい。
-; 積極的な追加は避けること。
-
 ";
 
 		#endregion
 
 		#region ランダムな単語リスト
 
-		public static string ランダムな単語リスト = @"
+		private static string RES_ランダムな単語リスト = @"
 
 ; ====
 ; 太陽系の天体
@@ -1564,7 +1252,7 @@ Thulite
 
 		#region 英単語リスト
 
-		public static string 英単語リスト = @"
+		private static string RES_英単語リスト = @"
 
 ; https://progeigo.org/learning/essential-words-600-plus/
 
@@ -2513,5 +2201,50 @@ zip					【動詞】
 ";
 
 		#endregion
+
+		// ====
+		// ====
+		// ====
+
+		public static string[] 予約語リスト = SCommon.TextToLines(RES_予約語リスト)
+			.Select(v => v.Trim())
+			.Where(v => v != "" && v[0] != ';') // 空行とコメント行を除去
+			.ToArray();
+
+		public static string[] ランダムな単語リスト = SCommon.TextToLines(RES_ランダムな単語リスト)
+			.Select(v => v.Trim())
+			.Where(v => v != "" && v[0] != ';') // 空行とコメント行を除去
+			.DistinctOrderBy(SCommon.Comp)
+			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
+			.ToArray();
+
+		public static string[] 英単語リスト = SCommon.TextToLines(RES_英単語リスト)
+			.Select(v => v.Trim())
+			.Where(v => v != "" && v[0] != ';') // 空行とコメント行を除去
+			.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
+			.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
+			.DistinctOrderBy(SCommon.Comp)
+			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
+			.ToArray();
+
+		public static string[] 英単語リスト_前置詞 = Get英単語リスト("前置詞");
+		public static string[] 英単語リスト_形容詞 = Get英単語リスト("形容詞");
+		public static string[] 英単語リスト_代名詞 = Get英単語リスト("代名詞");
+		public static string[] 英単語リスト_名詞 = Get英単語リスト("名詞");
+		public static string[] 英単語リスト_副詞 = Get英単語リスト("副詞");
+		public static string[] 英単語リスト_動詞 = Get英単語リスト("動詞");
+
+		private static string[] Get英単語リスト(string 品詞)
+		{
+			return SCommon.TextToLines(RES_英単語リスト)
+				.Select(v => v.Trim())
+				.Where(v => v != "" && v[0] != ';') // 空行とコメント行を除去
+				.Where(v => v.Contains(品詞)) // 品詞の絞り込み
+				.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
+				.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
+				.DistinctOrderBy(SCommon.Comp)
+				//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
+				.ToArray();
+		}
 	}
 }

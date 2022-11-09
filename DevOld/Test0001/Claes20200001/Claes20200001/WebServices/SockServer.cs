@@ -182,7 +182,7 @@ namespace Charlotte.WebServices
 			{
 				if (e.ErrorCode != 10035)
 				{
-					throw new Exception("接続エラー", e);
+					throw new Exception("接続失敗(" + e.ErrorCode + ")", e);
 				}
 				return null;
 			}

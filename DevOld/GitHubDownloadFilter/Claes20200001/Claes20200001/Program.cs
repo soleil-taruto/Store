@@ -29,21 +29,21 @@ namespace Charlotte
 			{
 				Main4(ar);
 			}
-			Common.OpenOutputDirIfCreated();
+			SCommon.OpenOutputDirIfCreated();
 		}
 
 		private void Main3()
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\temp\StoreP-main" }));
+			Main4(new ArgsReader(new string[] { @"C:\temp\StoreC-main" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
 
 			// --
 
-			//Common.Pause();
+			//SCommon.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -56,7 +56,7 @@ namespace Charlotte
 			{
 				ProcMain.WriteLog(ex);
 
-				MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("" + ex, Path.GetFileNameWithoutExtension(ProcMain.SelfFile) + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
 				//Console.ReadLine();
@@ -70,7 +70,7 @@ namespace Charlotte
 			if (!Directory.Exists(rDir))
 				throw new Exception("no rDir");
 
-			string wDir = Common.GetOutputDir();
+			string wDir = SCommon.GetOutputDir();
 			ProcMain.WriteLog("出力先へコピーしています...");
 			SCommon.CopyDir(rDir, wDir);
 			ProcMain.WriteLog("出力先へコピーしました。");
@@ -141,6 +141,14 @@ namespace Charlotte
 					Directory.Move(dir, dirNew);
 				}
 			}
+
+			// ---- 以下 2022.10 以降に追加
+
+			// ファイル名を変更したので再取得する。
+			files = Directory.GetFiles(rootDir, "*", SearchOption.AllDirectories);
+			Array.Sort(files, SCommon.Comp);
+
+			DecompressMapDataFiles(files); // 注意：パス名を変更するかもしれない。
 		}
 
 		private bool IsEncodingUTF8WithBOM(byte[] fileData)
@@ -232,6 +240,48 @@ namespace Charlotte
 				buff.Append(chr);
 			}
 			return buff.ToString();
+		}
+
+		// ---- 以下 2022.10 以降に追加
+
+		private void DecompressMapDataFiles(string[] files)
+		{
+			foreach (string file in files)
+			{
+				if (!SCommon.EndsWithIgnoreCase(file, ".txt_$$Compress.txt")) // ? 圧縮されたファイルではない。
+					continue;
+
+				string destFile = file.Substring(0, file.Length - 15); // "_$$Compress.txt" 除去
+
+				Console.WriteLine("< " + file);
+				Console.WriteLine("> " + destFile);
+
+				string[] lines = File.ReadAllLines(file, SCommon.ENCODING_SJIS);
+				string[] destLines = DecompressMapData(lines);
+
+				SCommon.DeletePath(file);
+				File.WriteAllLines(destFile, destLines, SCommon.ENCODING_SJIS);
+			}
+		}
+
+		private string[] DecompressMapData(string[] lines)
+		{
+			List<string> destLines = new List<string>();
+
+			for (int index = 0; index < lines.Length; )
+			{
+				if (lines[index] == ";;REPEAT;;")
+				{
+					destLines.AddRange(Enumerable.Range(1, int.Parse(lines[index + 1])).Select(dummy => lines[index + 2]));
+					index += 3;
+				}
+				else
+				{
+					destLines.Add(lines[index]);
+					index++;
+				}
+			}
+			return destLines.ToArray();
 		}
 	}
 }

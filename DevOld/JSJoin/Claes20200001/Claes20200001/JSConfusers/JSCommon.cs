@@ -38,7 +38,8 @@ namespace Charlotte.JSConfusers
 				if (accept(name))
 					return name;
 
-				if (1000 < c) // rough limit
+				// 十分なトライ回数 -- rough limit
+				if (1000 < c)
 					throw new Exception("識別子をほぼ使い果たしました。");
 			}
 		}
@@ -51,49 +52,23 @@ namespace Charlotte.JSConfusers
 		/// <returns>新しい識別子</returns>
 		private static string TryCreateNameNew()
 		{
+#if !true
+			// 4～40桁(10進)
+			return "_" + new string(Enumerable.Range(0, SCommon.CRandom.GetRange(4, 40))
+				.Select(dmy => SCommon.CRandom.ChooseOne(SCommon.DECIMAL.ToArray()))
+				.ToArray());
+#elif true
+			return "_" + SCommon.CRandom.GetRange(10000000, 99999999); // 8桁(10進)
+#elif true
+			return "_" + SCommon.CRandom.GetUInt().ToString("x8"); // 8桁(16進)
+
+#else // 似非英語名
 			return
 				SCommon.CRandom.ChooseOne(JSResource.英単語リスト_動詞) +
 				SCommon.CRandom.ChooseOne(JSResource.英単語リスト_形容詞) +
 				SCommon.CRandom.ChooseOne(JSResource.ランダムな単語リスト) +
 				SCommon.CRandom.ChooseOne(JSResource.英単語リスト_名詞);
-		}
-
-		private static char[] 似非単語文字フィルタ = null;
-
-		public static string 似非単語に変換するフィルタ(string word)
-		{
-			if (似非単語文字フィルタ == null)
-			{
-				似非単語文字フィルタ = Enumerable.Range(0, 256).Select(v => (char)v).ToArray();
-
-				Action<char[], char, char> a_swap = (chrs, a, b) =>
-				{
-					chrs[(int)a] = b;
-					chrs[(int)b] = a;
-
-					a += (char)0x20;
-					b += (char)0x20;
-
-					chrs[(int)a] = b;
-					chrs[(int)b] = a;
-				};
-
-				a_swap(似非単語文字フィルタ, 'B', 'D');
-				a_swap(似非単語文字フィルタ, 'F', 'L');
-				a_swap(似非単語文字フィルタ, 'G', 'J');
-				a_swap(似非単語文字フィルタ, 'K', 'H');
-				a_swap(似非単語文字フィルタ, 'M', 'N');
-				a_swap(似非単語文字フィルタ, 'P', 'Q');
-				a_swap(似非単語文字フィルタ, 'R', 'S');
-				a_swap(似非単語文字フィルタ, 'V', 'W');
-				a_swap(似非単語文字フィルタ, 'X', 'Z');
-			}
-
-			return new string(word.Select(chr =>
-			{
-				return 似非単語文字フィルタ[(int)chr];
-			})
-			.ToArray());
+#endif
 		}
 	}
 }

@@ -38,26 +38,30 @@ namespace Charlotte
 		private void Main3()
 		{
 			Main4();
-			//Common.Pause();
+			Common.Pause();
 		}
 
 		private void Main4()
 		{
+			try
+			{
+				Main5();
+			}
+			catch (Exception ex)
+			{
+				ProcMain.WriteLog(ex);
+			}
+		}
+
+		private void Main5()
+		{
 			// -- choose one --
 
-			Main5();
-			//new Test0001().Test01();
+			new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
 
 			// --
-		}
-
-		// Main5 -- テスト用なら Test01 にリネーム/不要なら削除 -- ★要削除
-
-		private void Main5()
-		{
-			// none
 		}
 #else // 主に実行ファイルにして使う/コマンド引数有り -- ★不要なら要削除
 		private void Main2(ArgsReader ar)
@@ -84,7 +88,7 @@ namespace Charlotte
 
 			// --
 
-			//Common.Pause();
+			Common.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -93,9 +97,14 @@ namespace Charlotte
 			{
 				Main5(ar);
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				ProcMain.WriteLog(e);
+				ProcMain.WriteLog(ex);
+
+				//MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
+				//Console.ReadLine();
 			}
 		}
 

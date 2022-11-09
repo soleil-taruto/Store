@@ -18,7 +18,7 @@ namespace Charlotte.Utilities
 
 		public T Next()
 		{
-			for (int c = 0; c < 1000; c++)
+			for (int c = 0; c < 1000; c++) // rough limit
 			{
 				T value = this.Generator();
 

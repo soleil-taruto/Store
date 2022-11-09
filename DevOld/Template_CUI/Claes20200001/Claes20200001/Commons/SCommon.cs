@@ -343,12 +343,25 @@ namespace Charlotte.Commons
 			return new Dictionary<string, V>(new IECompStringIgnoreCase());
 		}
 
+		public static HashSet<string> CreateSet()
+		{
+			return new HashSet<string>(new IECompString());
+		}
+
+		public static HashSet<string> CreateSetIgnoreCase()
+		{
+			return new HashSet<string>(new IECompStringIgnoreCase());
+		}
+
 		public const double MICRO = 1.0 / IMAX;
 
 		private static void CheckNaN(double value)
 		{
 			if (double.IsNaN(value))
 				throw new Exception("NaN");
+
+			if (double.IsInfinity(value))
+				throw new Exception("Infinity");
 		}
 
 		public static double ToRange(double value, double minval, double maxval)
@@ -581,7 +594,7 @@ namespace Charlotte.Commons
 		}
 
 		/// <summary>
-		/// 厳しいフルパス化
+		/// 厳しいフルパス化 (慣習的実装)
 		/// </summary>
 		/// <param name="path">パス</param>
 		/// <returns>フルパス</returns>
@@ -617,7 +630,7 @@ namespace Charlotte.Commons
 		}
 
 		/// <summary>
-		/// ゆるいフルパス化
+		/// ゆるいフルパス化 (慣習的実装)
 		/// </summary>
 		/// <param name="path">パス</param>
 		/// <returns>フルパス</returns>
@@ -633,7 +646,7 @@ namespace Charlotte.Commons
 		#region ToFairLocalPath, ToFairRelPath
 
 		/// <summary>
-		/// ローカル名に使用できない予約名のリストを返す。
+		/// ローカル名に使用できない予約名のリストを返す。(慣習的実装)
 		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L460-L491
 		/// </summary>
 		/// <returns>予約名リスト</returns>
@@ -662,23 +675,25 @@ namespace Charlotte.Commons
 		public const int MY_PATH_MAX = 240;
 
 		/// <summary>
-		/// 歴としたローカル名に変換する。
+		/// 歴としたローカル名に変換する。(慣習的実装)
 		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L503-L552
 		/// </summary>
 		/// <param name="str">対象文字列(対象パス)</param>
-		/// <param name="dirSize">対象パスが存在するディレクトリのフルパスの長さ、考慮しない場合は 0 を指定すること。</param>
+		/// <param name="dirSize">対象パスが存在するディレクトリのフルパスの長さ、考慮しない場合は -1 を指定すること。</param>
 		/// <returns>ローカル名</returns>
 		public static string ToFairLocalPath(string str, int dirSize)
 		{
 			const string CHRS_NG = "\"*/:<>?\\|";
 			const string CHR_ALT = "_";
 
-			int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
+			if (dirSize != -1)
+			{
+				int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
 
-			if (maxLen < str.Length)
-				str = str.Substring(0, maxLen);
-
-			str = SCommon.ToJString(SCommon.ENCODING_SJIS.GetBytes(str), true, false, false, true);
+				if (maxLen < str.Length)
+					str = str.Substring(0, maxLen);
+			}
+			str = SCommon.ToJString(str, true, false, false, true);
 
 			string[] words = str.Split('.');
 
@@ -716,15 +731,17 @@ namespace Charlotte.Commons
 				ptkns = new string[] { "_" };
 
 			for (int index = 0; index < ptkns.Length; index++)
-				ptkns[index] = ToFairLocalPath(ptkns[index], 0);
+				ptkns[index] = ToFairLocalPath(ptkns[index], -1);
 
 			path = string.Join("\\", ptkns);
 
-			int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
+			if (dirSize != -1)
+			{
+				int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
 
-			if (maxLen < path.Length)
-				path = ToFairLocalPath(path, dirSize);
-
+				if (maxLen < path.Length)
+					path = ToFairLocalPath(path, dirSize);
+			}
 			return path;
 		}
 
@@ -986,6 +1003,108 @@ namespace Charlotte.Commons
 			}
 		}
 
+		/// <summary>
+		/// 文字列をSJIS(CP-932)の文字列に変換する。
+		/// 以下の関数を踏襲した。(慣習的実装)
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L320-L388
+		/// </summary>
+		/// <param name="str">文字列</param>
+		/// <param name="okJpn">日本語(2バイト文字)を許可するか</param>
+		/// <param name="okRet">改行を許可するか</param>
+		/// <param name="okTab">水平タブを許可するか</param>
+		/// <param name="okSpc">半角空白を許可するか</param>
+		/// <returns>SJIS(CP-932)の文字列</returns>
+		public static string ToJString(string str, bool okJpn, bool okRet, bool okTab, bool okSpc)
+		{
+			if (str == null)
+				str = "";
+
+			return ToJString(GetSJISBytes(str), okJpn, okRet, okTab, okSpc);
+		}
+
+		#region GetSJISBytes
+
+		public static byte[] GetSJISBytes(string str)
+		{
+			byte[][] unicode2SJIS = P_GetUnicode2SJIS();
+
+			using (MemoryStream dest = new MemoryStream())
+			{
+				foreach (char chr in str)
+				{
+					byte[] chrSJIS = unicode2SJIS[(int)chr];
+
+					if (chrSJIS == null)
+						chrSJIS = new byte[] { 0x3f }; // '?'
+
+					dest.Write(chrSJIS, 0, chrSJIS.Length);
+				}
+				return dest.ToArray();
+			}
+		}
+
+		private static byte[][] P_Unicode2SJIS = null;
+
+		private static byte[][] P_GetUnicode2SJIS()
+		{
+			if (P_Unicode2SJIS == null)
+				P_Unicode2SJIS = P_GetUnicode2SJIS_Main();
+
+			return P_Unicode2SJIS;
+		}
+
+		private static byte[][] P_GetUnicode2SJIS_Main()
+		{
+			byte[][] dest = new byte[0x10000][];
+
+			for (byte bChr = 0x00; bChr <= 0x7e; bChr++) // ASCII with control-code
+			{
+				dest[(int)bChr] = new byte[] { bChr };
+			}
+			for (byte bChr = 0xa1; bChr <= 0xdf; bChr++) // 半角カナ
+			{
+				dest[SJISHanKanaToUnicodeHanKana((int)bChr)] = new byte[] { bChr };
+			}
+
+			// 2バイト文字
+			{
+				char[] unicodes = GetJChars().ToArray();
+
+				if (unicodes.Length * 2 != GetJCharBytes().Count()) // ? 文字数が合わない。-- サロゲートペアは無いはず！
+					throw null; // never
+
+				foreach (char unicode in unicodes)
+				{
+					byte[] bJChr = ENCODING_SJIS.GetBytes(new string(new char[] { unicode }));
+
+					if (bJChr.Length != 2) // ? 2バイト文字じゃない。
+						throw null; // never
+
+					dest[(int)unicode] = bJChr;
+				}
+			}
+
+			return dest;
+		}
+
+		private static int SJISHanKanaToUnicodeHanKana(int chr)
+		{
+			return chr + 0xfec0;
+		}
+
+		#endregion
+
+		/// <summary>
+		/// バイト列をSJIS(CP-932)の文字列に変換する。
+		/// 以下の関数を踏襲した。(慣習的実装)
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L320-L388
+		/// </summary>
+		/// <param name="src">バイト列</param>
+		/// <param name="okJpn">日本語(2バイト文字)を許可するか</param>
+		/// <param name="okRet">改行を許可するか</param>
+		/// <param name="okTab">水平タブを許可するか</param>
+		/// <param name="okSpc">半角空白を許可するか</param>
+		/// <returns>SJIS(CP-932)の文字列</returns>
 		public static string ToJString(byte[] src, bool okJpn, bool okRet, bool okTab, bool okSpc)
 		{
 			if (src == null)
@@ -1018,7 +1137,7 @@ namespace Charlotte.Commons
 					}
 					else if (chr <= 0x7e) // ? ascii
 					{
-						// nop
+						// noop
 					}
 					else if (0xa1 <= chr && chr <= 0xdf) // ? kana
 					{
@@ -1418,7 +1537,7 @@ namespace Charlotte.Commons
 
 		public static string MBC_CHOUONPU = S_GetString_SJISCodeRange(0x81, 0x5b, 0x5b); // 815b == 長音符 -- ひらがなとカタカナの長音符は同じ文字
 
-		public static string MBC_HIRA = S_GetString_SJISCodeRange(0x82, 0x9f, 0xf1);
+		public static string MBC_HIRA = S_GetString_SJISCodeRange(0x82, 0x9f, 0xf1) + MBC_CHOUONPU;
 		public static string MBC_KANA =
 			S_GetString_SJISCodeRange(0x83, 0x40, 0x7e) +
 			S_GetString_SJISCodeRange(0x83, 0x80, 0x96) + MBC_CHOUONPU;

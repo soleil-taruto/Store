@@ -317,7 +317,7 @@ $chrListFuncs
 			if (source.Length % 6 != 0)
 				throw null;
 
-			foreach (int dummy in Enumerable.Range(0, SCommon.CRandom.GetRange(3, 7)))
+			for (int c = SCommon.CRandom.GetRange(3, 7); 0 < c; c--)
 				yield return SLS_MakeYR(-1);
 
 			for (int index = 0; index * 6 < source.Length; index++)
@@ -331,15 +331,20 @@ $chrListFuncs
 
 		private static string SLS_MakeYR(int chr)
 		{
-			// (0x0000 + 1) + 65537 * 0 == 1
-			// (0xffff + 1) + 65537 * 0 == 65536
+			// (0x0000 + 1) + 65537 *     0 == 1
+			// (0xffff + 1) + 65537 *     0 == 65536
+			// (0x0000 + 1) + 65537 *   153 == 10027162
+			// (0xffff + 1) + 65537 *   153 == 10092697
+			// (0x0000 + 1) + 65537 *  1524 == 99878389
+			// (0xffff + 1) + 65537 *  1524 == 99943924
 			// (0x0000 + 1) + 65537 * 15259 == 1000029084
 			// (0xffff + 1) + 65537 * 15259 == 1000094619
 			// (0x0000 + 1) + 65537 * 32766 == 2147385343
 			// (0xffff + 1) + 65537 * 32766 == 2147450878 (0x7fff7ffe)
 
-			int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(15259, 32766);
-			//int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(0, 32766); // old
+			int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(153, 1524); // 8桁
+			//int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(15259, 32766); // 10桁
+			//int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(0, 32766); // 1～10桁
 
 			return "\tyield " + value + ";";
 		}
@@ -543,12 +548,13 @@ $chrListFuncs
 					)
 				{
 					this.JSLines.Insert(index++, "");
+#if true
+					this.JSLines.Insert(index++, "// " + SCommon.CRandom.GetInt(100).ToString("D2"));
+#else
 					this.JSLines.Insert(index++, "/*");
-
-					foreach (string commentLine in FS_Getエセ英語コメント())
-						this.JSLines.Insert(index++, "\t" + commentLine);
-
+					this.JSLines.Insert(index++, "\tConfused by JSJoin");
 					this.JSLines.Insert(index++, "*/");
+#endif
 				}
 			}
 
@@ -602,7 +608,7 @@ $chrListFuncs
 				}
 			}
 
-			// インデント有りの ]; }; の後には空行を入れる。
+			// ]; }; の後には空行を入れる。
 			//
 			for (int index = 0; index < this.JSLines.Count; index++)
 			{
@@ -614,21 +620,25 @@ $chrListFuncs
 					index++;
 				}
 			}
-		}
 
-		private static IEnumerable<string> FS_Getエセ英語コメント()
-		{
-			foreach (int dummy in Enumerable.Range(0, SCommon.CRandom.GetRange(3, 5)))
+			// 連続する空行を除去する。
+			//
+			for (int index = 1; index < this.JSLines.Count; index++)
 			{
-				string[] tokens = new string[SCommon.CRandom.GetRange(7, 13)];
+				if (this.JSLines[index] == "" && this.JSLines[index - 1] == "")
+				{
+					this.JSLines.RemoveAt(index);
+					index--;
+				}
+			}
 
-				for (int index = 0; index < tokens.Length; index++)
-					tokens[index] = SCommon.CRandom.ChooseOne(JSResource.英単語リスト);
+			// 先頭と終端の空行を除去する。
+			{
+				while (1 <= this.JSLines.Count && this.JSLines[0] == "")
+					this.JSLines.RemoveAt(0);
 
-				string line = string.Join(", ", tokens);
-				line = new string(line.ToCharArray().Where(chr => chr != ',' || SCommon.CRandom.GetInt(10) == 0).ToArray());
-				line = line.Substring(0, 1).ToUpper() + line.Substring(1).ToLower() + ".";
-				yield return line;
+				while (1 <= this.JSLines.Count && this.JSLines[this.JSLines.Count - 1] == "")
+					this.JSLines.RemoveAt(this.JSLines.Count - 1);
 			}
 		}
 	}

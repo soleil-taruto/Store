@@ -42,7 +42,8 @@ namespace Charlotte
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/TC", "255", "255", "255" }));
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/BC", "255", "255", "255" }));
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/ACM", "0", "0", "0" }));
-			Main4(new ArgsReader(new string[] { @"C:\temp", "/ACM", "0", "0", "10" }));
+			//Main4(new ArgsReader(new string[] { @"C:\temp", "/ACM", "0", "0", "10" }));
+			Main4(new ArgsReader(new string[] { @"C:\temp", "/S", "280", "400" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -183,6 +184,19 @@ namespace Charlotte
 						throw new Exception("不正なパラメータ");
 
 					canvas = AutoCutMargin(canvas, new I2Point(x, y), marginForPut);
+				}
+				else if (ar.ArgIs("/S"))
+				{
+					int w = int.Parse(ar.NextArg());
+					int h = int.Parse(ar.NextArg());
+
+					if (
+						w < 1 || SCommon.IMAX < w ||
+						h < 1 || SCommon.IMAX < h
+						)
+						throw new Exception("不正なパラメータ");
+
+					canvas = canvas.Expand(w, h);
 				}
 				else
 				{

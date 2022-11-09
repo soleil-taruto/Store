@@ -61,16 +61,7 @@ namespace Charlotte.GameCommons
 					byte[] fileData = this.Func_GetFileData();
 					int handle = -1;
 
-#if false
-					using (WorkingDir wd = new WorkingDir())
-					{
-						string file = wd.MakePath();
-						File.WriteAllBytes(file, fileData);
-						handle = DX.LoadSoundMem(file); // SetLoop*SamplePosSoundMem が正常に動作しない。@ 2021.4.30
-					}
-#else
-					DDSystem.PinOn(fileData, p => handle = DX.LoadSoundMemByMemImage(p, fileData.Length)); // DxLibDotNet3_22c で正常に動作しない。@ 2021.4.18
-#endif
+					DDSystem.PinOn(fileData, p => handle = DX.LoadSoundMemByMemImage(p, (ulong)fileData.Length));
 
 					if (handle == -1) // ? 失敗
 						throw new DDError("Sound File SHA-512: " + SCommon.Hex.ToString(SCommon.GetSHA512(fileData)));

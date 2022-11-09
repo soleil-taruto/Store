@@ -2036,16 +2036,6 @@ zip					【動詞】
 			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
 			.ToArray();
 
-		public static string[] 英単語リスト = SCommon.TextToLines(RES_英単語リスト)
-			.Select(v => v.Trim())
-			.Where(v => v != "" && v[0] != ';') // 空行とコメント行を除去
-			.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
-			.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
-			.Distinct()
-			.Select(v => JSCommon.似非単語に変換するフィルタ(v))
-			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
-			.ToArray();
-
 		public static string[] 英単語リスト_前置詞 = Get英単語リスト("前置詞");
 		public static string[] 英単語リスト_形容詞 = Get英単語リスト("形容詞");
 		public static string[] 英単語リスト_代名詞 = Get英単語リスト("代名詞");
@@ -2062,7 +2052,6 @@ zip					【動詞】
 				.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
 				.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
 				.Distinct()
-				.Select(v => JSCommon.似非単語に変換するフィルタ(v))
 				//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
 				.ToArray();
 		}

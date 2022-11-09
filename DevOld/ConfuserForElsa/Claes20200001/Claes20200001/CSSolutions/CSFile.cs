@@ -164,21 +164,12 @@ namespace Charlotte.CSSolutions
 					chrs[index + 1] == '/'
 					)
 				{
-					if (CSCommon.IsMatch(chrs, index, CSSpecialStrings.KEEP_COMMENT_START_PATTERN.ToArray()))
-					{
-						// C++系コメントの後に改行が必ずあると想定する。
+					chrs[index + 0] = ' '; // '/' 除去
+					chrs[index + 1] = ' '; // '/' 除去
 
-						index = RC_Skip_EC2(chrs, index + 2, '\r', '\n') + 1;
-					}
-					else
-					{
-						chrs[index + 0] = ' '; // '/' 除去
-						chrs[index + 1] = ' '; // '/' 除去
+					// C++系コメントの後に改行が必ずあると想定する。
 
-						// C++系コメントの後に改行が必ずあると想定する。
-
-						index = RC_Mask(chrs, index + 2, '\r', '\n') + 1;
-					}
+					index = RC_Mask(chrs, index + 2, '\r', '\n') + 1;
 				}
 			}
 			File.WriteAllText(_file, new string(chrs), Encoding.UTF8);
@@ -219,17 +210,6 @@ namespace Charlotte.CSSolutions
 				chrs[index + 1] != endChr_2
 				)
 				chrs[index++] = ' ';
-
-			return index; // endChr_1 の位置
-		}
-
-		private static int RC_Skip_EC2(char[] chrs, int index, char endChr_1, char endChr_2)
-		{
-			while (
-				chrs[index + 0] != endChr_1 ||
-				chrs[index + 1] != endChr_2
-				)
-				index++;
 
 			return index; // endChr_1 の位置
 		}
@@ -1313,140 +1293,6 @@ namespace Charlotte.CSSolutions
 				SCommon.CRandom.GetUInt64().ToString("D20") + "_" +
 				SCommon.CRandom.GetUInt64().ToString("D20") +
 				"_z";
-		}
-
-		/// <summary>
-		/// 識別子のリネーム
-		/// -- 置き換え禁止クラス名は置き換えフィルタによって置き換えられないことを想定する。
-		/// </summary>
-		/// <param name="filter">置き換えフィルタ</param>
-		/// <param name="f_isUnrenameableClassName">置き換え禁止クラス名判定</param>
-		public void RenameEx(Func<string, string> filter, Predicate<string> f_isUnrenameableClassName)
-		{
-			string text = File.ReadAllText(_file, Encoding.UTF8);
-			string text_bk = text;
-			bool insideOfLiteralChar = false;
-			bool insideOfLiteralString = false;
-			Dictionary<string, string> escapedLines = SCommon.CreateDictionary<string>();
-
-			text = RX_EscapeNoRenameLines(text, escapedLines);
-
-			// C#の書式上「C#の単語」で終わることは無いはずだが、一応想定する。
-			//
-			text += " "; // 番兵設置
-
-			for (int index = 0; index < text.Length; index++)
-			{
-				if (text[index] == '\\') // ? エスケープ文字 -> スキップする。
-				{
-					index++;
-					continue;
-				}
-				insideOfLiteralChar ^= text[index] == '\'';
-				insideOfLiteralString ^= text[index] == '"';
-
-				if (
-					!insideOfLiteralChar &&
-					!insideOfLiteralString &&
-					CSCommon.IsCSWordChar(text[index])
-					)
-				{
-					int end = index + 1;
-
-					while (CSCommon.IsCSWordChar(text[end]))
-						end++;
-
-					string name = text.Substring(index, end - index);
-					string nameNew = filter(name);
-
-					if (name == nameNew) // ? 置き換え禁止ワード
-					{
-						index = end;
-
-						// ? 置き換え禁止クラス名
-						// -> (置き換え禁止ワード).(後続のワード).(後続のワード).(後続のワード) ... の「後続のワード」も置き換え禁止とする。
-						if (f_isUnrenameableClassName(name))
-						{
-							//Console.WriteLine("name: " + name); // test
-
-							while (text[index] == '.' && CSCommon.IsCSWordChar(text[index + 1]))
-							{
-								end = index + 2;
-
-								while (CSCommon.IsCSWordChar(text[end]))
-									end++;
-
-								//Console.WriteLine("trailer: " + text.Substring(index, end - index)); // test
-								index = end;
-							}
-						}
-					}
-					else
-					{
-						text = text.Substring(0, index) + nameNew + text.Substring(end);
-						index += nameNew.Length;
-					}
-				}
-			}
-			text = text.Substring(0, text.Length - 1); // 復元 -- 番兵除去
-
-			text = RX_UnescapeNoRenameLines(text, escapedLines);
-			text = RX_Mix(text, text_bk);
-
-			File.WriteAllText(_file, text, Encoding.UTF8);
-		}
-
-		private static string RX_EscapeNoRenameLines(string text, Dictionary<string, string> escapedLines)
-		{
-			string[] lines = SCommon.TextToLines(text);
-
-			lines = lines.Select(line =>
-			{
-				if (line.EndsWith(CSSpecialStrings.NO_RENAME_LINE_SUFFIX))
-				{
-					string ident = "9_" + CSCommon.CreateNewIdent(); // 数字で始まるトークンは置き換えない。
-					escapedLines.Add(ident, line);
-					return ident;
-				}
-				return line;
-			})
-			.ToArray();
-
-			return SCommon.LinesToText(lines);
-		}
-
-		private static string RX_UnescapeNoRenameLines(string text, Dictionary<string, string> escapedLines)
-		{
-			string[] lines = SCommon.TextToLines(text);
-
-			lines = lines.Select(line =>
-			{
-				if (escapedLines.ContainsKey(line))
-					return escapedLines[line];
-
-				return line;
-			})
-			.ToArray();
-
-			return SCommon.LinesToText(lines);
-		}
-
-		private static string RX_Mix(string text, string text_bk)
-		{
-			string[] lines = SCommon.TextToLines(text);
-			string[] lines_bk = SCommon.TextToLines(text_bk);
-
-			if (lines.Length != lines_bk.Length) // 同じはず
-				throw null; // 想定外
-
-			List<string> dest = new List<string>();
-
-			for (int index = 0; index < lines.Length; index++)
-			{
-				dest.Add(lines[index]);
-				dest.Add("// " + lines_bk[index]);
-			}
-			return SCommon.LinesToText(dest.ToArray());
 		}
 
 		private class SMO_RangeInfo

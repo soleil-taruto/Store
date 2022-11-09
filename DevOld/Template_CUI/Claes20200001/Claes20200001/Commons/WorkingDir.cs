@@ -37,7 +37,14 @@ namespace Charlotte.Commons
 			{
 				if (this.Created)
 				{
-					SCommon.DeletePath(this.Dir);
+					try
+					{
+						Directory.Delete(this.Dir, true);
+					}
+					catch (Exception e)
+					{
+						ProcMain.WriteLog(e);
+					}
 
 					this.Created = false;
 				}
@@ -46,9 +53,7 @@ namespace Charlotte.Commons
 
 		public static RootInfo CreateProcessRoot()
 		{
-			// 環境変数 TMP のパスは ProcMain.CheckLogonUserAndTmp() で検査している。
-
-			// 環境変数 TMP のフォルダの配下は定期的に削除される。-> プロセス終了時の削除漏れはケアしない。
+			// 環境変数 TMP のパスは ProcMain.CheckLogonUserAndTmp() で検査している。-- ProcMain.GUIMain() の場合のみ
 
 			return new RootInfo(Path.Combine(Environment.GetEnvironmentVariable("TMP"), ProcMain.APP_IDENT + "_" + Process.GetCurrentProcess().Id));
 		}
@@ -64,8 +69,6 @@ namespace Charlotte.Commons
 				if (Root == null)
 					throw new Exception("Root is null");
 
-				//this.Dir = Path.Combine(Root.GetDir(), Guid.NewGuid().ToString("B"));
-				//this.Dir = Path.Combine(Root.GetDir(), SecurityTools.MakePassword_9A());
 				this.Dir = Path.Combine(Root.GetDir(), "$" + CtorCounter++);
 
 				SCommon.CreateDir(this.Dir);
@@ -82,8 +85,6 @@ namespace Charlotte.Commons
 
 		public string MakePath()
 		{
-			//return this.GetPath(Guid.NewGuid().ToString("B"));
-			//return this.GetPath(SecurityTools.MakePassword_9A());
 			return this.GetPath("$" + this.PathCounter++);
 		}
 

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using Microsoft.Win32;
 
@@ -14,8 +15,8 @@ namespace Charlotte.Commons
 {
 	public static class ProcMain
 	{
-		public const string APP_IDENT = "{ca4ab237-a76d-40c5-9e93-267059d27324}"; // アプリ毎に変更する。
-		public const string APP_TITLE = "Elsa20200001-Game";
+		public const string APP_IDENT = "{c496ce16-4117-4315-8d03-282dc4842266}";
+		public const string APP_TITLE = "APP-20200001";
 
 		public static string SelfFile;
 		public static string SelfDir;
@@ -44,6 +45,8 @@ namespace Charlotte.Commons
 			{
 				WriteLog(e);
 
+				//MessageBox.Show("" + e, Path.GetFileNameWithoutExtension(SelfFile ?? APP_TITLE) + " / Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
 				Console.WriteLine("Press ENTER key. (Error termination)");
 				Console.ReadLine();
 			}
@@ -60,11 +63,23 @@ namespace Charlotte.Commons
 			SelfFile = Assembly.GetEntryAssembly().Location;
 			SelfDir = Path.GetDirectoryName(SelfFile);
 
-			Mutex procMutex = new Mutex(false, APP_IDENT);
+			string procMutexName;
+
+			using (SHA512 sha512 = SHA512.Create())
+			{
+				string s = APP_IDENT + SelfDir;
+				byte[] b = Encoding.UTF8.GetBytes(s);
+				byte[] bh = sha512.ComputeHash(b);
+				string h = string.Join("", bh.Select(bChr => bChr.ToString("x02")));
+
+				procMutexName = h;
+			}
+
+			Mutex procMutex = new Mutex(false, procMutexName);
 
 			if (procMutex.WaitOne(0))
 			{
-				if (GlobalProcMtx.Create(APP_IDENT, APP_TITLE))
+				if (GlobalProcMtx.Create(procMutexName, APP_TITLE))
 				{
 					CheckSelfFile();
 					Directory.SetCurrentDirectory(SelfDir);
@@ -187,7 +202,7 @@ namespace Charlotte.Commons
 					MessageBoxIcon.Error
 					);
 
-				Environment.Exit(7);
+				Environment.Exit(6);
 			}
 
 			string tmp = Environment.GetEnvironmentVariable("TMP");
@@ -196,7 +211,6 @@ namespace Charlotte.Commons
 				tmp == null ||
 				tmp == "" ||
 				tmp != SJIS.GetString(SJIS.GetBytes(tmp)) ||
-				//tmp.Length < 3 ||
 				tmp.Length < 4 || // ルートDIR禁止
 				tmp[1] != ':' ||
 				tmp[2] != '\\' ||
@@ -211,11 +225,11 @@ namespace Charlotte.Commons
 					MessageBoxIcon.Error
 					);
 
-				Environment.Exit(8);
+				Environment.Exit(7);
 			}
 		}
 
-		private class GlobalProcMtx
+		private static class GlobalProcMtx
 		{
 			private static Mutex ProcMtx;
 

@@ -9,103 +9,26 @@ namespace Charlotte.CSSolutions
 {
 	public class CSRenameVarsFilter
 	{
-		/// <summary>
-		/// テスト用
-		/// null == 無効
-		/// null 以外 == この文字列を「置き換え禁止ワードのリスト」から除去する。
-		/// </summary>
-		public static string 置き換え禁止ワードの例外ワード = null;
+		private Dictionary<string, string> OrigName2NameNew = SCommon.CreateDictionary<string>();
+		private Dictionary<string, string> NameNew2OrigName = SCommon.CreateDictionary<string>();
 
-		/// <summary>
-		/// テスト用
-		/// </summary>
-		/// <returns>置き換え禁止ワードのリスト</returns>
-		public string[] Get置き換え禁止ワードのリスト()
+		public string GetNameNew(string name)
 		{
-			return this.置き換え禁止ワードのリスト;
-		}
-
-		private string[] 置き換え禁止ワードのリスト = SCommon.TextToLines(CSResources.予約語リスト + CSConsts.CRLF + CSResources.予約語クラス名リスト)
-			.Select(v => v.Trim())
-			.Where(v => v != "" && v[0] != ';') // ? 空行ではない && コメント行ではない
-			.Where(v => v != 置き換え禁止ワードの例外ワード) // テスト用
-			.ToArray();
-
-		private List<string> 置き換え禁止ワード処理履歴 = new List<string>();
-		private int Count置き換え実施 = 0;
-		private Dictionary<string, string> 変換テーブル = SCommon.CreateDictionary<string>();
-
-		public string Filter(string name)
-		{
-			if (
-				name == "" ||
-				SCommon.DECIMAL.Contains(name[0])
-				)
-				return name;
-
-			if (this.置き換え禁止ワードのリスト.Contains(name))
-			{
-				this.置き換え禁止ワード処理履歴.Add(name);
-				return name;
-			}
-			this.Count置き換え実施++;
 			string nameNew;
 
-			if (this.変換テーブル.ContainsKey(name))
+			if (this.OrigName2NameNew.ContainsKey(name))
 			{
-				nameNew = this.変換テーブル[name];
+				nameNew = this.OrigName2NameNew[name];
 			}
 			else
 			{
 				nameNew = this.CreateNameNew();
-				this.変換テーブル.Add(name, nameNew);
+
+				this.OrigName2NameNew.Add(name, nameNew);
+				this.NameNew2OrigName.Add(nameNew, name);
 			}
 			return nameNew;
 		}
-
-		public void Write置き換え禁止ワード処理履歴(string file)
-		{
-			Dictionary<string, int> word2Count = SCommon.CreateDictionary<int>();
-
-			foreach (string word in this.置き換え禁止ワード処理履歴)
-			{
-				if (word2Count.ContainsKey(word))
-					word2Count[word]++;
-				else
-					word2Count.Add(word, 1);
-			}
-			KeyValuePair<string, int>[] words = word2Count.ToArray();
-
-			Array.Sort(words, (a, b) =>
-			{
-				int ret = SCommon.Comp(a.Value, b.Value) * -1; // 件数_多い順
-				if (ret != 0)
-					return ret;
-
-				ret = SCommon.Comp(a.Key.Length, b.Key.Length); // ワード_短い順
-				if (ret != 0)
-					return ret;
-
-				ret = SCommon.Comp(a.Key, b.Key); // ワード_辞書順
-				return ret;
-			});
-
-			using (CsvFileWriter writer = new CsvFileWriter(file))
-			{
-				foreach (KeyValuePair<string, int> word in words)
-				{
-					writer.WriteCell(word.Key);
-					writer.WriteCell(word.Value.ToString());
-					writer.EndRow();
-				}
-
-				// ついでに出力
-				writer.WriteRow(new string[] { "置き換え禁止件数", this.置き換え禁止ワード処理履歴.Count.ToString() });
-				writer.WriteRow(new string[] { "置き換え実施件数", this.Count置き換え実施.ToString() });
-			}
-		}
-
-		private Dictionary<string, object> CNN_Names = SCommon.CreateDictionary<object>();
 
 		public string CreateNameNew()
 		{
@@ -115,50 +38,18 @@ namespace Charlotte.CSSolutions
 			do
 			{
 				if (1000 < ++countTry)
-					throw new Exception("想定外のトライ回数 -- 非常に運が悪いか NameNew をほぼ生成し尽くした。");
+					throw new Exception("とても運が悪いか、新しい名前をほぼ使い果たしました。");
 
 				nameNew = this.TryCreateNameNew();
 			}
-			while (this.CNN_Names.ContainsKey(nameNew) || this.置き換え禁止ワードのリスト.Contains(nameNew));
+			while (this.NameNew2OrigName.ContainsKey(nameNew) || CSResources.予約語リスト.Contains(nameNew));
 
-			this.CNN_Names.Add(nameNew, null);
 			return nameNew;
 		}
 
-		private string[] ランダムな単語リスト = SCommon.TextToLines(CSResources.ランダムな単語リスト)
-			.Select(v => v.Trim())
-			.Where(v => v != "" && v[0] != ';') // ? 空行ではない && コメント行ではない
-			.Distinct()
-			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
-			.ToArray();
-
-		private string[] 英単語リスト = SCommon.TextToLines(CSResources.英単語リスト)
-			.Select(v => v.Trim())
-			.Where(v => v != "" && v[0] != ';') // ? 空行ではない && コメント行ではない
-			.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
-			.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
-			.Distinct()
-			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
-			.ToArray();
-
-		private string[] 英単語リスト_前置詞 = Get英単語リスト("前置詞");
-		private string[] 英単語リスト_形容詞 = Get英単語リスト("形容詞");
-		private string[] 英単語リスト_代名詞 = Get英単語リスト("代名詞");
-		private string[] 英単語リスト_名詞 = Get英単語リスト("名詞");
-		private string[] 英単語リスト_副詞 = Get英単語リスト("副詞");
-		private string[] 英単語リスト_動詞 = Get英単語リスト("動詞");
-
-		private static string[] Get英単語リスト(string 品詞)
+		public IEnumerable<KeyValuePair<string, string>> Get変換テーブル()
 		{
-			return SCommon.TextToLines(CSResources.英単語リスト)
-				.Select(v => v.Trim())
-				.Where(v => v != "" && v[0] != ';') // ? 空行ではない && コメント行ではない
-				.Where(v => v.Contains(品詞)) // 品詞の絞り込み
-				.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
-				.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
-				.Distinct()
-				//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
-				.ToArray();
+			return this.OrigName2NameNew;
 		}
 
 		/// <summary>
@@ -183,15 +74,15 @@ namespace Charlotte.CSSolutions
 			{
 				// 似非英語名
 				string name =
-					SCommon.CRandom.ChooseOne(this.英単語リスト_動詞) +
-					SCommon.CRandom.ChooseOne(this.英単語リスト_形容詞) +
-					SCommon.CRandom.ChooseOne(this.ランダムな単語リスト) +
-					SCommon.CRandom.ChooseOne(this.英単語リスト_名詞);
+					SCommon.CRandom.ChooseOne(CSResources.英単語リスト_動詞) +
+					SCommon.CRandom.ChooseOne(CSResources.英単語リスト_形容詞) +
+					SCommon.CRandom.ChooseOne(CSResources.ランダムな単語リスト) +
+					SCommon.CRandom.ChooseOne(CSResources.英単語リスト_名詞);
 
 				if (NAME_LEN_MIN <= name.Length && name.Length <= NAME_LEN_MAX)
 					return name;
 			}
-			throw new Exception("非常に運が悪いか、しきい値に問題があります。");
+			throw new Exception("とても運が悪いか、しきい値に問題があります。");
 		}
 
 		public string ForTest_Get似非英語名_本番用()
@@ -202,36 +93,21 @@ namespace Charlotte.CSSolutions
 		public string ForTest_Get似非英語名()
 		{
 			return
-				SCommon.CRandom.ChooseOne(this.英単語リスト_動詞) +
-				SCommon.CRandom.ChooseOne(this.英単語リスト_形容詞) +
-				SCommon.CRandom.ChooseOne(this.ランダムな単語リスト) +
-				SCommon.CRandom.ChooseOne(this.英単語リスト_名詞);
+				SCommon.CRandom.ChooseOne(CSResources.英単語リスト_動詞) +
+				SCommon.CRandom.ChooseOne(CSResources.英単語リスト_形容詞) +
+				SCommon.CRandom.ChooseOne(CSResources.ランダムな単語リスト) +
+				SCommon.CRandom.ChooseOne(CSResources.英単語リスト_名詞);
 		}
 
 		public string[][] ForTest_Get似非英語名用単語集リスト()
 		{
 			return new string[][]
 			{
-				this.英単語リスト_動詞,
-				this.英単語リスト_形容詞,
-				this.ランダムな単語リスト,
-				this.英単語リスト_名詞,
+				CSResources.英単語リスト_動詞,
+				CSResources.英単語リスト_形容詞,
+				CSResources.ランダムな単語リスト,
+				CSResources.英単語リスト_名詞,
 			};
-		}
-
-		private string[] 予約語クラス名リスト = SCommon.TextToLines(CSResources.予約語クラス名リスト)
-			.Select(v => v.Trim())
-			.Where(v => v != "" && v[0] != ';') // ? 空行ではない && コメント行ではない
-			.ToArray();
-
-		public bool Is予約語クラス名(string name)
-		{
-			return 予約語クラス名リスト.Contains(name);
-		}
-
-		public IEnumerable<KeyValuePair<string, string>> Get変換テーブル()
-		{
-			return this.変換テーブル;
 		}
 	}
 }

@@ -55,6 +55,9 @@ namespace Charlotte
 			if (urlPath == "/API-RemoteEndPoint")
 				return channel => Action_RemoteEndPoint.Perform(channel);
 
+			if (urlPath == "/BatchService/CRDIG-40-8450056454715280836387383747438425309643-Z") // サーバー内でのみ使用するため、予測不能な文字列にする。
+				return channel => Action_BatchService.Perform(channel);
+
 			return null;
 		}
 	}
