@@ -43,5 +43,10 @@ namespace Charlotte.Commons
 		{
 			return new D2Point(a.X / b, a.Y / b);
 		}
+
+		public override string ToString()
+		{
+			return string.Format("(X:{0:F9},Y:{1:F9})", this.X, this.Y);
+		}
 	}
 }

@@ -10,9 +10,10 @@ namespace Charlotte
 		public static IEnumerable<T> ForEach<T>(this IEnumerable<T> src, Action<T> action)
 		{
 			foreach (T element in src)
+			{
 				action(element);
-
-			return src;
+				yield return element;
+			}
 		}
 
 		public static IEnumerable<T> OrderBy<T>(this IEnumerable<T> src, Comparison<T> comp)
@@ -46,6 +47,19 @@ namespace Charlotte
 		public static IEnumerable<T> DistinctOrderBy<T>(this IEnumerable<T> src, Comparison<T> comp)
 		{
 			return src.OrderBy(comp).OrderedDistinct((a, b) => comp(a, b) == 0);
+		}
+
+		// ====
+
+		public static IEnumerable<T> Test0011_ForEach<T>(this IEnumerable<T> src, Action<T> action)
+		{
+			// 複製すると想定どおり動くっぽい。
+			//src = src.ToArray(); // 複製
+
+			foreach (T element in src)
+				action(element);
+
+			return src;
 		}
 	}
 }

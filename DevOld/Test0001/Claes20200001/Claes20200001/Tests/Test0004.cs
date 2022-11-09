@@ -2,68 +2,103 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Charlotte.Commons;
 
 namespace Charlotte.Tests
 {
 	public class Test0004
 	{
-		private const double SNOW_INIT = 1.0;
-		private const double SNOWPLOW_POWER = 1.0;
-		private const double SNOW_PER_MILLIS_EXPECT_LW = 0.0;
-		private const double SNOW_PER_MILLIS_EXPECT_HI = 1.0;
-		private const int SNOW_PER_MILLIS_BIN_SEARCH_MAX = 50;
-		private const int MILLIS_PER_HOUR = 3600000;
-
 		public void Test01()
 		{
-			double l = SNOW_PER_MILLIS_EXPECT_LW;
-			double r = SNOW_PER_MILLIS_EXPECT_HI;
-
-			for (int c = 0; c < SNOW_PER_MILLIS_BIN_SEARCH_MAX; c++)
+			for (double distance = 0.0001; distance < 10000.0; distance *= 3.16)
 			{
-				double m = (l + r) / 2;
-				double rate = GetDistanceRate(m);
-
-				if (1.5 < rate)
+				for (double angle = 0.0; angle < Math.PI * 2.0; angle += 0.0001)
 				{
-					l = m;
+					double x = Math.Cos(angle) * distance;
+					double y = Math.Sin(angle) * distance;
+
+					double ret = GetAngle(x, y);
+					double diff = ret - angle;
+
+					Console.WriteLine(distance.ToString("F9") + ", " + angle.ToString("F9") + " ==> " + diff.ToString("F9"));
+
+					if (Math.Abs(diff) > SCommon.MICRO)
+						throw null; // BUG !!!
 				}
-				else
-				{
-					r = m;
-				}
+				//Console.WriteLine("OK");
 			}
-
-			{
-				double m = (l + r) / 2;
-				double millis = SNOW_INIT / m;
-
-				TimeSpan t = new TimeSpan(12, 0, 0) - TimeSpan.FromMilliseconds(millis);
-
-				Console.WriteLine(t.ToString("hh\\:mm\\:ss\\.fff"));
-			}
+			Console.WriteLine("OK!");
 		}
 
-		private double GetDistanceRate(double snowPerMillis)
+		public void Test02()
 		{
-			double snow = SNOW_INIT;
-			double d = 0.0;
+			const double distance = 100.0;
 
-			for (int t = 0; t < MILLIS_PER_HOUR; t++)
+			for (int a = 1; a < 8; a++)
 			{
-				d += SNOWPLOW_POWER / snow;
-				snow += snowPerMillis;
-			}
-			double d1 = d;
+				for (int b = 0; b < 10000; b++)
+				{
+					for (int bSgn = -1; bSgn <= 1; bSgn += 2)
+					{
+						double angle = (Math.PI / 4.0) * a + b * 0.00000001 * bSgn;
 
-			for (int t = 0; t < MILLIS_PER_HOUR; t++)
+						double x = Math.Cos(angle) * distance;
+						double y = Math.Sin(angle) * distance;
+
+						double ret = GetAngle(x, y);
+						double diff = ret - angle;
+
+						Console.WriteLine(distance.ToString("F9") + ", " + angle.ToString("F9") + " ==> " + diff.ToString("F9"));
+
+						if (Math.Abs(diff) > SCommon.MICRO)
+							throw null; // BUG !!!
+					}
+				}
+			}
+			Console.WriteLine("OK!");
+		}
+
+		/// <summary>
+		/// 原点から指定座標への角度を返す。
+		/// ラジアン角 (0.0 ～ Math.PI * 2.0)
+		/// 右真横 (0,0 -> 1,0 方向) を 0.0 として時計回り。但し、X軸プラス方向は右、Y軸プラス方向は下である。
+		/// 1周は Math.PI * 2.0
+		/// </summary>
+		/// <param name="x">X座標</param>
+		/// <param name="y">Y座標</param>
+		/// <returns>角度</returns>
+		public static double GetAngle(double x, double y)
+		{
+			if (y < 0.0) return Math.PI * 2.0 - GetAngle(x, -y);
+			if (x < 0.0) return Math.PI - GetAngle(-x, y);
+
+			if (x < y) return Math.PI / 2.0 - GetAngle(y, x);
+			if (x < SCommon.MICRO) return 0.0; // 極端に原点に近い座標の場合、常に右真横を返す。
+
+			if (y == 0.0) return 0.0;
+			if (y == x) return Math.PI / 4.0;
+
+			double r1 = 0.0;
+			double r2 = Math.PI / 4.0;
+			double t = y / x;
+			double rm;
+
+			for (int c = 1; ; c++)
 			{
-				d += SNOWPLOW_POWER / snow;
-				snow += snowPerMillis;
-			}
-			double d2 = d;
+				rm = (r1 + r2) / 2.0;
 
-			return d2 / d1;
+				//if (10 <= c) // for Game
+				if (50 < c)
+					break;
+
+				double rmt = Math.Tan(rm);
+
+				if (t < rmt)
+					r2 = rm;
+				else
+					r1 = rm;
+			}
+			return rm;
 		}
 	}
 }

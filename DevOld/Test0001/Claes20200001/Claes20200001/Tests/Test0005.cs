@@ -8,84 +8,129 @@ namespace Charlotte.Tests
 {
 	public class Test0005
 	{
-		private const int PLAYER_NUM = 8;
-
-		private class GameInfo
-		{
-			public PlayerInfo[] Players = new PlayerInfo[PLAYER_NUM];
-			public PlayerInfo[] RankOrder;
-		}
-
-		private class PlayerInfo
-		{
-			public int SelfIndex; // 0～
-			public int[] Points = new int[PLAYER_NUM];
-			public int Rank; // 1～
-
-			public int Point
-			{
-				get
-				{
-					return this.Points.Sum();
-				}
-			}
-		}
-
-		private GameInfo CreateGame()
-		{
-			GameInfo game = new GameInfo();
-
-			for (int index = 0; index < PLAYER_NUM; index++)
-			{
-				game.Players[index] = new PlayerInfo();
-				game.Players[index].SelfIndex = index;
-			}
-			for (int b = 1; b < PLAYER_NUM; b++)
-			{
-				for (int a = 0; a < b; a++)
-				{
-					int aPoint = Math.Max(
-						SCommon.CRandom.GetInt(3) * 5,
-						SCommon.CRandom.GetInt(3) * 5
-						);
-					int bPoint = 10 - aPoint;
-
-					game.Players[a].Points[b] = aPoint;
-					game.Players[b].Points[a] = bPoint;
-				}
-			}
-
-			for (int index = 0; index < PLAYER_NUM; index++)
-				game.Players[index].Rank = game.Players.Where(v => game.Players[index].Point < v.Point).Count() + 1;
-
-			game.RankOrder = game.Players.ToArray(); // Cloning
-
-			Array.Sort(game.RankOrder, (a, b) => a.Rank - b.Rank);
-
-			return game;
-		}
-
 		public void Test01()
 		{
-			for (int c = 0; c < 10; )
+			foreach (int countScale in new int[] { 100, 300, 1000, 3000, 10000 })
 			{
-				GameInfo game = CreateGame();
+				foreach (int limitScale in new int[] { 100, 10000, 1000000 })
+				{
+					Console.WriteLine(countScale + ", " + limitScale);
 
-				if (SCommon.HasSame(game.Players, (a, b) => a.Point == b.Point))
-					continue;
-
-				if (
-					game.RankOrder[1].Point !=
-					game.RankOrder[4].Point +
-					game.RankOrder[5].Point +
-					game.RankOrder[6].Point +
-					game.RankOrder[7].Point
-					)
-					continue;
-
-				Console.WriteLine(game.RankOrder[2].Points[game.RankOrder[6].SelfIndex]);
-				c++;
+					for (int testcnt = 0; testcnt < 1000; testcnt++)
+					{
+						Test01_a(countScale, limitScale);
+					}
+					Console.WriteLine("OK");
+				}
 			}
+			Console.WriteLine("OK!");
+		}
+
+		private void Test01_a(int countScale, int limitScale)
+		{
+			int[] arr = GetRandInts(countScale, limitScale);
+
+			Array.Sort(arr, (a, b) => a - b);
+
+			// 範囲外の存在しない値(前方)
+			Test01_b(arr, -1);
+
+			// 範囲外の存在しない値(後方)
+			Test01_b(arr, SCommon.IMAX);
+
+			if (1 <= arr.Length)
+			{
+				int target = SCommon.CRandom.ChooseOne(arr);
+
+				// 範囲内の存在する値
+				Test01_b(arr, target);
+
+				for (int index = 0; index < arr.Length; index++)
+					if (arr[index] >= target)
+						arr[index]++;
+
+				// 範囲内の存在しない値
+				Test01_b(arr, target);
+			}
+		}
+
+		private void Test01_b(int[] arr, int target)
+		{
+			int[] range1 = GetOuterRange_v1(arr, target, SCommon.Comp);
+			int[] range2 = GetOuterRange_v2(arr, target, SCommon.Comp);
+
+			if (SCommon.Comp(range1, range2, SCommon.Comp) != 0) // ? 不一致
+				throw null; // BUG !!!
+		}
+
+		private int[] GetOuterRange_v1<T>(T[] arr, T target, Comparison<T> comp)
+		{
+			int l = -1;
+			int r = arr.Length;
+
+			while (l + 1 < r)
+			{
+				int m = (l + r) / 2;
+				int ret = comp(arr[m], target);
+
+				if (ret < 0)
+				{
+					l = m;
+				}
+				else if (ret > 0)
+				{
+					r = m;
+				}
+				else
+				{
+					l = GetBorder(arr, v => comp(v, target) != 0, l, m);
+					r = GetBorder(arr, v => comp(v, target) == 0, m, r) + 1;
+					break;
+				}
+			}
+			return new int[] { l, r };
+		}
+
+		private int GetBorder<T>(T[] arr, Predicate<T> matchForLeft, int l, int r)
+		{
+			while (l + 1 < r)
+			{
+				int m = (l + r) / 2;
+
+				if (matchForLeft(arr[m]))
+				{
+					l = m;
+				}
+				else
+				{
+					r = m;
+				}
+			}
+			return l;
+		}
+
+		private int[] GetOuterRange_v2<T>(T[] arr, T target, Comparison<T> comp)
+		{
+			int l;
+			int r;
+
+			for (l = arr.Length - 1; 0 <= l; l--)
+				if (comp(arr[l], target) < 0)
+					break;
+
+			for (r = 0; r < arr.Length; r++)
+				if (comp(arr[r], target) > 0)
+					break;
+
+			return new int[] { l, r };
+		}
+
+		private int[] GetRandInts(int countScale, int limitScale)
+		{
+			int count = SCommon.CRandom.GetInt(countScale);
+			int limit = SCommon.CRandom.GetInt(limitScale) + 1;
+
+			return Enumerable.Range(1, count).Select(dummy => SCommon.CRandom.GetInt(limit)).ToArray();
 		}
 	}
 }

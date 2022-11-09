@@ -38,8 +38,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\00_Shooting\Gattonero20200001", @"C:\Dev\GameJS\00_Shooting\res", @"C:\temp" }));
-			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\00_Shooting\Gattonero20200001", @"C:\Dev\GameJS\00_Shooting\res", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -324,12 +324,18 @@ namespace Charlotte
 				lines[index] = line; // 行を更新
 			}
 
+			string appIdent =
+				"APP_" +
+				SCommon.Hex.ToString(SCommon.GetSHA512(Encoding.UTF8.GetBytes(this.SourceDir))).Substring(0, 32).ToUpper() +
+				"_ID";
+
 			string text = SCommon.LinesToText(lines.Concat(extendLines).ToArray());
 
 			text = Common.Replace(text, "@(ASTR)", () => "*");
 			text = Common.Replace(text, "@(AUTO)", () => "" + (AutoCounter++));
 			text = Common.Replace(text, "@(UNQN)", () => Common.CreateRandIdent());
 			text = Common.Replace(text, "@(UUID)", () => Guid.NewGuid().ToString("B"));
+			text = Common.Replace(text, "@(APID)", () => appIdent);
 
 			lines = SCommon.TextToLines(text);
 
