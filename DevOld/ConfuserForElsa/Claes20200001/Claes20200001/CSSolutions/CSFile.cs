@@ -604,8 +604,8 @@ namespace Charlotte.CSSolutions
 
 			return
 				"SAM_a_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") + "_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") +
+				SCommon.CRandom.GetULong().ToString("D20") + "_" +
+				SCommon.CRandom.GetULong().ToString("D20") +
 				"_z";
 		}
 
@@ -944,8 +944,8 @@ namespace Charlotte.CSSolutions
 
 			return
 				"SLS2_a_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") + "_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") +
+				SCommon.CRandom.GetULong().ToString("D20") + "_" +
+				SCommon.CRandom.GetULong().ToString("D20") +
 				"_z";
 		}
 
@@ -1265,8 +1265,8 @@ namespace Charlotte.CSSolutions
 
 			return
 				"ADM_a_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") + "_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") +
+				SCommon.CRandom.GetULong().ToString("D20") + "_" +
+				SCommon.CRandom.GetULong().ToString("D20") +
 				"_z";
 		}
 
@@ -1290,7 +1290,7 @@ namespace Charlotte.CSSolutions
 			//
 			text += " "; // 番兵設置
 
-			StringMultiReplace smr = new StringMultiReplace();
+			StringSpliceSequencer sss = new StringSpliceSequencer(text);
 
 			for (int index = 0; index < text.Length; index++)
 			{
@@ -1341,13 +1341,13 @@ namespace Charlotte.CSSolutions
 					}
 					else
 					{
-						smr.AddRange(index, end, nameNew);
+						sss.Splice(index, end - index, nameNew);
 						index = end;
 					}
 				}
 			}
-			text = smr.Perform(text);
-			smr = null;
+			text = sss.GetString();
+			sss = null;
 
 			text = text.Substring(0, text.Length - 1); // 番兵除去
 

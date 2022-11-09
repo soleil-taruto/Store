@@ -14,28 +14,47 @@ function <void> SetColor(<string> color)
 
 /*
 	矩形を描画する。
-	(l, t, w, h): 左側 X-座標, 上側 Y-座標, 幅, 高さ
+	(l, t, w, h): 左上座標, 幅, 高さ
 */
 function <void> PrintRect(<double> l, <double> t, <double> w, <double> h)
 {
+	if (w < MICRO || h < MICRO) // ? 小さすぎるので描画不要
+	{
+		return;
+	}
+
 	Context.fillRect(l, t, w, h);
 }
 
 /*
 	矩形を描画する。
-	(x, y, w, h): 中心 X-座標, 中心 Y-座標, 幅, 高さ
+	(l, t, r, b): 左上座標, 右下座標
+*/
+function <void> PrintRect_LTRB(<double> l, <double> t, <double> r, <double> b)
+{
+	PrintRect(l, t, r - l, b - t);
+}
+
+/*
+	矩形を描画する。
+	(x, y, w, h): 中心座標, 幅, 高さ
 */
 function <void> PrintRect_XYWH(<double> x, <double> y, <double> w, <double> h)
 {
-	Context.fillRect(x - w / 2, y - h / 2, w, h);
+	PrintRect(x - w / 2, y - h / 2, w, h);
 }
 
 /*
 	円を描画する。
-	(x, y, r): 中心 X-座標, 中心 Y-座標, 半径
+	(x, y, r): 中心座標, 半径
 */
 function <void> PrintCircle(<double> x, <double> y, <double> r)
 {
+	if (r < MICRO) // ? 小さすぎるので描画不要
+	{
+		return;
+	}
+
 	Context.beginPath();
 	Context.arc(x, y, r, 0, Math.PI * 2.0, false);
 	Context.fill();

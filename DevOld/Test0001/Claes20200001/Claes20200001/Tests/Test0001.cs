@@ -11,65 +11,97 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			Test01_a(100, 30000);
-			Test01_a(300, 10000);
-			Test01_a(1000, 3000);
-			Test01_a(3000, 1000);
-			Test01_a(10000, 300);
-			Test01_a(30000, 100);
+			//Test01_a(100000, 20, 1000);
+			//Test01_a(2000, 2000, 1000000);
+			//Test01_a(30, 200000, 1000000000);
+
+			Test01_a(100000, 30, 30);
+			Test01_a(10000, 200, 200);
+			Test01_a(1000, 1000, 1000);
+			Test01_a(200, 2000, 2000);
+			Test01_a(30, 3000, 3000);
 
 			Console.WriteLine("OK!");
 		}
 
-		private void Test01_a(int dataSizeLmt, int testCount)
+		private void Test01_a(int testCount, int nMax, int aMax)
 		{
 			for (int testcnt = 0; testcnt < testCount; testcnt++)
 			{
-				byte[] src = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(dataSizeLmt));
-				string enc = SCommon.Base64.I.Encode(src);
-				byte[] dec = SCommon.Base64.I.Decode(enc);
+				int[] aArr = Enumerable.Range(0, SCommon.CRandom.GetRange(2, nMax)).Select(dummy => SCommon.CRandom.GetRange(0, aMax)).ToArray();
 
-				if (SCommon.Comp(src, dec) != 0) // ? 不一致
+				int ans1 = Test01_b1(aArr);
+				int ans2 = Test01_b2(aArr);
+
+				if (ans1 != ans2)
 					throw null;
 			}
 			Console.WriteLine("OK");
 		}
 
-		public void Test02()
+		private int Test01_b1(int[] aArr)
 		{
-			Test02_a(100, 30000);
-			Test02_a(300, 10000);
-			Test02_a(1000, 3000);
-			Test02_a(3000, 1000);
-			Test02_a(10000, 300);
-			Test02_a(30000, 100);
+			int aMin = aArr.Min();
 
-			Console.WriteLine("OK!");
+			Queue<int> q = new Queue<int>(aArr.Select(a => a - aMin).Where(a => 1 <= a));
+
+			if (q.Count == 0)
+				return 1;
+
+			while (2 <= q.Count)
+			{
+				int a = q.Dequeue();
+				int b = q.Dequeue();
+
+				int gcd = GetGCD(a, b);
+
+				q.Enqueue(gcd);
+			}
+
+			{
+				int gcd = q.Dequeue();
+
+				return 2 <= gcd ? 1 : 2;
+			}
 		}
 
-		private void Test02_a(int dataSizeLmt, int testCount)
+		private int GetGCD(int a, int b)
 		{
-			for (int testcnt = 0; testcnt < testCount; testcnt++)
+			for (; ; )
 			{
-				byte[] src = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(dataSizeLmt));
-				string enc = SCommon.Base64.I.Encode(src);
+				int t = a % b;
 
-				// Change enc
+				if (t == 0)
+					return b;
+
+				a = b;
+				b = t;
+			}
+		}
+
+		private int Test01_b2(int[] aArr)
+		{
+			int aMax = aArr.Max();
+			int kindMin = int.MaxValue;
+
+			for (int m = 2; m <= Math.Max(2, aMax + 1); m++)
+			{
+				bool[] modMap = new bool[aMax + 1];
+				int kind = 0;
+
+				foreach (int a in aArr)
 				{
-					enc = enc.Replace("=", "");
+					int mod = a % m;
 
-					for (int c = 80; c + 30 < enc.Length; c += 100)
+					if (!modMap[mod])
 					{
-						enc = enc.Substring(0, c) + "\r\n\t" + enc.Substring(c);
+						modMap[mod] = true;
+						kind++;
 					}
 				}
-
-				byte[] dec = SCommon.Base64.I.Decode(enc);
-
-				if (SCommon.Comp(src, dec) != 0) // ? 不一致
-					throw null;
+				kindMin = Math.Min(kindMin, kind);
 			}
-			Console.WriteLine("OK");
+			return kindMin;
 		}
 	}
 }

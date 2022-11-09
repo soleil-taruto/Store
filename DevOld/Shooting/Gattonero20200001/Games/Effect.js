@@ -3,42 +3,101 @@
 */
 
 /*
-	爆発
+	ダミーエフェクト
 
-	x: 中心-X
-	y: 中心-Y
+	追加方法：
+		AddEffect(Effect_Dummy(x, y));
+
+	★サンプルとしてキープ
 */
-function* <generatorForTask> Effect_Explode(<double> x, <double> y)
+function* <generatorForTask> Effect_Dummy(<double> x, <double> y)
 {
-	for (var<Picture_t> image of P_Explode)
-	for (var<int> c = 0; c < 4; c++)
+	for (var<Scene_t> scene of CreateScene(30))
 	{
-		Draw(image, x, y - 50, 1.0, 0.0, 1.0);
+		Draw(P_Dummy, x, y, 0.5 - 0.5 * scene.Rate, scene.Rate * Math.PI, 1.0);
 
 		yield 1;
 	}
 }
 
-/*
-	自機消滅
-
-	x: 中心-X
-	y: 中心-Y
-*/
-function* <generatorForTask> Effect_PlayerDead(<double> x, <double> y)
+function <void> AddEffect_Explode(<double> x, <double> y) // 汎用爆発
 {
-	var<int> FRM_NUM = 60;
-
-	for (var<int> c = 0; c < FRM_NUM; c++)
+	for (var<int> c = 0; c < 30; c++)
 	{
-		var<double> rate = c / FRM_NUM;
+		AddEffect(function* <generatorForTask> ()
+		{
+			var<D2Point_t> pt = CreateD2Point(x, y);
+			var<D2Point_t> speed = AngleToPoint(GetRand1() * Math.PI * 2, 17.0);
+			var<double> rot = GetRand1() * Math.PI * 2;
+			var<double> rotAdd = GetRand2() * 0.1;
 
-		Draw(P_Player, x, y,
-			1.0 - rate,
-			0.0 + rate * 6.0,
-			1.0 + rate * 4.0
-			);
+			for (var<Scene_t> scene of CreateScene(20))
+			{
+				Draw(
+					P_ExplodePiece,
+					pt.X,
+					pt.Y,
+					scene.RemRate,
+					rot,
+					1.0
+					);
 
-		yield 1;
+				pt.X += speed.X;
+				pt.Y += speed.Y;
+
+				speed.X *= 0.8;
+				speed.Y *= 0.8;
+
+				rot += rotAdd;
+
+				rotAdd *= 0.8;
+
+				yield 1;
+			}
+		}());
 	}
+}
+
+function <void> AddEffect_ShotExplode(<double> x, <double> y)
+{
+	AddEffect(function* <generatorForTask> ()
+	{
+		var<double> rot = GetRand1() * Math.PI * 2;
+
+		for (var<Scene_t> scene of CreateScene(10))
+		{
+			Draw(
+				P_Shot0001,
+				x,
+				y,
+				scene.RemRate,
+				rot,
+				1.0 + 4.0 * scene.Rate
+				);
+
+			yield 1;
+		}
+	}());
+}
+
+function <void> AddEffect_TamaExplode(<double> x, <double> y)
+{
+	AddEffect(function* <generatorForTask> ()
+	{
+		var<double> rot = GetRand1() * Math.PI * 2;
+
+		for (var<Scene_t> scene of CreateScene(10))
+		{
+			Draw(
+				P_Tama0001,
+				x,
+				y,
+				scene.RemRate,
+				rot,
+				1.0 + 4.0 * scene.Rate
+				);
+
+			yield 1;
+		}
+	}());
 }

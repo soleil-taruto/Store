@@ -27,7 +27,7 @@ namespace Charlotte.Tests
 			{
 				Console.WriteLine(index.ToString("D3") + " ==> " + mapNameLenCount[index]);
 			}
-			Common.Pause();
+			SCommon.Pause();
 		}
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace Charlotte.Tests
 			{
 				Console.WriteLine(wordMaps[index].Count + " / " + wordMapList[index].Length);
 			}
-			Common.Pause();
+			SCommon.Pause();
 		}
 
 		private static string[] NameToWords(string name)

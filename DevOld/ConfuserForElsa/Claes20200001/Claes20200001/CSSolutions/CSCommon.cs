@@ -52,8 +52,8 @@ namespace Charlotte.CSSolutions
 
 			return
 				"Common_CNI_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") + "_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") +
+				SCommon.CRandom.GetULong().ToString("D20") + "_" +
+				SCommon.CRandom.GetULong().ToString("D20") +
 				"_zzz";
 		}
 

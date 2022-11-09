@@ -3,140 +3,180 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Charlotte.Commons;
-using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
-	/// <summary>
-	/// ArrayReplaceSequencer.cs テスト
-	/// </summary>
 	public class Test0003
 	{
 		public void Test01()
 		{
-			Test01_a(10, 1000);
-			Test01_a(100, 100);
-			Test01_a(1000, 10);
+			Test01_a(10000, 2);
+			Test01_a(1000, 3);
+			Test01_a(100, 4);
+			Test01_a(10, 5);
 
 			Console.WriteLine("OK!");
 		}
 
-		public void Test01_a(int testDataScale, int testCount)
+		private void Test01_a(int testCount, int nMax)
 		{
+			Test01_a2(testCount, nMax, 7);
+			Test01_a2(testCount, nMax, 10);
+			Test01_a2(testCount, nMax, 100);
+			Test01_a2(testCount, nMax, 103);
+			Test01_a2(testCount, nMax, 1000);
+			Test01_a2(testCount, nMax, 1003);
+		}
+
+		private void Test01_a2(int testCount, int nMax, int mMax)
+		{
+			Console.WriteLine(string.Join(", ", testCount, nMax, mMax));
+
 			for (int testcnt = 0; testcnt < testCount; testcnt++)
 			{
-				Test01_b(testDataScale);
+				int n = SCommon.CRandom.GetRange(1, nMax);
+				int m = SCommon.CRandom.GetRange(2, mMax);
+
+				int[] aArr = Enumerable.Range(0, n * 2).Select(dummy => SCommon.CRandom.GetRange(0, m - 1)).ToArray();
+
+				string ans1 = Test01_b1(aArr, m);
+				string ans2 = Test01_b2(aArr, m);
+
+				if (ans1 != ans2)
+					throw null;
 			}
 			Console.WriteLine("OK");
 		}
 
-		private void Test01_b(int testDataScale)
+		private string Test01_b1(int[] aArr, int m)
 		{
-			string[] words = new string[]
+			int[] aa = aArr.ToArray(); // 複製
+			int n = aa.Length;
+			int n_ = 0;
+			int i;
+
+			Array.Sort(aa, SCommon.Comp);
+
+			for (i = 0; i < n; i++)
 			{
-				"Sio",
-				"Miso",
-				"Syoyu",
-				"Hakata",
-				"Sapporo",
-				"Kitakata",
+				if (n_ == 0 || aa[n_ - 1] != aa[i])
+				{
+					aa[n_++] = aa[i];
+				}
+				else
+				{
+					n_--;
+				}
+			}
+			n = n_;
+
+			if (m % 2 != 0)
+			{
+				return n != 0 ? "Alice" : "Bob";
+			}
+			for (i = 0; i < n / 2; i++)
+			{
+				if (aa[i + n / 2] - aa[i] != m / 2)
+				{
+					return "Alice";
+				}
+			}
+			return n % 4 != 0 ? "Alice" : "Bob";
+		}
+
+		private string Test01_b2(int[] aArr, int m)
+		{
+			GameStatusInfo gameStatus = new GameStatusInfo()
+			{
+				TurnWho = Player_e.Alice,
+				AArr = aArr,
+				AliceSum = 0,
+				BobSum = 0,
+				M = m,
 			};
 
-			string src = string.Join("", Enumerable.Range(0, SCommon.CRandom.GetInt(testDataScale)).Select(dummy => SCommon.CRandom.ChooseOne(words)));
-			string word1 = SCommon.CRandom.ChooseOne(words);
-			string word2 = SCommon.CRandom.ChooseOne(words);
+			Player_e winner = Judge(gameStatus);
 
-			string ans1 = src.Replace(word1, word2);
-			string ans2;
+			return winner == Player_e.Alice ? "Alice" : "Bob";
+		}
 
+		private Player_e Judge(GameStatusInfo gameStatus)
+		{
+			if (gameStatus.AArr.Length == 0)
 			{
-				ArrayReplaceSequencer<char> rsq = new ArrayReplaceSequencer<char>();
-				int index = 0;
-
-				for (; ; )
+				if (gameStatus.AliceSum % gameStatus.M == gameStatus.BobSum % gameStatus.M)
 				{
-					index = src.IndexOf(word1, index);
+					return Player_e.Bob;
+				}
+				else
+				{
+					return Player_e.Alice;
+				}
+			}
 
-					if (index == -1)
+			bool canAliceWin = false;
+			bool canBobWin = false;
+
+			for (int index = 0; index < gameStatus.AArr.Length; index++)
+			{
+				GameStatusInfo nextGameStatus = new GameStatusInfo()
+				{
+					TurnWho = gameStatus.TurnWho == Player_e.Alice ? Player_e.Bob : Player_e.Alice,
+					AArr = gameStatus.AArr.Take(index).Concat(gameStatus.AArr.Skip(index + 1)).ToArray(),
+					AliceSum =
+						gameStatus.AliceSum + (
+						gameStatus.TurnWho == Player_e.Alice ?
+						gameStatus.AArr[index] : 0),
+					BobSum =
+						gameStatus.BobSum + (
+						gameStatus.TurnWho == Player_e.Bob ?
+						gameStatus.AArr[index] : 0),
+					M = gameStatus.M,
+				};
+
+				Player_e nextJudgement = Judge(nextGameStatus);
+
+				switch (nextJudgement)
+				{
+					case Player_e.Alice:
+						canAliceWin = true;
 						break;
 
-					rsq.Add(index, word1.Length, word2.ToArray());
-					index += word1.Length;
+					case Player_e.Bob:
+						canBobWin = true;
+						break;
+
+					default:
+						throw null; // never
 				}
-				ans2 = new string(rsq.Replace(src.ToArray()));
 			}
 
-			if (ans1 != ans2) // ? 不一致
-				throw null;
-		}
-
-		public void Test02()
-		{
-			Test02_a(100, 10000);
-			Test02_a(300, 3000);
-			Test02_a(1000, 1000);
-			Test02_a(3000, 300);
-			Test02_a(10000, 100);
-
-			Console.WriteLine("OK!");
-		}
-
-		public void Test02_a(int testDataScale, int testCount)
-		{
-			for (int testcnt = 0; testcnt < testCount; testcnt++)
+			switch (gameStatus.TurnWho)
 			{
-				Test02_b(testDataScale, testDataScale);
-				Test02_b(testDataScale, testDataScale / 3);
-				Test02_b(testDataScale, testDataScale / 10);
+				case Player_e.Alice:
+					return canAliceWin ? Player_e.Alice : Player_e.Bob;
+
+				case Player_e.Bob:
+					return canBobWin ? Player_e.Bob : Player_e.Alice;
+
+				default:
+					throw null; // never
 			}
-			Console.WriteLine("OK");
 		}
 
-		private void Test02_b(int testDataScale, int subTestDataScale)
+		private struct GameStatusInfo
 		{
-			if (subTestDataScale < 2) throw null; // 2bs
+			public Player_e TurnWho;
+			public int[] AArr;
+			public int AliceSum;
+			public int BobSum;
+			public int M;
+		}
 
-			char[] TEST_CHARS = SCommon.HALF.ToArray();
-			string src = new string(Enumerable
-				.Range(0, SCommon.CRandom.GetInt(testDataScale))
-				.Select(dummy => SCommon.CRandom.ChooseOne(TEST_CHARS))
-				.ToArray());
-
-			string ans1 = src;
-			string ans2;
-
-			int index1 = 0;
-			int index2 = 0;
-
-			ArrayReplaceSequencer<char> rsq = new ArrayReplaceSequencer<char>();
-
-			for (; ; )
-			{
-				int span = SCommon.CRandom.GetInt(subTestDataScale);
-
-				index1 += span;
-				index2 += span;
-
-				int removeLength = SCommon.CRandom.GetInt(subTestDataScale);
-
-				if (ans1.Length < index1 + removeLength)
-					break;
-
-				string newPart = new string(Enumerable
-					.Range(0, SCommon.CRandom.GetInt(subTestDataScale))
-					.Select(dummy => SCommon.CRandom.ChooseOne(TEST_CHARS))
-					.ToArray());
-
-				ans1 = ans1.Substring(0, index1) + newPart + ans1.Substring(index1 + removeLength);
-				rsq.Add(index2, removeLength, newPart.ToArray());
-
-				index1 += newPart.Length;
-				index2 += removeLength;
-			}
-			ans2 = new string(rsq.Replace(src.ToArray()));
-
-			if (ans1 != ans2) // ? 不一致
-				throw null;
+		private enum Player_e
+		{
+			Alice,
+			Bob,
 		}
 	}
 }

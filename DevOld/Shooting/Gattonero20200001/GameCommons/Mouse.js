@@ -42,9 +42,9 @@ function <void> @@_TouchEnd(<double> x, <double> y)
 	@@_ScreenPosToCanvasPos();
 }
 
-function <Action_event> @@_GetEvTouch(<Action_double_double> touch)
+function <Action event> @@_GetEvTouch(<Action double double> touch)
 {
-	var<Action_event> ret = function(event)
+	var<Action event> ret = function(event)
 	{
 		touch(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
 	};
@@ -52,9 +52,9 @@ function <Action_event> @@_GetEvTouch(<Action_double_double> touch)
 	return ret;
 }
 
-function <Action_event> @@_GetEvMouse(<Action_double_double> touch)
+function <Action event> @@_GetEvMouse(<Action double double> touch)
 {
-	var<Action_event> ret = function(event)
+	var<Action event> ret = function(event)
 	{
 		touch(event.x, event.y);
 	};
@@ -106,6 +106,8 @@ function <void> @(UNQN)_EACH()
 		}
 	}
 }
+
+// ★★★ ボタン・キー押下は 1 マウス押下は -1 で判定する。
 
 /*
 	マウスボタンの押下(スクリーン・タッチ)状態を得る。

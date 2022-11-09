@@ -336,6 +336,7 @@ namespace Charlotte
 
 			text = Common.Replace(text, "@(INIT)", () => string.Join(", ", this.JSFunctions.Where(v => v.EndsWith("_INIT"))));
 			text = Common.Replace(text, "@(EACH)", () => string.Join(", ", this.JSFunctions.Where(v => v.EndsWith("_EACH"))));
+			text = Common.Replace(text, "@(CRDT)", () => string.Join(", ", this.GetCreditStrings()));
 
 			lines = SCommon.TextToLines(text);
 
@@ -612,6 +613,37 @@ namespace Charlotte
 				}
 				this.JSLines[lineIndex] = line;
 			}
+		}
+
+		private string[] GetCreditStrings()
+		{
+			List<string[]> credits = new List<string[]>();
+
+			foreach (string file in Directory.GetFiles(this.ResourceDir, "_source.txt", SearchOption.AllDirectories))
+			{
+				Console.WriteLine("< " + file);
+
+				string[] lines = File.ReadAllLines(file, SCommon.ENCODING_SJIS);
+
+				if (
+					lines.Length < 2 ||
+					string.IsNullOrEmpty(lines[0]) ||
+					string.IsNullOrEmpty(lines[1])
+					)
+					throw new Exception("Bad '_source.txt'");
+
+				credits.Add(new string[]
+				{
+					lines[0],
+					lines[1],
+				});
+			}
+
+			credits.DistinctOrderBy((a, b) => SCommon.Comp(a, b, SCommon.Comp));
+
+			return SCommon.Concat(credits)
+				.Select(line => "\"" + string.Join("", line.Select(chr => "\\u" + ((int)chr).ToString("x4"))) + "\"")
+				.ToArray();
 		}
 	}
 }

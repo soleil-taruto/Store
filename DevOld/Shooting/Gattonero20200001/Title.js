@@ -5,40 +5,25 @@
 var @@_Buttons =
 [
 	{
-		L : 380,
-		T : 300,
-		W : 200,
-		H : 55,
-		Draw : function()
-		{
-			SetColor("#ffffff");
-			PrintRect(this.L, this.T, this.W, this.H);
-			SetColor("#000000");
-			SetPrint(this.L + 35, this.T + 40, 0);
-			SetFSize(32);
-			PrintLine("スタート");
-		},
+		Text: "スタート",
 		Pressed : function* ()
 		{
 			LOGPOS();
-			yield* GameMain();
+			yield* GameProgressMaster();
 			LOGPOS();
 		},
 	},
 	{
-		L : 380,
-		T : 370,
-		W : 200,
-		H : 55,
-		Draw : function()
+		Text: "設定",
+		Pressed : function* ()
 		{
-			SetColor("#ffff80");
-			PrintRect(this.L, this.T, this.W, this.H);
-			SetColor("#000080");
-			SetPrint(this.L + 35, this.T + 40, 0);
-			SetFSize(32);
-			PrintLine("Credit");
+			LOGPOS();
+			yield* SettingMain();
+			LOGPOS();
 		},
+	},
+	{
+		Text: "Credit",
 		Pressed : function* ()
 		{
 			LOGPOS();
@@ -47,23 +32,12 @@ var @@_Buttons =
 		},
 	},
 	{
-		L : 380,
-		T : 440,
-		W : 200,
-		H : 55,
-		Draw : function()
-		{
-			SetColor("#ffff80");
-			PrintRect(this.L, this.T, this.W, this.H);
-			SetColor("#000080");
-			SetPrint(this.L + 35, this.T + 40, 0);
-			SetFSize(32);
-			PrintLine("Exit");
-		},
+		Text: "Exit",
 		Pressed : function* ()
 		{
 			LOGPOS();
-			window.location.href = "..";
+			window.location.href = "/";
+//			window.location.href = "..";
 //			window.location.href = "https://www.google.com/";
 			LOGPOS();
 		},
@@ -72,33 +46,36 @@ var @@_Buttons =
 
 function* <generatorForTask> TitleMain()
 {
+	var<int> selectIndex = 0;
+
+	SetCurtain();
+	FreezeInput();
+	FreezeInputUntilRelease();
+
+	Play(M_Title);
+
 	for (; ; )
 	{
-		SetColor("#80a080");
+		SetColor("#a0b0c0");
 		PrintRect(0, 0, Screen_W, Screen_H);
 
 		SetColor("#000000");
-		SetPrint(50, 220, 0);
-		SetFSize(200);
+		SetPrint(50, 250, 0);
+		SetFSize(100);
 		PrintLine("Shooting");
 
-		for (var button of @@_Buttons)
-		{
-			button.Draw();
+		selectIndex = DrawSimpleMenu(selectIndex, 70, 440, 600, 30, @@_Buttons.map(v => v.Text));
 
-			if (GetMouseDown() == -1)
-			{
-				if (
-					button.L < GetMouseX() && GetMouseX() < button.L + button.W &&
-					button.T < GetMouseY() && GetMouseY() < button.T + button.H
-					)
-				{
-					ClearMouseDown();
-					yield* button.Pressed();
-					ClearMouseDown();
-					break;
-				}
-			}
+		if (DSM_Desided)
+		{
+			FreezeInput();
+
+			yield* @@_Buttons[selectIndex].Pressed();
+
+			SetCurtain();
+			FreezeInput();
+
+			Play(M_Title);
 		}
 		yield 1;
 	}

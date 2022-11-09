@@ -2,12 +2,7 @@
 	アプリケーション用メインモジュール
 */
 
-var<string> APP_IDENT = "{c9e92c41-52cf-44fe-8c46-b5139531e666}";
-
-window.onload = function()
-{
-	Main();
-};
+setTimeout(Main, 0);
 
 function <void> Main()
 {
@@ -18,33 +13,14 @@ function <void> @@_Loading()
 {
 	if (1 <= Loading)
 	{
-		@@_PrintLoading();
+		PrintGameLoading();
 		setTimeout(@@_Loading, 100);
 	}
 	else
 	{
-		@@_PrintLoaded();
+		PrintGameLoaded();
 		@@_Loaded();
 	}
-}
-
-var @@_LOADING_MAX = -1;
-
-function <void> @@_PrintLoading()
-{
-	if (@@_LOADING_MAX == -1)
-	{
-		@@_LOADING_MAX = Loading;
-	}
-
-	var<int> pbn = ToInt((@@_LOADING_MAX - Loading) * 108.0 / @@_LOADING_MAX);
-
-	document.body.innerHTML = "<div style='font-size: 108px;'>" + pbn + " PBN COMPLETE...</div>";
-}
-
-function <void> @@_PrintLoaded()
-{
-	document.body.innerHTML = "";
 }
 
 function <void> @@_Loaded()
@@ -71,8 +47,7 @@ function* <generatorForTask> @@_Main()
 	}
 }
 
-// 本番用メイン
 function* <generatorForTask> @@_Main2()
 {
-	yield* TitleMain();
+	yield* EntranceMain();
 }

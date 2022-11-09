@@ -3,140 +3,121 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Charlotte.Commons;
-using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
-	/// <summary>
-	/// StringReplaceSequencer.cs テスト
-	/// </summary>
 	public class Test0002
 	{
 		public void Test01()
 		{
-			Test01_a(10, 1000);
-			Test01_a(100, 100);
 			Test01_a(1000, 10);
+			Test01_a(100, 100);
+			Test01_a(10, 300);
 
 			Console.WriteLine("OK!");
 		}
 
-		public void Test01_a(int testDataScale, int testCount)
+		private void Test01_a(int testCount, int nMax)
 		{
+			char[] S_CHARS = "dp".ToArray();
+
 			for (int testcnt = 0; testcnt < testCount; testcnt++)
 			{
-				Test01_b(testDataScale);
+				string s = new string(Enumerable.Range(0, SCommon.CRandom.GetRange(0, nMax)).Select(dummy => SCommon.CRandom.ChooseOne(S_CHARS)).ToArray());
+
+				string ans1 = Test01_b1(s);
+				string ans2 = Test01_b2(s);
+
+				if (ans1 != ans2)
+					throw null;
 			}
 			Console.WriteLine("OK");
 		}
 
-		private void Test01_b(int testDataScale)
+		private string Test01_b1(string s)
 		{
-			string[] words = new string[]
+			string best = s;
+			int p = s.IndexOf('p');
+
+			if (p != -1)
 			{
-				"Sio",
-				"Miso",
-				"Syoyu",
-				"Hakata",
-				"Sapporo",
-				"Kitakata",
-			};
-
-			string src = string.Join("", Enumerable.Range(0, SCommon.CRandom.GetInt(testDataScale)).Select(dummy => SCommon.CRandom.ChooseOne(words)));
-			string word1 = SCommon.CRandom.ChooseOne(words);
-			string word2 = SCommon.CRandom.ChooseOne(words);
-
-			string ans1 = src.Replace(word1, word2);
-			string ans2;
-
-			{
-				StringReplaceSequencer rsq = new StringReplaceSequencer();
-				int index = 0;
+				int q = p;
 
 				for (; ; )
 				{
-					index = src.IndexOf(word1, index);
+					q = s.IndexOf("pd", q);
 
-					if (index == -1)
+					if (q == -1)
 						break;
 
-					rsq.Add(index, word1.Length, word2);
-					index += word1.Length;
+					q++;
+					string t = s.Substring(0, p) + Turn(s.Substring(p, q - p)) + s.Substring(q);
+
+					if (SCommon.Comp(best, t) > 0)
+						best = t;
 				}
-				ans2 = rsq.Replace(src);
+
+				{
+					string t = s.Substring(0, p) + Turn(s.Substring(p));
+
+					if (SCommon.Comp(best, t) > 0)
+						best = t;
+				}
 			}
-
-			if (ans1 != ans2) // ? 不一致
-				throw null;
+			return best;
 		}
 
-		public void Test02()
+		private string Turn(string str)
 		{
-			Test02_a(100, 10000);
-			Test02_a(300, 3000);
-			Test02_a(1000, 1000);
-			Test02_a(3000, 300);
-			Test02_a(10000, 100);
-
-			Console.WriteLine("OK!");
+			str = new string(str.Reverse().ToArray());
+			str = str.Replace('d', 'x');
+			str = str.Replace('p', 'd');
+			str = str.Replace('x', 'p');
+			return str;
 		}
 
-		public void Test02_a(int testDataScale, int testCount)
+		private string Test01_b2(string s)
 		{
-			for (int testcnt = 0; testcnt < testCount; testcnt++)
+			string best = s;
+
+			for (int start = 0; start < s.Length; start++)
 			{
-				Test02_b(testDataScale, testDataScale);
-				Test02_b(testDataScale, testDataScale / 3);
-				Test02_b(testDataScale, testDataScale / 10);
+				for (int count = 1; start + count <= s.Length; count++)
+				{
+					char[] buff = s.ToArray();
+
+					int l = start;
+					int r = start + count - 1;
+
+					while (l < r)
+					{
+						char a = buff[l];
+						char b = buff[r];
+
+						a = ChangeDP(a);
+						b = ChangeDP(b);
+
+						buff[l] = b;
+						buff[r] = a;
+
+						l++;
+						r--;
+					}
+					if (l == r)
+						buff[l] = ChangeDP(buff[l]);
+
+					string t = new string(buff);
+
+					if (SCommon.Comp(best, t) > 0)
+						best = t;
+				}
 			}
-			Console.WriteLine("OK");
+			return best;
 		}
 
-		private void Test02_b(int testDataScale, int subTestDataScale)
+		private char ChangeDP(char chr)
 		{
-			if (subTestDataScale < 2) throw null; // 2bs
-
-			char[] TEST_CHARS = SCommon.HALF.ToArray();
-			string src = new string(Enumerable
-				.Range(0, SCommon.CRandom.GetInt(testDataScale))
-				.Select(dummy => SCommon.CRandom.ChooseOne(TEST_CHARS))
-				.ToArray());
-
-			string ans1 = src;
-			string ans2;
-
-			int index1 = 0;
-			int index2 = 0;
-
-			StringReplaceSequencer rsq = new StringReplaceSequencer();
-
-			for (; ; )
-			{
-				int span = SCommon.CRandom.GetInt(subTestDataScale);
-
-				index1 += span;
-				index2 += span;
-
-				int removeLength = SCommon.CRandom.GetInt(subTestDataScale);
-
-				if (ans1.Length < index1 + removeLength)
-					break;
-
-				string newPart = new string(Enumerable
-					.Range(0, SCommon.CRandom.GetInt(subTestDataScale))
-					.Select(dummy => SCommon.CRandom.ChooseOne(TEST_CHARS))
-					.ToArray());
-
-				ans1 = ans1.Substring(0, index1) + newPart + ans1.Substring(index1 + removeLength);
-				rsq.Add(index2, removeLength, newPart);
-
-				index1 += newPart.Length;
-				index2 += removeLength;
-			}
-			ans2 = rsq.Replace(src);
-
-			if (ans1 != ans2) // ? 不一致
-				throw null;
+			return chr == 'd' ? 'p' : 'd';
 		}
 	}
 }
