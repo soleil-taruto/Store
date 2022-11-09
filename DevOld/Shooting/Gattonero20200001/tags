@@ -55,8 +55,9 @@ C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Print.js(72) : SetPrint // 
 C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Print.js(83) : PrintLine // ŠÖ”
 C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resized.js(9) : AddResized // ŠÖ”
 C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resource.js(6) : Loading // •Ï”
-C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resource_MusicSoundEffect.js(76) : M_Field // •Ï”
-C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resource_MusicSoundEffect.js(78) : S_Explode // •Ï”
+C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resource_MusicSoundEffect.js(95) : SE_t // ’è‹`
+C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resource_MusicSoundEffect.js(132) : M_Field // •Ï”
+C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resource_MusicSoundEffect.js(134) : S_Explode // •Ï”
 C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resource_Picture.js(32) : P_Enemy_0001 // •Ï”
 C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resource_Picture.js(33) : P_Player // •Ï”
 C:\Dev\GameJS\Shooting\Gattonero20200001\GameCommons\Resource_Picture.js(34) : P_Shot_0001 // •Ï”

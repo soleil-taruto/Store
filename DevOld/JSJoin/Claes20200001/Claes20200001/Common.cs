@@ -74,31 +74,106 @@ namespace Charlotte
 		}
 
 		/// <summary>
-		/// 指定パスの拡張子が指定拡張子であるか判定する。
+		/// パス文字列を比較する。
+		/// 同じフォルダ内のローカル名が辞書順になるようにする。
 		/// </summary>
-		/// <param name="path">パス</param>
-		/// <param name="ext">拡張子</param>
-		/// <returns>指定パスの拡張子が指定拡張子であるか</returns>
-		public static bool ExtIs(string path, string ext)
+		/// <param name="a">パス文字列_A</param>
+		/// <param name="b">パス文字列_B</param>
+		/// <returns>比較結果</returns>
+		public static int CompPath(string a, string b)
 		{
-			return SCommon.EqualsIgnoreCase(Path.GetExtension(path), ext);
+			a = ConvForCompPath(a);
+			b = ConvForCompPath(b);
+
+			return SCommon.CompIgnoreCase(a, b);
+		}
+
+		private static string ConvForCompPath(string str)
+		{
+			string[] tokens = str.Split('\\');
+
+			for (int index = 0; index < tokens.Length; index++)
+				tokens[index] = (index + 1 < tokens.Length ? "2_" : "1_") + tokens[index];
+
+			str = string.Join("\t", tokens);
+			return str;
 		}
 
 		/// <summary>
-		/// リストの指定範囲を列挙する。
-		/// -- 開始位置と終了位置を指定することに注意すること。
+		/// ランダムな識別子を生成する。
+		/// 重複を考慮しなくて良いランダムな文字列を返す。
 		/// </summary>
-		/// <typeparam name="T">リストの要素の型</typeparam>
-		/// <param name="list">リスト</param>
-		/// <param name="start">開始位置(この位置の要素を含む)</param>
-		/// <param name="end">終了位置(この位置の要素を含まない)</param>
-		/// <returns>部分リスト</returns>
-		public static IEnumerable<T> GetBetween<T>(IList<T> list, int start, int end)
+		/// <returns>新しい識別子</returns>
+		public static string CreateRandIdent()
 		{
-			for (int index = start; index < end; index++)
+			return
+				"A_" +
+				SCommon.CRandom.GetUInt64().ToString("D20") + "_" +
+				SCommon.CRandom.GetUInt64().ToString("D20") +
+				"_Z";
+		}
+
+		/// <summary>
+		/// リソースファイル(テキストファイル)を読み込む
+		/// </summary>
+		/// <param name="localName">リソースファイルのローカル名</param>
+		/// <returns>リソースファイルの内容</returns>
+		public static string ReadResTextFile(string localName)
+		{
+			string resFile = Path.Combine(ProcMain.SelfDir, localName);
+
+			if (!File.Exists(resFile))
 			{
-				yield return list[index];
+				resFile = Path.Combine(@"..\..\..\..\doc", localName);
+
+				if (!File.Exists(resFile))
+					throw new Exception("リソースファイル \"" + localName + "\" が存在しません。");
 			}
+			return File.ReadAllText(resFile, SCommon.ENCODING_SJIS);
+		}
+
+		/// <summary>
+		/// string.Replace(oldValue, valueNew) と同じ
+		/// 但し、valueNew は毎回 getValueNew を実行した戻り値を使用する。
+		/// </summary>
+		/// <param name="text">処理前のテキスト</param>
+		/// <param name="oldValue">置き換え前のパターン</param>
+		/// <param name="getValueNew">置き換え後のパターンの取得先</param>
+		/// <returns>処理後のテキスト</returns>
+		public static string Replace(string text, string oldValue, Func<string> getValueNew)
+		{
+			List<string> dest = new List<string>();
+
+			for (; ; )
+			{
+				string[] slnd = SCommon.ParseIsland(text, oldValue);
+
+				if (slnd == null)
+					break;
+
+				dest.Add(slnd[0]);
+				dest.Add(getValueNew());
+				text = slnd[2];
+			}
+			dest.Add(text);
+			return string.Join("", dest);
+		}
+
+		public static char HexCharsToUnicodeChar(params char[] hexChrs)
+		{
+			int value = 0;
+
+			foreach (char hexChr in hexChrs)
+			{
+				int hexVal = SCommon.hexadecimal.IndexOf(char.ToLower(hexChr));
+
+				if (hexVal == -1)
+					throw new Exception("Bad hex-char: " + (int)hexChr);
+
+				value <<= 4;
+				value |= hexVal;
+			}
+			return (char)value;
 		}
 	}
 }

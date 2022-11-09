@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using System.IO;
 using Charlotte.Commons;
-using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
@@ -13,61 +11,65 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			string text = File.ReadAllText(@"C:\temp\Input.txt", SCommon.ENCODING_SJIS);
-			string dest = "";
+			Test01_a(100, 30000);
+			Test01_a(300, 10000);
+			Test01_a(1000, 3000);
+			Test01_a(3000, 1000);
+			Test01_a(10000, 300);
+			Test01_a(30000, 100);
 
-			for (; ; )
-			{
-				string[] encl = SCommon.ParseEnclosed(text, "[http://stackprobe.ccsp.mydns.jp", "]");
-
-				if (encl == null)
-					break;
-
-				Action skip = () =>
-				{
-					dest += encl[0] + encl[1] + encl[2] + encl[3];
-					text = encl[4];
-				};
-
-				int start = encl[2].IndexOf(":image=http://stackprobe.ccsp.mydns.jp");
-
-				if (start == -1) // ? イメージじゃないっぽい。
-				{
-					skip();
-					continue;
-				}
-
-				string url = encl[2].Substring(start + 7);
-				url = url.Replace(":58946", "");
-				string mediaType = URLToMediaType(url);
-				byte[] data;
-
-				using (WorkingDir wd = new WorkingDir())
-				{
-					HTTPClient hc = new HTTPClient(url);
-					hc.ResFile = wd.MakePath();
-					hc.Get();
-					data = File.ReadAllBytes(hc.ResFile);
-				}
-
-				string dataUrl = "data:" + mediaType + ";base64," + SCommon.Base64.I.Encode(data);
-
-				dest += encl[0] + "><img src=\"" + dataUrl + "\"/><";
-				text = encl[4];
-			}
-			dest += text;
-
-			File.WriteAllText(SCommon.NextOutputPath() + ".txt", dest, SCommon.ENCODING_SJIS);
+			Console.WriteLine("OK!");
 		}
 
-		private string URLToMediaType(string url)
+		private void Test01_a(int dataSizeLmt, int testCount)
 		{
-			if (url.EndsWith(".png"))
+			for (int testcnt = 0; testcnt < testCount; testcnt++)
 			{
-				return "image/png";
-			}
+				byte[] src = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(dataSizeLmt));
+				string enc = SCommon.Base64.I.Encode(src);
+				byte[] dec = SCommon.Base64.I.Decode(enc);
 
-			throw new Exception("不明なメディアタイプ");
+				if (SCommon.Comp(src, dec) != 0) // ? 不一致
+					throw null;
+			}
+			Console.WriteLine("OK");
+		}
+
+		public void Test02()
+		{
+			Test02_a(100, 30000);
+			Test02_a(300, 10000);
+			Test02_a(1000, 3000);
+			Test02_a(3000, 1000);
+			Test02_a(10000, 300);
+			Test02_a(30000, 100);
+
+			Console.WriteLine("OK!");
+		}
+
+		private void Test02_a(int dataSizeLmt, int testCount)
+		{
+			for (int testcnt = 0; testcnt < testCount; testcnt++)
+			{
+				byte[] src = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(dataSizeLmt));
+				string enc = SCommon.Base64.I.Encode(src);
+
+				// Change enc
+				{
+					enc = enc.Replace("=", "");
+
+					for (int c = 80; c + 30 < enc.Length; c += 100)
+					{
+						enc = enc.Substring(0, c) + "\r\n\t" + enc.Substring(c);
+					}
+				}
+
+				byte[] dec = SCommon.Base64.I.Decode(enc);
+
+				if (SCommon.Comp(src, dec) != 0) // ? 不一致
+					throw null;
+			}
+			Console.WriteLine("OK");
 		}
 	}
 }
