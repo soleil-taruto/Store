@@ -465,7 +465,7 @@ namespace Charlotte.Commons
 			return ret;
 		}
 
-		public static T GetElement<T>(IList<T> list, int index, T defval)
+		public static T RefElement<T>(IList<T> list, int index, T defval)
 		{
 			if (index < list.Count)
 			{
@@ -477,40 +477,33 @@ namespace Charlotte.Commons
 			}
 		}
 
-		public static IEnumerable<T> InsertRange<T>(IEnumerable<T> list, int index, IEnumerable<T> listForInsert)
+		public static IEnumerable<T> E_RemoveRange<T>(IEnumerable<T> list, int index, int count)
 		{
-			int listCount = list.Count();
-
 			if (
 				list == null ||
-				listForInsert == null ||
-				index < 0 || listCount < index
-				)
-				throw new ArgumentException();
-
-			return list.Take(index).Concat(listForInsert).Concat(list.Skip(index));
-		}
-
-		public static IEnumerable<T> RemoveRange<T>(IEnumerable<T> list, int index, int count)
-		{
-			int listCount = list.Count();
-
-			if (
-				list == null ||
-				index < 0 || listCount < index ||
-				count < 0 || listCount - index < count
+				index < 0 || list.Count() < index ||
+				count < 0 || list.Count() - index < count
 				)
 				throw new ArgumentException();
 
 			return list.Take(index).Concat(list.Skip(index + count));
 		}
 
-		public static void AddRange<T>(List<T> dest, IEnumerable<T> listForAdd)
+		public static IEnumerable<T> E_InsertRange<T>(IEnumerable<T> list, int index, IEnumerable<T> listForInsert)
 		{
-			foreach (T element in listForAdd)
-			{
-				dest.Add(element);
-			}
+			if (
+				list == null ||
+				listForInsert == null ||
+				index < 0 || list.Count() < index
+				)
+				throw new ArgumentException();
+
+			return list.Take(index).Concat(listForInsert).Concat(list.Skip(index));
+		}
+
+		public static IEnumerable<T> E_AddRange<T>(IEnumerable<T> list, IEnumerable<T> listForAdd)
+		{
+			return SCommon.E_InsertRange(list, list.Count(), listForAdd);
 		}
 
 		private const int IO_TRY_MAX = 10;
@@ -1490,7 +1483,8 @@ namespace Charlotte.Commons
 		{
 			return GetSHA512(writePart =>
 			{
-				SCommon.ReadToEnd(reader, (buff, offset, count) => writePart(buff, offset, count));
+				SCommon.ReadToEnd(reader, writePart);
+				//SCommon.ReadToEnd(reader, (buff, offset, count) => writePart(buff, offset, count)); // old
 			});
 		}
 
@@ -1766,9 +1760,14 @@ namespace Charlotte.Commons
 
 		public static bool HasSame<T>(IList<T> list, Comparison<T> comp)
 		{
+			return HasSame(list, (a, b) => comp(a, b) == 0);
+		}
+
+		public static bool HasSame<T>(IList<T> list, Func<T, T, bool> match)
+		{
 			for (int r = 1; r < list.Count; r++)
 				for (int l = 0; l < r; l++)
-					if (comp(list[l], list[r]) == 0)
+					if (match(list[l], list[r]))
 						return true;
 
 			return false;
