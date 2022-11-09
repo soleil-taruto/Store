@@ -148,7 +148,6 @@ AppDomain
 Append
 Application
 ArgumentException
-Array
 Assembly
 AutoScaleDimensions
 AutoScaleMode
@@ -162,13 +161,13 @@ Clear
 Click
 ClientSize
 Close
+Collect
 Color
 Comparison
 Compress
 CompressionMode
 ComputeHash
 Concat
-Console
 Contains
 ContainsKey
 Controls
@@ -182,7 +181,6 @@ DateTime
 Decompress
 Dequeue
 Dictionary
-Directory
 Dispose
 Distinct
 DllImport
@@ -202,7 +200,6 @@ EventArgs
 Exception
 ExceptionObject
 Exit
-File
 FileAccess
 FileMode
 FileStream
@@ -217,6 +214,7 @@ FormClosing
 FormClosingEventArgs
 FormattingEnabled
 Free
+FromArgb
 FullControl
 Func
 GC
@@ -226,6 +224,8 @@ GZipStream
 GetByteCount
 GetBytes
 GetCommandLineArgs
+GetCurrentProcess
+GetEncoding
 GetEntryAssembly
 GetEnumerator
 GetEnvironmentVariable
@@ -245,6 +245,7 @@ Icon
 Id
 IndexOf
 IntPtr
+IsMatch
 IsNaN
 Items
 Key
@@ -259,7 +260,6 @@ Location
 Main
 Margin
 MaxDropDownItems
-MaxValue
 MaximizeBox
 MemoryStream
 Message
@@ -281,8 +281,6 @@ NewGuid
 Now
 OK
 Open
-Parse
-Path
 PerformLayout
 Pinned
 Position
@@ -291,8 +289,11 @@ Process
 Queue
 RNGCryptoServiceProvider
 RandomNumberGenerator
+Range
 Read
+Regex
 ReleaseMutex
+Remove
 RemoveAll
 RemoveAt
 Replace
@@ -322,6 +323,7 @@ Shown
 Size
 SizeGripStyle
 Skip
+Sleep
 Split
 Start
 StartPosition
@@ -332,7 +334,6 @@ StreamWriter
 StringBuilder
 StructLayout
 Substring
-SuspendLayout
 SuspendLayout
 SystemEvents
 TabIndex
@@ -353,12 +354,14 @@ TopMost
 Trim
 UInt16
 UInt64
+UTF8
 UnhandledException
 UnhandledExceptionEventArgs
 UnhandledExceptionEventHandler
 UnmanagedCode
 UseVisualStyleBackColor
 Value
+Values
 Visible
 WParam
 WaitOne
@@ -388,24 +391,41 @@ Zero
 		/// </summary>
 		public static string 予約語クラス名リスト = @"
 
+; 名前空間
+
 DX
 System
-File
-Directory
-Path
-Process
-Thread
-GC
-Array
-Enumerable
-Color
-Console
-Regex
+
+; 型名
+
+sbyte
+byte
+short
+ushort
+int
+uint
+long
+ulong
+char
+float
+double
+bool
+decimal
 string
+
+; 静的メンバーを多用するクラス名
+
+Array
+Console
+Directory
+File
 Math
-Encoding
+Path
 
 ; ★★★ 新しい予約語クラス名をここへ追加する。
+; 注意：ここへ追加したワードは、
+; 同名のアプリ固有のワードとそのメンバーも置き換え禁止になるため影響が大きい。
+; 積極的な追加は避けること。
 
 ";
 

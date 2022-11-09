@@ -8,10 +8,8 @@ using Charlotte.Commons;
 
 namespace Charlotte
 {
-	public class Ground
+	public static class Ground
 	{
-		public static Ground I; // MainWin.MainWin_Load()で初期化される。
-
 		// none
 	}
 }

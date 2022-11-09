@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Charlotte.Commons;
 
 namespace Charlotte.JSConfusers
@@ -238,15 +239,23 @@ function* $varName_E_GetStrParts()
 function* $varName_E_GetChars()
 {
 
-$chrList
+$callChrListFuncs
 
 }
 
+$chrListFuncs
+
 ";
 
+					int[][] ranges = SLS_GetRanges(new int[] { c + 1, (c2 - c) - 2 });
+
 					extendSource = extendSource.Replace(
-						"$chrList",
-						SLS_GetCharList(line.Substring(c + 1, (c2 - c) - 2))
+						"$callChrListFuncs",
+						string.Join("\r\n", SLS_GetCallCharListFuncs(varName, ranges.Length))
+						);
+					extendSource = extendSource.Replace(
+						"$chrListFuncs",
+						string.Join("\r\n", SLS_GetCharListFuncs(varName, line, ranges))
 						);
 					extendSource = extendSource.Replace("$varName", varName);
 					extendLines.AddRange(
@@ -260,13 +269,51 @@ $chrList
 			this.JSLines.AddRange(extendLines);
 		}
 
-		private static string SLS_GetCharList(string source)
+		private int[][] SLS_GetRanges(int[] baseRange)
 		{
-			return string.Join("\r\n", SLS_E_GetCharList(source));
+			List<int[]> ranges = new List<int[]>();
+
+			ranges.Add(baseRange);
+
+			for (int c = SCommon.CRandom.GetRange(1, 3); 0 < c; c--)
+			{
+				int index = SCommon.CRandom.GetInt(ranges.Count);
+				int subLength = SCommon.CRandom.GetInt(ranges[index][1] / 6 + 1) * 6; // 注意：6文字で実際の1文字を表す。
+
+				ranges.Insert(index + 1, new int[] { ranges[index][0] + subLength, ranges[index][1] - subLength });
+				ranges[index][1] = subLength;
+			}
+			return ranges.ToArray();
+		}
+
+		private static IEnumerable<string> SLS_GetCallCharListFuncs(string varName, int count)
+		{
+			for (int index = 0; index < count; index++)
+			{
+				yield return "\tyield* " + varName + "_E_GetChars_" + index + "_Z();";
+			}
+		}
+
+		private static IEnumerable<string> SLS_GetCharListFuncs(string varName, string sourceLine, int[][] ranges)
+		{
+			for (int index = 0; index < ranges.Length; index++)
+			{
+				int[] range = ranges[index];
+
+				yield return "function* " + varName + "_E_GetChars_" + index + "_Z()";
+				yield return "{";
+
+				foreach (var relay in SLS_E_GetCharList(sourceLine.Substring(range[0], range[1])))
+					yield return relay;
+
+				yield return "}";
+			}
 		}
 
 		private static IEnumerable<string> SLS_E_GetCharList(string source)
 		{
+			// 注意：6文字で実際の1文字を表す。
+
 			if (source.Length % 6 != 0)
 				throw null;
 
@@ -398,12 +445,11 @@ $chrList
 		}
 
 		/// <summary>
-		/// 関数・変数の並び方をめちゃくちゃにする。
+		/// 関数と初期化子を持たない変数の並び方をめちゃくちゃにする。
 		/// </summary>
 		private void ShuffleFunctions()
 		{
 			List<string[]> functions = new List<string[]>();
-			List<string> variables = new List<string>();
 
 			for (int index = 0; index + 1 < this.JSLines.Count; )
 			{
@@ -411,11 +457,9 @@ $chrList
 				string line_02 = this.JSLines[index + 1];
 
 				if ((
-					line_01.StartsWith("var ") ||
 					line_01.StartsWith("function ") ||
 					line_01.StartsWith("function* ")
 					) && (
-					line_02.StartsWith("[") ||
 					line_02.StartsWith("{")
 					))
 				{
@@ -443,28 +487,22 @@ $chrList
 				}
 				index++;
 			}
-
 			for (int index = 0; index < this.JSLines.Count; index++)
 			{
-				if (this.JSLines[index].StartsWith("var "))
+				string line = this.JSLines[index];
+
+				if (
+					line.StartsWith("var ") &&
+					!line.Contains('=') // ? 初期化子を持たない。
+					)
 				{
-					variables.Add(this.JSLines[index]);
+					functions.Add(new string[] { this.JSLines[index] });
 					this.JSLines[index] = "";
 				}
 			}
-
 			SCommon.CRandom.Shuffle(functions);
-			SCommon.CRandom.Shuffle(variables);
 
-			// 以下の順序を保証する。
-			//
-			// 1. (関数, 複数行の初期化子を持つ変数)
-			// 2. (初期化子を持たない変数, 1行の初期化子を持つ変数)
-			// 3. それ以外
-
-			// TODO: 変数の並び替えはマズいかもしれない。
-
-			this.JSLines = SCommon.Concat(functions).Concat(variables).Concat(this.JSLines).ToList();
+			this.JSLines = SCommon.Concat(functions).Concat(this.JSLines).ToList();
 		}
 
 		/// <summary>
@@ -525,6 +563,55 @@ $chrList
 				{
 					this.JSLines.RemoveAt(index);
 					index--;
+				}
+			}
+
+			// インデント有りの行に挟まれた空行を除去する。
+			//
+			for (int index = 2; index < this.JSLines.Count; index++)
+			{
+				string line_01 = this.JSLines[index - 2];
+				string line_02 = this.JSLines[index - 1];
+				string line_03 = this.JSLines[index];
+
+				if (
+					line_01.StartsWith("\t") &&
+					line_02 == "" &&
+					line_03.StartsWith("\t")
+					)
+				{
+					this.JSLines.RemoveAt(index - 1);
+					index--;
+				}
+			}
+
+			// for ( ... などの前には空行を入れる。
+			//
+			for (int index = 1; index < this.JSLines.Count; index++)
+			{
+				string line_01 = this.JSLines[index - 1];
+				string line_02 = this.JSLines[index];
+
+				if (
+					!Regex.IsMatch(line_01, "^[\t]*\\{") &&
+					Regex.IsMatch(line_02, "^[\t]+[a-z]+ \\(") // ex. "\tfor (; ; )"
+					)
+				{
+					this.JSLines.Insert(index, "");
+					index++;
+				}
+			}
+
+			// インデント有りの ]; }; の後には空行を入れる。
+			//
+			for (int index = 0; index < this.JSLines.Count; index++)
+			{
+				string trLine = this.JSLines[index].Trim();
+
+				if (trLine == "];" || trLine == "};")
+				{
+					this.JSLines.Insert(index + 1, "");
+					index++;
 				}
 			}
 		}

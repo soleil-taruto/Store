@@ -43,7 +43,7 @@ namespace Charlotte
 
 			// --
 
-			Common.Pause();
+			//Common.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -56,7 +56,7 @@ namespace Charlotte
 			{
 				ProcMain.WriteLog(ex);
 
-				//MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
 				//Console.ReadLine();
@@ -223,11 +223,15 @@ namespace Charlotte
 					)
 				{
 					chr = (char)Convert.ToUInt16(str.Substring(index + 1, 4), 16);
+
+					if (!Common.IsUnicodeJChar(chr))
+						throw new Exception("エスケープされた不正な文字コードを検出しました。ローカル名：" + str);
+
 					index += 4;
 				}
 				buff.Append(chr);
 			}
-			return SCommon.ToJString(buff.ToString(), true, false, false, true);
+			return buff.ToString();
 		}
 	}
 }

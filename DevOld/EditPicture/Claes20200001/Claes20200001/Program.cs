@@ -41,7 +41,8 @@ namespace Charlotte
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/T", "0", "0" }));
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/TC", "255", "255", "255" }));
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/BC", "255", "255", "255" }));
-			Main4(new ArgsReader(new string[] { @"C:\temp", "/ACM" }));
+			//Main4(new ArgsReader(new string[] { @"C:\temp", "/ACM", "0", "0", "0" }));
+			Main4(new ArgsReader(new string[] { @"C:\temp", "/ACM", "0", "0", "10" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -170,7 +171,18 @@ namespace Charlotte
 				}
 				else if (ar.ArgIs("/ACM"))
 				{
-					canvas = AutoCutMargin(canvas);
+					int x = int.Parse(ar.NextArg());
+					int y = int.Parse(ar.NextArg());
+					int marginForPut = int.Parse(ar.NextArg());
+
+					if (
+						x < 0 || canvas.W <= x ||
+						y < 0 || canvas.H <= y ||
+						marginForPut < 0 || SCommon.IMAX < marginForPut
+						)
+						throw new Exception("不正なパラメータ");
+
+					canvas = AutoCutMargin(canvas, new I2Point(x, y), marginForPut);
 				}
 				else
 				{
@@ -206,15 +218,18 @@ namespace Charlotte
 			return dest;
 		}
 
-		private Canvas AutoCutMargin(Canvas canvas)
+		private Canvas AutoCutMargin(Canvas canvas, I2Point marginColorPt, int marginForPut)
 		{
-			return canvas.GetSubImage(GetRectWithoutMargin(canvas));
+			I4Color marginColor = canvas[marginColorPt.X, marginColorPt.Y];
+
+			canvas = canvas.GetSubImage(GetRectWithoutMargin(canvas, marginColor));
+			canvas = canvas.PutMargin(marginForPut, marginColor);
+
+			return canvas;
 		}
 
-		private I4Rect GetRectWithoutMargin(Canvas canvas)
+		private I4Rect GetRectWithoutMargin(Canvas canvas, I4Color marginColor)
 		{
-			I4Color marginColor = canvas[0, 0];
-
 			int l = 0;
 			int t = 0;
 			int r = canvas.W;
@@ -256,13 +271,8 @@ namespace Charlotte
 
 			ProcMain.WriteLog(string.Format("LTRB-2: {0}, {1}, {2}, {3}", l, t, r, b));
 
-			if (l <= 0) throw new Exception("左側にマージンがありません。");
-			if (t <= 0) throw new Exception("上側にマージンがありません。");
-			if (canvas.W <= r) throw new Exception("右側にマージンがありません。");
-			if (canvas.H <= b) throw new Exception("下側にマージンがありません。");
-
-			if (r <= l) throw new Exception("マージンがありません。(LR)");
-			if (b <= t) throw new Exception("マージンがありません。(TB)");
+			if (r <= l) throw new Exception("マージン以外の部分がありません。(LR)");
+			if (b <= t) throw new Exception("マージン以外の部分がありません。(TB)");
 
 			return I4Rect.LTRB(l, t, r, b);
 		}

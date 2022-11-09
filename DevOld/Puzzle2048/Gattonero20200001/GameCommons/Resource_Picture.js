@@ -53,10 +53,49 @@ var<Picture_t[]> P_数字パネル =
 	@@_Load(RESOURCE_数字パネル__n1073741824_png),
 	@@_Load(RESOURCE_数字パネル__n2147483648_png),
 	@@_Load(RESOURCE_数字パネル__n4294967296_png),
+	@@_Load(RESOURCE_数字パネルex__n2p33_png),
+	@@_Load(RESOURCE_数字パネルex__n2p34_png),
+	@@_Load(RESOURCE_数字パネルex__n2p35_png),
+	@@_Load(RESOURCE_数字パネルex__n2p36_png),
+	@@_Load(RESOURCE_数字パネルex__n2p37_png),
+	@@_Load(RESOURCE_数字パネルex__n2p38_png),
+	@@_Load(RESOURCE_数字パネルex__n2p39_png),
+	@@_Load(RESOURCE_数字パネルex__n2p40_png),
+	@@_Load(RESOURCE_数字パネルex__n2p41_png),
+	@@_Load(RESOURCE_数字パネルex__n2p42_png),
+	@@_Load(RESOURCE_数字パネルex__n2p43_png),
+	@@_Load(RESOURCE_数字パネルex__n2p44_png),
+	@@_Load(RESOURCE_数字パネルex__n2p45_png),
+	@@_Load(RESOURCE_数字パネルex__n2p46_png),
+	@@_Load(RESOURCE_数字パネルex__n2p47_png),
+	@@_Load(RESOURCE_数字パネルex__n2p48_png),
+	@@_Load(RESOURCE_数字パネルex__n2p49_png),
+	@@_Load(RESOURCE_数字パネルex__n2p50_png),
+	@@_Load(RESOURCE_数字パネルex__n2p51_png),
+	@@_Load(RESOURCE_数字パネルex__n2p52_png),
+	@@_Load(RESOURCE_数字パネルex__n2p53_png),
+	@@_Load(RESOURCE_数字パネルex__n2p54_png),
+	@@_Load(RESOURCE_数字パネルex__n2p55_png),
+	@@_Load(RESOURCE_数字パネルex__n2p56_png),
+	@@_Load(RESOURCE_数字パネルex__n2p57_png),
+	@@_Load(RESOURCE_数字パネルex__n2p58_png),
+	@@_Load(RESOURCE_数字パネルex__n2p59_png),
+	@@_Load(RESOURCE_数字パネルex__n2p60_png),
+	@@_Load(RESOURCE_数字パネルex__n2p61_png),
+	@@_Load(RESOURCE_数字パネルex__n2p62_png),
+	@@_Load(RESOURCE_数字パネルex__n2p63_png),
+	@@_Load(RESOURCE_数字パネルex__n2p64_png),
 ];
 
 var<Picture_t> P_Gravity = @@_Load(RESOURCE_Picture__Gravity_png);
 
 var<Picture_t> P_Star_S = @@_Load(RESOURCE_Picture__光る星20_png);
-var<Picture_t> P_Star_M = @@_Load(RESOURCE_Picture__光る星30_png);
-var<Picture_t> P_Star_L = @@_Load(RESOURCE_Picture__光る星50_png);
+
+var<Picture_t> P_Button_W_Up     = @@_Load(RESOURCE_Button__W_Up_png);
+var<Picture_t> P_Button_W_Down   = @@_Load(RESOURCE_Button__W_Down_png);
+var<Picture_t> P_Button_H_Up     = @@_Load(RESOURCE_Button__H_Up_png);
+var<Picture_t> P_Button_H_Down   = @@_Load(RESOURCE_Button__H_Down_png);
+var<Picture_t> P_Button_NP_Up    = @@_Load(RESOURCE_Button__NP_Up_png);
+var<Picture_t> P_Button_NP_Down  = @@_Load(RESOURCE_Button__NP_Down_png);
+var<Picture_t> P_Button_Auto_CW  = @@_Load(RESOURCE_Button__Auto_CW_png);
+var<Picture_t> P_Button_Auto_CCW = @@_Load(RESOURCE_Button__Auto_CCW_png);

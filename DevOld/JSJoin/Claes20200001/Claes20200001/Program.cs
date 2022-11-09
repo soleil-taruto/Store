@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Charlotte.Commons;
 using Charlotte.Tests;
 using Charlotte.JSConfusers;
+using Charlotte.Utilities;
 
 namespace Charlotte
 {
@@ -37,8 +38,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			//Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\GameTemplate\Program", @"C:\Dev\GameJS\GameTemplate\res", @"C:\temp" }));
-			Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\GameTemplate\Program", @"C:\Dev\GameJS\GameTemplate\res", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\GameSample\Program", @"C:\Dev\GameJS\GameSample\res", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\GameSample\Program", @"C:\Dev\GameJS\GameSample\res", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -149,8 +150,15 @@ namespace Charlotte
 			this.JSLines.Add("var Resources =");
 			this.JSLines.Add("{");
 
+			string resDir = Path.Combine(this.OutputDir, "res");
+
+			if (releaseMode)
+			{
+				SCommon.DeletePath(resDir);
+				SCommon.CreateDir(resDir);
+			}
 			HashSet<string> resNames = new HashSet<string>();
-			int resIndex = 0;
+			UniqueFilter<string> resFileNameGen = new UniqueFilter<string>(() => SCommon.CRandom.GetUInt().ToString("x8"));
 
 			foreach (string file in this.ResourceFiles)
 			{
@@ -182,15 +190,11 @@ namespace Charlotte
 
 				if (releaseMode) // ? リリース・モード -> リリースフォルダへ展開
 				{
-					string resDir = Path.Combine(this.OutputDir, "res");
-					string resFile = Path.Combine(resDir, resIndex.ToString("D8") + ".bin");
+					string resFile = Path.Combine(resDir, resFileNameGen.Next() + ".bin");
 
-					SCommon.CreateDir(resDir);
-					File.Copy(file, resFile, true);
+					File.Copy(file, resFile);
 
 					url = "res/" + Path.GetFileName(resFile);
-
-					resIndex++;
 				}
 				else // ? デバッグ・モード -> ローカルファイルへのリンク
 				{

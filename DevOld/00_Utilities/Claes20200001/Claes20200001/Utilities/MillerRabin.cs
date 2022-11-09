@@ -22,9 +22,6 @@ namespace Charlotte.Utilities
 			if (n % 2 == 0)
 				return false;
 
-			// if n < 4759123141, it is enough to test a = 2, 7, and 61.
-			// if n < 2^64, it is enough to test a = 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, and 37.
-
 			ulong d = n;
 			int r;
 			for (r = 0; ((d >>= 1) & 1) == 0; r++) ;

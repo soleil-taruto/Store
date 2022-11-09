@@ -1315,6 +1315,12 @@ namespace Charlotte.CSSolutions
 				"_z";
 		}
 
+		/// <summary>
+		/// 識別子のリネーム
+		/// -- 置き換え禁止クラス名は置き換えフィルタによって置き換えられないことを想定する。
+		/// </summary>
+		/// <param name="filter">置き換えフィルタ</param>
+		/// <param name="f_isUnrenameableClassName">置き換え禁止クラス名判定</param>
 		public void RenameEx(Func<string, string> filter, Predicate<string> f_isUnrenameableClassName)
 		{
 			string text = File.ReadAllText(_file, Encoding.UTF8);

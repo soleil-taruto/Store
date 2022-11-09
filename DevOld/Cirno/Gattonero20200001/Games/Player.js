@@ -509,6 +509,14 @@ invincibleBlock:
 
 				GetShots().push(shot);
 			}
+			/*
+			else if (1 <= PlayerShitamukiFrame)
+			{
+				var<Shot_t> shot = CreateShot_Normal(PlayerX, PlayerY + 20.0, PlayerFacingLeft, false, true);
+
+				GetShots().push(shot);
+			}
+			*/
 			else
 			{
 				var<Shot_t> shot = CreateShot_Normal(PlayerX + 30.0 * (PlayerFacingLeft ? -1 : 1), PlayerY + 4.0, PlayerFacingLeft, false, false);
@@ -585,7 +593,11 @@ function <void> DrawPlayer()
 
 		picture = (PlayerFacingLeft ? P_PlayerMirrorRun : P_PlayerRun)[koma];
 	}
-	else if (1 <= PlayerAttackFrame && PlayerUwamukiFrame == 0)
+	else if (
+		1 <= PlayerAttackFrame &&
+		PlayerUwamukiFrame == 0 &&
+		PlayerShitamukiFrame == 0
+		)
 	{
 		picture = PlayerFacingLeft ? P_PlayerMirrorAttack : P_PlayerAttack;
 	}

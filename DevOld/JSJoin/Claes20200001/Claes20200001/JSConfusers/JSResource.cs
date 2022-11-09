@@ -2042,6 +2042,7 @@ zip					【動詞】
 			.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
 			.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
 			.Distinct()
+			.Select(v => JSCommon.似非単語に変換するフィルタ(v))
 			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
 			.ToArray();
 
@@ -2061,6 +2062,7 @@ zip					【動詞】
 				.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
 				.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
 				.Distinct()
+				.Select(v => JSCommon.似非単語に変換するフィルタ(v))
 				//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
 				.ToArray();
 		}

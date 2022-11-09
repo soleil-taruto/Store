@@ -97,7 +97,7 @@ namespace Charlotte.WebServices
 
 					if (recvSize <= 0)
 					{
-						throw new Exception("受信エラー(切断)");
+						throw new Exception("受信失敗(切断)");
 					}
 					if (10.0 <= (DateTime.Now - startedTime).TotalSeconds) // 長い無通信時間をモニタする。
 					{
@@ -110,7 +110,7 @@ namespace Charlotte.WebServices
 				{
 					if (e.ErrorCode != 10035)
 					{
-						throw new Exception("受信エラー", e);
+						throw new Exception("受信失敗(" + e.ErrorCode + ")", e);
 					}
 				}
 				if (this.P_IdleTimeoutMillis != -1 && this.P_IdleTimeoutMillis < (DateTime.Now - startedTime).TotalMilliseconds)
@@ -136,11 +136,12 @@ namespace Charlotte.WebServices
 
 			while (1 <= size)
 			{
-				int vsDenom = this.Parent.ChannelCount;
-				vsDenom = Math.Max(1, vsDenom); // 2bs
+				//int vsDenom = this.Parent.ChannelCount;
+				//vsDenom = Math.Max(1, vsDenom); // 2bs
 
 				int vSize = 4000000;
-				vSize /= vsDenom;
+				//vSize /= vsDenom;
+				//vSize = Math.Max(vSize, 1000); // 2bs
 				vSize = Math.Min(vSize, size);
 
 				int? sentSize = null;
@@ -168,7 +169,7 @@ namespace Charlotte.WebServices
 
 					if (sentSize <= 0)
 					{
-						throw new Exception("送信エラー(切断)");
+						throw new Exception("送信失敗(切断)");
 					}
 					if (10.0 <= (DateTime.Now - startedTime).TotalSeconds) // 長い無通信時間をモニタする。
 					{
@@ -181,7 +182,7 @@ namespace Charlotte.WebServices
 				{
 					if (e.ErrorCode != 10035)
 					{
-						throw new Exception("送信エラー", e);
+						throw new Exception("送信失敗(" + e.ErrorCode + ")", e);
 					}
 				}
 				if (this.P_IdleTimeoutMillis != -1 && this.P_IdleTimeoutMillis < (DateTime.Now - startedTime).TotalMilliseconds)

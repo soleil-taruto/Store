@@ -57,5 +57,43 @@ namespace Charlotte.JSConfusers
 				SCommon.CRandom.ChooseOne(JSResource.ランダムな単語リスト) +
 				SCommon.CRandom.ChooseOne(JSResource.英単語リスト_名詞);
 		}
+
+		private static char[] 似非単語文字フィルタ = null;
+
+		public static string 似非単語に変換するフィルタ(string word)
+		{
+			if (似非単語文字フィルタ == null)
+			{
+				似非単語文字フィルタ = Enumerable.Range(0, 256).Select(v => (char)v).ToArray();
+
+				Action<char[], char, char> a_swap = (chrs, a, b) =>
+				{
+					chrs[(int)a] = b;
+					chrs[(int)b] = a;
+
+					a += (char)0x20;
+					b += (char)0x20;
+
+					chrs[(int)a] = b;
+					chrs[(int)b] = a;
+				};
+
+				a_swap(似非単語文字フィルタ, 'B', 'D');
+				a_swap(似非単語文字フィルタ, 'F', 'L');
+				a_swap(似非単語文字フィルタ, 'G', 'J');
+				a_swap(似非単語文字フィルタ, 'K', 'H');
+				a_swap(似非単語文字フィルタ, 'M', 'N');
+				a_swap(似非単語文字フィルタ, 'P', 'Q');
+				a_swap(似非単語文字フィルタ, 'R', 'S');
+				a_swap(似非単語文字フィルタ, 'V', 'W');
+				a_swap(似非単語文字フィルタ, 'X', 'Z');
+			}
+
+			return new string(word.Select(chr =>
+			{
+				return 似非単語文字フィルタ[(int)chr];
+			})
+			.ToArray());
+		}
 	}
 }

@@ -118,6 +118,21 @@ function <double> GetDistance(<double> x, <double> y)
 }
 
 /*
+	原点から指定位置までの距離が指定距離未満であるか判定する。
+
+	x: X-指定位置
+	y: Y-指定位置
+	r: 指定距離
+
+	ret: 原点から指定位置までの距離が指定距離未満であるか
+*/
+function <boolean> GetDistanceLessThan(<double> x, <double> y, <double> r)
+{
+	return GetDistance(x, y) < r;
+//	return x * x + y * y < r * r;
+}
+
+/*
 	現在値を目的値に近づけます。
 
 	value: 現在値
@@ -174,4 +189,124 @@ function* <Scene_t[]> CreateScene(<int> frameMax)
 
 		yield scene;
 	}
+}
+
+var<D4Rect_t> @@_Interior = null;
+var<D4Rect_t> @@_Exterior = null;
+
+function <void> @@_AdjustRect(<D2Size_t> size, <D4Rect_t> rect)
+{
+	var<double> w_h = (rect.H * size.W) / size.H; // 高さを基準にした幅
+	var<double> h_w = (rect.W * size.H) / size.W; // 幅を基準にした高さ
+
+	var<D4Rect_t> rect1 = {};
+	var<D4Rect_t> rect2 = {};
+
+	rect1.L = rect.L + (rect.W - w_h) / 2.0;
+	rect1.T = rect.T;
+	rect1.W = w_h;
+	rect1.H = rect.H;
+
+	rect2.L = rect.L;
+	rect2.T = rect.T + (rect.H - h_w) / 2.0;
+	rect2.W = rect.W;
+	rect2.H = h_w;
+
+	if (w_h < rect.W)
+	{
+		@@_Interior = rect1;
+		@@_Exterior = rect2;
+	}
+	else
+	{
+		@@_Interior = rect2;
+		@@_Exterior = rect1;
+	}
+}
+
+/*
+	サイズを(アスペクト比を維持して)矩形領域いっぱいに広げる。
+	矩形領域の内側に張り付く領域を返す。
+*/
+function <D4Rect_t> AdjustRectInterior(<D2Size_t> size, <D4Rect_t> rect)
+{
+	@@_AdjustRect(size, rect);
+
+	return @@_Interior;
+}
+
+/*
+	サイズを(アスペクト比を維持して)矩形領域いっぱいに広げる。
+	矩形領域の外側に張り付く領域を返す。
+*/
+function <D4Rect_t> AdjustRectExterior(<D2Size_t> size, <D4Rect_t> rect)
+{
+	@@_AdjustRect(size, rect);
+
+	return @@_Exterior;
+}
+
+/*
+	サイズを(アスペクト比を維持して)矩形領域いっぱいに広げる。
+	矩形領域の外側に張り付く領域を返す。
+
+	size: サイズ
+	rect: 矩形領域(入力)
+	xRate: スライドレート 0.0 ～ 1.0
+		0.0 == 矩形領域(出力)を左に寄せる == 矩形領域(入力)と矩形領域(出力)の右側が重なる。
+		0.5 == 中央
+		1.0 == 矩形領域(出力)を右に寄せる == 矩形領域(入力)と矩形領域(出力)の左側が重なる。
+	yRate: スライドレート 0.0 ～ 1.0
+		0.0 == 矩形領域(出力)を上に寄せる == 矩形領域(入力)と矩形領域(出力)の下側が重なる。
+		0.5 == 中央
+		1.0 == 矩形領域(出力)を下に寄せる == 矩形領域(入力)と矩形領域(出力)の上側が重なる。
+	extraZoom: 倍率 1.0 ～
+
+	ret: 矩形領域(出力)
+*/
+function <D4Rect_t> AdjustRectExterior_RRZ(<D2Size_t> size, <D4Rect_t> rect, <double> xRate, <double> yRate, <double> extraZoom)
+{
+	var<D4Rect_t> exterior = AdjustRectExterior(size, rect);
+
+	exterior.W *= extraZoom;
+	exterior.H *= extraZoom;
+
+	var<double> rangeX = exterior.W - rect.W;
+	var<double> rangeY = exterior.H - rect.H;
+
+	exterior.L = rect.L + rangeX * (xRate - 1.0);
+	exterior.T = rect.T + rangeY * (yRate - 1.0);
+
+	return exterior;
+}
+
+/*
+	テンキー式方向・速度から XY-速度を得る。
+
+	direction: 8方向_テンキー方式 (1～4, 6～9)
+	speed: 速度
+
+	ret: XY-速度
+*/
+function <D2Point_t> GetXYSpeed(<int> direction, <double> speed)
+{
+	var<double> nanameSpeed = speed / Math.SQRT2;
+	var<D2Point_t> ret;
+
+	switch (direction)
+	{
+	case 4: ret = CreateD2Point(-speed, 0.0); break;
+	case 6: ret = CreateD2Point( speed, 0.0); break;
+	case 8: ret = CreateD2Point(0.0, -speed); break;
+	case 2: ret = CreateD2Point(0.0,  speed); break;
+
+	case 1: ret = CreateD2Point(-nanameSpeed,  nanameSpeed); break;
+	case 3: ret = CreateD2Point( nanameSpeed,  nanameSpeed); break;
+	case 7: ret = CreateD2Point(-nanameSpeed, -nanameSpeed); break;
+	case 9: ret = CreateD2Point( nanameSpeed, -nanameSpeed); break;
+
+	default:
+		error(); // never
+	}
+	return ret;
 }

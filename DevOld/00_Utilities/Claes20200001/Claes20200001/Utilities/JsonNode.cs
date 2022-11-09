@@ -179,15 +179,19 @@ namespace Charlotte.Utilities
 						}
 					}
 				}
-				else if (chr == '"') // ? String-Value
+				else if (chr == '"' || chr == '\'') // ? String-Value
 				{
 					StringBuilder buff = new StringBuilder();
+					char chrEnclStr = chr;
+
+					if (chrEnclStr == '\'')
+						ProcMain.WriteLog("JSON format warning: String enclosed in single quotes");
 
 					for (; ; )
 					{
 						chr = this.Next();
 
-						if (chr == '"')
+						if (chr == chrEnclStr)
 							break;
 
 						if (chr == '\\')
@@ -263,32 +267,42 @@ namespace Charlotte.Utilities
 				byte[] buff = new byte[4];
 				int readSize = reader.Read(buff, 0, 4);
 
-				if (4 <= readSize)
-				{
-					if (
-						buff[0] == 0x00 &&
-						buff[1] == 0x00 &&
-						buff[2] == 0xfe &&
-						buff[3] == 0xff
-						||
-						buff[0] == 0xff &&
-						buff[1] == 0xfe &&
-						buff[2] == 0x00 &&
-						buff[3] == 0x00
-						)
-						return Encoding.UTF32;
-				}
-				if (2 <= readSize)
-				{
-					if (
-						buff[0] == 0xfe &&
-						buff[1] == 0xff
-						||
-						buff[0] == 0xff &&
-						buff[1] == 0xfe
-						)
-						return Encoding.Unicode;
-				}
+				// ? UTF-32 BE
+				if (
+					4 <= readSize &&
+					buff[0] == 0x00 &&
+					buff[1] == 0x00 &&
+					buff[2] == 0xfe &&
+					buff[3] == 0xff
+					)
+					return Encoding.UTF32;
+
+				// ? UTF-32 LE
+				if (
+					4 <= readSize &&
+					buff[0] == 0xff &&
+					buff[1] == 0xfe &&
+					buff[2] == 0x00 &&
+					buff[3] == 0x00
+					)
+					return Encoding.UTF32;
+
+				// ? UTF-16 BE
+				if (
+					2 <= readSize &&
+					buff[0] == 0xfe &&
+					buff[1] == 0xff
+					)
+					return Encoding.Unicode;
+
+				// ? UTF-16 LE
+				if (
+					2 <= readSize &&
+					buff[0] == 0xff &&
+					buff[1] == 0xfe
+					)
+					return Encoding.Unicode;
+
 				return Encoding.UTF8;
 			}
 		}

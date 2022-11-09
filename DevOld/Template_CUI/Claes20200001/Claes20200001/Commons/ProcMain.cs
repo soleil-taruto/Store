@@ -7,6 +7,7 @@ using System.Threading;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using Microsoft.Win32;
 
@@ -14,8 +15,8 @@ namespace Charlotte.Commons
 {
 	public static class ProcMain
 	{
-		public const string APP_IDENT = "{760c7fb8-d673-436e-98c9-27b23c5ab0a2}"; // アプリ毎に変更する。
-		public const string APP_TITLE = "Claes20200001";
+		public const string APP_IDENT = "{c496ce16-4117-4315-8d03-282dc4842266}";
+		public const string APP_TITLE = "APP-20200001";
 
 		public static string SelfFile;
 		public static string SelfDir;
@@ -62,11 +63,23 @@ namespace Charlotte.Commons
 			SelfFile = Assembly.GetEntryAssembly().Location;
 			SelfDir = Path.GetDirectoryName(SelfFile);
 
-			Mutex procMutex = new Mutex(false, APP_IDENT);
+			string procMutexName;
+
+			using (SHA512 sha512 = SHA512.Create())
+			{
+				string s = APP_IDENT + SelfDir;
+				byte[] b = Encoding.UTF8.GetBytes(s);
+				byte[] bh = sha512.ComputeHash(b);
+				string h = string.Join("", bh.Select(bChr => bChr.ToString("x02")));
+
+				procMutexName = h;
+			}
+
+			Mutex procMutex = new Mutex(false, procMutexName);
 
 			if (procMutex.WaitOne(0))
 			{
-				if (GlobalProcMtx.Create(APP_IDENT, APP_TITLE))
+				if (GlobalProcMtx.Create(procMutexName, APP_TITLE))
 				{
 					CheckSelfFile();
 					Directory.SetCurrentDirectory(SelfDir);

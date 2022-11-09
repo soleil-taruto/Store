@@ -101,7 +101,7 @@ function <int> StrToInt(<string> str)
 		}
 		else
 		{
-			var<int> p = "0123456789".indexOf(chr);
+			var<int> p = DECIMAL.indexOf(chr);
 
 			if (p == -1)
 			{

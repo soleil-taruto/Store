@@ -188,6 +188,7 @@ function <MapCell_t> @@_CharToMapCell(<string> chr)
 	// タイル系
 	//
 	if (chr == "壁") return @@_CreateMapCell_T(CreateTile_BDummy()); // ★サンプル
+	if (chr == "UC") return @@_CreateMapCell_T(CreateTile_BUnderConstruction());
 	if (chr == "　") return @@_CreateMapCell_T(CreateTile_None());
 	if (chr == "■") return @@_CreateMapCell_T(CreateTile_Wall(P_Tiles[0]));
 	if (chr == "W1") return @@_CreateMapCell_T(CreateTile_Wall(P_Tiles[1]));

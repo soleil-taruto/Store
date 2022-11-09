@@ -16,6 +16,7 @@
 	// -- アイテム・敵弾など
 	// プレイヤーに当たらない敵を作る場合 enemy.Draw において enemy.Crash == null にすること。
 	// -- アイテムなど
+	// ---- アイテムの Draw でプレイヤーとの当たり判定・処理を行う。
 
 	// 体力
 	// -1 == 死亡
@@ -56,7 +57,7 @@
 */
 function <boolean> DrawEnemy(<Enemy_t> enemy) // ret: ? 生存
 {
-	return enemy.Draw.next().value;
+	return NextVal(enemy.Draw);
 }
 
 /*

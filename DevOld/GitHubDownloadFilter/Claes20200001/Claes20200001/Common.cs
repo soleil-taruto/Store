@@ -80,6 +80,12 @@ namespace Charlotte
 
 		private static bool[,] S_JChars = null;
 
+		/// <summary>
+		/// SJISの2バイト文字か判定する。
+		/// </summary>
+		/// <param name="lead">第1バイト</param>
+		/// <param name="trail">第2バイト</param>
+		/// <returns>SJISの2バイト文字か</returns>
 		public static bool IsJChar(byte lead, byte trail)
 		{
 			if (S_JChars == null)
@@ -92,6 +98,27 @@ namespace Charlotte
 				}
 			}
 			return S_JChars[lead, trail];
+		}
+
+		private static bool[] S_UnicodeJChars = null;
+
+		/// <summary>
+		/// Unicodeの全角文字(SJISの2バイト文字)か判定する。
+		/// </summary>
+		/// <param name="value">文字コード</param>
+		/// <returns>Unicodeの全角文字(SJISの2バイト文字)か</returns>
+		public static bool IsUnicodeJChar(UInt16 value)
+		{
+			if (S_UnicodeJChars == null)
+			{
+				S_UnicodeJChars = new bool[65536];
+
+				foreach (char chr in SCommon.GetJChars())
+				{
+					S_UnicodeJChars[(int)chr] = true;
+				}
+			}
+			return S_UnicodeJChars[(int)value];
 		}
 	}
 }

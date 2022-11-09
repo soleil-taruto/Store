@@ -194,3 +194,11 @@ function <T[]> ToArray(<T[]> src)
 	}
 	return dest;
 }
+
+/*
+	ジェネレータの次の値を取得する。
+*/
+function <T> NextVal(generator)
+{
+	return generator.next().value;
+}

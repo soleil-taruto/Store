@@ -279,3 +279,34 @@ function <D4Rect_t> AdjustRectExterior_RRZ(<D2Size_t> size, <D4Rect_t> rect, <do
 
 	return exterior;
 }
+
+/*
+	テンキー式方向・速度から XY-速度を得る。
+
+	direction: 8方向_テンキー方式 (1～4, 6～9)
+	speed: 速度
+
+	ret: XY-速度
+*/
+function <D2Point_t> GetXYSpeed(<int> direction, <double> speed)
+{
+	var<double> nanameSpeed = speed / Math.SQRT2;
+	var<D2Point_t> ret;
+
+	switch (direction)
+	{
+	case 4: ret = CreateD2Point(-speed, 0.0); break;
+	case 6: ret = CreateD2Point( speed, 0.0); break;
+	case 8: ret = CreateD2Point(0.0, -speed); break;
+	case 2: ret = CreateD2Point(0.0,  speed); break;
+
+	case 1: ret = CreateD2Point(-nanameSpeed,  nanameSpeed); break;
+	case 3: ret = CreateD2Point( nanameSpeed,  nanameSpeed); break;
+	case 7: ret = CreateD2Point(-nanameSpeed, -nanameSpeed); break;
+	case 9: ret = CreateD2Point( nanameSpeed, -nanameSpeed); break;
+
+	default:
+		error(); // never
+	}
+	return ret;
+}

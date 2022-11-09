@@ -16,7 +16,7 @@ var<int> @@_RETURN_BUTTON_T = 480;
 var<int> @@_RETURN_BUTTON_W = 500;
 var<int> @@_RETURN_BUTTON_H = 100;
 
-function* <generatorForTask> MapSelectMenu()
+function* <generatorForTask> GameProgressMaster()
 {
 	SetCurtain();
 	FreezeInput();

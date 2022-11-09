@@ -18,6 +18,7 @@ var<Picture_t> P_WhiteCircle = @@_Load(RESOURCE_General__WhiteCircle_png);
 
 // š‚±‚±‚Ü‚ÅŒÅ’è -- ‚¿‰ñ‚è_‹¤’Ê -- ƒTƒ“ƒvƒ‹‚Æ‚µ‚ÄƒL[ƒv
 
+var<Picture_t> P_GameStartButton = @@_Load(RESOURCE_Picture__GameStartButton_png);
 var<Picture_t> P_Star_S = @@_Load(RESOURCE_Picture__Œõ‚é¯20_png);
 var<Picture_t> P_Player = @@_Load(RESOURCE_Picture__Player_png);
 var<Picture_t> P_Wall = @@_Load(RESOURCE_Picture__Wall_png);
@@ -26,3 +27,6 @@ var<Picture_t> P_”wŒi = @@_Load(RESOURCE_Picture__Background_png);
 var<Picture_t> P_Enemy_B = @@_Load(RESOURCE_Picture__“GÂ_png);
 var<Picture_t> P_Enemy_R = @@_Load(RESOURCE_Picture__“GÔ_png);
 var<Picture_t> P_Enemy_G = @@_Load(RESOURCE_Picture__“G—Î_png);
+
+var<Picture_t> P_TitleLogo    = @@_Load(RESOURCE_Picture__TitleLogo_png);
+var<Picture_t> P_EndingString = @@_Load(RESOURCE_Picture__EndingString_png);

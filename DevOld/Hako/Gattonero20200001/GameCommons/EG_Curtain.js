@@ -51,3 +51,20 @@ function <void> @(UNQN)_EACH()
 	SetColor(I4ColorToString(D4ColorToI4Color(color)));
 	PrintRect(0, 0, Screen_W, Screen_H);
 }
+
+function <void> DrawCurtain(<double> whiteLevel) // whiteLevel: -1.0 Å` 1.0
+{
+	var<D4Color> color;
+
+	if (whiteLevel < 0.0)
+	{
+		color = CreateD4Color(0.0, 0.0, 0.0, whiteLevel * -1.0);
+	}
+	else
+	{
+		color = CreateD4Color(1.0, 1.0, 1.0, whiteLevel);
+	}
+
+	SetColor(I4ColorToString(D4ColorToI4Color(color)));
+	PrintRect(0, 0, Screen_W, Screen_H);
+}

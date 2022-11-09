@@ -2,6 +2,12 @@
 	音楽再生・停止
 */
 
+/*
+	音楽の音量
+	0.0 ～ 1.0
+*/
+var<double> MusicVolume = DEFAULT_VOLUME;
+
 var<int> @@_State = 0; // 0 == 停止中, 1 == 再生中, 2 == フェードアウト中, 3 == 曲停止, 4 == 次の曲を再生
 var<Sound_t> @@_Music = null;
 var<Sound_t> @@_NextMusic = null;
@@ -31,7 +37,7 @@ function <void> Play(<Sound_t> music)
 
 	music.Handle.loop = true;
 	music.Handle.currentTime = 0;
-	music.Handle.volume = 1.0;
+	music.Handle.volume = MusicVolume;
 	music.Handle.play();
 
 	@@_State = 1;
@@ -60,7 +66,7 @@ function <void> @(UNQN)_EACH()
 			@@_Volume = 0.0;
 			@@_State = 3;
 		}
-		@@_Music.Handle.volume = @@_Volume;
+		@@_Music.Handle.volume = @@_Volume * MusicVolume;
 	}
 	else if (@@_State == 3) // ? 曲停止
 	{
@@ -116,4 +122,12 @@ function <void> Fadeout_F(<int> frame)
 	@@_State = 2;
 	@@_FadeoutFrame = frame;
 	@@_Volume = 1.0;
+}
+
+function <void> MusicVolumeChanged()
+{
+	if (@@_Music != null)
+	{
+		@@_Music.Handle.volume = MusicVolume;
+	}
 }

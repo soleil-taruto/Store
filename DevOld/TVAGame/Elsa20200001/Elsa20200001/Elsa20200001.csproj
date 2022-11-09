@@ -54,9 +54,8 @@
     <ApplicationIcon>game_app.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DxLibDotNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Dat\DxLibDotNet\DxLibDotNet3_20f\DxLibDotNet.dll</HintPath>
+    <Reference Include="DxLibDotNet">
+      <HintPath>C:\Dat\DxLibDotNet\DxLibDotNet3_23\DxLibDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -316,7 +315,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY C:\Dat\DxLibDotNet\DxLibDotNet3_20f\DxLib.dll $(TargetDir).
+    <PostBuildEvent>COPY C:\Dat\DxLibDotNet\DxLibDotNet3_23\DxLib.dll $(TargetDir).
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -2,6 +2,12 @@
 	Œø‰Ê‰¹Ä¶
 */
 
+/*
+	Œø‰Ê‰¹‚Ì‰¹—Ê
+	0.0 ` 1.0
+*/
+var<double> SEVolume = DEFAULT_VOLUME;
+
 var<SE_t[]> @@_SEBuff = [];
 
 function <void> SE(<SE_t> se)
@@ -33,7 +39,7 @@ function <void> @(UNQN)_EACH()
 	{
 		var<SE_t> se = @@_SEBuff.shift();
 
-		se.Handles[se.Index].Handle.volume = 1.0;
+		se.Handles[se.Index].Handle.volume = SEVolume;
 		se.Handles[se.Index].Handle.play();
 
 		se.Index++;

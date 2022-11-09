@@ -18,7 +18,9 @@ var<Picture_t> P_WhiteCircle = @@_Load(RESOURCE_General__WhiteCircle_png);
 
 // ★ここまで固定 -- 持ち回り_共通 -- サンプルとしてキープ
 
+var<Picture_t> P_GameStartButton = @@_Load(RESOURCE_Picture__GameStartButton_png);
 var<Picture_t> P_ExplodePiece = @@_Load(RESOURCE_Picture__光る星20_png);
+var<Picture_t> P_EndingString = @@_Load(RESOURCE_Picture__EndingString_png);
 var<Picture_t> P_Goal = @@_Load(RESOURCE_Picture__Goal_png);
 
 // プレイヤー

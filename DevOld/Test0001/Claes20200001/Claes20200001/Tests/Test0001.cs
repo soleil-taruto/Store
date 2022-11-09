@@ -5,107 +5,158 @@ using System.Text;
 using System.Drawing;
 using System.IO;
 using Charlotte.Commons;
+using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
-	/// <summary>
-	/// データサイズ_大
-	/// </summary>
 	public class Test0001
 	{
 		public void Test01()
 		{
-			// GetSHA512(byte[] src)
-			// GetSHA512(IEnumerable<byte[]> src)
-			// GetSHA512(Action<Write_d> execute) ...をテスト_1
-			//
-			for (int testcnt = 0; testcnt < 100; testcnt++)
-			{
-				Console.WriteLine("1_testcnt: " + testcnt); // cout
+			BitList bits = new BitList();
 
-				byte[] testData = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(5000000));
+			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
 
-				byte[] hash1 = SCommon.GetSHA512(testData);
-				byte[] hash2 = SCommon.GetSHA512(new byte[][] { testData });
-				byte[] hash3 = SCommon.GetSHA512(writePart => writePart(testData, 0, testData.Length));
+			bits[5] = true;
+			bits[10] = true;
+			bits[15] = true;
+			bits[20] = true;
+			bits[25] = true;
+			bits[30] = true;
+			bits[35] = true;
 
-				if (SCommon.Comp(hash1, hash2) != 0) // ? 不一致
-					throw null; // 想定外
+			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
 
-				if (SCommon.Comp(hash1, hash3) != 0) // ? 不一致
-					throw null; // 想定外
-			}
+			bits = new BitList();
+			bits[31] = true;
+			bits[32] = true;
 
-			// GetSHA512(byte[] src)
-			// GetSHA512(IEnumerable<byte[]> src)
-			// GetSHA512(Action<Write_d> execute) ...をテスト_2
-			//
-			for (int testcnt = 0; testcnt < 100; testcnt++)
-			{
-				Console.WriteLine("2_testcnt: " + testcnt); // cout
+			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
 
-				byte[][] testData = Enumerable.Range(0, SCommon.CRandom.GetInt(20))
-					.Select(dummy => SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(250000)))
-					.ToArray();
+			bits[32] = false;
 
-				byte[] hash1 = SCommon.GetSHA512(SCommon.Join(testData));
-				byte[] hash2 = SCommon.GetSHA512(testData);
-				byte[] hash3 = SCommon.GetSHA512(writePart =>
-				{
-					foreach (byte[] part in testData)
-						writePart(part, 0, part.Length);
-				});
+			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
 
-				if (SCommon.Comp(hash1, hash2) != 0) // ? 不一致
-					throw null; // 想定外
+			bits[31] = false;
 
-				if (SCommon.Comp(hash1, hash3) != 0) // ? 不一致
-					throw null; // 想定外
-			}
+			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
 
-			// GetSHA512(byte[] src)
-			// GetSHA512(Read_d reader) ...をテスト
-			//
-			for (int testcnt = 0; testcnt < 100; testcnt++)
-			{
-				Console.WriteLine("3_testcnt: " + testcnt); // cout
+			bits[0] = true;
+			bits[1] = true;
+			bits[2] = true;
+			bits[3] = true;
+			bits[4] = true;
 
-				byte[] testData = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(5000000));
+			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
 
-				byte[] hash1 = SCommon.GetSHA512(testData);
-				byte[] hash2;
+			bits[1] = false;
+			bits[3] = false;
 
-				using (MemoryStream mem = new MemoryStream(testData))
-				{
-					hash2 = SCommon.GetSHA512(mem.Read);
-				}
+			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
+		}
 
-				if (SCommon.Comp(hash1, hash2) != 0) // ? 不一致
-					throw null; // 想定外
-			}
+		public void Test02()
+		{
+			Canvas canvas = new Canvas(1000, 1000);
 
-			// GetSHA512(byte[] src)
-			// GetSHA512File(string file) ...をテスト
-			//
+			canvas.Fill(new I4Color(255, 255, 160, 255));
+			canvas.FillRect(new I4Color(255, 255, 128, 255), new I4Rect(250, 250, 500, 500));
+			canvas.DrawString("CD", 1000, "Impact", FontStyle.Regular, new I3Color(0, 0, 255), new I4Rect(250, 250, 500, 500), 10);
+
+			canvas.Save(Common.NextOutputPath() + ".png");
+		}
+
+		public void Test03()
+		{
+			Test03_a(@"
+
+{
+	Integer: 123,
+	Float: -123.456,
+	String: ""ABC"",
+	Boolean: true,
+	Map: {
+		aaa: 1,
+		bbb: 2,
+		ccc: 3
+	},
+	Array: [ 1, 2, 3 ]
+}
+
+");
+
+			Test03_a("[[[[[[[[[[ 123 ]]]]]]]]]]");
+			Test03_a("{ a: { a: { a: { a: { a: { a: { a: { a: { a: { a: 123 }}}}}}}}}}");
+		}
+
+		private void Test03_a(string json)
+		{
 			using (WorkingDir wd = new WorkingDir())
 			{
-				for (int testcnt = 0; testcnt < 100; testcnt++)
-				{
-					Console.WriteLine("4_testcnt: " + testcnt); // cout
+				string file = wd.MakePath();
+				File.WriteAllText(file, json, Encoding.UTF8);
 
-					byte[] testData = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(5000000));
-					string testFile = wd.MakePath();
-					File.WriteAllBytes(testFile, testData);
+				JsonNode root = JsonNode.LoadFromFile(file);
 
-					byte[] hash1 = SCommon.GetSHA512(testData);
-					byte[] hash2 = SCommon.GetSHA512File(testFile);
-
-					if (SCommon.Comp(hash1, hash2) != 0) // ? 不一致
-						throw null; // 想定外
-				}
+				root.WriteToFile(Common.NextOutputPath() + ".json");
 			}
+		}
 
-			Console.WriteLine("OK!");
+		public void Test04()
+		{
+			Test04_a(@"
+
+<?xml version=""1.0"" encoding=""UTF-8"" ?>
+<root>
+	<Integer>123</Integer>
+	<Float>-123.456</Float>
+	<String>ABC</String>
+	<Boolean>true</Boolean>
+	<Map>
+		<Value>1</Value>
+		<Value>2</Value>
+		<Value>3</Value>
+	</Map>
+	<Array><Element>1</Element><Element>2</Element><Element>3</Element></Array>
+</root>
+
+".TrimStart());
+
+			Test04_a(@"
+
+<?xml version=""1.0"" encoding=""UTF-8"" ?>
+<root>
+	<Integer Value=""123""></Integer>
+	<Float Value=""-123.456""></Float>
+	<String Value=""ABC""></String>
+	<Boolean Value=""true""></Boolean>
+	<Map>
+		<Value Value=""1""></Value>
+		<Value Value=""2""></Value>
+		<Value Value=""3""></Value>
+	</Map>
+	<Array><Element Value=""1""></Element><Element Value=""2""></Element><Element Value=""3""></Element></Array>
+</root>
+
+".TrimStart());
+
+			Test04_a("<a/>");
+			Test04_a("<a></a>");
+			Test04_a("<a b=\"c\"/>");
+			Test04_a("<a b=\"c\"></a>");
+		}
+
+		private void Test04_a(string xml)
+		{
+			using (WorkingDir wd = new WorkingDir())
+			{
+				string file = wd.MakePath();
+				File.WriteAllText(file, xml, Encoding.UTF8);
+
+				XMLNode root = XMLNode.LoadFromFile(file);
+
+				root.WriteToFile(Common.NextOutputPath() + ".xml");
+			}
 		}
 	}
 }

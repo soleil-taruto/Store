@@ -2,110 +2,96 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
-using System.IO;
 using Charlotte.Commons;
+using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
-	/// <summary>
-	/// データサイズ_小
-	/// </summary>
 	public class Test0002
 	{
 		public void Test01()
 		{
-			// GetSHA512(byte[] src)
-			// GetSHA512(IEnumerable<byte[]> src)
-			// GetSHA512(Action<Write_d> execute) ...をテスト_1
-			//
-			for (int testcnt = 0; testcnt < 10000; testcnt++)
+			Test01_a(100);
+			Test01_a(10000);
+			Test01_a(1000000);
+			Test01_a(100000000);
+			Test01_a(300000000); // Release で 0:30くらい @ 2022.5.6
+			//Test01_a(1000000000); // Release で 1:30くらい 100MBくらい使用 @ 2022.5.6
+			//Test01_a(3000000000); // Release で 4:30くらい 300MBくらい使用 @ 2022.5.6
+		}
+
+		private void Test01_a(long limit)
+		{
+			ProcMain.WriteLog("ST " + limit);
+
+			CompositeList composites = new CompositeList();
+
+			for (long numb = 3; numb < limit; numb += 2)
 			{
-				if (testcnt % 100 == 0) Console.WriteLine("1_testcnt: " + testcnt); // cout
-
-				byte[] testData = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(1000));
-
-				byte[] hash1 = SCommon.GetSHA512(testData);
-				byte[] hash2 = SCommon.GetSHA512(new byte[][] { testData });
-				byte[] hash3 = SCommon.GetSHA512(writePart => writePart(testData, 0, testData.Length));
-
-				if (SCommon.Comp(hash1, hash2) != 0) // ? 不一致
-					throw null; // 想定外
-
-				if (SCommon.Comp(hash1, hash3) != 0) // ? 不一致
-					throw null; // 想定外
-			}
-
-			// GetSHA512(byte[] src)
-			// GetSHA512(IEnumerable<byte[]> src)
-			// GetSHA512(Action<Write_d> execute) ...をテスト_2
-			//
-			for (int testcnt = 0; testcnt < 10000; testcnt++)
-			{
-				if (testcnt % 100 == 0) Console.WriteLine("2_testcnt: " + testcnt); // cout
-
-				byte[][] testData = Enumerable.Range(0, SCommon.CRandom.GetInt(10))
-					.Select(dummy => SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(100)))
-					.ToArray();
-
-				byte[] hash1 = SCommon.GetSHA512(SCommon.Join(testData));
-				byte[] hash2 = SCommon.GetSHA512(testData);
-				byte[] hash3 = SCommon.GetSHA512(writePart =>
+				if (!composites[numb])
 				{
-					foreach (byte[] part in testData)
-						writePart(part, 0, part.Length);
-				});
+					if (limit / numb <= numb)
+					{
+						continue;
+					}
+					for (long n = numb * numb; n < limit; n += numb * 2)
+					{
+						composites[n] = true;
+					}
 
-				if (SCommon.Comp(hash1, hash2) != 0) // ? 不一致
-					throw null; // 想定外
-
-				if (SCommon.Comp(hash1, hash3) != 0) // ? 不一致
-					throw null; // 想定外
-			}
-
-			// GetSHA512(byte[] src)
-			// GetSHA512(Read_d reader) ...をテスト
-			//
-			for (int testcnt = 0; testcnt < 10000; testcnt++)
-			{
-				if (testcnt % 100 == 0) Console.WriteLine("3_testcnt: " + testcnt); // cout
-
-				byte[] testData = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(1000));
-
-				byte[] hash1 = SCommon.GetSHA512(testData);
-				byte[] hash2;
-
-				using (MemoryStream mem = new MemoryStream(testData))
-				{
-					hash2 = SCommon.GetSHA512(mem.Read);
-				}
-
-				if (SCommon.Comp(hash1, hash2) != 0) // ? 不一致
-					throw null; // 想定外
-			}
-
-			// GetSHA512(byte[] src)
-			// GetSHA512File(string file) ...をテスト
-			//
-			using (WorkingDir wd = new WorkingDir())
-			{
-				for (int testcnt = 0; testcnt < 10000; testcnt++)
-				{
-					if (testcnt % 100 == 0) Console.WriteLine("4_testcnt: " + testcnt); // cout
-
-					byte[] testData = SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(1000));
-					string testFile = wd.MakePath();
-					File.WriteAllBytes(testFile, testData);
-
-					byte[] hash1 = SCommon.GetSHA512(testData);
-					byte[] hash2 = SCommon.GetSHA512File(testFile);
-
-					if (SCommon.Comp(hash1, hash2) != 0) // ? 不一致
-						throw null; // 想定外
+					if (numb < 20)
+						ProcMain.WriteLog("C-done " + numb);
 				}
 			}
 
-			Console.WriteLine("OK!");
+			ProcMain.WriteLog("CNT");
+
+			long count = 0;
+
+			for (long numb = 2; numb < limit; numb++)
+			{
+				if (!composites[numb])
+				{
+					count++;
+				}
+			}
+
+			ProcMain.WriteLog("CNT-done");
+
+			Console.WriteLine(limit + " ==> " + count);
+		}
+
+		private class CompositeList
+		{
+			private BitList Inner = new BitList();
+
+			public bool this[long index]
+			{
+				get
+				{
+					if (index <= 1)
+						return true;
+
+					if (index == 2)
+						return false;
+
+					if (index % 2 == 0)
+						return true;
+
+					return this.Inner[index / 2 - 1];
+				}
+
+				set
+				{
+					if (index <= 2)
+						throw null; // dont
+
+					if (index % 2 == 0)
+						throw null; // dont
+
+					this.Inner[index / 2 - 1] = value;
+				}
+			}
 		}
 	}
 }

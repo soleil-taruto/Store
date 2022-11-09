@@ -474,7 +474,7 @@ namespace Charlotte.Utilities
 		}
 
 		// ====
-		// 定番機能ここまで、ここから拡張機能・ツール
+		// 定番機能ここまで
 		// ====
 
 		/// <summary>

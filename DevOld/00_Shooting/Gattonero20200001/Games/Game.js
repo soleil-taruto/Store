@@ -16,7 +16,7 @@ var<D2Point_t> Camera = CreateD2Point(0.0, 0.0);
 var<TaskManager_t> GameTasks = CreateTaskManager();
 
 // 前面タスク
-var<TaskManager_t> FrontTasks = CreateTaskManager();
+var<TaskManager_t> FrontTasks = CreateTaskManager_CEFM(true);
 
 // シナリオ・タスク
 var<generatorForTask> @@_ScenarioTask = null;
@@ -149,6 +149,7 @@ gameLoop:
 		}
 
 		ExecuteAllTask(GameTasks);
+		ExecuteAllTask(FrontTasks);
 		@@_DrawFront();
 
 		if (DEBUG && GetKeyInput(17) == 1) // ? コントロール押下中 -> 当たり判定表示 (デバッグ用)
@@ -376,14 +377,7 @@ function <Shot_t[]> GetShots()
 */
 function <void> @@_DrawWall()
 {
-	ClearAllTask(FrontTasks);
-
-	// ----
-
-	if (!NextVal(@@_BackgroundTask)) // ? タスク終了 -> 想定外
-	{
-		error();
-	}
+	NextRun(@@_BackgroundTask);
 }
 
 /*
@@ -391,10 +385,6 @@ function <void> @@_DrawWall()
 */
 function <void> @@_DrawFront()
 {
-	ExecuteAllTask(FrontTasks);
-
-	// ----
-
 	var<string> strPower;
 
 	switch (PlayerAttackLv)

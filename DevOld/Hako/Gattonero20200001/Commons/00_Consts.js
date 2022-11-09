@@ -2,17 +2,6 @@
 	定数
 */
 
-// old ---->
-/*
-	整数の上限として恣意的に決めた値
-	・1000兆
-	・16桁
-	・15桁の最大値+1
-	・9倍しても Number.MAX_SAFE_INTEGER (9007199254740991 == 2^53-1) より小さい
-*/
-//var<int> IMAX = 1000000000000000;
-// <---- old
-
 /*
 	整数の上限として慣習的に決めた値
 	・10億
@@ -27,3 +16,18 @@ var<int> IMAX = 1000000000;
 	・doubleの許容誤差として
 */
 var<double> MICRO = 1.0 / IMAX;
+
+/*
+	半角・数字
+*/
+var<string> DECIMAL = "0123456789";
+
+/*
+	半角・英大文字
+*/
+var<string> ALPHA_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+/*
+	半角・英小文字
+*/
+var<string> ALPHA_LOWER = "abcdefghijklmnopqrstuvwxyz";

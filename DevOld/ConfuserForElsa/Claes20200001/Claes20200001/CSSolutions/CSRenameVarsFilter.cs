@@ -31,17 +31,24 @@ namespace Charlotte.CSSolutions
 			.Where(v => v != 置き換え禁止ワードの例外ワード) // テスト用
 			.ToArray();
 
+		private List<string> 置き換え禁止ワード処理履歴 = new List<string>();
+		private int Count置き換え実施 = 0;
 		private Dictionary<string, string> 変換テーブル = SCommon.CreateDictionary<string>();
 
 		public string Filter(string name)
 		{
 			if (
 				name == "" ||
-				SCommon.DECIMAL.Contains(name[0]) ||
-				this.置き換え禁止ワードのリスト.Contains(name)
+				SCommon.DECIMAL.Contains(name[0])
 				)
 				return name;
 
+			if (this.置き換え禁止ワードのリスト.Contains(name))
+			{
+				this.置き換え禁止ワード処理履歴.Add(name);
+				return name;
+			}
+			this.Count置き換え実施++;
 			string nameNew;
 
 			if (this.変換テーブル.ContainsKey(name))
@@ -54,6 +61,48 @@ namespace Charlotte.CSSolutions
 				this.変換テーブル.Add(name, nameNew);
 			}
 			return nameNew;
+		}
+
+		public void Write置き換え禁止ワード処理履歴(string file)
+		{
+			Dictionary<string, int> word2Count = SCommon.CreateDictionary<int>();
+
+			foreach (string word in this.置き換え禁止ワード処理履歴)
+			{
+				if (word2Count.ContainsKey(word))
+					word2Count[word]++;
+				else
+					word2Count.Add(word, 1);
+			}
+			KeyValuePair<string, int>[] words = word2Count.ToArray();
+
+			Array.Sort(words, (a, b) =>
+			{
+				int ret = SCommon.Comp(a.Value, b.Value) * -1; // 件数_多い順
+				if (ret != 0)
+					return ret;
+
+				ret = SCommon.Comp(a.Key.Length, b.Key.Length); // ワード_短い順
+				if (ret != 0)
+					return ret;
+
+				ret = SCommon.Comp(a.Key, b.Key); // ワード_辞書順
+				return ret;
+			});
+
+			using (CsvFileWriter writer = new CsvFileWriter(file))
+			{
+				foreach (KeyValuePair<string, int> word in words)
+				{
+					writer.WriteCell(word.Key);
+					writer.WriteCell(word.Value.ToString());
+					writer.EndRow();
+				}
+
+				// ついでに出力
+				writer.WriteRow(new string[] { "置き換え禁止件数", this.置き換え禁止ワード処理履歴.Count.ToString() });
+				writer.WriteRow(new string[] { "置き換え実施件数", this.Count置き換え実施.ToString() });
+			}
 		}
 
 		private Dictionary<string, object> CNN_Names = SCommon.CreateDictionary<object>();
@@ -125,6 +174,11 @@ namespace Charlotte.CSSolutions
 			const int NAME_LEN_MIN = 25;
 			const int NAME_LEN_MAX = 32;
 
+			// Test0002.Test01 より、頻度の最も高い長さ @ 2022.2.27
+			//
+			//const int NAME_LEN_MIN = 28;
+			//const int NAME_LEN_MAX = 28;
+
 			for (int c = 0; c < 1000; c++) // 十分なトライ回数 -- rough limit
 			{
 				// 似非英語名
@@ -140,6 +194,11 @@ namespace Charlotte.CSSolutions
 			throw new Exception("非常に運が悪いか、しきい値に問題があります。");
 		}
 
+		public string ForTest_Get似非英語名_本番用()
+		{
+			return this.TryCreateNameNew();
+		}
+
 		public string ForTest_Get似非英語名()
 		{
 			return
@@ -147,6 +206,17 @@ namespace Charlotte.CSSolutions
 				SCommon.CRandom.ChooseOne(this.英単語リスト_形容詞) +
 				SCommon.CRandom.ChooseOne(this.ランダムな単語リスト) +
 				SCommon.CRandom.ChooseOne(this.英単語リスト_名詞);
+		}
+
+		public string[][] ForTest_Get似非英語名用単語集リスト()
+		{
+			return new string[][]
+			{
+				this.英単語リスト_動詞,
+				this.英単語リスト_形容詞,
+				this.ランダムな単語リスト,
+				this.英単語リスト_名詞,
+			};
 		}
 
 		private string[] 予約語クラス名リスト = SCommon.TextToLines(CSResources.予約語クラス名リスト)

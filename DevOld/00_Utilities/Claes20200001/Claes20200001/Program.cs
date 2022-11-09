@@ -57,7 +57,7 @@ namespace Charlotte
 			//new Test0001().Test01(); // AESCipher
 			//new Test0002().Test01(); // RingCipher
 			//new Test0002().Test02(); // RingCipher
-			//new Test0003().Test01(); // FileCipher
+			//new Test0003().Test01(); // RingCipherFile
 			//new Test0004().Test01(); // HTTPClient
 			//new Test0005().Test01(); // HTTPServer
 			//new Test0005().Test02(); // HTTPServer
@@ -69,8 +69,12 @@ namespace Charlotte
 			//new Test0008().Test01(); // StringSpliceSequencer
 			//new Test0008().Test02(); // StringSpliceSequencer
 			//new Test0009().Test01(); // Adler32
-			//new Test0010().Test01(); // MillerRabin
-			new Test0010().Test02(); // MillerRabin
+			new Test0010().Test01(); // MillerRabin
+			//new Test0010().Test02(); // MillerRabin
+			//new Test0011().Test01(); // JsonNode
+			//new Test0012().Test01(); // XMLNode
+			//new Test0013().Test01(); // CtrCipher
+			//new Test0014().Test01(); // Canvas
 
 			// --
 		}

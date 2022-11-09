@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 using Charlotte.Commons;
 using Charlotte.CSSolutions;
-using System.Windows.Forms;
 
 namespace Charlotte
 {
@@ -26,10 +26,13 @@ namespace Charlotte
 			string workSolutionDir = Path.Combine(workDir, "tmpsol");
 			string workSolutionFile = Path.Combine(workSolutionDir, Path.GetFileName(solutionFile));
 			string workSolutionDir_mid = workSolutionDir + "_mid";
+			string fileCsv置き換え禁止ワード処理履歴 = Path.Combine(workDir, "置き換え禁止ワード処理履歴.csv");
 
 			SCommon.DeletePath(workSolutionDir);
-			SCommon.CopyDir(solutionDir, workSolutionDir);
 			SCommon.DeletePath(workSolutionDir_mid);
+			SCommon.DeletePath(fileCsv置き換え禁止ワード処理履歴);
+
+			SCommon.CopyDir(solutionDir, workSolutionDir);
 
 			// まかり間違っても masterSol.Confuse() を実行しないように！
 
@@ -42,7 +45,8 @@ namespace Charlotte
 				{
 					SCommon.CopyDir(workSolutionDir, workSolutionDir_mid);
 				},
-				rvf
+				rvf,
+				fileCsv置き換え禁止ワード処理履歴
 				);
 			sol.Rebuild();
 

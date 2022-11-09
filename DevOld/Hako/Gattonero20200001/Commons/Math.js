@@ -12,10 +12,11 @@ function <int> ToInt(<double> value)
 
 /*
 	ret: value の小数部を切り捨てた整数を返す。
-		つまりゼロ方向で最寄りの整数を返す。
+		つまりゼロ方向で最寄りの整数を返す。自身が整数であれば自身を返す。
 		例：
 			2.4 -> 2
 			-3.7 -> -3
+			586.0 -> 586
 */
 function <int> ToFix(<double> value)
 {
@@ -24,10 +25,11 @@ function <int> ToFix(<double> value)
 
 /*
 	ret: value 以下で最大の整数を返す。
-		つまりマイナス無限大方向で最寄りの整数を返す。
+		つまりマイナス無限大方向で最寄りの整数を返す。自身が整数であれば自身を返す。
 		例：
 			2.4 -> 2
 			-3.7 -> -4
+			586.0 -> 586
 */
 function <int> ToFloor(<double> value)
 {
@@ -56,6 +58,14 @@ function <int> GetRand(<int> modulo)
 function <int> GetRandRange(<int> minval, <int> maxval)
 {
 	return GetRand((maxval - minval) + 1) + minval;
+}
+
+/*
+	-1 または 1 をランダムに返す。
+*/
+function <int> GetRandSign()
+{
+	return GetRand(2) * 2 - 1;
 }
 
 /*

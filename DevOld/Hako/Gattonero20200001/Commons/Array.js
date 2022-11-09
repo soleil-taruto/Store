@@ -128,7 +128,7 @@ function <T[]> GetTrailArray(<T[]> arr, <int> offset)
 */
 function <T[]> CloneArray(<T[]> arr)
 {
-	return GetSubArray(arr, 0, arr.length);
+	return GetTrailArray(arr, 0);
 }
 
 /*
@@ -172,6 +172,16 @@ function <void> RemoveFalse(<T[]> arr)
 }
 
 /*
+	配列の要素を全て削除する。
+
+	arr: 配列
+*/
+function <void> ClearArray(<T[]> arr)
+{
+	arr.length = 0;
+}
+
+/*
 	配列またはジェネレータを配列に変換する。
 */
 function <T[]> ToArray(<T[]> src)
@@ -183,4 +193,12 @@ function <T[]> ToArray(<T[]> src)
 		dest.push(element);
 	}
 	return dest;
+}
+
+/*
+	ジェネレータの次の値を取得する。
+*/
+function <T> NextVal(generator)
+{
+	return generator.next().value;
 }

@@ -1166,8 +1166,13 @@ namespace Charlotte.Commons
 			}
 		}
 
+		// memo: SJIS(CP-932)の中にサロゲートペアは無い。
+		// -- なので以下は保証される。
+		// ---- SCommon.GetJChars().Length == SCommon.GetJCharCodes().Count()
+
 		/// <summary>
 		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：Unicode
 		/// </summary>
 		/// <returns>SJIS(CP-932)の2バイト文字の文字列</returns>
 		public static string GetJChars()
@@ -1177,6 +1182,7 @@ namespace Charlotte.Commons
 
 		/// <summary>
 		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：SJIS
 		/// </summary>
 		/// <returns>SJIS(CP-932)の2バイト文字のバイト列</returns>
 		public static IEnumerable<byte> GetJCharBytes()
@@ -1190,6 +1196,7 @@ namespace Charlotte.Commons
 
 		/// <summary>
 		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：SJIS
 		/// </summary>
 		/// <returns>SJIS(CP-932)の2バイト文字の列挙</returns>
 		public static IEnumerable<UInt16> GetJCharCodes()

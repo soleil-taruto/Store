@@ -175,9 +175,9 @@ namespace Charlotte.Commons
 
 		/// <summary>
 		/// バイト列を再分割可能なように連結する。
-		/// 再分割するには BinTools.Split を使用すること。
+		/// 再分割するには SCommon.Split を使用すること。
 		/// 例：{ BYTE_ARR_1, BYTE_ARR_2, BYTE_ARR_3 } -> SIZE(BYTE_ARR_1) + BYTE_ARR_1 + SIZE(BYTE_ARR_2) + BYTE_ARR_2 + SIZE(BYTE_ARR_3) + BYTE_ARR_3
-		/// SIZE(b) は BinTools.ToBytes(b.Length) である。
+		/// SIZE(b) は SCommon.ToBytes(b.Length) である。
 		/// </summary>
 		/// <param name="src">バイト列の引数配列</param>
 		/// <returns>連結したバイト列</returns>

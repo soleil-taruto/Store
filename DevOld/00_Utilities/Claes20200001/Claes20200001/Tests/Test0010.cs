@@ -17,13 +17,17 @@ namespace Charlotte.Tests
 			Test01_a(1000000, 1000000);
 			Test01_a(100000, 5000000000); // == UINT_MAX * 1.164*
 			Test01_a(10000, 9000000000000); // == UINT_MAX * 2095.47579*
+			Test01_a(1000, 1000000000000000); // == ULONG_MAX * 0.0000542*
+			Test01_a(300, 100000000000000000); // == ULONG_MAX * 0.00542*
 
 			Console.WriteLine("OK!");
 		}
 
 		private void Test01_a(int testCount, ulong scale)
 		{
-			int countOfNumPrime = 0;
+			Console.WriteLine(testCount + ", " + scale); // cout
+
+			int countOfPrime = 0;
 
 			for (int testcnt = 0; testcnt < testCount; testcnt++)
 			{
@@ -36,9 +40,9 @@ namespace Charlotte.Tests
 					throw null;
 
 				if (ans1)
-					countOfNumPrime++;
+					countOfPrime++;
 			}
-			Console.WriteLine("OK " + countOfNumPrime);
+			Console.WriteLine("OK " + countOfPrime);
 		}
 
 		private bool Test01_b1(ulong n)
@@ -69,7 +73,7 @@ namespace Charlotte.Tests
 		public void Test02()
 		{
 			ulong PRIMES_RANGE_MIN = 18446744073709550000;
-			ulong PRIMES_RANGE_MAX = 18446744073709551614; // ULONG_MAX - 1
+			ulong PRIMES_RANGE_MAX = 18446744073709551615; // ULONG_MAX
 
 			// PRIMES_RANGE_MIN 以上 PRIMES_RANGE_MAX 以下の範囲の素数一覧
 			// -- by Prime4096 @ 2022.9.17
@@ -115,7 +119,7 @@ namespace Charlotte.Tests
 				18446744073709551557,
 			};
 
-			for (ulong n = PRIMES_RANGE_MIN; n <= PRIMES_RANGE_MAX; n++)
+			for (ulong n = PRIMES_RANGE_MIN; ; n++)
 			{
 				bool ans1 = MillerRabin.IsPrime(n);
 				bool ans2 = PRIMES.Contains(n);
@@ -124,10 +128,10 @@ namespace Charlotte.Tests
 
 				if (ans1 != ans2)
 					throw null;
-			}
 
-			if (MillerRabin.IsPrime(ulong.MaxValue)) // ULONG_MAX は素数ではないはず。
-				throw null;
+				if (n == PRIMES_RANGE_MAX)
+					break;
+			}
 
 			Console.WriteLine("OK!");
 		}

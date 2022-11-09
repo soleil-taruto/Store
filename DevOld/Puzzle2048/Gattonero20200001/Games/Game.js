@@ -2,6 +2,11 @@
 	ゲーム・メイン
 */
 
+var<boolean> AutoMode = false;
+var<boolean> AutoMode_CCW = false;
+
+var<int> NewPanelExponentLmt = 3; // 1 ～ P_数字パネル.length
+
 var<int> @@_Gravity = -1; // 重力方向 (-1, 2, 4, 6, 8) == (無し, 下, 左, 右, 上)
 
 /*
@@ -72,45 +77,153 @@ function* <generatorForTask> GameMain()
 
 		var<D2Point_t> draw_pt = TablePointToDrawPoint(CreateI2Point(x, y));
 
-		AddEffect_BornPanel(draw_pt.X, draw_pt.Y);
+		AddEffect_BornPanel(draw_pt.X, draw_pt.Y, @@_Table[x][y].Exponent);
 	}
 
 	ClearMouseDown();
 
 	for (; ; )
 	{
-		var inputGravity = -1; // (-1, 2, 4, 6, 8) == (無入力, 下, 左, 右, 上)
+		var<int> inputGravity = -1; // (-1, 2, 4, 6, 8) == (無入力, 下, 左, 右, 上)
 
 		if (GetMouseDown() == -1) // ? マウス・ボタンを離した。
 		{
 			var<double> x = GetMouseX();
 			var<double> y = GetMouseY();
 
-			// フィールドの中心座標が (0, 0) になるように変更
-			//
-			x -= Field_L + Field_W / 2;
-			y -= Field_T + Field_H / 2;
+			// ====
+			// Press Game-Config-Button BGN
+			// ====
 
-			if (x - y < 0) // ? 中心から見て左下
+			// 上段
+
+			if (
+				GameCfgBtn_L_1 <= x && x < GameCfgBtn_L_1 + GameCfgBtn_W &&
+				GameCfgBtn_T_1 <= y && y < GameCfgBtn_T_1 + GameCfgBtn_H
+				)
 			{
-				if (x + y < 0) // ? 中心から見て左
+				GameConfig_Press_0101();
+			}
+
+			if (
+				GameCfgBtn_L_2 <= x && x < GameCfgBtn_L_2 + GameCfgBtn_W &&
+				GameCfgBtn_T_1 <= y && y < GameCfgBtn_T_1 + GameCfgBtn_H
+				)
+			{
+				GameConfig_Press_0201();
+			}
+
+			if (
+				GameCfgBtn_L_3 <= x && x < GameCfgBtn_L_3 + GameCfgBtn_W &&
+				GameCfgBtn_T_1 <= y && y < GameCfgBtn_T_1 + GameCfgBtn_H
+				)
+			{
+				GameConfig_Press_0301();
+			}
+
+			if (
+				GameCfgBtn_L_4 <= x && x < GameCfgBtn_L_4 + GameCfgBtn_W &&
+				GameCfgBtn_T_1 <= y && y < GameCfgBtn_T_1 + GameCfgBtn_H
+				)
+			{
+				GameConfig_Press_0401();
+			}
+
+			// 下段
+
+			if (
+				GameCfgBtn_L_1 <= x && x < GameCfgBtn_L_1 + GameCfgBtn_W &&
+				GameCfgBtn_T_2 <= y && y < GameCfgBtn_T_2 + GameCfgBtn_H
+				)
+			{
+				GameConfig_Press_0102();
+			}
+
+			if (
+				GameCfgBtn_L_2 <= x && x < GameCfgBtn_L_2 + GameCfgBtn_W &&
+				GameCfgBtn_T_2 <= y && y < GameCfgBtn_T_2 + GameCfgBtn_H
+				)
+			{
+				GameConfig_Press_0202();
+			}
+
+			if (
+				GameCfgBtn_L_3 <= x && x < GameCfgBtn_L_3 + GameCfgBtn_W &&
+				GameCfgBtn_T_2 <= y && y < GameCfgBtn_T_2 + GameCfgBtn_H
+				)
+			{
+				GameConfig_Press_0302();
+			}
+
+			if (
+				GameCfgBtn_L_4 <= x && x < GameCfgBtn_L_4 + GameCfgBtn_W &&
+				GameCfgBtn_T_2 <= y && y < GameCfgBtn_T_2 + GameCfgBtn_H
+				)
+			{
+				GameConfig_Press_0402();
+			}
+
+			// ====
+			// Press Game-Config-Button END
+			// ====
+
+			if (
+				GameArea_L <= x && x < GameArea_L + GameArea_W &&
+				GameArea_T <= y && y < GameArea_T + GameArea_H
+				)
+			{
+				// フィールドの中心座標が (0, 0) になるように変更
+				//
+				x -= Field_L + Field_W / 2;
+				y -= Field_T + Field_H / 2;
+
+				if (x - y < 0) // ? 中心から見て左下
 				{
-					inputGravity = 4;
+					if (x + y < 0) // ? 中心から見て左
+					{
+						inputGravity = 4;
+					}
+					else // ? 中心から見て下
+					{
+						inputGravity = 2;
+					}
 				}
-				else // ? 中心から見て下
+				else // ? 中心から見て右上
 				{
-					inputGravity = 2;
+					if (x + y < 0) // ? 中心から見て上
+					{
+						inputGravity = 8;
+					}
+					else // ? 中心から見て右
+					{
+						inputGravity = 6;
+					}
 				}
 			}
-			else // ? 中心から見て右上
+		}
+
+		if (AutoMode)
+		{
+			if (AutoMode_CCW) // ? 反時計回り
 			{
-				if (x + y < 0) // ? 中心から見て上
+				switch (@@_Gravity)
 				{
-					inputGravity = 8;
+				case -1:
+				case 2: inputGravity = 6; break;
+				case 4: inputGravity = 2; break;
+				case 8: inputGravity = 4; break;
+				case 6: inputGravity = 8; break;
 				}
-				else // ? 中心から見て右
+			}
+			else // ? 時計回り
+			{
+				switch (@@_Gravity)
 				{
-					inputGravity = 6;
+				case -1:
+				case 2: inputGravity = 4; break;
+				case 4: inputGravity = 8; break;
+				case 8: inputGravity = 6; break;
+				case 6: inputGravity = 2; break;
 				}
 			}
 		}
@@ -150,6 +263,8 @@ function* <generatorForTask> GameMain()
 
 function* <generatorForTask> @@_GravityChanged()
 {
+	ClearMouseDown();
+
 	// 落下前描画位置保存
 	for (var<int> x = 0; x < Field_XNum; x++)
 	for (var<int> y = 0; y < Field_YNum; y++)
@@ -324,6 +439,7 @@ function* <generatorForTask> @@_GravityChanged()
 				DrawPanel(panel, panel.DrawPt.X, panel.DrawPt.Y);
 			}
 
+			@@_EachMotion();
 			yield 1;
 		}
 	}
@@ -358,7 +474,16 @@ function* <generatorForTask> @@_融合の余韻(<int> frameMax)
 			}
 		}
 
+		@@_EachMotion();
 		yield 1;
+	}
+}
+
+function <void> @@_EachMotion()
+{
+	if (GetMouseDown() == -1) // ? マウス・ボタンを離した。
+	{
+		AutoMode = false; // オートモード解除
 	}
 }
 
@@ -419,6 +544,7 @@ function <boolean> @@_Fusion() // ret: ? 融合した。
 			0 <= ny && ny < Field_YNum &&
 			@@_Table[nx][ny] != null &&
 			@@_Table[nx][ny].Exponent == @@_Table[x][y].Exponent &&
+			@@_Table[nx][ny].Exponent + 1 < P_数字パネル.length && // ? これ以上融合できない。(これより大きいパネルが無い)
 			@@_F_NotExistInXYPairs(xyPairs, x, y) &&
 			@@_F_NotExistInXYPairs(xyPairs, nx, ny)
 			)
@@ -439,7 +565,7 @@ function <boolean> @@_Fusion() // ret: ? 融合した。
 
 		var<D2Point_t> draw_pt = TablePointToDrawPoint(CreateI2Point(x, y));
 
-		AddEffect_Fusion(draw_pt.X, draw_pt.Y); // 融合エフェクト
+		AddEffect_Fusion(draw_pt.X, draw_pt.Y, @@_Table[x][y].Exponent, @@_Gravity); // 融合エフェクト
 	}
 
 	var<boolean> 融合した = 1 <= xyPairs.length;
@@ -523,11 +649,11 @@ function <boolean> @@_TryAddNewPanel() // ret: ? 設置完了
 		}
 	}
 
-	@@_Table[x][y] = CreatePanel(GetRand(3));
+	@@_Table[x][y] = CreatePanel(GetRand(NewPanelExponentLmt));
 
 	var<D2Point_t> draw_pt = TablePointToDrawPoint(CreateI2Point(x, y));
 
-	AddEffect_BornPanel(draw_pt.X, draw_pt.Y); // パネル追加エフェクト
+	AddEffect_BornPanel(draw_pt.X, draw_pt.Y, @@_Table[x][y].Exponent); // パネル追加エフェクト
 
 	return true;
 }
@@ -538,7 +664,25 @@ function <boolean> @@_TryAddNewPanel() // ret: ? 設置完了
 */
 function <void> @@_DrawWall()
 {
-	ClearScreen();
+	SetColor("#e0e0e0");
+	PrintRect(0, 0, Screen_W, Screen_H);
+
+	@@_DrawGaemCfgBtn(GameCfgBtn_L_1, GameCfgBtn_T_1, P_Button_W_Up     , !AutoMode);
+	@@_DrawGaemCfgBtn(GameCfgBtn_L_2, GameCfgBtn_T_1, P_Button_H_Up     , !AutoMode);
+	@@_DrawGaemCfgBtn(GameCfgBtn_L_3, GameCfgBtn_T_1, P_Button_NP_Up    , !AutoMode);
+	@@_DrawGaemCfgBtn(GameCfgBtn_L_4, GameCfgBtn_T_1, P_Button_Auto_CW  , !AutoMode || !AutoMode_CCW);
+	@@_DrawGaemCfgBtn(GameCfgBtn_L_1, GameCfgBtn_T_2, P_Button_W_Down   , !AutoMode);
+	@@_DrawGaemCfgBtn(GameCfgBtn_L_2, GameCfgBtn_T_2, P_Button_H_Down   , !AutoMode);
+	@@_DrawGaemCfgBtn(GameCfgBtn_L_3, GameCfgBtn_T_2, P_Button_NP_Down  , !AutoMode);
+	@@_DrawGaemCfgBtn(GameCfgBtn_L_4, GameCfgBtn_T_2, P_Button_Auto_CCW , !AutoMode || AutoMode_CCW);
+
+	SetColor("#f0f0f0");
+	PrintRect(GameArea_L, GameArea_T, GameArea_W, GameArea_H);
+
+	SetPrint(GameArea_L + 10, GameArea_T + 35, 0);
+	SetFSize(25);
+	SetColor("#000080");
+	PrintLine("新しいブロックの番号 : 1 ～ " + Math.pow(2, NewPanelExponentLmt - 1));
 
 	// 枠線描画
 	{
@@ -579,7 +723,7 @@ function <void> @@_DrawWall()
 		var<double> x = Field_L + Field_W / 2;
 		var<double> y = Field_T + Field_H / 2;
 
-		var<double> G_FAR = Field_W / 2 + 70.0;
+		var<double> G_FAR = Math.max(Field_W, Field_H) / 2 + 70.0;
 
 		if (@@_Gravity == 2)
 		{
@@ -604,4 +748,25 @@ function <void> @@_DrawWall()
 
 		Draw(P_Gravity, x, y, 1.0, 0.0, 1.0);
 	}
+}
+
+function <void> @@_DrawGaemCfgBtn(<int> l, <int> t, <Picture_t> picture, <boolean> activated)
+{
+	Draw(picture, l + GameCfgBtn_W / 2, t + GameCfgBtn_H / 2, 1.0, 0.0, 1.0);
+
+	if (!activated)
+	{
+		SetColor("#00000060");
+		PrintRect(l, t, GameCfgBtn_W, GameCfgBtn_H);
+	}
+}
+
+function <Panel_t[][]> Game_GetTable()
+{
+	return @@_Table;
+}
+
+function <void> Game_SetTable(<Panel_t[][]> table)
+{
+	@@_Table = table;
 }

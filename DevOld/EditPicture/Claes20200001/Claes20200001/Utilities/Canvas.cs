@@ -551,5 +551,24 @@ namespace Charlotte.Utilities
 			}
 			return dest;
 		}
+
+		/// <summary>
+		/// 上下左右にマージンを追加する。
+		/// </summary>
+		/// <param name="margin">マージンの幅</param>
+		/// <param name="marginColor">マージン部分の色</param>
+		/// <returns>新しいキャンバス</returns>
+		public Canvas PutMargin(int margin, I4Color marginColor)
+		{
+			if (margin < 0)
+				throw new Exception("Bad margin");
+
+			Canvas dest = new Canvas(this.W + margin * 2, this.H + margin * 2);
+
+			dest.Fill(marginColor);
+			dest.DrawImage(this, margin, margin, false);
+
+			return dest;
+		}
 	}
 }

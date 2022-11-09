@@ -13,7 +13,7 @@ function* <generatorForTask> CreditMain()
 			break;
 		}
 
-		SetColor("#a0a080");
+		SetColor("#a0b0c0");
 		PrintRect(0, 0, Screen_W, Screen_H);
 
 		SetColor("#000000");
@@ -33,6 +33,10 @@ function* <generatorForTask> CreditMain()
 		{
 			PrintLine(credits[index] + "　" + credits[index + 1]);
 		}
+
+		SetPrint(Screen_W - 400, Screen_H - 20, 0);
+		SetFSize(20);
+		PrintLine("画面をクリックするとタイトルに戻ります");
 
 		yield 1;
 	}
