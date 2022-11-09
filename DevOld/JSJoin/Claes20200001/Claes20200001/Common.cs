@@ -121,5 +121,32 @@ namespace Charlotte
 			}
 			return File.ReadAllText(resFile, SCommon.ENCODING_SJIS);
 		}
+
+		/// <summary>
+		/// string.Replace(oldValue, valueNew) と同じ
+		/// 但し、valueNew は毎回 getValueNew を実行した戻り値を使用する。
+		/// </summary>
+		/// <param name="text">処理前のテキスト</param>
+		/// <param name="oldValue">置き換え前のパターン</param>
+		/// <param name="getValueNew">置き換え後のパターンの取得先</param>
+		/// <returns>処理後のテキスト</returns>
+		public static string Replace(string text, string oldValue, Func<string> getValueNew)
+		{
+			List<string> dest = new List<string>();
+
+			for (; ; )
+			{
+				string[] slnd = SCommon.ParseIsland(text, oldValue);
+
+				if (slnd == null)
+					break;
+
+				dest.Add(slnd[0]);
+				dest.Add(getValueNew());
+				text = slnd[2];
+			}
+			dest.Add(text);
+			return string.Join("", dest);
+		}
 	}
 }

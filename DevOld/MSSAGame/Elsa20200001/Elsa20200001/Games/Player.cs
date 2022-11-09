@@ -53,8 +53,8 @@ namespace Charlotte.Games
 
 		public void Draw()
 		{
-			if (PlayerLookLeftFrame == 0 && DDUtils.Random.Real() < 0.002) // キョロキョロするレート
-				PlayerLookLeftFrame = 150 + (int)(DDUtils.Random.Real() * 90.0);
+			if (PlayerLookLeftFrame == 0 && DDUtils.Random.Single() < 0.002) // キョロキョロするレート
+				PlayerLookLeftFrame = 150 + (int)(DDUtils.Random.Single() * 90.0);
 
 			DDUtils.CountDown(ref PlayerLookLeftFrame);
 

@@ -113,6 +113,7 @@
     <Compile Include="Games\Attacks\Attack_Tewi_ジャンプ強攻撃.cs" />
     <Compile Include="Games\Attacks\Attack_Tewi_強攻撃.cs" />
     <Compile Include="Games\Confirm.cs" />
+    <Compile Include="Games\Enemies\EnemyCommon.cs" />
     <Compile Include="Games\Enemies\Enemy_Bird.cs" />
     <Compile Include="Games\Enemies\Enemy_BirdShit.cs" />
     <Compile Include="Games\Enemies\Enemy_Dog.cs" />

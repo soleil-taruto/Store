@@ -46,7 +46,7 @@ namespace Charlotte.GameCommons
 
 		public static string Version
 		{
-			get { return GetValue("Version", "0.00"); }
+			get { return GetValue("Version", "0000.000.0000"); }
 		}
 
 		// < Accessor

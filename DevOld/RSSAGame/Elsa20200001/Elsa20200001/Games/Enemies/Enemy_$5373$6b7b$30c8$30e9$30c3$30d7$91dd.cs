@@ -11,11 +11,11 @@ namespace Charlotte.Games.Enemies
 	/// 即死トラップ
 	/// いわゆる「針」
 	/// </summary>
-	public class Enemy_即死トラップThe針 : Enemy
+	public class Enemy_即死トラップ針 : Enemy
 	{
 		private DDPicture Picture;
 
-		public Enemy_即死トラップThe針(double x, double y, DDPicture picture)
+		public Enemy_即死トラップ針(double x, double y, DDPicture picture)
 			: base(x, y, 0, SCommon.IMAX / 2, false)
 		{
 			this.Picture = picture;

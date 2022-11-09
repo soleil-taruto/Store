@@ -229,9 +229,9 @@ function* $varName_E_GetStrParts()
 {
 	for (var $varName_Chr of $varName_E_GetChars())
 	{
-		if ($varName_Chr % 65537 != 0)
+		if ($varName_Chr % $_65537_ != 0)
 		{
-			yield String.fromCodePoint($varName_Chr % 65537 - 1);
+			yield String.fromCodePoint($varName_Chr % $_65537_ - 1);
 		}
 	}
 }
@@ -257,6 +257,10 @@ $chrListFuncs
 						"$chrListFuncs",
 						string.Join("\r\n", SLS_GetCharListFuncs(varName, line, ranges))
 						);
+					extendSource = Common.Replace(extendSource,
+						"$_65537_",
+						() => SLS_GetOperandOf65537()
+						);
 					extendSource = extendSource.Replace("$varName", varName);
 					extendLines.AddRange(
 						SCommon.TextToLines(extendSource).Where(v => v != "")
@@ -267,6 +271,15 @@ $chrListFuncs
 				this.JSLines[index] = line;
 			}
 			this.JSLines.AddRange(extendLines);
+		}
+
+		private string SLS_GetOperandOf65537()
+		{
+			int a = SCommon.CRandom.GetRange(300, 399);
+			int b = SCommon.CRandom.GetRange(300, 399);
+			int c = a * b - 65537;
+
+			return "(" + a + " * " + b + " - " + c + ")";
 		}
 
 		private int[][] SLS_GetRanges(int[] baseRange)
@@ -535,6 +548,8 @@ $chrListFuncs
 			})
 			.ToList();
 
+			int dmyCmtNo = 0;
+
 			// ダミーコメントの追加
 			//
 			for (int index = 0; index < this.JSLines.Count; index++)
@@ -549,6 +564,8 @@ $chrListFuncs
 				{
 					this.JSLines.Insert(index++, "");
 #if true
+					this.JSLines.Insert(index++, "// " + (++dmyCmtNo));
+#elif true
 					this.JSLines.Insert(index++, "// " + SCommon.CRandom.GetInt(100).ToString("D2"));
 #else
 					this.JSLines.Insert(index++, "/*");

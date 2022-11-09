@@ -89,6 +89,12 @@ namespace Charlotte
 			this.ResourceDir = SCommon.MakeFullPath(ar.NextArg());
 			this.OutputDir = SCommon.MakeFullPath(ar.NextArg());
 
+			// コマンド引数の個数チェック
+			// -- コマンド引数の間違い対策
+			// ---- 例えば、間違った任意オプションを指定すれば、残りの引数がズレて個数が狂うはず。
+			if (ar.HasArgs())
+				throw new Exception("Bad command line option-num");
+
 			if (!Directory.Exists(this.SourceDir))
 				throw new Exception("no SourceDir");
 
@@ -97,6 +103,11 @@ namespace Charlotte
 
 			if (!Directory.Exists(this.OutputDir))
 				throw new Exception("no OutputDir");
+
+			// 出力先をクリア
+			// -- コマンド引数の指定順を間違えた場合を考えるとちょっと怖い。-> コマンド引数の個数チェックを入れてみた。
+			SCommon.DeletePath(this.OutputDir);
+			SCommon.CreateDir(this.OutputDir);
 
 			foreach (string file in Directory.GetFiles(this.SourceDir, "*", SearchOption.AllDirectories))
 				if (!file.Contains("\\_")) // ? アンダースコアで始まるローカル名を含まない。
@@ -214,10 +225,10 @@ namespace Charlotte
 				this.JSLines = new JSConfuser().Confuse(this.JSLines);
 			}
 
-			IEnumerable<string> htmlLines = this.CreateHtmlLines();
+			IEnumerable<string> htmlLines = this.CreateHtmlLines(releaseMode);
 
 			File.WriteAllLines(
-				Path.Combine(this.OutputDir, "index.html"),
+				Path.Combine(this.OutputDir, releaseMode ? "index.html" : "index_Debug.html"),
 				htmlLines,
 				SCommon.ENCODING_SJIS
 				);
@@ -305,30 +316,13 @@ namespace Charlotte
 
 			string text = SCommon.LinesToText(lines.Concat(extendLines).ToArray());
 
-			text = RSC_ProcessWord(text, "@(AUTO)", () => "" + (AutoCounter++));
-			text = RSC_ProcessWord(text, "@(UNQN)", () => Common.CreateRandIdent());
-			text = RSC_ProcessWord(text, "@(UUID)", () => Guid.NewGuid().ToString("B"));
+			text = Common.Replace(text, "@(AUTO)", () => "" + (AutoCounter++));
+			text = Common.Replace(text, "@(UNQN)", () => Common.CreateRandIdent());
+			text = Common.Replace(text, "@(UUID)", () => Guid.NewGuid().ToString("B"));
 
 			lines = SCommon.TextToLines(text);
 
 			return lines;
-		}
-
-		private string RSC_ProcessWord(string text, string word, Func<string> getCode)
-		{
-			string dest = "";
-
-			for (; ; )
-			{
-				string[] slnd = SCommon.ParseIsland(text, word);
-
-				if (slnd == null)
-					break;
-
-				dest += slnd[0] + getCode();
-				text = slnd[2];
-			}
-			return dest + text;
 		}
 
 		/// <summary>
@@ -340,8 +334,8 @@ namespace Charlotte
 		{
 			string text = SCommon.LinesToText(lines);
 
-			text = RSC_ProcessWord(text, "@(INIT)", () => string.Join(", ", this.JSFunctions.Where(v => v.EndsWith("_INIT"))));
-			text = RSC_ProcessWord(text, "@(EACH)", () => string.Join(", ", this.JSFunctions.Where(v => v.EndsWith("_EACH"))));
+			text = Common.Replace(text, "@(INIT)", () => string.Join(", ", this.JSFunctions.Where(v => v.EndsWith("_INIT"))));
+			text = Common.Replace(text, "@(EACH)", () => string.Join(", ", this.JSFunctions.Where(v => v.EndsWith("_EACH"))));
 
 			lines = SCommon.TextToLines(text);
 
@@ -435,9 +429,9 @@ namespace Charlotte
 			}
 		}
 
-		private IEnumerable<string> CreateHtmlLines()
+		private IEnumerable<string> CreateHtmlLines(bool releaseMode)
 		{
-			string srcHtmlFile = Path.Combine(this.SourceDir, "_index.html.js");
+			string srcHtmlFile = Path.Combine(this.SourceDir, "_index_" + (releaseMode ? "Release" : "Debug") + ".html.js");
 
 			string[] srcHtmlLines = File.ReadAllLines(srcHtmlFile, SCommon.ENCODING_SJIS);
 

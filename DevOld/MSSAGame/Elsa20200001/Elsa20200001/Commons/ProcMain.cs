@@ -15,7 +15,7 @@ namespace Charlotte.Commons
 {
 	public static class ProcMain
 	{
-		public const string APP_IDENT = "{c496ce16-4117-4315-8d03-282dc4842266}";
+		public const string APP_IDENT = "{c9e92c41-52cf-44fe-8c46-b5139531e666}";
 		public const string APP_TITLE = "APP-20200001";
 
 		public static string SelfFile;
@@ -45,10 +45,13 @@ namespace Charlotte.Commons
 			{
 				WriteLog(e);
 
-				//MessageBox.Show("" + e, Path.GetFileNameWithoutExtension(SelfFile ?? APP_TITLE) + " / Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				// ここに到達する場合は想定外の致命的なエラーである。-> 何か出すべき。
+				// ウィンドウ非表示で実行されているかもしれないのでメッセージダイアログを出す。
 
-				Console.WriteLine("Press ENTER key. (Error termination)");
-				Console.ReadLine();
+				MessageBox.Show("" + e, APP_TITLE + " / Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				//Console.WriteLine("Press ENTER key. (Error termination)");
+				//Console.ReadLine();
 			}
 		}
 
@@ -67,7 +70,7 @@ namespace Charlotte.Commons
 
 			using (SHA512 sha512 = SHA512.Create())
 			{
-				string s = APP_IDENT + SelfDir;
+				string s = APP_IDENT + GetPETimeDateStamp().ToString();
 				byte[] b = Encoding.UTF8.GetBytes(s);
 				byte[] bh = sha512.ComputeHash(b);
 				string h = string.Join("", bh.Select(bChr => bChr.ToString("x02")));
@@ -291,6 +294,60 @@ namespace Charlotte.Commons
 
 				ProcMtx = null;
 			}
+		}
+
+		private static uint? PETimeDateStamp = null;
+
+		public static uint GetPETimeDateStamp()
+		{
+			if (PETimeDateStamp == null)
+				PETimeDateStamp = GetPETimeDateStamp_Main();
+
+			return PETimeDateStamp.Value;
+		}
+
+		private static uint GetPETimeDateStamp_Main()
+		{
+			using (FileStream reader = new FileStream(SelfFile, FileMode.Open, FileAccess.Read))
+			{
+				if (F_ReadByte(reader) != 'M') throw null;
+				if (F_ReadByte(reader) != 'Z') throw null;
+
+				reader.Seek(0x3c, SeekOrigin.Begin);
+
+				uint peHedPos = (uint)F_ReadByte(reader);
+				peHedPos |= (uint)F_ReadByte(reader) << 8;
+				peHedPos |= (uint)F_ReadByte(reader) << 16;
+				peHedPos |= (uint)F_ReadByte(reader) << 24;
+
+				reader.Seek(peHedPos, SeekOrigin.Begin);
+
+				if (F_ReadByte(reader) != 'P') throw null;
+				if (F_ReadByte(reader) != 'E') throw null;
+				if (F_ReadByte(reader) != 0x00) throw null;
+				if (F_ReadByte(reader) != 0x00) throw null;
+
+				reader.Seek(0x04, SeekOrigin.Current);
+
+				uint timeDateStamp = (uint)F_ReadByte(reader);
+				timeDateStamp |= (uint)F_ReadByte(reader) << 8;
+				timeDateStamp |= (uint)F_ReadByte(reader) << 16;
+				timeDateStamp |= (uint)F_ReadByte(reader) << 24;
+
+				return timeDateStamp;
+			}
+		}
+
+		private static int F_ReadByte(FileStream reader)
+		{
+			int bChr = reader.
+				ReadByte // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				();
+
+			if (bChr == -1) // ? EOF
+				throw new Exception("Read EOF");
+
+			return bChr;
 		}
 
 		public static bool DEBUG

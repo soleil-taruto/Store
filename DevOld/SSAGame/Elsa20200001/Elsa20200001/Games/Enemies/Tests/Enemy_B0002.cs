@@ -55,8 +55,8 @@ namespace Charlotte.Games.Enemies.Tests
 
 				picture = Ground.I.Picture.Enemy_B0002_02;
 				SPEED = 0.0;
-				xBuru = (1.0 - rate) * 50.0 * (DDUtils.Random.Real() - 0.5);
-				yBuru = (1.0 - rate) * 50.0 * (DDUtils.Random.Real() - 0.5);
+				xBuru = (1.0 - rate) * 25.0 * DDUtils.Random.Double();
+				yBuru = (1.0 - rate) * 25.0 * DDUtils.Random.Double();
 			}
 		endHitBack:
 
@@ -90,11 +90,11 @@ namespace Charlotte.Games.Enemies.Tests
 			this.Frame++;
 		}
 
-		public override void Damaged(Shot shot)
+		protected override void P_Damaged(Shot shot)
 		{
 			//this.X += 10.0 * (shot.FacingLeft ? -1 : 1); // ヒットバック
 			this.HitBackFrame = 1;
-			base.Damaged(shot);
+			base.P_Damaged(shot);
 		}
 	}
 }

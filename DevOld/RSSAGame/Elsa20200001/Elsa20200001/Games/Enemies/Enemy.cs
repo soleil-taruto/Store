@@ -124,23 +124,31 @@ namespace Charlotte.Games.Enemies
 		/// 体力の減少などは呼び出し側でやっている。
 		/// </summary>
 		/// <param name="shot">この敵が被弾したプレイヤーの弾</param>
-		public virtual void Damaged(Shot shot)
+		public void Damaged(Shot shot)
 		{
-			// TODO: SE
+			this.P_Damaged(shot);
+		}
+
+		/// <summary>
+		/// この敵の固有の被弾イベント
+		/// </summary>
+		/// <param name="shot">この敵が被弾したプレイヤーの弾</param>
+		public virtual void P_Damaged(Shot shot)
+		{
+			EnemyCommon.Damaged(this, shot);
 		}
 
 		/// <summary>
 		/// Killed 複数回実行回避のため、DeadFlag をチェックして Killed を実行する。
 		/// 注意：HP を減らして -1 になったとき Kill を呼んでも(DeadFlag == true になるため) Killed は実行されない！
-		/// -- HP == -1 の可能性がある場合は -- Kill(true);
+		/// -- HP == -1 の可能性がある場合は HP = 0; を忘れずに！
 		/// </summary>
-		/// <param name="force">強制モード</param>
-		public void Kill(bool force = false)
+		public void Kill()
 		{
-			if (force || !this.DeadFlag)
+			if (!this.DeadFlag)
 			{
 				this.DeadFlag = true;
-				this.Killed();
+				this.P_Killed();
 			}
 		}
 
@@ -150,9 +158,17 @@ namespace Charlotte.Games.Enemies
 		/// 注意：本メソッドを複数回実行しないように注意すること！
 		/// -- DeadFlag == true の敵を { DeadFlag = true; Killed(); } してしまわないように！
 		/// </summary>
-		protected virtual void Killed()
+		private void Killed()
 		{
-			DDGround.EL.Add(SCommon.Supplier(Effects.小爆発(this.X, this.Y)));
+			this.P_Killed();
+		}
+
+		/// <summary>
+		/// この敵の固有の消滅イベント
+		/// </summary>
+		protected virtual void P_Killed()
+		{
+			EnemyCommon.Killed(this);
 		}
 	}
 }

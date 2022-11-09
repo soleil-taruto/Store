@@ -36,7 +36,7 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 			this.X = Game.I.Map.W / 2.0;
 			this.Y = -100.0;
 
-			foreach (DDScene scene in DDSceneUtils.Create(120))
+			foreach (DDScene scene in DDSceneUtils.Create(150))
 			{
 				f_閉鎖();
 
@@ -60,6 +60,9 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 		private IEnumerable<bool> E_閉鎖()
 		{
 			Game.I.UserInputDisabled = true;
+
+			for (int c = 0; c < 30; c++)
+				yield return true;
 
 			for (int x = 0; x < Game.I.Map.W; x++)
 			{

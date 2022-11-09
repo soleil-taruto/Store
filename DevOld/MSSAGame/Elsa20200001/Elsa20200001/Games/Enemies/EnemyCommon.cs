@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Charlotte.Commons;
-using Charlotte.GameCommons;
 using Charlotte.Games.Shots;
+using Charlotte.GameCommons;
+using Charlotte.Commons;
 
 namespace Charlotte.Games.Enemies
 {
@@ -13,20 +13,27 @@ namespace Charlotte.Games.Enemies
 		/// <summary>
 		/// 汎用・被弾イベント
 		/// </summary>
-		/// <param name="enemy">被弾した敵</param>
-		/// <param name="shot">「被弾した敵」に当たった自弾</param>
+		/// <param name="enemy">敵</param>
+		/// <param name="shot">被弾した自弾</param>
 		public static void Damaged(Enemy enemy, Shot shot)
 		{
-			// none ???
+			int count = shot.AttackPoint;
+
+			DDGround.EL.Add(() =>
+			{
+				Ground.I.SE.EnemyDamaged.Play();
+				return 0 < --count;
+			});
 		}
 
 		/// <summary>
 		/// 汎用・消滅イベント
 		/// </summary>
-		/// <param name="enemy">消滅する敵</param>
+		/// <param name="enemy">敵</param>
 		public static void Killed(Enemy enemy)
 		{
-			DDGround.EL.Add(SCommon.Supplier(Effects.中爆発(enemy.X, enemy.Y)));
+			DDGround.EL.Add(SCommon.Supplier(Effects.EnemyKilled(enemy.X, enemy.Y)));
+			Ground.I.SE.EnemyKilled.Play();
 		}
 	}
 }

@@ -7,5 +7,6 @@ namespace Charlotte.Games.Enemies.アイテムs
 {
 	public static class EnemyCommon_Item
 	{
+		// none
 	}
 }

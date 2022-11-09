@@ -31,7 +31,7 @@ namespace Charlotte.Games.Enemies.Tests
 		private void P_Draw()
 		{
 			double rot = DDUtils.GetAngle(Game.I.Player.X - this.X, Game.I.Player.Y - this.Y);
-			rot += DDUtils.Random.Real() * 0.05;
+			rot += DDUtils.Random.Single() * 0.05;
 			D2Point speedAdd = DDUtils.AngleToPoint(rot, 0.1);
 
 			if (DDUtils.GetDistance(Game.I.Player.X - this.X, Game.I.Player.Y - this.Y) < 50.0)

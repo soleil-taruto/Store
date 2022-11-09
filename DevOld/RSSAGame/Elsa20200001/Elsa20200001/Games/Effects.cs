@@ -32,7 +32,7 @@ namespace Charlotte.Games
 			}
 		}
 
-		public static IEnumerable<bool> テスト用_小爆発(double x, double y)
+		public static IEnumerable<bool> 小爆発(double x, double y) // ★サンプルとしてキープ
 		{
 			foreach (DDScene scene in DDSceneUtils.Create(5))
 			{
@@ -47,14 +47,14 @@ namespace Charlotte.Games
 			}
 		}
 
-		public static IEnumerable<bool> テスト用_中爆発(double x, double y)
+		public static IEnumerable<bool> 中爆発(double x, double y) // ★サンプルとしてキープ
 		{
 			foreach (DDScene scene in DDSceneUtils.Create(10))
 			{
-				DDDraw.SetAlpha(1.0 - scene.Rate * 0.3);
-				DDDraw.SetBright(1.0, 0.3, 0.3);
+				DDDraw.SetAlpha(0.7);
+				DDDraw.SetBright(1.0, 0.6, 0.3);
 				DDDraw.DrawBegin(Ground.I.Picture.WhiteCircle, x - DDGround.ICamera.X, y - DDGround.ICamera.Y);
-				DDDraw.DrawZoom(3.0 * scene.Rate);
+				DDDraw.DrawZoom(1.5 * scene.Rate);
 				DDDraw.DrawEnd();
 				DDDraw.Reset();
 
@@ -62,29 +62,18 @@ namespace Charlotte.Games
 			}
 		}
 
-		public static IEnumerable<bool> 小爆発(double x, double y)
+		public static IEnumerable<bool> 大爆発(double x, double y) // ★サンプルとしてキープ
 		{
-			foreach (DDPicture picture in Ground.I.Picture.Effect_A01_A_Explosion)
+			foreach (DDScene scene in DDSceneUtils.Create(10))
 			{
-				for (int c = 0; c < 4; c++)
-				{
-					DDDraw.DrawCenter(picture, x - DDGround.ICamera.X, y - DDGround.ICamera.Y);
+				DDDraw.SetAlpha(0.7);
+				DDDraw.SetBright(0.6, 0.8, 1.0);
+				DDDraw.DrawBegin(Ground.I.Picture.WhiteCircle, x - DDGround.ICamera.X, y - DDGround.ICamera.Y);
+				DDDraw.DrawZoom(3.0 * scene.Rate);
+				DDDraw.DrawEnd();
+				DDDraw.Reset();
 
-					yield return true;
-				}
-			}
-		}
-
-		public static IEnumerable<bool> 中爆発(double x, double y)
-		{
-			foreach (DDPicture picture in Ground.I.Picture.Effect_A01_B_Explosion)
-			{
-				for (int c = 0; c < 4; c++)
-				{
-					DDDraw.DrawCenter(picture, x - DDGround.ICamera.X, y - DDGround.ICamera.Y);
-
-					yield return true;
-				}
+				yield return true;
 			}
 		}
 

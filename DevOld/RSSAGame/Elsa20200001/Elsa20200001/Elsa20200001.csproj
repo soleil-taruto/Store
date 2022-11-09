@@ -91,7 +91,7 @@
     <Compile Include="Games\Enemies\Enemy_ノコノコ.cs" />
     <Compile Include="Games\Enemies\Enemy_地蔵.cs" />
     <Compile Include="Games\Enemies\Enemy_弾.cs" />
-    <Compile Include="Games\Enemies\Enemy_即死トラップThe針.cs" />
+    <Compile Include="Games\Enemies\Enemy_即死トラップ針.cs" />
     <Compile Include="Games\Enemies\アイテムs\EnemyCommon_Item.cs" />
     <Compile Include="Games\Enemies\アイテムs\Enemy_Item.cs" />
     <Compile Include="Games\Enemies\アイテムs\Enemy_Item_跳ねる陰陽玉.cs" />
@@ -190,6 +190,7 @@
     <Compile Include="Games\PasswordInput.cs" />
     <Compile Include="Games\RingMenu.cs" />
     <Compile Include="Games\SettingMenu.cs" />
+    <Compile Include="Games\Shots\ShotCommon.cs" />
     <Compile Include="Games\Shots\Shot_AirShooter.cs" />
     <Compile Include="Games\Shots\Shot_MagnetAir.cs" />
     <Compile Include="Games\Shots\Shot_ハンマー陰陽玉.cs" />

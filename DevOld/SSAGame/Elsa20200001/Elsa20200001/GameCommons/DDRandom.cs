@@ -28,14 +28,14 @@ namespace Charlotte.GameCommons
 		/// <returns>乱数</returns>
 		public uint Next()
 		{
-			ulong uu1 = this.Next2();
+			ulong uu1 = this.P_Next();
 
 			uint u1 = (uint)(uu1 % 4294967311ul); // 2^32 より大きい最小の素数
 
 			return u1;
 		}
 
-		private ulong Next2()
+		private ulong P_Next()
 		{
 			return this.X = 1103515245 * (ulong)(uint)this.X + 12345;
 		}
@@ -44,7 +44,7 @@ namespace Charlotte.GameCommons
 		/// 0以上1以下の乱数を返す。
 		/// </summary>
 		/// <returns>乱数</returns>
-		public double Real()
+		public double Single()
 		{
 			return this.Next() / (double)uint.MaxValue;
 		}
@@ -53,22 +53,24 @@ namespace Charlotte.GameCommons
 		/// -1以上1以下の乱数を返す。
 		/// </summary>
 		/// <returns>乱数</returns>
-		public double DReal()
+		public double Double()
 		{
-			return this.Real() * 2.0 - 1.0;
+			return this.Single() * 2.0 - 1.0;
 		}
 
-		public uint GetUInt(uint modulo)
-		{
-			if (modulo < 1u)
-				throw new ArgumentException("Bad modulo: " + modulo);
-
-			return this.Next() % modulo;
-		}
-
+		/// <summary>
+		/// 0以上"上限値"未満の乱数を返す。
+		/// </summary>
+		/// <param name="modulo">上限値(1～)</param>
+		/// <returns>乱数</returns>
 		public int GetInt(int modulo)
 		{
-			return (int)this.GetUInt((uint)modulo);
+			return (int)this.P_GetUInt((uint)modulo);
+		}
+
+		private uint P_GetUInt(uint modulo)
+		{
+			return this.Next() % modulo;
 		}
 
 		public int GetRange(int minval, int maxval)
@@ -76,15 +78,17 @@ namespace Charlotte.GameCommons
 			return this.GetInt(maxval - minval + 1) + minval;
 		}
 
-		public void Shuffle<T>(T[] arr)
+		public void Shuffle<T>(IList<T> list)
 		{
-			for (int index = arr.Length; 2 <= index; index--)
-				SCommon.Swap(arr, this.GetInt(index), index - 1);
+			for (int index = list.Count; 1 < index; index--)
+			{
+				SCommon.Swap(list, this.GetInt(index), index - 1);
+			}
 		}
 
-		public T ChooseOne<T>(T[] arr)
+		public T ChooseOne<T>(IList<T> list)
 		{
-			return arr[this.GetInt(arr.Length)];
+			return list[this.GetInt(list.Count)];
 		}
 	}
 }

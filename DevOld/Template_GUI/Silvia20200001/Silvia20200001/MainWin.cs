@@ -47,6 +47,8 @@ namespace Charlotte
 
 		private void MainWin_Shown(object sender, EventArgs e)
 		{
+			Common.PostShown(this);
+
 			this.Idling = true;
 		}
 

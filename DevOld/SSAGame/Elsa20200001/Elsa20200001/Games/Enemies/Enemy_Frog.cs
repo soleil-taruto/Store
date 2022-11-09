@@ -42,7 +42,7 @@ namespace Charlotte.Games.Enemies
 							DDUtils.GetDistance(new D2Point(Game.I.Player.X, Game.I.Player.Y), new D2Point(this.X, this.Y)) < 300.0 ||
 							Math.Abs(Game.I.Player.Y - this.Y) < 32.0
 						))
-						this.Jump = SCommon.Supplier(this.E_Jump(this.Random.Real() < 0.5 ? JUMP_SPEED : HI_JUMP_SPEED));
+						this.Jump = SCommon.Supplier(this.E_Jump(this.Random.Single() < 0.5 ? JUMP_SPEED : HI_JUMP_SPEED));
 
 					DDDraw.DrawBegin(Ground.I.Picture.Teki_a03_Jump01, this.X - DDGround.ICamera.X, this.Y - 16 - DDGround.ICamera.Y);
 					DDDraw.DrawZoom_X(this.FacingLeft ? 1.0 : -1.0);

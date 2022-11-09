@@ -63,7 +63,7 @@ namespace Charlotte.Games.Enemies
 				for (; ; )
 				{
 					if (
-						this.Random.Real() < 0.03 &&
+						this.Random.Single() < 0.03 &&
 						this.Y < Game.I.Player.Y &&
 						Math.Abs(Game.I.Player.X - this.X) < 100.0
 						)

@@ -80,6 +80,7 @@
     <Compile Include="GameCommons\DDTouch.cs" />
     <Compile Include="GameProgressMasters\GameProgressMaster.cs" />
     <Compile Include="Games\Confirm.cs" />
+    <Compile Include="Games\Enemies\EnemyCommon.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_Bイベント0001.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_Bセーブ地点.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_Bハック0001.cs" />

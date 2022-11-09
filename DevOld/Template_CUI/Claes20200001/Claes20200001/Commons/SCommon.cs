@@ -353,6 +353,10 @@ namespace Charlotte.Commons
 			return new HashSet<string>(new IECompStringIgnoreCase());
 		}
 
+		/// <summary>
+		/// とても小さい正数として慣習的に決めた値
+		/// ・doubleの許容誤差として
+		/// </summary>
 		public const double MICRO = 1.0 / IMAX;
 
 		private static void CheckNaN(double value)
@@ -2357,9 +2361,9 @@ namespace Charlotte.Commons
 				return a.GetValueForCompare() != b.GetValueForCompare();
 			}
 
-			public override bool Equals(object other)
+			public override bool Equals(object another)
 			{
-				return other is SimpleDateTime && this == (SimpleDateTime)other;
+				return another is SimpleDateTime && this == (SimpleDateTime)another;
 			}
 
 			public override int GetHashCode()
@@ -2451,6 +2455,25 @@ namespace Charlotte.Commons
 			{
 				throw null; // never
 			}
+		}
+
+		public static Exception ToThrow(Action routine)
+		{
+			try
+			{
+				routine();
+			}
+			catch (Exception ex)
+			{
+				return ex;
+			}
+			throw new Exception("例外を投げませんでした。");
+		}
+
+		public static void ToThrowPrint(Action routine)
+		{
+			Console.WriteLine(ToThrow(routine));
+			Console.WriteLine("★★★想定された例外のため処理を続行します。");
 		}
 	}
 }

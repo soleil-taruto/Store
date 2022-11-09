@@ -65,7 +65,7 @@ namespace Charlotte.Games.Enemies
 			{
 				if (
 					30 < frame &&
-					this.Random.Real() <
+					this.Random.Single() <
 					(
 						DDUtils.GetDistance(new D2Point(Game.I.Player.X, Game.I.Player.Y), new D2Point(this.X, this.Y)) < 400.0 ?
 						0.0001 :
@@ -73,7 +73,7 @@ namespace Charlotte.Games.Enemies
 					))
 					break;
 
-				if (this.Random.Real() < 0.05)
+				if (this.Random.Single() < 0.05)
 					this.FacingLeft = Game.I.Player.X < this.X;
 
 				if (this.FacingLeft)

@@ -771,11 +771,12 @@ namespace Charlotte.Games
 
 								if (1 <= enemy.HP) // ? まだ生存している。
 								{
-									enemy.Damaged(shot);
+									enemy.P_Damaged(shot);
 								}
 								else // ? 撃破した。
 								{
-									enemy.Kill(true);
+									enemy.HP = 0; // 過剰に削った分を正す。
+									enemy.Kill();
 									break; // この敵は死亡したので、この敵について以降の当たり判定は不要
 								}
 

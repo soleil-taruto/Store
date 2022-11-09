@@ -40,7 +40,7 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 			}
 		}
 
-		protected override void Killed()
+		protected override void P_Killed()
 		{
 			DDGround.EL.Add(SCommon.Supplier(Effects.中爆発(this.X, this.Y)));
 		}

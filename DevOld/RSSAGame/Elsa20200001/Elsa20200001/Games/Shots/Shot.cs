@@ -80,16 +80,24 @@ namespace Charlotte.Games.Shots
 			if (!this.DeadFlag)
 			{
 				this.DeadFlag = true;
-				this.Killed();
+				this.P_Killed();
 			}
 		}
 
 		/// <summary>
 		/// 何かと衝突して消滅した。
 		/// </summary>
-		protected virtual void Killed()
+		private void Killed()
 		{
-			DDGround.EL.Add(SCommon.Supplier(Effects.テスト用_小爆発(this.X, this.Y)));
+			this.P_Killed();
+		}
+
+		/// <summary>
+		/// この自弾の固有の消滅イベント
+		/// </summary>
+		protected virtual void P_Killed()
+		{
+			ShotCommon.Killed(this);
 		}
 	}
 }
