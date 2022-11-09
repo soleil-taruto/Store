@@ -32,9 +32,9 @@ namespace Charlotte.Games
 		public int SpeedLevel = SPEED_LEVEL_DEF;
 		public int AttackLevel = 0;
 
-		public int DeadFrame = 0; // 0 == 無効, 0< == 死亡中
-		public int RebornFrame = 0; // 0 == 無効, 0< == 登場中
-		public int InvincibleFrame = 0; // 0 == 無効, 0< == 無敵時間中
+		public int DeadFrame = 0; // 0 == 無効, 1～ == 死亡中
+		public int RebornFrame = 0; // 0 == 無効, 1～ == 登場中
+		public int InvincibleFrame = 0; // 0 == 無効, 1～ == 無敵時間中
 
 		public void Draw()
 		{
@@ -75,25 +75,25 @@ namespace Charlotte.Games
 				switch (this.AttackLevel)
 				{
 					case 0:
-						Game.I.Shots.Add(new Shot_B0001(this.X + 38.0, this.Y));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 38.0, this.Y));
 						break;
 
 					case 1:
-						Game.I.Shots.Add(new Shot_B0001(this.X + 38.0, this.Y - 16.0));
-						Game.I.Shots.Add(new Shot_B0001(this.X + 38.0, this.Y + 16.0));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 38.0, this.Y - 16.0));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 38.0, this.Y + 16.0));
 						break;
 
 					case 2:
-						Game.I.Shots.Add(new Shot_B0001(this.X + 38.0, this.Y - 32.0));
-						Game.I.Shots.Add(new Shot_B0001(this.X + 38.0, this.Y));
-						Game.I.Shots.Add(new Shot_B0001(this.X + 38.0, this.Y + 32.0));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 38.0, this.Y - 32.0));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 38.0, this.Y));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 38.0, this.Y + 32.0));
 						break;
 
 					case 3:
-						Game.I.Shots.Add(new Shot_B0001(this.X + 20.0, this.Y - 48.0));
-						Game.I.Shots.Add(new Shot_B0001(this.X + 38.0, this.Y - 16.0));
-						Game.I.Shots.Add(new Shot_B0001(this.X + 38.0, this.Y + 16.0));
-						Game.I.Shots.Add(new Shot_B0001(this.X + 20.0, this.Y + 48.0));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 20.0, this.Y - 48.0));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 38.0, this.Y - 16.0));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 38.0, this.Y + 16.0));
+						Game.I.Shots.Add(new Shot_Test0001(this.X + 20.0, this.Y + 48.0));
 						break;
 
 					default:
@@ -106,7 +106,7 @@ namespace Charlotte.Games
 		{
 			if (!Isボム発動中() && DDUtils.CountDown(ref Game.I.Status.ZanBomb))
 			{
-				Game.I.Shots.Add(new Shot_Bボム());
+				Game.I.Shots.Add(new Shot_Testボム0001());
 			}
 		}
 

@@ -16,8 +16,8 @@ namespace Charlotte.Games
 {
 	public class Game : IDisposable
 	{
-		public Script Script = new Script_Bダミー0001(); // 軽量なダミー初期オブジェクト
-		public GameStatus Status = new GameStatus();   // 軽量なダミー初期オブジェクト
+		public Script Script = new Script_Test何もなし0001(); // 軽量なダミー初期オブジェクト
+		public GameStatus Status = new GameStatus(); // 軽量なダミー初期オブジェクト
 
 		// <---- prm
 
@@ -76,6 +76,11 @@ namespace Charlotte.Games
 
 			for (this.Frame = 0; ; this.Frame++)
 			{
+				// memo: スクリプトの途中で Game.I.Script = scriptNew; として別のスクリプトに遷移して良い。
+				// 但し、スクリプトを差し替えた後で yield return (1以上); を行うこと。
+				// スクリプトを差し替えて列挙が終了すると this.Script.EachFrame() == false となるため、ゲームループを break; してしまう。
+				// yield return 1; としておけば this.Script.EachFrame() == true となり、次の this.Script.EachFrame()で新しいスクリプトが開始される。
+				//
 				if (!this.Script.EachFrame())
 					break;
 
@@ -334,7 +339,8 @@ namespace Charlotte.Games
 								}
 								else // ? 撃破した。
 								{
-									enemy.Kill(true);
+									enemy.HP = 0; // 過剰に削られた分を正す。
+									enemy.Kill();
 									break; // この敵は死亡したので、この敵について以降の当たり判定は不要
 								}
 
@@ -628,10 +634,8 @@ namespace Charlotte.Games
 			{
 				if (
 					enemy.DeadFlag || // ? 敵：死亡
-					enemy is Enemy_BItem ||
-					enemy is Enemy_Bボス0001 ||
-					enemy is Enemy_Bボス0002 ||
-					enemy is Enemy_Bボス0003
+					enemy.Kind == Enemy.Kind_e.アイテム ||
+					enemy.Kind == Enemy.Kind_e.ボス
 					)
 				{
 					// noop

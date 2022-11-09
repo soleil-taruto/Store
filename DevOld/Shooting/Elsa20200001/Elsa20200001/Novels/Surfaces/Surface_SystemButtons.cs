@@ -92,5 +92,10 @@ namespace Charlotte.Novels.Surfaces
 				yield return true;
 			}
 		}
+
+		protected override void Invoke_02(string command, params string[] arguments)
+		{
+			throw new DDError(); // 固有コマンド無し
+		}
 	}
 }

@@ -1223,9 +1223,7 @@ namespace Charlotte.CSSolutions
 
 				// ダミーメンバー_01
 				{
-					int dmCount = lines.Length / dmLines.Length;
-					dmCount /= 3;
-					dmCount++;
+					int dmCount = (lines.Length / dmLines.Length) / 13 + 1;
 
 					for (int index = 0; index < dmCount; index++)
 					{
@@ -1237,54 +1235,6 @@ namespace Charlotte.CSSolutions
 							line = line.Replace("SSS_", ident + "_");
 							dest.Add(line);
 						}
-					}
-				}
-
-				// ダミーメンバー_02
-				{
-					int dmCount = SCommon.CRandom.GetRange(1, 13);
-					string ident = ADM_CreateIdent();
-
-					dest.Add("\t\tpublic static int " +
-						ident + "_Count_0;"
-						);
-					dest.Add("\t\tpublic int " +
-						ident + "_GetInt_0() { return " +
-						ident + "_Count_0; }"
-						);
-
-					for (int index = 0; index < dmCount; index++)
-					{
-						int nextIndex = index + 1;
-
-						string op = SCommon.CRandom.ChooseOne(SCommon.TextToLines(@"
-
-+
--
-== 0 ? 0 :
-== 0 ? 1 :
-== 1 ? 0 :
-== 1 ? 1 :
-!= 0 ? 0 :
-!= 0 ? 1 :
-!= 1 ? 0 :
-!= 1 ? 1 :
-
-").Select(v => v.Trim()).Where(v => v != "").ToArray());
-
-						dest.Add("\t\tpublic static int " +
-							ident + "_Count_" +
-							nextIndex + ";"
-							);
-						dest.Add("\t\tpublic int " +
-							ident + "_GetInt_" +
-							nextIndex + "() { return " +
-							ident + "_GetInt_" +
-							index + "() " +
-							op + " " +
-							ident + "_Count_" +
-							nextIndex + "; }"
-							);
 					}
 				}
 

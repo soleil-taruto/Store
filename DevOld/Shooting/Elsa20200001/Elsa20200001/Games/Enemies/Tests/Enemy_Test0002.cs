@@ -10,10 +10,10 @@ namespace Charlotte.Games.Enemies.Tests
 	/// <summary>
 	/// テスト用_敵
 	/// </summary>
-	public class Enemy_B0002 : Enemy
+	public class Enemy_Test0002 : Enemy
 	{
-		public Enemy_B0002(double x, double y)
-			: base(x, y, 10)
+		public Enemy_Test0002(double x, double y)
+			: base(x, y, 10, Kind_e.通常敵)
 		{ }
 
 		protected override IEnumerable<bool> E_Draw()
@@ -21,7 +21,7 @@ namespace Charlotte.Games.Enemies.Tests
 			for (int frame = 1; ; frame++)
 			{
 				if (frame % 20 == 0)
-					Game.I.Enemies.Add(new Enemy_BTama0001(this.X, this.Y));
+					Game.I.Enemies.Add(new Enemy_TestTama0001(this.X, this.Y));
 
 				D2Point speed = DDUtils.AngleToPoint(
 					DDUtils.GetAngle(Game.I.Player.X - this.X, Game.I.Player.Y - this.Y),

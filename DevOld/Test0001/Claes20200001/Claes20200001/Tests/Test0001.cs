@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using Charlotte.Commons;
+using System.IO;
 
 namespace Charlotte.Tests
 {
@@ -11,142 +12,156 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			Console.WriteLine(((int)'\0').ToString()); // 0
-
-			Console.WriteLine(((int)'\b').ToString()); // 8
-			Console.WriteLine(((int)'\t').ToString()); // 9
-			Console.WriteLine(((int)'\n').ToString()); // 10
-			Console.WriteLine(((int)'\v').ToString()); // 11
-			Console.WriteLine(((int)'\f').ToString()); // 12
-			Console.WriteLine(((int)'\r').ToString()); // 13
-
-			Console.WriteLine(((int)'"').ToString()); // 34
-			Console.WriteLine(((int)'\'').ToString()); // 39
-			Console.WriteLine(((int)'\\').ToString()); // 92
-			Console.WriteLine(((int)'`').ToString()); // 96
+			Common.ToThrowPrint(() => SCommon.CRandom.GetInt(0));
+			Common.ToThrowPrint(() => SCommon.CRandom.GetLong(0));
 		}
 
 		public void Test02()
 		{
-			for (int testcnt = 0; testcnt < 100; testcnt++)
+			for (int testcnt = 0; testcnt < 1000; testcnt++)
 			{
-				double value = (double)SCommon.CRandom.GetInt(SCommon.IMAX) / SCommon.IMAX;
+				double value = (double)SCommon.CRandom.GetUInt() / uint.MaxValue;
 
 				Console.WriteLine(value.ToString("F20"));
 			}
-			for (int testcnt = 0; testcnt < 100; testcnt++)
-			{
-				double value = (double)SCommon.CRandom.GetLong(SCommon.IMAX_64) / SCommon.IMAX_64;
-
-				Console.WriteLine(value.ToString("F20"));
-			}
-			for (int testcnt = 0; testcnt < 100; testcnt++)
-			{
-				double value = (double)(SCommon.CRandom.GetULong() & ((1UL << 52) - 1)) / (1UL << 52);
-
-				Console.WriteLine(value.ToString("F20"));
-			}
-
-			// ----
-			// ----
-			// ----
-
-			{
-				double value = (double)((1UL << 52) - 1);
-
-				Console.WriteLine(value.ToString("F20")); // 4503599627370500.00000000000000000000
-
-				value += 1.0;
-
-				Console.WriteLine(value.ToString("F20")); // 4503599627370500.00000000000000000000
-			}
-
-			// ----
-			// ----
-			// ----
-
-			for (int testcnt = 1; testcnt < 64; testcnt++)
-			{
-				double value = 1.0 + 1.0 / (1UL << testcnt);
-
-				Console.WriteLine(testcnt.ToString("D2") + " ==> " + value.ToString("F20"));
-			}
-
-			Test02_a(0);
-			Test02_a(1);
-			Test02_a(2);
-			Test02_a(3);
-
-			Test02_a(uint.MaxValue - 3);
-			Test02_a(uint.MaxValue - 2);
-			Test02_a(uint.MaxValue - 1);
-			Test02_a(uint.MaxValue);
-
-			// ----
-
-			Test02_b(0);
-			Test02_b(1);
-			Test02_b(2);
-			Test02_b(3);
-
-			Test02_b(SCommon.IMAX - 3);
-			Test02_b(SCommon.IMAX - 2);
-			Test02_b(SCommon.IMAX - 1);
-			Test02_b(SCommon.IMAX);
-		}
-
-		private void Test02_a(uint numer)
-		{
-			double value = (double)numer / uint.MaxValue;
-
-			Console.WriteLine(value.ToString("F20"));
-		}
-
-		private void Test02_b(int numer)
-		{
-			double value = (double)numer / SCommon.IMAX;
-
-			Console.WriteLine(value.ToString("F20"));
 		}
 
 		public void Test03()
 		{
-			for (int c = 0; c < 100; c++)
+			if (SCommon.GetJChars().Length == SCommon.GetJCharCodes().Count())
 			{
-				using (WorkingDir wd = new WorkingDir())
-				{
-					for (int d = 0; d < 100; d++)
-					{
-						Console.WriteLine(wd.MakePath());
-					}
-				}
+				Console.WriteLine("JCharsLen-OK!");
+			}
+			else
+			{
+				throw null; // 想定外
 			}
 		}
 
 		public void Test04()
 		{
-			for (int testcnt = 0; testcnt < 1000; testcnt++)
+			using (CsvFileWriter writer = new CsvFileWriter(Common.NextOutputPath() + ".csv"))
 			{
-				Console.WriteLine(SCommon.CRandom.GetRange(1000, 9999));
+				for (int n = 1; n <= 5; n++)
+				{
+					int[] counts = new int[30];
+
+					for (int testcnt = 0; testcnt < 1000000; testcnt++)
+					{
+						double v = 1.0;
+
+						for (int c = 0; c < n; c++)
+						{
+							double r = (double)SCommon.CRandom.GetUInt() / uint.MaxValue;
+							v = Math.Min(v, r);
+						}
+						counts[(int)(v * counts.Length)]++;
+					}
+					writer.WriteRow(counts.Select(v => "" + v).ToArray());
+				}
 			}
-			for (int testcnt = 0; testcnt < 1000; testcnt++)
+		}
+
+		/// <summary>
+		/// SCommon.GetJChars()の文字でファイルが作成可能かチェック
+		/// -- 作成可能である。@ 2022.6.13
+		/// </summary>
+		public void Test05()
+		{
+			const string TEST_DIR = @"C:\temp";
+
+			SCommon.DeletePath(TEST_DIR);
+			SCommon.CreateDir(TEST_DIR);
+
+			string homeDir = Directory.GetCurrentDirectory();
+			Directory.SetCurrentDirectory(TEST_DIR);
+
+			foreach (char chr in SCommon.GetJChars())
 			{
-				Console.WriteLine(SCommon.CRandom.GetLong(9000) + 1000);
+				Console.WriteLine("[" + chr + "] " + (int)chr);
+
+				string localName = new string(new char[] { chr });
+				string file = TEST_DIR + "\\" + localName;
+
+				if (File.Exists(localName)) throw null;
+				if (File.Exists(file)) throw null;
+
+				File.WriteAllBytes(localName, SCommon.EMPTY_BYTES);
+
+				if (!File.Exists(localName)) throw null;
+				if (!File.Exists(file)) throw null;
+
+				SCommon.DeletePath(localName);
+
+				if (File.Exists(localName)) throw null;
+				if (File.Exists(file)) throw null;
+
+				File.WriteAllBytes(file, SCommon.EMPTY_BYTES);
+
+				if (!File.Exists(localName)) throw null;
+				if (!File.Exists(file)) throw null;
+
+				SCommon.DeletePath(file);
+
+				if (File.Exists(localName)) throw null;
+				if (File.Exists(file)) throw null;
 			}
+			Directory.SetCurrentDirectory(homeDir);
+		}
+
+		public void Test06()
+		{
+			SCommon.Read_d reader = (buff, offset, count) =>
+			{
+				return count;
+			};
+
+			reader = SCommon.GetLimitedReader(reader, 100);
+
+			if (reader(null, 0, 30) != 30) throw null;
+			if (reader(null, 0, 30) != 30) throw null;
+			if (reader(null, 0, 30) != 30) throw null;
+			if (reader(null, 0, 30) != 10) throw null;
+			if (reader(null, 0, 30) > 0) throw null;
 
 			// ----
-			// ----
+
+			reader = (buff, offset, count) =>
+			{
+				if (count == 70)
+					return -1;
+
+				return count;
+			};
+
+			reader = SCommon.GetLimitedReader(reader, SCommon.IMAX_64);
+
+			if (reader(null, 0, 40) != 40) throw null;
+			if (reader(null, 0, 50) != 50) throw null;
+			if (reader(null, 0, 60) != 60) throw null;
+			if (reader(null, 0, 70) > 0) throw null;
+			if (reader(null, 0, 80) > 0) throw null;
+			if (reader(null, 0, 90) > 0) throw null;
+
 			// ----
 
-			try
+			reader = (buff, offset, count) =>
 			{
-				SCommon.CRandom.GetInt(0); // 例外
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex);
-				Console.WriteLine("想定された例外");
-			}
+				if (count == 60)
+					return 50;
+
+				return count;
+			};
+
+			reader = SCommon.GetLimitedReader(SCommon.GetReader(reader), SCommon.IMAX_64);
+
+			if (reader(null, 0, 40) != 40) throw null;
+			if (reader(null, 0, 50) != 50) throw null;
+			Common.ToThrowPrint(() => reader(null, 0, 60));
+
+			// ----
+
+			Console.WriteLine("OK!");
 		}
 	}
 }

@@ -45,8 +45,8 @@ namespace Charlotte.Games.Enemies.Tests
 					double rate = (double)frm / HIT_BACK_FRAME_MAX;
 
 					SPEED = 0.0;
-					xBuru = (1.0 - rate) * 30.0 * DDUtils.Random.Real();
-					yBuru = (1.0 - rate) * 30.0 * DDUtils.Random.Real();
+					xBuru = (1.0 - rate) * 30.0 * DDUtils.Random.Single();
+					yBuru = (1.0 - rate) * 30.0 * DDUtils.Random.Single();
 				}
 			endHitBack:
 
@@ -93,7 +93,7 @@ namespace Charlotte.Games.Enemies.Tests
 			}
 		}
 
-		public override void Damaged(Shot shot)
+		protected override void P_Damaged(Shot shot)
 		{
 			// 難読化のため #if の入れ子ができない。
 #if true
@@ -146,7 +146,7 @@ namespace Charlotte.Games.Enemies.Tests
 #endif
 
 			this.HitBackFrame = 1;
-			base.Damaged(shot);
+			base.P_Damaged(shot);
 		}
 	}
 }

@@ -22,7 +22,7 @@ namespace Charlotte.Tests.Games
 		{
 			using (new Game())
 			{
-				Game.I.Script = new Script_B壁紙テスト0001();
+				Game.I.Script = new Script_Test壁紙0001();
 				Game.I.Perform();
 			}
 		}
@@ -33,15 +33,15 @@ namespace Charlotte.Tests.Games
 
 			// ---- choose one ----
 
-			//script = new Script_壁紙テスト0001();
-			//script = new Script_テスト0001();
-			//script = new Script_テスト0002();
-			//script = new Script_テスト0003();
-			//script = new Script_テスト0004();
-			//script = new Script_Bボス0001テスト();
-			//script = new Script_ステージ0001();
-			//script = new Script_ステージ0002();
-			script = new Script_Bステージ0003();
+			//script = new Script_Test壁紙0001();
+			//script = new Script_Test0001();
+			//script = new Script_Test0002();
+			//script = new Script_Test0003();
+			//script = new Script_Test0004();
+			//script = new Script_Testボス0001テスト();
+			//script = new Script_Testステージ0001();
+			//script = new Script_Testステージ0002();
+			script = new Script_Testステージ0003();
 
 			// ----
 

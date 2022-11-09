@@ -25,7 +25,7 @@ namespace Charlotte.Games.Shots
 
 		public Kind_e Kind;
 
-		public Shot(double x, double y, int attackPoint, bool 敵を貫通する, Kind_e kind = Kind_e.通常弾)
+		public Shot(double x, double y, int attackPoint, bool 敵を貫通する, Kind_e kind)
 		{
 			this.X = x;
 			this.Y = y;
@@ -87,11 +87,17 @@ namespace Charlotte.Games.Shots
 		/// <summary>
 		/// 衝突して消滅した。
 		/// </summary>
-		protected virtual void Killed()
+		private void Killed()
 		{
-			DDGround.EL.Add(SCommon.Supplier(Effects.小爆発(this.X, this.Y)));
+			this.P_Killed();
+		}
 
-			// TODO: SE
+		/// <summary>
+		/// この自弾の固有の消滅イベント
+		/// </summary>
+		protected virtual void P_Killed()
+		{
+			ShotCommon.Killed(this);
 		}
 	}
 }

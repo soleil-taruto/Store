@@ -10,10 +10,10 @@ namespace Charlotte.Games.Shots.Tests
 	/// <summary>
 	/// 通常弾
 	/// </summary>
-	public class Shot_B0001 : Shot
+	public class Shot_Test0001 : Shot
 	{
-		public Shot_B0001(double x, double y)
-			: base(x, y, 1, false)
+		public Shot_Test0001(double x, double y)
+			: base(x, y, 1, false, Kind_e.通常弾)
 		{ }
 
 		protected override IEnumerable<bool> E_Draw()

@@ -10,10 +10,10 @@ namespace Charlotte.Games.Enemies.Tests
 	/// <summary>
 	/// テスト用_敵
 	/// </summary>
-	public class Enemy_B0001 : Enemy
+	public class Enemy_Test0001 : Enemy
 	{
-		public Enemy_B0001(double x, double y)
-			: base(x, y, 1)
+		public Enemy_Test0001(double x, double y)
+			: base(x, y, 1, Kind_e.通常敵)
 		{ }
 
 		protected override IEnumerable<bool> E_Draw()

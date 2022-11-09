@@ -96,6 +96,7 @@
     <Compile Include="GameCommons\DDTouch.cs" />
     <Compile Include="GameProgressMasters\GameProgressMaster.cs" />
     <Compile Include="Games\Confirm.cs" />
+    <Compile Include="Games\Enemies\EnemyCommon.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_Bアイテム.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_Bイベント0001.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_Bセーブ地点.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Games\MapCell.cs" />
     <Compile Include="Games\MusicCollection.cs" />
     <Compile Include="Games\SettingMenu.cs" />
+    <Compile Include="Games\Shots\ShotCommon.cs" />
     <Compile Include="Games\Shots\Shot_Bounce.cs" />
     <Compile Include="Games\Shots\Shot_Normal.cs" />
     <Compile Include="Games\Shots\Shot_Spread.cs" />

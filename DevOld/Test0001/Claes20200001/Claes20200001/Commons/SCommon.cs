@@ -580,7 +580,7 @@ namespace Charlotte.Commons
 			return path.Substring(oldRoot.Length);
 		}
 
-		public static string PutYen(string path)
+		private static string PutYen(string path)
 		{
 			return Put_INE(path, "\\");
 		}
@@ -823,7 +823,7 @@ namespace Charlotte.Commons
 		{
 			if (reader.Read(buff, offset, count) != count)
 			{
-				throw new Exception("データの途中でファイルの終端に到達しました。");
+				throw new Exception("データの途中でストリームの終端に到達しました。");
 			}
 		}
 
@@ -1166,8 +1166,13 @@ namespace Charlotte.Commons
 			}
 		}
 
+		// memo: SJIS(CP-932)の中にサロゲートペアは無い。
+		// -- なので以下は保証される。
+		// ---- SCommon.GetJChars().Length == SCommon.GetJCharCodes().Count()
+
 		/// <summary>
 		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：Unicode
 		/// </summary>
 		/// <returns>SJIS(CP-932)の2バイト文字の文字列</returns>
 		public static string GetJChars()
@@ -1177,6 +1182,7 @@ namespace Charlotte.Commons
 
 		/// <summary>
 		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：SJIS
 		/// </summary>
 		/// <returns>SJIS(CP-932)の2バイト文字のバイト列</returns>
 		public static IEnumerable<byte> GetJCharBytes()
@@ -1190,6 +1196,7 @@ namespace Charlotte.Commons
 
 		/// <summary>
 		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：SJIS
 		/// </summary>
 		/// <returns>SJIS(CP-932)の2バイト文字の列挙</returns>
 		public static IEnumerable<UInt16> GetJCharCodes()
@@ -1820,6 +1827,10 @@ namespace Charlotte.Commons
 			};
 		}
 
+		// memo: GetLimitedReader は総読み込みサイズの下限を制限しない。
+		// -- 総読み込みサイズ上限・下限ともに length としたい場合は以下のようにする。
+		// ---- SCommon.GetLimitedReader(SCommon.GetReader(reader), length)
+
 		public static Read_d GetLimitedReader(Read_d reader, long remaining)
 		{
 			return (buff, offset, count) =>
@@ -1829,7 +1840,24 @@ namespace Charlotte.Commons
 
 				count = (int)Math.Min((long)count, remaining);
 				count = reader(buff, offset, count);
-				remaining -= (long)count;
+
+				if (count <= 0) // ? これ以上読み込めない
+					remaining = 0L;
+				else
+					remaining -= (long)count;
+
+				return count;
+			};
+		}
+
+		public static Read_d GetReader(Read_d reader)
+		{
+			return (buff, offset, count) =>
+			{
+				if (reader(buff, offset, count) != count)
+				{
+					throw new Exception("データの途中でストリームの終端に到達しました。");
+				}
 				return count;
 			};
 		}

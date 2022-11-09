@@ -59,7 +59,7 @@ namespace Charlotte.Games
 					DDDraw.DrawZoom(1.3);
 					DDDraw.DrawEnd();
 
-					if (1 <= frame && DDUtils.Random.Real() < 0.03 + Math.Sin(frame / 307.0) * 0.02)
+					if (1 <= frame && DDUtils.Random.Single() < 0.03 + Math.Sin(frame / 307.0) * 0.02)
 					{
 						el.Add(SCommon.Supplier(this.Effect_0001(dx, dy, dxa, dya)));
 					}
@@ -146,11 +146,11 @@ namespace Charlotte.Games
 				double a = 1.0;
 				double z = 1.3;
 				double r = 0.0;
-				double xa = DDUtils.Random.Real() * 0.01;
-				double ya = DDUtils.Random.Real() * 0.01;
-				double aa = -0.007 - DDUtils.Random.Real() * 0.003;
-				double za = DDUtils.Random.Real() * 0.00006 - 0.00002;
-				double ra = DDUtils.Random.Real() < 0.3 ? DDUtils.Random.Real() * 0.003 - 0.0015 : 0.0;
+				double xa = DDUtils.Random.Single() * 0.01;
+				double ya = DDUtils.Random.Single() * 0.01;
+				double aa = -0.007 - DDUtils.Random.Single() * 0.003;
+				double za = DDUtils.Random.Single() * 0.00006 - 0.00002;
+				double ra = DDUtils.Random.Single() < 0.3 ? DDUtils.Random.Single() * 0.003 - 0.0015 : 0.0;
 
 				while (0.003 < a)
 				{

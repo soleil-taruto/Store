@@ -7,7 +7,7 @@ using Charlotte.Games.Walls.Tests;
 
 namespace Charlotte.Games.Scripts.Tests
 {
-	public class Script_B壁紙テスト0001 : Script
+	public class Script_Test壁紙0001 : Script
 	{
 		protected override IEnumerable<bool> E_EachFrame()
 		{
@@ -15,22 +15,22 @@ namespace Charlotte.Games.Scripts.Tests
 
 			for (; ; )
 			{
-				Game.I.Walls.Add(new Wall_B0001());
+				Game.I.Walls.Add(new Wall_Test0001());
 
 				for (int c = 0; c < 300; c++)
 					yield return true;
 
-				Game.I.Walls.Add(new Wall_B0002());
+				Game.I.Walls.Add(new Wall_Test0002());
 
 				for (int c = 0; c < 300; c++)
 					yield return true;
 
-				Game.I.Walls.Add(new Wall_B0003());
+				Game.I.Walls.Add(new Wall_Test0003());
 
 				for (int c = 0; c < 300; c++)
 					yield return true;
 
-				Game.I.Walls.Add(new Wall_B0004());
+				Game.I.Walls.Add(new Wall_Test0004());
 
 				for (int c = 0; c < 300; c++)
 					yield return true;

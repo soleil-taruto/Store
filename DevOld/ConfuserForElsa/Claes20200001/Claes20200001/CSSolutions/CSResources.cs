@@ -2440,6 +2440,10 @@ zip					【動詞】
 
 		public void SSS_Overload_04(int SSS_a, int SSS_b, int SSS_c, int SSS_a2, int SSS_b2, int SSS_c2)
 		{
+			if (SSS_a != SSS_b) this.SSS_ResetCount();
+			if (SSS_b != SSS_c) this.SSS_Overload_01(SSS_b);
+			if (SSS_c != SSS_a) this.SSS_SetCount(SSS_c);
+
 			var SSS_infos = new[]
 			{
 				new { SSS_Info_P1 = SSS_a, SSS_Info_P2 = SSS_a2 },
@@ -2464,7 +2468,7 @@ zip					【動詞】
 			if (SSS_v != this.SSS_GetCount())
 				this.SSS_SetCount(SSS_v);
 			else
-				this.SSS_Overload_01(SSS_v);
+				this.SSS_Overload_00();
 		}
 
 ";

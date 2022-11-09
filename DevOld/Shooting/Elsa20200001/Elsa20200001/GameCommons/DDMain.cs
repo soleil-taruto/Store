@@ -155,8 +155,8 @@ namespace Charlotte.GameCommons
 
 			// Font
 			{
-				//DDFontRegister.Add(@"e20200928_NovelAdv\Font\Genkai-Mincho-font\genkai-mincho.ttf");
-				//DDFontRegister.Add(@"e20200928_NovelAdv\Font\riitf\RiiT_F.otf");
+				//DDFontRegister.Add(@"dat\Font\Genkai-Mincho-font\genkai-mincho.ttf");
+				//DDFontRegister.Add(@"dat\Font\riitf\RiiT_F.otf");
 				DDFontRegister.Add(@"dat\Font\K Gothic\K Gothic.ttf");
 				DDFontRegister.Add(@"dat\Font\木漏れ日ゴシック\komorebi-gothic.ttf");
 			}
@@ -193,7 +193,12 @@ namespace Charlotte.GameCommons
 
 		public static void SetMainWindowTitle()
 		{
-			DX.SetMainWindowText(DDDatStrings.Title + " / " + DDUserDatStrings.Version);
+			string version = DDUserDatStrings.Version
+				.Replace('.', '-');
+			string builtDateTime = new SCommon.SimpleDateTime(SCommon.TimeStampToSec.ToSec(19700101090000) + ProcMain.GetPETimeDateStamp())
+				.ToString("{0}-{1:D2}-{2:D2}-{4:D2}-{5:D2}-{6:D2}");
+
+			DX.SetMainWindowText(DDDatStrings.Title + " / " + version + " / " + builtDateTime);
 		}
 
 		private static IntPtr GetAppIcon()

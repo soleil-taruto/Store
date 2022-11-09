@@ -72,5 +72,24 @@ namespace Charlotte
 		{
 			Console.WriteLine("Hello, world!");
 		}
+
+		public static Exception ToThrow(Action routine)
+		{
+			try
+			{
+				routine();
+			}
+			catch (Exception ex)
+			{
+				return ex;
+			}
+			throw new Exception("Did not throw!");
+		}
+
+		public static void ToThrowPrint(Action routine)
+		{
+			Console.WriteLine(ToThrow(routine));
+			Console.WriteLine("★★★想定された例外のため処理を続行します。");
+		}
 	}
 }

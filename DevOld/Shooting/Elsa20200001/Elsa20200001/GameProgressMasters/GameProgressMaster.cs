@@ -7,6 +7,7 @@ using Charlotte.Commons;
 using Charlotte.GameCommons;
 using Charlotte.Games;
 using Charlotte.Games.Scripts.Tests;
+using Charlotte.Games.Scripts;
 
 namespace Charlotte.GameProgressMasters
 {
@@ -26,26 +27,18 @@ namespace Charlotte.GameProgressMasters
 
 		public void Perform()
 		{
-			// zantei zantei zantei
-			// zantei zantei zantei
-			// zantei zantei zantei
-
 			using (new Game())
 			{
-				Game.I.Script = new Script_Bステージ0001(); // 仮？
+				Game.I.Script = new Script_Testステージ0001();
 				Game.I.Perform();
 			}
 		}
 
-		public void Perform_コンテニュー()
+		public void Perform_コンテニュー(Script script)
 		{
-			// zantei zantei zantei
-			// zantei zantei zantei
-			// zantei zantei zantei
-
 			using (new Game())
 			{
-				Game.I.Script = new Script_Bステージ0001(); // 仮？
+				Game.I.Script = script;
 				Game.I.Perform();
 			}
 		}

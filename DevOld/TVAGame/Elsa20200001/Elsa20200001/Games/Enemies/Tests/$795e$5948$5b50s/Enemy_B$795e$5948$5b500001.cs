@@ -68,10 +68,10 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 			}
 		}
 
-		public override void Damaged(Shot shot)
+		protected override void P_Damaged(Shot shot)
 		{
 			_hitBack = SCommon.Supplier(this.E_HitBack());
-			base.Damaged(shot);
+			base.P_Damaged(shot);
 			Game.I.Enemies.Add(new Enemy_B神奈子_Tama(this.X, this.Y));
 		}
 
@@ -79,8 +79,8 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 		{
 			foreach (DDScene scene in DDSceneUtils.Create(20))
 			{
-				double xBuru = (DDUtils.Random.Real() - 0.5) * 2 * 10.0;
-				double yBuru = (DDUtils.Random.Real() - 0.5) * 2 * 10.0;
+				double xBuru = (DDUtils.Random.Single() - 0.5) * 2 * 10.0;
+				double yBuru = (DDUtils.Random.Single() - 0.5) * 2 * 10.0;
 
 				bool facingLeft = Game.I.Player.X < this.X;
 
@@ -93,7 +93,7 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 			}
 		}
 
-		protected override void Killed()
+		protected override void P_Killed()
 		{
 			敵弾一掃();
 			Game.I.Enemies.Add(new Enemy_B神奈子9901(this.X, this.Y));

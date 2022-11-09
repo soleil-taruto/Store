@@ -7,7 +7,7 @@ using Charlotte.GameCommons;
 
 namespace Charlotte.Games.Enemies.Tests
 {
-	public class Enemy_BItem : Enemy
+	public class Enemy_TestItem : Enemy
 	{
 		public enum 効用_e
 		{
@@ -25,7 +25,7 @@ namespace Charlotte.Games.Enemies.Tests
 
 		private 効用_e 効用;
 
-		public Enemy_BItem(double x, double y, 効用_e 効用)
+		public Enemy_TestItem(double x, double y, 効用_e 効用)
 			: base(x, y, 0, Kind_e.アイテム)
 		{
 			this.効用 = 効用;
@@ -81,6 +81,16 @@ namespace Charlotte.Games.Enemies.Tests
 				default:
 					throw null; // never
 			}
+		}
+
+		protected override void P_Damaged()
+		{
+			// noop
+		}
+
+		protected override void P_Killed()
+		{
+			// noop
 		}
 	}
 }

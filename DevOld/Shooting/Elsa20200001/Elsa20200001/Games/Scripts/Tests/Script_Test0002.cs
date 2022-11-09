@@ -10,7 +10,7 @@ using Charlotte.Games.Walls.Tests;
 
 namespace Charlotte.Games.Scripts.Tests
 {
-	public class Script_Bテスト0002 : Script
+	public class Script_Test0002 : Script
 	{
 		protected override IEnumerable<bool> E_EachFrame()
 		{
@@ -18,16 +18,16 @@ namespace Charlotte.Games.Scripts.Tests
 
 			for (; ; )
 			{
-				Game.I.Walls.Add(new Wall_B0003());
+				Game.I.Walls.Add(new Wall_Test0003());
 
-				Game.I.Enemies.Add(new Enemy_B0001(GameConsts.FIELD_W + 50.0, GameConsts.FIELD_H / 2.0));
+				Game.I.Enemies.Add(new Enemy_Test0001(GameConsts.FIELD_W + 50.0, GameConsts.FIELD_H / 2.0));
 
 				for (int c = 0; c < 500; c++)
 					yield return true;
 
-				Game.I.Walls.Add(new Wall_B0004());
+				Game.I.Walls.Add(new Wall_Test0004());
 
-				Game.I.Enemies.Add(new Enemy_B0001(GameConsts.FIELD_W + 50.0, GameConsts.FIELD_H / 2.0));
+				Game.I.Enemies.Add(new Enemy_Test0001(GameConsts.FIELD_W + 50.0, GameConsts.FIELD_H / 2.0));
 
 				for (int c = 0; c < 500; c++)
 					yield return true;

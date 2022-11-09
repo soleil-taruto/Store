@@ -34,6 +34,11 @@ namespace Charlotte.Games.Scripts
 		/// -- 必要に応じて Game.I.Walls へ追加
 		/// -- 必要に応じて Game.I.Enemies へ追加
 		/// -- 必要に応じて 音楽の再生・停止 など
+		/// スクリプトの差し替え：
+		/// -- スクリプトの途中で Game.I.Script = scriptNew; として別のスクリプトに遷移して良い。
+		/// -- 但し、スクリプトを差し替えた後で yield return (1以上); を行うこと。
+		/// ---- スクリプトを差し替えて列挙が終了すると Game.Perform() 側でスクリプトが終了したと判定され、
+		/// ---- ゲームが終了してしまうため。
 		/// </summary>
 		/// <returns>列挙：このスクリプトを継続するか</returns>
 		protected abstract IEnumerable<bool> E_EachFrame();

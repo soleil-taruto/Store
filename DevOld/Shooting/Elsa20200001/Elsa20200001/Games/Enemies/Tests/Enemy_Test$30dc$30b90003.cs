@@ -10,10 +10,10 @@ namespace Charlotte.Games.Enemies.Tests
 	/// <summary>
 	/// テスト用_ボス敵
 	/// </summary>
-	public class Enemy_Bボス0002 : Enemy
+	public class Enemy_Testボス0003 : Enemy
 	{
-		public Enemy_Bボス0002()
-			: base(GameConsts.FIELD_W + 96.0, GameConsts.FIELD_H / 2.0, 1000, Kind_e.ボス)
+		public Enemy_Testボス0003()
+			: base(GameConsts.FIELD_W + 96.0, GameConsts.FIELD_H / 2.0, 1500, Kind_e.ボス)
 		{ }
 
 		protected override IEnumerable<bool> E_Draw()
@@ -26,7 +26,7 @@ namespace Charlotte.Games.Enemies.Tests
 				f_移動();
 				f_攻撃();
 
-				DDDraw.DrawCenter(Ground.I.Picture.Boss0002, this.X, this.Y);
+				DDDraw.DrawCenter(Ground.I.Picture.Boss0003, this.X, this.Y);
 
 				{
 					const double WH = 192.0;
@@ -102,22 +102,22 @@ namespace Charlotte.Games.Enemies.Tests
 				for (int c = 0; c < 5; c++)
 					yield return true;
 
-				Game.I.Enemies.Add(new Enemy_BTama0001(this.X - R, this.Y - R));
+				Game.I.Enemies.Add(new Enemy_TestTama0001(this.X - R, this.Y - R));
 
 				for (int c = 0; c < 5; c++)
 					yield return true;
 
-				Game.I.Enemies.Add(new Enemy_BTama0001(this.X - R, this.Y + R));
+				Game.I.Enemies.Add(new Enemy_TestTama0001(this.X - R, this.Y + R));
 
 				for (int c = 0; c < 5; c++)
 					yield return true;
 
-				Game.I.Enemies.Add(new Enemy_BTama0001(this.X + R, this.Y - R));
+				Game.I.Enemies.Add(new Enemy_TestTama0001(this.X + R, this.Y - R));
 
 				for (int c = 0; c < 5; c++)
 					yield return true;
 
-				Game.I.Enemies.Add(new Enemy_BTama0001(this.X + R, this.Y + R));
+				Game.I.Enemies.Add(new Enemy_TestTama0001(this.X + R, this.Y + R));
 			}
 		}
 	}
