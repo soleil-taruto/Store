@@ -13,7 +13,7 @@ namespace Charlotte.CSSolutions
 		/// <summary>
 		/// ここに含まれる単語は置き換えない。
 		/// </summary>
-		private static string RES_予約語リスト = @"
+		public static string RES_予約語リスト = @"
 
 ; ====
 ; C#の予約語
@@ -115,13 +115,348 @@ where
 yield
 when
 
+; ====
+; 名前空間 / クラス名 / 型名 / メンバー名
+; ====
+
+AccessControlType
+Action
+Add
+AddAccessRule
+AddrOfPinnedObject
+AggregateException
+AllDirectories
+Alloc
+Allow
+Anchor
+Any
+AppDomain
+Append
+Application
+ArgumentException
+Array
+Assembly
+AutoScaleDimensions
+AutoScaleMode
+AutoSize
+Begin
+BeginInvoke
+CheckState
+Checked
+CheckedChanged
+Clear
+Click
+ClientSize
+Close
+Color
+Comparison
+Compress
+CompressionMode
+ComputeHash
+Concat
+Console
+Contains
+ContainsKey
+Controls
+Convert
+CopyTo
+Count
+Create
+Current
+CurrentDomain
+DateTime
+Decompress
+Dequeue
+Dictionary
+Directory
+Dispose
+Distinct
+DllImport
+DropDownStyle
+DxLibDLL
+EnableVisualStyles
+Encoding
+EndsWith
+Enqueue
+Enter
+Enum
+Enumerable
+Environment
+Equals
+Error
+EventArgs
+Exception
+ExceptionObject
+Exit
+File
+FileAccess
+FileMode
+FileStream
+First
+FirstOrDefault
+Flags
+Font
+Form
+FormClosed
+FormClosedEventArgs
+FormClosing
+FormClosingEventArgs
+FormattingEnabled
+Free
+FullControl
+Func
+GC
+GCHandle
+GCHandleType
+GZipStream
+GetByteCount
+GetBytes
+GetCommandLineArgs
+GetEntryAssembly
+GetEnumerator
+GetEnvironmentVariable
+GetHashCode
+GetObject
+GetString
+GetValues
+Guid
+Handle
+HashSet
+IDisposable
+IEnumerable
+IEnumerator
+IEqualityComparer
+IList
+Icon
+Id
+IndexOf
+IntPtr
+IsNaN
+Items
+Key
+KeyValuePair
+Keys
+LayoutKind
+Length
+LinkDemand
+List
+Load
+Location
+Main
+Margin
+MaxDropDownItems
+MaxValue
+MaximizeBox
+MemoryStream
+Message
+MessageBox
+MessageBoxButtons
+MessageBoxIcon
+MethodInvoker
+Microsoft
+MinimizeBox
+MinimumSize
+MoveNext
+Msg
+Mutex
+MutexAccessRule
+MutexRights
+MutexSecurity
+Name
+NewGuid
+NotImplementedException
+Now
+OK
+Open
+Parse
+Path
+PerformLayout
+Pinned
+Position
+Predicate
+Process
+Queue
+RNGCryptoServiceProvider
+RandomNumberGenerator
+Read
+ReleaseMutex
+RemoveAll
+RemoveAt
+Replace
+ResumeLayout
+Reverse
+Run
+SHA512
+STAThread
+SearchOption
+SecurityAction
+SecurityIdentifier
+SecurityPermission
+SecurityPermissionFlag
+Seek
+SeekOrigin
+Select
+SelectedIndex
+SelectedIndexChanged
+Sequential
+SessionEnding
+SessionEndingEventArgs
+SessionEndingEventHandler
+SetCompatibleTextRenderingDefault
+Show
+ShowInTaskbar
+Shown
+Size
+SizeGripStyle
+Skip
+Split
+Start
+StartPosition
+StartsWith
+Stream
+StreamReader
+StreamWriter
+StringBuilder
+StructLayout
+Substring
+SuspendLayout
+SystemEvents
+TabIndex
+TabStop
+Take
+Text
+Thread
+ThreadException
+ThreadExceptionEventArgs
+ThreadExceptionEventHandler
+ToArray
+ToInt64
+ToList
+ToLower
+ToString
+ToUpper
+TopMost
+Trim
+UInt16
+UInt64
+UnhandledException
+UnhandledExceptionEventArgs
+UnhandledExceptionEventHandler
+UnmanagedCode
+UseVisualStyleBackColor
+Value
+Visible
+WParam
+WaitOne
+WellKnownSidType
+Where
+Win32
+WndProc
+WorldSid
+Write
+WriteByte
+WriteLine
+Zero
+
+; ここまで 2022/1/3 時点の設定である。(前身の Rico/ConfuerElsa を破棄した時点)
+; ワードの再検出や選り分けには時間が掛かるので、要不要に関わらずここまで固定として扱うことにした。@ 2022/3/5
+
+AllScreens
+BackColor
+Bounds
+Collect
+Cursor
+ForeColor
+FormBorderStyle
+FromArgb
+GetCurrentProcess
+GetEncoding
+IsMatch
+None
+Range
+Regex
+Remove
+Screen
+Sleep
+UTF8
+Values
+
+; ここまで 2022/3/5 時点の設定である。
+; 上と同じ理由で、要不要に関わらずここまで固定として扱うことにした。@ 2022/3/5
+
+
+
+; ★★★ 新しい予約語をここへ追加する。
+
+; 以下のワードは置き換え禁止対象外とする。
+; 理由：(多用する && 解読に貢献しそう)なので必ず置き換えしたい。
+; 難読化抑止コメントで回避すること。
+; ---
+; X Y Z Left Top Width Height Right Bottom
+; Year Month Day Hour Minute Second
+
+; アンマネージドコードのメソッド名も難読化抑止コメントで回避すること。
+; 理由：誤って置き換えてしまってもビルドが通ってしまう。バグが潜在化する危険性
+
+";
+
+		#endregion
+
+		#region 予約語クラス名リスト
+
+		/// <summary>
+		/// ここに含まれる単語は置き換えない。
+		/// (この単語).(後続の単語).(後続の単語).(後続の単語) ... の「後続の単語」についても置き換えない。
+		/// 名前空間も差し支えないので含める。
+		/// -- System
+		/// </summary>
+		public static string RES_予約語クラス名リスト = @"
+
+; 名前空間
+
+Charlotte
+DxLibDLL
+System
+
+; 型名
+
+sbyte
+byte
+short
+ushort
+int
+uint
+long
+ulong
+char
+float
+double
+bool
+decimal
+string
+
+; 静的メンバーを多用するクラス名
+
+Array
+Console
+Directory
+DX
+File
+Math
+Path
+
+; ★★★ 新しい予約語クラス名をここへ追加する。
+; 注意：ここへ追加したワードは、
+; 同名のアプリ固有のワードとそのメンバーも置き換え禁止になるため影響が大きい。
+; 積極的な追加は避けること。
+
 ";
 
 		#endregion
 
 		#region ランダムな単語リスト
 
-		private static string RES_ランダムな単語リスト = @"
+		public static string RES_ランダムな単語リスト = @"
 
 ; ====
 ; 太陽系の天体
@@ -1252,7 +1587,7 @@ Thulite
 
 		#region 英単語リスト
 
-		private static string RES_英単語リスト = @"
+		public static string RES_英単語リスト = @"
 
 ; https://progeigo.org/learning/essential-words-600-plus/
 
@@ -2206,24 +2541,29 @@ zip					【動詞】
 		// ====
 		// ====
 
-		public static string[] 予約語リスト = SCommon.TextToLines(RES_予約語リスト)
+		public static string[] 予約語と予約語クラス名のリスト = SCommon.TextToLines(RES_予約語リスト + CSConsts.CRLF + RES_予約語クラス名リスト)
 			.Select(v => v.Trim())
-			.Where(v => v != "" && v[0] != ';') // 空行とコメント行を除去
+			.Where(v => v != "" && v[0] != ';') // ? 空行とコメント行を除去
+			.ToArray();
+
+		public static string[] 予約語クラス名リスト = SCommon.TextToLines(CSResources.RES_予約語クラス名リスト)
+			.Select(v => v.Trim())
+			.Where(v => v != "" && v[0] != ';') // ? 空行とコメント行を除去
 			.ToArray();
 
 		public static string[] ランダムな単語リスト = SCommon.TextToLines(RES_ランダムな単語リスト)
 			.Select(v => v.Trim())
-			.Where(v => v != "" && v[0] != ';') // 空行とコメント行を除去
-			.DistinctOrderBy(SCommon.Comp)
+			.Where(v => v != "" && v[0] != ';') // ? 空行とコメント行を除去
+			.Distinct()
 			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
 			.ToArray();
 
 		public static string[] 英単語リスト = SCommon.TextToLines(RES_英単語リスト)
 			.Select(v => v.Trim())
-			.Where(v => v != "" && v[0] != ';') // 空行とコメント行を除去
+			.Where(v => v != "" && v[0] != ';') // ? 空行とコメント行を除去
 			.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
 			.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
-			.DistinctOrderBy(SCommon.Comp)
+			.Distinct()
 			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
 			.ToArray();
 
@@ -2236,13 +2576,13 @@ zip					【動詞】
 
 		private static string[] Get英単語リスト(string 品詞)
 		{
-			return SCommon.TextToLines(RES_英単語リスト)
+			return SCommon.TextToLines(CSResources.RES_英単語リスト)
 				.Select(v => v.Trim())
-				.Where(v => v != "" && v[0] != ';') // 空行とコメント行を除去
+				.Where(v => v != "" && v[0] != ';') // ? 空行とコメント行を除去
 				.Where(v => v.Contains(品詞)) // 品詞の絞り込み
 				.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
 				.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
-				.DistinctOrderBy(SCommon.Comp)
+				.Distinct()
 				//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
 				.ToArray();
 		}

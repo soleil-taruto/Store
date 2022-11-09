@@ -71,20 +71,19 @@
     <Compile Include="CSSolutions\CSConsts.cs" />
     <Compile Include="CSSolutions\CSFile.cs" />
     <Compile Include="CSSolutions\CSProjectFile.cs" />
-    <Compile Include="CSSolutions\CSRenameEx.cs" />
     <Compile Include="CSSolutions\CSRenameVarsFilter.cs" />
     <Compile Include="CSSolutions\CSResources.cs" />
     <Compile Include="CSSolutions\CSSolution.cs" />
     <Compile Include="ConfuserForElsa.cs" />
+    <Compile Include="CSSolutions\CSSpecialStrings.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Test0001.cs" />
     <Compile Include="Tests\Test0002.cs" />
+    <Compile Include="Utilities\StringMultiReplace.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CSRenamers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

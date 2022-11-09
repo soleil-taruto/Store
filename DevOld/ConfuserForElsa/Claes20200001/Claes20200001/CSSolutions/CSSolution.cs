@@ -124,7 +124,8 @@ namespace Charlotte.CSSolutions
 			// 念のためソートしておく -- 不幸な並びになった時の何らかの偏りを懸念
 			Array.Sort(csFiles, (a, b) => SCommon.CompIgnoreCase(a.GetFile(), b.GetFile()));
 
-			string beforeWarpableMemberLine = "// " + CSCommon.CreateNewIdent() + " -- beforeWarpableMemberLine";
+			string beforeWarpableMemberLine = "// " + CSCommon.CreateNewIdent() + " -- BWML";
+			string dummyMyProjectRootNamespace = "9_" + CSCommon.CreateNewIdent() + "_DMPRN"; // 置き換えられないように数字で始める。
 
 			foreach (CSFile csFile in csFiles)
 			{
@@ -144,7 +145,8 @@ namespace Charlotte.CSSolutions
 
 				csFile.WarpLiteralStrings(
 					beforeWarpableMemberLine,
-					csFiles.Where(v => v != csFile && !v.GetClassOrStructName().Contains('<')).ToArray() // 自分自身とジェネリック型を除外
+					csFiles.Where(v => v != csFile && !v.GetClassOrStructName().Contains('<')).ToArray(), // 自分自身とジェネリック型を除外
+					dummyMyProjectRootNamespace
 					);
 			}
 			foreach (CSFile csFile in csFiles)
@@ -152,15 +154,16 @@ namespace Charlotte.CSSolutions
 				Console.WriteLine("file.3: " + csFile.GetFile());
 
 				csFile.AddDummyMember();
+				csFile.RenameEx(rvf.Filter, rvf.Is予約語クラス名);
 				csFile.ShuffleMemberOrder();
-			}
 
-			new CSRenameEx(rvf, csFiles, () =>
-			{
-				this.Rebuild();
-				return File.Exists(this.OutputExeFile);
-			})
-			.RenameEx();
+				// ダミー名前空間の解決
+				{
+					string text = File.ReadAllText(csFile.GetFile(), Encoding.UTF8);
+					text = text.Replace(dummyMyProjectRootNamespace, CSConsts.MY_PROJECT_ROOT_NAMESPACE);
+					File.WriteAllText(csFile.GetFile(), text, Encoding.UTF8);
+				}
+			}
 
 			CSProjectFile projFile = new CSProjectFile(this.ProjectFile);
 

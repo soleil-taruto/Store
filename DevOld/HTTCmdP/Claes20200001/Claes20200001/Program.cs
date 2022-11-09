@@ -31,7 +31,7 @@ namespace Charlotte
 			{
 				Main4(ar);
 			}
-			Common.OpenOutputDirIfCreated();
+			SCommon.OpenOutputDirIfCreated();
 		}
 
 		private void Main3()
@@ -58,7 +58,7 @@ namespace Charlotte
 
 			// --
 
-			//Common.Pause();
+			//SCommon.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -85,26 +85,26 @@ namespace Charlotte
 			{
 				HTTPServer hs = new HTTPServer()
 				{
-					//PortNo = 80,
-					//Backlog = 300,
-					//ConnectMax = 100,
+					PortNo = 80,
+					Backlog = 300,
+					ConnectMax = 100,
 					Interlude = () => !evStop.WaitOne(0),
 					HTTPConnected = P_Connected,
 				};
 
-				//SockChannel.ThreadTimeoutMillis = 100;
+				SockChannel.ThreadTimeoutMillis = 100;
 
-				//HTTPServer.KeepAliveTimeoutMillis = 5000;
+				HTTPServer.KeepAliveTimeoutMillis = 5000;
 
 				HTTPServerChannel.RequestTimeoutMillis = 10000; // 10 sec
-				//HTTPServerChannel.ResponseTimeoutMillis = -1;
-				//HTTPServerChannel.FirstLineTimeoutMillis = 2000;
+				HTTPServerChannel.ResponseTimeoutMillis = -1;
+				HTTPServerChannel.FirstLineTimeoutMillis = 2000;
 				HTTPServerChannel.IdleTimeoutMillis = 600000; // 10 min
-				//HTTPServerChannel.BodySizeMax = 300000000; // 300 MB
+				HTTPServerChannel.BodySizeMax = 300000000; // 300 MB
 
-				//SockCommon.TimeWaitMonitor.CTR_ROT_SEC = 60;
-				//SockCommon.TimeWaitMonitor.COUNTER_NUM = 5;
-				//SockCommon.TimeWaitMonitor.COUNT_LIMIT = 10000;
+				SockCommon.TimeWaitMonitor.CTR_ROT_SEC = 60;
+				SockCommon.TimeWaitMonitor.COUNTER_NUM = 5;
+				SockCommon.TimeWaitMonitor.COUNT_LIMIT = 10000;
 
 				// サーバーの設定ここまで
 
@@ -154,6 +154,12 @@ namespace Charlotte
 								if (!File.Exists(this.Page404File))
 									throw new Exception("Page404File is not found");
 
+								continue;
+							}
+							if (ar.ArgIs("/B"))
+							{
+								Common.BatchServiceCredentials = ar.NextArg();
+								ProcMain.WriteLog("BatchServiceCredentials: " + Common.BatchServiceCredentials);
 								continue;
 							}
 							break;

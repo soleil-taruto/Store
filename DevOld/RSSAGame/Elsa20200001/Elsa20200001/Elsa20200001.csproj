@@ -70,6 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
+    <Compile Include="Commons\CsvFileReader.cs" />
+    <Compile Include="Commons\CsvFileWriter.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="GameCommons\DDHash.cs" />
     <Compile Include="GameCommons\DDHashedData.cs" />
@@ -98,7 +100,6 @@
     <Compile Include="Games\Enemies\アイテムs\Enemy_Item_マグネットエアー.cs" />
     <Compile Include="Games\GameCommon.cs" />
     <Compile Include="Commons\ArgsReader.cs" />
-    <Compile Include="Commons\CsvFileReader.cs" />
     <Compile Include="Commons\D2Point.cs" />
     <Compile Include="Commons\D2Size.cs" />
     <Compile Include="Commons\D3Color.cs" />

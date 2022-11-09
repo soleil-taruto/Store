@@ -9,26 +9,32 @@ namespace Charlotte.CSSolutions
 {
 	public class CSRenameVarsFilter
 	{
-		private Dictionary<string, string> OrigName2NameNew = SCommon.CreateDictionary<string>();
-		private Dictionary<string, string> NameNew2OrigName = SCommon.CreateDictionary<string>();
+		private Dictionary<string, string> 変換テーブル = SCommon.CreateDictionary<string>();
 
-		public string GetNameNew(string name)
+		public string Filter(string name)
 		{
+			if (
+				name == "" ||
+				SCommon.DECIMAL.Contains(name[0]) ||
+				CSResources.予約語と予約語クラス名のリスト.Contains(name)
+				)
+				return name;
+
 			string nameNew;
 
-			if (this.OrigName2NameNew.ContainsKey(name))
+			if (this.変換テーブル.ContainsKey(name))
 			{
-				nameNew = this.OrigName2NameNew[name];
+				nameNew = this.変換テーブル[name];
 			}
 			else
 			{
 				nameNew = this.CreateNameNew();
-
-				this.OrigName2NameNew.Add(name, nameNew);
-				this.NameNew2OrigName.Add(nameNew, name);
+				this.変換テーブル.Add(name, nameNew);
 			}
 			return nameNew;
 		}
+
+		private Dictionary<string, object> CNN_Names = SCommon.CreateDictionary<object>();
 
 		public string CreateNameNew()
 		{
@@ -38,18 +44,14 @@ namespace Charlotte.CSSolutions
 			do
 			{
 				if (1000 < ++countTry)
-					throw new Exception("とても運が悪いか、新しい名前をほぼ使い果たしました。");
+					throw new Exception("とても運が悪いか、新しい名前をほぼ生成し尽くしました。");
 
 				nameNew = this.TryCreateNameNew();
 			}
-			while (this.NameNew2OrigName.ContainsKey(nameNew) || CSResources.予約語リスト.Contains(nameNew));
+			while (this.CNN_Names.ContainsKey(nameNew) || CSResources.予約語と予約語クラス名のリスト.Contains(nameNew));
 
+			this.CNN_Names.Add(nameNew, null);
 			return nameNew;
-		}
-
-		public IEnumerable<KeyValuePair<string, string>> Get変換テーブル()
-		{
-			return this.OrigName2NameNew;
 		}
 
 		/// <summary>
@@ -108,6 +110,16 @@ namespace Charlotte.CSSolutions
 				CSResources.ランダムな単語リスト,
 				CSResources.英単語リスト_名詞,
 			};
+		}
+
+		public bool Is予約語クラス名(string name)
+		{
+			return CSResources.予約語クラス名リスト.Contains(name);
+		}
+
+		public IEnumerable<KeyValuePair<string, string>> Get変換テーブル()
+		{
+			return this.変換テーブル;
 		}
 	}
 }

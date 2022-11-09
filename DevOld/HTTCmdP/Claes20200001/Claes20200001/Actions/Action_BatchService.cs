@@ -15,7 +15,7 @@ namespace Charlotte.Actions
 		/// 実行するバッチファイル
 		/// 読み込んだら勝手に削除することに注意！
 		/// </summary>
-		private const string BATCH_FILE = @"C:\temp\HTTCmdP_BatchService_1843.bat";
+		private const string BATCH_FILE = @"C:\temp\HTTCmd-P_BatchService_Batch.bat";
 
 		/// <summary>
 		/// バッチファイル実行時の作業ディレクトリ

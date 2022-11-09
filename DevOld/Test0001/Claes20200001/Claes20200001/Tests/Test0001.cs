@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using System.IO;
 using Charlotte.Commons;
-using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
@@ -13,149 +11,141 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			BitList bits = new BitList();
+			Console.WriteLine(((int)'\0').ToString()); // 0
 
-			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
+			Console.WriteLine(((int)'\b').ToString()); // 8
+			Console.WriteLine(((int)'\t').ToString()); // 9
+			Console.WriteLine(((int)'\n').ToString()); // 10
+			Console.WriteLine(((int)'\v').ToString()); // 11
+			Console.WriteLine(((int)'\f').ToString()); // 12
+			Console.WriteLine(((int)'\r').ToString()); // 13
 
-			bits[5] = true;
-			bits[10] = true;
-			bits[15] = true;
-			bits[20] = true;
-			bits[25] = true;
-			bits[30] = true;
-			bits[35] = true;
-
-			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
-
-			bits = new BitList();
-			bits[31] = true;
-			bits[32] = true;
-
-			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
-
-			bits[32] = false;
-
-			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
-
-			bits[31] = false;
-
-			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
-
-			bits[0] = true;
-			bits[1] = true;
-			bits[2] = true;
-			bits[3] = true;
-			bits[4] = true;
-
-			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
-
-			bits[1] = false;
-			bits[3] = false;
-
-			Console.WriteLine("[" + new string(bits.Iterate().Select(bit => bit ? '1' : '0').ToArray()) + "]");
+			Console.WriteLine(((int)'"').ToString()); // 34
+			Console.WriteLine(((int)'\'').ToString()); // 39
+			Console.WriteLine(((int)'\\').ToString()); // 92
+			Console.WriteLine(((int)'`').ToString()); // 96
 		}
 
 		public void Test02()
 		{
-			Canvas canvas = new Canvas(1000, 1000);
+			for (int testcnt = 0; testcnt < 100; testcnt++)
+			{
+				double value = (double)SCommon.CRandom.GetInt(SCommon.IMAX) / SCommon.IMAX;
 
-			canvas.Fill(new I4Color(255, 255, 160, 255));
-			canvas.FillRect(new I4Color(255, 255, 128, 255), new I4Rect(250, 250, 500, 500));
-			canvas.DrawString("CD", 1000, "Impact", FontStyle.Regular, new I3Color(0, 0, 255), new I4Rect(250, 250, 500, 500), 10);
+				Console.WriteLine(value.ToString("F20"));
+			}
+			for (int testcnt = 0; testcnt < 100; testcnt++)
+			{
+				double value = (double)SCommon.CRandom.GetLong(SCommon.IMAX_64) / SCommon.IMAX_64;
 
-			canvas.Save(Common.NextOutputPath() + ".png");
+				Console.WriteLine(value.ToString("F20"));
+			}
+			for (int testcnt = 0; testcnt < 100; testcnt++)
+			{
+				double value = (double)(SCommon.CRandom.GetULong() & ((1UL << 52) - 1)) / (1UL << 52);
+
+				Console.WriteLine(value.ToString("F20"));
+			}
+
+			// ----
+			// ----
+			// ----
+
+			{
+				double value = (double)((1UL << 52) - 1);
+
+				Console.WriteLine(value.ToString("F20")); // 4503599627370500.00000000000000000000
+
+				value += 1.0;
+
+				Console.WriteLine(value.ToString("F20")); // 4503599627370500.00000000000000000000
+			}
+
+			// ----
+			// ----
+			// ----
+
+			for (int testcnt = 1; testcnt < 64; testcnt++)
+			{
+				double value = 1.0 + 1.0 / (1UL << testcnt);
+
+				Console.WriteLine(testcnt.ToString("D2") + " ==> " + value.ToString("F20"));
+			}
+
+			Test02_a(0);
+			Test02_a(1);
+			Test02_a(2);
+			Test02_a(3);
+
+			Test02_a(uint.MaxValue - 3);
+			Test02_a(uint.MaxValue - 2);
+			Test02_a(uint.MaxValue - 1);
+			Test02_a(uint.MaxValue);
+
+			// ----
+
+			Test02_b(0);
+			Test02_b(1);
+			Test02_b(2);
+			Test02_b(3);
+
+			Test02_b(SCommon.IMAX - 3);
+			Test02_b(SCommon.IMAX - 2);
+			Test02_b(SCommon.IMAX - 1);
+			Test02_b(SCommon.IMAX);
+		}
+
+		private void Test02_a(uint numer)
+		{
+			double value = (double)numer / uint.MaxValue;
+
+			Console.WriteLine(value.ToString("F20"));
+		}
+
+		private void Test02_b(int numer)
+		{
+			double value = (double)numer / SCommon.IMAX;
+
+			Console.WriteLine(value.ToString("F20"));
 		}
 
 		public void Test03()
 		{
-			Test03_a(@"
-
-{
-	Integer: 123,
-	Float: -123.456,
-	String: ""ABC"",
-	Boolean: true,
-	Map: {
-		aaa: 1,
-		bbb: 2,
-		ccc: 3
-	},
-	Array: [ 1, 2, 3 ]
-}
-
-");
-
-			Test03_a("[[[[[[[[[[ 123 ]]]]]]]]]]");
-			Test03_a("{ a: { a: { a: { a: { a: { a: { a: { a: { a: { a: 123 }}}}}}}}}}");
-		}
-
-		private void Test03_a(string json)
-		{
-			using (WorkingDir wd = new WorkingDir())
+			for (int c = 0; c < 100; c++)
 			{
-				string file = wd.MakePath();
-				File.WriteAllText(file, json, Encoding.UTF8);
-
-				JsonNode root = JsonNode.LoadFromFile(file);
-
-				root.WriteToFile(Common.NextOutputPath() + ".json");
+				using (WorkingDir wd = new WorkingDir())
+				{
+					for (int d = 0; d < 100; d++)
+					{
+						Console.WriteLine(wd.MakePath());
+					}
+				}
 			}
 		}
 
 		public void Test04()
 		{
-			Test04_a(@"
-
-<?xml version=""1.0"" encoding=""UTF-8"" ?>
-<root>
-	<Integer>123</Integer>
-	<Float>-123.456</Float>
-	<String>ABC</String>
-	<Boolean>true</Boolean>
-	<Map>
-		<Value>1</Value>
-		<Value>2</Value>
-		<Value>3</Value>
-	</Map>
-	<Array><Element>1</Element><Element>2</Element><Element>3</Element></Array>
-</root>
-
-".TrimStart());
-
-			Test04_a(@"
-
-<?xml version=""1.0"" encoding=""UTF-8"" ?>
-<root>
-	<Integer Value=""123""></Integer>
-	<Float Value=""-123.456""></Float>
-	<String Value=""ABC""></String>
-	<Boolean Value=""true""></Boolean>
-	<Map>
-		<Value Value=""1""></Value>
-		<Value Value=""2""></Value>
-		<Value Value=""3""></Value>
-	</Map>
-	<Array><Element Value=""1""></Element><Element Value=""2""></Element><Element Value=""3""></Element></Array>
-</root>
-
-".TrimStart());
-
-			Test04_a("<a/>");
-			Test04_a("<a></a>");
-			Test04_a("<a b=\"c\"/>");
-			Test04_a("<a b=\"c\"></a>");
-		}
-
-		private void Test04_a(string xml)
-		{
-			using (WorkingDir wd = new WorkingDir())
+			for (int testcnt = 0; testcnt < 1000; testcnt++)
 			{
-				string file = wd.MakePath();
-				File.WriteAllText(file, xml, Encoding.UTF8);
+				Console.WriteLine(SCommon.CRandom.GetRange(1000, 9999));
+			}
+			for (int testcnt = 0; testcnt < 1000; testcnt++)
+			{
+				Console.WriteLine(SCommon.CRandom.GetLong(9000) + 1000);
+			}
 
-				XMLNode root = XMLNode.LoadFromFile(file);
+			// ----
+			// ----
+			// ----
 
-				root.WriteToFile(Common.NextOutputPath() + ".xml");
+			try
+			{
+				SCommon.CRandom.GetInt(0); // 例外
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				Console.WriteLine("想定された例外");
 			}
 		}
 	}

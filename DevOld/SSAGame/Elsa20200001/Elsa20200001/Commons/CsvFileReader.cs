@@ -12,18 +12,17 @@ namespace Charlotte.Commons
 		public const char DELIMITER_TAB = '\t';
 
 		private char Delimiter = DELIMITER_COMMA;
-
 		private StreamReader Reader;
 
 		public CsvFileReader(string file)
 			: this(file, SCommon.ENCODING_SJIS)
 		{ }
 
-		public CsvFileReader(string file, Encoding encoding) // 難読化のため、デフォルト引数にしない。
+		public CsvFileReader(string file, Encoding encoding)
 			: this(file, encoding, DELIMITER_COMMA)
 		{ }
 
-		public CsvFileReader(string file, Encoding encoding, char delimiter)
+		public CsvFileReader(string file, Encoding encoding, char delimiter) // 難読化のため、デフォルト引数をオーバーロードの引数に指定する。
 			: this(new StreamReader(file, encoding))
 		{
 			this.Delimiter = delimiter;

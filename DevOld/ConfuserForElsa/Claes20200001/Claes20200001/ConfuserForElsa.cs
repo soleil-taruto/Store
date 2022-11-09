@@ -85,7 +85,10 @@ namespace Charlotte
 			{
 				SCommon.CreateDir(masterSol.GetBinDir());
 
-				throw new Exception("ビルドに失敗しました。");
+				MessageBox.Show(@"ビルドに失敗しました。
+難読化してはいけないキーワードの登録が不足しているか、
+難読化してはいけない行指定が不足している可能性があります。
+作業フォルダ """ + workSolutionDir_mid + @""" の内容を確認して下さい。", "ビルド失敗", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			}
 		}
 	}
