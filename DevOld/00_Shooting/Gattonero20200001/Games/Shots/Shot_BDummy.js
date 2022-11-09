@@ -1,14 +1,14 @@
 /*
-	自弾 - BDummy
-
-	★サンプルとしてキープ
+	自弾 - BDummy ★サンプル
 */
+
+var<int> ShotKind_BDummy = @(AUTO);
 
 function <Shot_t> CreateShot_BDummy(<doule> x, <double> y, <double> xAdd, <double> yAdd)
 {
 	var ret =
 	{
-		Kind: Shot_Kind_e_BDummy,
+		Kind: ShotKind_BDummy,
 		X: x,
 		Y: y,
 		AttackPoint: 1,
@@ -33,11 +33,7 @@ function* <generatorForTask> @@_Draw(<Shot_t> shot)
 		shot.X += shot.XAdd;
 		shot.Y += shot.YAdd;
 
-		if (IsOut(
-			CreateD2Point(shot.X, shot.Y),
-			CreateD4Rect(FIELD_L, FIELD_T, FIELD_W, FIELD_H),
-			0.0
-			))
+		if (IsOutOfScreen(CreateD2Point(shot.X, shot.Y), 0.0))
 		{
 			break;
 		}

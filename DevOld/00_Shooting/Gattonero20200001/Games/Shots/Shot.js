@@ -6,7 +6,7 @@
 
 /// Shot_t
 {
-	<Shot_Kind_e> Kind // ©’e‚Ìí—Ş
+	<int> Kind // ©’e‚Ìí—Ş
 
 	<double> X // X-ˆÊ’u
 	<double> Y // Y-ˆÊ’u
@@ -39,7 +39,7 @@
 */
 function <boolean> DrawShot(<Shot_t> shot) // ret: ? ¶‘¶
 {
-	return shot.Draw.next().value;
+	return NextVal(shot.Draw);
 }
 
 /*

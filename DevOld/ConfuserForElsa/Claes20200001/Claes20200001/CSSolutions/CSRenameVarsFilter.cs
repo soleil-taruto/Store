@@ -79,6 +79,16 @@ namespace Charlotte.CSSolutions
 		private string[] ランダムな単語リスト = SCommon.TextToLines(CSResources.ランダムな単語リスト)
 			.Select(v => v.Trim())
 			.Where(v => v != "" && v[0] != ';') // ? 空行ではない && コメント行ではない
+			.Distinct()
+			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
+			.ToArray();
+
+		private string[] 英単語リスト = SCommon.TextToLines(CSResources.英単語リスト)
+			.Select(v => v.Trim())
+			.Where(v => v != "" && v[0] != ';') // ? 空行ではない && コメント行ではない
+			.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
+			.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
+			.Distinct()
 			//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
 			.ToArray();
 
@@ -97,6 +107,8 @@ namespace Charlotte.CSSolutions
 				.Where(v => v.Contains(品詞)) // 品詞の絞り込み
 				.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
 				.Select(v => v.Substring(0, 1).ToUpper() + v.Substring(1).ToLower()) // 先頭の文字だけ大文字にする。-- 全て小文字のはずなので .ToLower() は不要だけど念の為
+				.Distinct()
+				//.Select(v => { if (!Regex.IsMatch(v, "^[A-Z][a-z]*$")) throw new Exception(v); return v; }) // チェック
 				.ToArray();
 		}
 
@@ -108,17 +120,33 @@ namespace Charlotte.CSSolutions
 		/// <returns>新しい識別子</returns>
 		private string TryCreateNameNew()
 		{
-#if true
+			// Test0002.Test01 より、頻度の高い範囲 @ 2022.2.27
+			//
+			const int NAME_LEN_MIN = 25;
+			const int NAME_LEN_MAX = 32;
+
+			for (int c = 0; c < 1000; c++) // 十分なトライ回数 -- rough limit
+			{
+				// 似非英語名
+				string name =
+					SCommon.CRandom.ChooseOne(this.英単語リスト_動詞) +
+					SCommon.CRandom.ChooseOne(this.英単語リスト_形容詞) +
+					SCommon.CRandom.ChooseOne(this.ランダムな単語リスト) +
+					SCommon.CRandom.ChooseOne(this.英単語リスト_名詞);
+
+				if (NAME_LEN_MIN <= name.Length && name.Length <= NAME_LEN_MAX)
+					return name;
+			}
+			throw new Exception("非常に運が悪いか、しきい値に問題があります。");
+		}
+
+		public string ForTest_Get似非英語名()
+		{
 			return
 				SCommon.CRandom.ChooseOne(this.英単語リスト_動詞) +
 				SCommon.CRandom.ChooseOne(this.英単語リスト_形容詞) +
 				SCommon.CRandom.ChooseOne(this.ランダムな単語リスト) +
 				SCommon.CRandom.ChooseOne(this.英単語リスト_名詞);
-#else
-			return string.Join("", Enumerable.Range(1, SCommon.CRandom.GetRange(3, 5))
-				.Select(v => SCommon.CRandom.ChooseOne(this.ランダムな単語リスト))
-				.ToArray());
-#endif
 		}
 
 		private string[] 予約語クラス名リスト = SCommon.TextToLines(CSResources.予約語クラス名リスト)

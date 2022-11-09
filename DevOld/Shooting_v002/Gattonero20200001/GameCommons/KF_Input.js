@@ -2,7 +2,7 @@
 	入力
 
 	ファイル名 Input.js -> KF_Input.js の理由：
-	本ソースの @@_EACH() を Gamepad.js, Keyboard.js の *_EACH より後に実行する必要がある。
+	本ソースの *_EACH() を Gamepad.js, Keyboard.js の *_EACH より後に実行する必要がある。
 */
 
 /*
@@ -39,7 +39,7 @@ function* <int[]> @@_Counts()
 	yield @@_Count_B;
 }
 
-function <void> @@_EACH()
+function <void> @(UNQN)_EACH()
 {
 	@@_Count_2 = @@_Check(@@_Count_2, PadInputIndex_2, [ 40, 74,  98 ]); // カーソル下 , J , テンキー2
 	@@_Count_4 = @@_Check(@@_Count_4, PadInputIndex_4, [ 37, 72, 100 ]); // カーソル左 , H , テンキー4

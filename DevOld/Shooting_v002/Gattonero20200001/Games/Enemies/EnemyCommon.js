@@ -22,7 +22,7 @@ function <void> EnemyCommon_Dead(<Enemy_t> enemy)
 
 function <void> EnemyCommon_Draw(<Enemy_t> enemy)
 {
-	var<Image> picture;
+	var<Picture_t> picture;
 
 	switch (enemy.Kind)
 	{

@@ -14,6 +14,7 @@ namespace Charlotte.WebServices
 		public int ID;
 		public Func<int> Connected;
 		public HTTPBodyOutputStream BodyOutputStream;
+		public SockServer Parent;
 
 		// <---- prm
 
@@ -56,7 +57,7 @@ namespace Charlotte.WebServices
 			}
 			else if (this.ThreadTimeoutTime.Value < DateTime.Now)
 			{
-				SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "スレッド占用タイムアウト");
+				//SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "スレッド占用タイムアウト"); // 頻出するので抑止
 
 				this.ThreadTimeoutTime = null;
 				yield return -1;
@@ -135,9 +136,16 @@ namespace Charlotte.WebServices
 
 			while (1 <= size)
 			{
+				int vsDenom = this.Parent.ChannelCount;
+				vsDenom = Math.Max(1, vsDenom); // 2bs
+
+				int vSize = 4000000;
+				vSize /= vsDenom;
+				vSize = Math.Min(vSize, size);
+
 				int? sentSize = null;
 
-				foreach (int relay in this.TrySend(data, offset, Math.Min(4 * 1024 * 1024, size), ret => sentSize = ret))
+				foreach (int relay in this.TrySend(data, offset, vSize, ret => sentSize = ret))
 					yield return relay;
 
 				size -= sentSize.Value;

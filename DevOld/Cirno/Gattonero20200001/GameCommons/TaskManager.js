@@ -26,6 +26,11 @@ function <void> AddTask(<TaskManager_t> info, <generatorForTask> task)
 	info.Tasks.push(task);
 }
 
+function <int> GetTaskCount(<TaskManager_t> info)
+{
+	return info.Tasks.length;
+}
+
 function <void> ClearAllTask(<TaskManager_t> info)
 {
 	info.Tasks = [];

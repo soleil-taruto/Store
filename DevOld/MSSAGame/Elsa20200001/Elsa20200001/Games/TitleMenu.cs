@@ -197,7 +197,7 @@ namespace Charlotte.Games
 			{
 				selectIndex = simpleMenu.Perform(18, 18, 32, 24, "ロード", items, selectIndex);
 
-				if (selectIndex < Consts.SAVE_DATA_SLOT_NUM)
+				if (selectIndex < GameConsts.SAVE_DATA_SLOT_NUM)
 				{
 					if (Ground.I.SaveDataSlots[selectIndex].GameStatus != null)
 					{

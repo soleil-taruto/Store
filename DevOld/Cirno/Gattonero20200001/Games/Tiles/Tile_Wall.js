@@ -4,7 +4,7 @@
 
 var<int> TileKind_Wall = @(AUTO);
 
-function <Tile_t> CreateTile_Wall(<Image> picture)
+function <Tile_t> CreateTile_Wall(<Picture_t> picture)
 {
 	var ret =
 	{

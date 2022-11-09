@@ -61,12 +61,12 @@ namespace Charlotte.GameCommons
 					byte[] fileData = this.Func_GetFileData();
 					int handle = -1;
 
-#if false // SetLoop*SamplePosSoundMem が正常に動作しない。@ 2021.4.30
+#if false
 					using (WorkingDir wd = new WorkingDir())
 					{
 						string file = wd.MakePath();
 						File.WriteAllBytes(file, fileData);
-						handle = DX.LoadSoundMem(file);
+						handle = DX.LoadSoundMem(file); // SetLoop*SamplePosSoundMem が正常に動作しない。@ 2021.4.30
 					}
 #else
 					DDSystem.PinOn(fileData, p => handle = DX.LoadSoundMemByMemImage(p, fileData.Length)); // DxLibDotNet3_22c で正常に動作しない。@ 2021.4.18

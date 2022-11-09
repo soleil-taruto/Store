@@ -37,6 +37,8 @@ namespace Charlotte.JSConfusers
 			this.RemoveComments_EscapeLiteralStrings();
 			this.SolveLiteralStrings();
 			this.RenameEx();
+			this.ShuffleFunctions();
+			this.FormatSource();
 		}
 
 		private void RemoveComments_EscapeLiteralStrings()
@@ -173,9 +175,126 @@ namespace Charlotte.JSConfusers
 			this.JSLines = SCommon.TextToLines(dest.ToString()).ToList();
 		}
 
+		/// <summary>
+		/// リテラル文字列を判読しにくくする。
+		/// </summary>
 		private void SolveLiteralStrings()
 		{
-			// TODO
+			List<string> extendLines = new List<string>();
+
+			for (int index = 0; index < this.JSLines.Count; index++)
+			{
+				string line = this.JSLines[index];
+
+				for (; ; )
+				{
+					int c = line.IndexOf('"');
+
+					if (c == -1)
+						break;
+
+					int c2 = line.IndexOf('"', c + 1);
+
+					if (c2 == -1)
+						throw new Exception("文字列が閉じられていない。");
+
+					c2++;
+					string varName = Common.CreateRandIdent();
+					string extendSource = @"
+
+var $varName;
+
+function $varName_01()
+{
+	if (!$varName)
+	{
+		$varName = $varName_GetString();
+	}
+	return $varName;
+}
+
+function $varName_GetString()
+{
+	var $varName_Str = """";
+    
+	for (var $varName_StrPart of $varName_E_GetStrParts())
+	{
+		$varName_Str += $varName_StrPart;
+	}
+	return $varName_Str;
+}
+
+function* $varName_E_GetStrParts()
+{
+	for (var $varName_Chr of $varName_E_GetChars())
+	{
+		if ($varName_Chr % 65537 != 0)
+		{
+			yield String.fromCodePoint($varName_Chr % 65537 - 1);
+		}
+	}
+}
+
+function* $varName_E_GetChars()
+{
+
+$chrList
+
+}
+
+";
+
+					extendSource = extendSource.Replace(
+						"$chrList",
+						SLS_GetCharList(line.Substring(c + 1, (c2 - c) - 2))
+						);
+					extendSource = extendSource.Replace("$varName", varName);
+					extendLines.AddRange(
+						SCommon.TextToLines(extendSource).Where(v => v != "")
+						);
+
+					line = line.Substring(0, c) + varName + "_01()" + line.Substring(c2);
+				}
+				this.JSLines[index] = line;
+			}
+			this.JSLines.AddRange(extendLines);
+		}
+
+		private static string SLS_GetCharList(string source)
+		{
+			return string.Join("\r\n", SLS_E_GetCharList(source));
+		}
+
+		private static IEnumerable<string> SLS_E_GetCharList(string source)
+		{
+			if (source.Length % 6 != 0)
+				throw null;
+
+			foreach (int dummy in Enumerable.Range(0, SCommon.CRandom.GetRange(3, 7)))
+				yield return SLS_MakeYR(-1);
+
+			for (int index = 0; index * 6 < source.Length; index++)
+			{
+				if (SCommon.CRandom.GetInt(2) == 0) // ランダムにダミー値を差し込む
+					yield return SLS_MakeYR(-1);
+
+				yield return SLS_MakeYR(Convert.ToInt32(source.Substring(index * 6 + 2, 4), 16));
+			}
+		}
+
+		private static string SLS_MakeYR(int chr)
+		{
+			// (0x0000 + 1) + 65537 * 0 == 1
+			// (0xffff + 1) + 65537 * 0 == 65536
+			// (0x0000 + 1) + 65537 * 15259 == 1000029084
+			// (0xffff + 1) + 65537 * 15259 == 1000094619
+			// (0x0000 + 1) + 65537 * 32766 == 2147385343
+			// (0xffff + 1) + 65537 * 32766 == 2147450878 (0x7fff7ffe)
+
+			int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(15259, 32766);
+			//int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(0, 32766); // old
+
+			return "\tyield " + value + ";";
 		}
 
 		private void RenameEx()
@@ -227,7 +346,7 @@ namespace Charlotte.JSConfusers
 					{
 						index = end;
 					}
-					// ? 小文字で始まるメソッド名 -> 置き換えしない。
+					// ? 小文字で始まるメンバー名 -> 置き換えしない。
 					else if (SCommon.alpha.Contains(word[0]) && 1 <= index && text[index - 1] == '.')
 					{
 						index = end;
@@ -239,8 +358,9 @@ namespace Charlotte.JSConfusers
 						if (word == destWord) // ? 予約語である。
 						{
 							// (予約語).(後続のワード).(後続のワード).(後続のワード) ... の「後続のワード」も置き換え禁止とする。
-							// Math.PI など
 							// 但し this は除外する。
+
+							// -- MEMO: 小文字で始まるメンバーを除外しているので、後続のワードの除外は不要と思ったが Math.PI, Math.E などがある。
 
 							if (word != "this")
 							{
@@ -263,7 +383,7 @@ namespace Charlotte.JSConfusers
 					}
 					else // ? 未知の置き換え
 					{
-						string destWord = JSCommon.CreateNewIdent();
+						string destWord = JSCommon.CreateNewIdent(v => !wordFilter.ContainsKey(v));
 
 						wordFilter.Add(word, destWord);
 
@@ -275,6 +395,154 @@ namespace Charlotte.JSConfusers
 				index++;
 			}
 			this.JSLines = SCommon.TextToLines(text).ToList();
+		}
+
+		/// <summary>
+		/// 関数・変数の並び方をめちゃくちゃにする。
+		/// </summary>
+		private void ShuffleFunctions()
+		{
+			List<string[]> functions = new List<string[]>();
+			List<string> variables = new List<string>();
+
+			for (int index = 0; index + 1 < this.JSLines.Count; )
+			{
+				string line_01 = this.JSLines[index];
+				string line_02 = this.JSLines[index + 1];
+
+				if ((
+					line_01.StartsWith("var ") ||
+					line_01.StartsWith("function ") ||
+					line_01.StartsWith("function* ")
+					) && (
+					line_02.StartsWith("[") ||
+					line_02.StartsWith("{")
+					))
+				{
+					List<string> function = new List<string>();
+
+					function.Add(line_01);
+					function.Add(line_02);
+
+					this.JSLines[index++] = "";
+					this.JSLines[index++] = "";
+
+					for (; ; )
+					{
+						string line = this.JSLines[index];
+
+						function.Add(line);
+						this.JSLines[index] = "";
+						index++;
+
+						if (line.StartsWith("}"))
+							break;
+					}
+					functions.Add(function.ToArray());
+					continue;
+				}
+				index++;
+			}
+
+			for (int index = 0; index < this.JSLines.Count; index++)
+			{
+				if (this.JSLines[index].StartsWith("var "))
+				{
+					variables.Add(this.JSLines[index]);
+					this.JSLines[index] = "";
+				}
+			}
+
+			SCommon.CRandom.Shuffle(functions);
+			SCommon.CRandom.Shuffle(variables);
+
+			// 以下の順序を保証する。
+			//
+			// 1. (関数, 複数行の初期化子を持つ変数)
+			// 2. (初期化子を持たない変数, 1行の初期化子を持つ変数)
+			// 3. それ以外
+
+			// TODO: 変数の並び替えはマズいかもしれない。
+
+			this.JSLines = SCommon.Concat(functions).Concat(variables).Concat(this.JSLines).ToList();
+		}
+
+		/// <summary>
+		/// ソースコードの整形
+		/// </summary>
+		private void FormatSource()
+		{
+			// 行単位の整形
+			//
+			this.JSLines = this.JSLines.Select(line =>
+			{
+				if (line.Trim() == "")
+				{
+					line = "";
+				}
+				else
+				{
+					for (int c = 0; c < 20; c++)
+					{
+						line = line.Replace("\u0020\u0020", "\u0020"); // SP-SP -> SP
+					}
+					line = line.TrimEnd("\t ".ToArray());
+				}
+				return line;
+			})
+			.ToList();
+
+			// ダミーコメントの追加
+			//
+			for (int index = 0; index < this.JSLines.Count; index++)
+			{
+				string line = this.JSLines[index];
+
+				if (
+					line.StartsWith("var ") ||
+					line.StartsWith("function ") ||
+					line.StartsWith("function* ")
+					)
+				{
+					this.JSLines.Insert(index++, "");
+					this.JSLines.Insert(index++, "/*");
+
+					foreach (string commentLine in FS_Getエセ英語コメント())
+						this.JSLines.Insert(index++, "\t" + commentLine);
+
+					this.JSLines.Insert(index++, "*/");
+				}
+			}
+
+			// 連続する空行を１つの空行にする。
+			//
+			for (int index = 1; index < this.JSLines.Count; index++)
+			{
+				string line_01 = this.JSLines[index - 1];
+				string line_02 = this.JSLines[index];
+
+				if (line_01 == "" && line_02 == "")
+				{
+					this.JSLines.RemoveAt(index);
+					index--;
+				}
+			}
+		}
+
+		private static IEnumerable<string> FS_Getエセ英語コメント()
+		{
+			foreach (int dummy in Enumerable.Range(0, SCommon.CRandom.GetRange(3, 5)))
+			{
+				string[] tokens = new string[SCommon.CRandom.GetRange(7, 13)];
+
+				for (int index = 0; index < tokens.Length; index++)
+					tokens[index] = SCommon.CRandom.ChooseOne(JSResource.英単語リスト);
+
+				string line = string.Join(", ", tokens);
+				line = new string(line.ToCharArray().Where(chr => chr != ',' || SCommon.CRandom.GetInt(10) == 0).ToArray());
+				line = line.Substring(0, 1).ToUpper() + line.Substring(1).ToLower() + ".";
+				yield return line;
+			}
 		}
 	}
 }

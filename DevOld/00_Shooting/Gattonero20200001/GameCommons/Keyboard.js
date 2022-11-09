@@ -6,7 +6,7 @@
 // キーを押し続けていると keydown が何度も呼び出される。
 // keypress はカーソルキーなどの押下を拾えない。
 
-function <void> @@_INIT()
+function <void> @(UNQN)_INIT()
 {
 	document.addEventListener("keydown", @@_A_KeyDown, false);
 	document.addEventListener("keyup",   @@_A_KeyUp,   false);
@@ -17,6 +17,11 @@ var @@_Status = {};
 function <void> @@_A_KeyDown(e)
 {
 	@@_Status["" + e.keyCode] = true;
+
+	if ((37 <= e.keyCode && e.keyCode <= 40) || e.keyCode == 32) // ? カーソルキー || スペースキー -> 画面スクロール阻止のため動作キャンセルする。
+	{
+		e.preventDefault();
+	}
 }
 
 function <void> @@_A_KeyUp(e)
@@ -26,7 +31,7 @@ function <void> @@_A_KeyUp(e)
 
 var @@_Counters = {};
 
-function <void> @@_EACH()
+function <void> @(UNQN)_EACH()
 {
 	for (var key in @@_Counters)
 	{
@@ -60,6 +65,8 @@ function <void> @@_EACH()
 
 	@@_Status = {};
 }
+
+// ★★★ ボタン・キー押下は 1 マウス押下は -1 で判定する。
 
 /*
 	特定のキーの押下状態を得る。

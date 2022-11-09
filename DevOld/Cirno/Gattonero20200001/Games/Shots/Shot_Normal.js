@@ -69,7 +69,7 @@ function* <generatorForTask> @@_Draw(<Shot_t> shot)
 			break;
 		}
 
-		if (GetMapCell(ToTablePoint_XY(shot.X, shot.Y)).Tile.WallFlag)
+		if (IsPtWall_XY(shot.X, shot.Y))
 		{
 			KillShot(shot);
 			break;

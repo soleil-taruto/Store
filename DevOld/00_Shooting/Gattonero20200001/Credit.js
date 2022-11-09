@@ -11,11 +11,29 @@ function* <generatorForTask> CreditMain()
 		credits = [ "none", "" ];
 	}
 
+	var<string[]> lines = [];
+
+	lines.push("■素材 (文字コード順・敬称略)");
+	lines.push("");
+
+	for (var<int> index = 0; index < credits.length; index += 2)
+	{
+		lines.push(credits[index] + "　" + credits[index + 1]);
+	}
+
+	lines.push("");
+	lines.push("Ｚ・Ｘキーまたは画面をクリックするとタイトルに戻ります");
+
+	var<int> MARGIN_L = 30;
+	var<int> MARGIN_B = 30;
+
+	var<int> yStep = ToFix((Screen_H - MARGIN_B) / lines.length);
+
 	FreezeInput();
 
 	for (; ; )
 	{
-		if (GetMouseDown() == -1 || GetInput_A() == 1)
+		if (GetMouseDown() == -1 || GetInput_A() == 1 || GetInput_B() == 1)
 		{
 			break;
 		}
@@ -24,19 +42,13 @@ function* <generatorForTask> CreditMain()
 		PrintRect(0, 0, Screen_W, Screen_H);
 
 		SetColor("#000000");
-		SetPrint(30, 50, 24);
+		SetPrint(MARGIN_L, yStep, yStep);
 		SetFSize(20);
-		PrintLine("■素材 (文字コード順・敬称略)");
-		PrintLine("");
 
-		for (var<int> index = 0; index < credits.length; index += 2)
+		for (var<string> line of lines)
 		{
-			PrintLine(credits[index] + "　" + credits[index + 1]);
+			PrintLine(line);
 		}
-
-		SetPrint(Screen_W - 400, Screen_H - 20, 0);
-		SetFSize(20);
-		PrintLine("画面をクリックするとタイトルに戻ります");
 
 		yield 1;
 	}

@@ -21,7 +21,8 @@ namespace Charlotte.GameCommons
 			public bool IgnoreError = false;
 			public int A = -1; // -1 == 無効
 			public int BlendAdd = -1; // -1 == 無効
-			public I3Color Bright = new I3Color(-1, 0, 0);
+			public I3Color Bright = new I3Color(0, 0, 0);
+			public bool BrightEnabled = false;
 		};
 
 		private static ExtraInfo Extra = new ExtraInfo();
@@ -85,6 +86,7 @@ namespace Charlotte.GameCommons
 			pB = SCommon.ToRange(pB, 0, 255);
 
 			Extra.Bright = new I3Color(pR, pG, pB);
+			Extra.BrightEnabled = true;
 		}
 
 		public static void SetBright(I3Color color)
@@ -94,6 +96,7 @@ namespace Charlotte.GameCommons
 			color.B = SCommon.ToRange(color.B, 0, 255);
 
 			Extra.Bright = color;
+			Extra.BrightEnabled = true;
 		}
 
 		// < Extra
@@ -170,7 +173,7 @@ namespace Charlotte.GameCommons
 			{
 				DX.SetDrawMode(DX.DX_DRAWMODE_NEAREST);
 			}
-			if (Extra.Bright.R != -1)
+			if (Extra.BrightEnabled)
 			{
 				SetBright(Extra.Bright.R, Extra.Bright.G, Extra.Bright.B);
 			}
@@ -298,7 +301,7 @@ namespace Charlotte.GameCommons
 			{
 				DX.SetDrawMode(DDConsts.DEFAULT_DX_DRAWMODE);
 			}
-			if (Extra.Bright.R != -1)
+			if (Extra.BrightEnabled)
 			{
 				ResetBright();
 			}
@@ -357,12 +360,18 @@ namespace Charlotte.GameCommons
 		public static void DrawRect_LTRB(DDPicture picture, double l, double t, double r, double b)
 		{
 			if (
-				l < -(double)SCommon.IMAX || (double)SCommon.IMAX - 1.0 < l ||
-				t < -(double)SCommon.IMAX || (double)SCommon.IMAX - 1.0 < t ||
-				r < l + 1.0 || (double)SCommon.IMAX < r ||
-				b < t + 1.0 || (double)SCommon.IMAX < b
+				l < -(double)SCommon.IMAX || (double)SCommon.IMAX < l ||
+				t < -(double)SCommon.IMAX || (double)SCommon.IMAX < t ||
+				r < l || (double)SCommon.IMAX < r ||
+				b < t || (double)SCommon.IMAX < b
 				)
 				throw new DDError();
+
+			if (
+				r < l + 1.0 ||
+				b < t + 1.0
+				)
+				return; // 細すぎるので描画しない。
 
 			RectInfo layout = new RectInfo()
 			{

@@ -2,7 +2,7 @@
 	ステージ情報
 */
 
-var<Audio[]> @@_MusicList =
+var<Sound_t[]> @@_MusicList =
 [
 	M_Field,
 	M_Field,
@@ -21,7 +21,7 @@ function <void> PlayStageMusic(<int> mapIndex)
 	Play(@@_MusicList[mapIndex]);
 }
 
-var<Image[]> @@_WallPictureList =
+var<Picture_t[]> @@_WallPictureList =
 [
 	P_Wall0001,
 	P_Wall0001,
@@ -35,7 +35,7 @@ var<Image[]> @@_WallPictureList =
 	P_Wall0002,
 ];
 
-function <Image> GetStageWallPicture(<int> mapIndex)
+function <Picture_t> GetStageWallPicture(<int> mapIndex)
 {
 	return @@_WallPictureList[mapIndex];
 }

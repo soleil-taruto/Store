@@ -79,7 +79,7 @@ gameLoop:
 	FreezeInput();
 }
 
-function* <generatorForTask> @@_VolumeSetting(<string> name, <double> initVolume, <Func double> volumeChanged)
+function* <generatorForTask> @@_VolumeSetting(<string> name, <double> initVolume, <Action double> volumeChanged)
 {
 	FreezeInput();
 

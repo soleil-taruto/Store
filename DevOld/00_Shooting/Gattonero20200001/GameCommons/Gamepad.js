@@ -8,7 +8,7 @@ var<boolean> @@_Dir_6 = false;
 var<boolean> @@_Dir_8 = false;
 var<boolean[]> @@_Status = [];
 
-function <void> @@_EACH()
+function <void> @(UNQN)_EACH()
 {
 	@@_Dir_2 = false;
 	@@_Dir_4 = false;

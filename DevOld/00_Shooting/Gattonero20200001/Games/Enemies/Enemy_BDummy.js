@@ -1,17 +1,17 @@
 /*
-	敵 - BDummy
-
-	★サンプルとしてキープ
+	敵 - BDummy ★サンプル
 */
 
-function <Enemy_t> CreateEnemy_BDummy(<double> x, <double> y, <int> hp)
+var<int> EnemyKind_BDummy = @(AUTO);
+
+function <Enemy_t> CreateEnemy_BDummy(<double> x, <double> y)
 {
 	var ret =
 	{
-		Kind: Enemy_Kind_e_BDummy,
+		Kind: EnemyKind_BDummy,
 		X: x,
 		Y: y,
-		HP: hp,
+		HP: 10,
 		Crash: null,
 
 		// ここから固有
@@ -22,6 +22,7 @@ function <Enemy_t> CreateEnemy_BDummy(<double> x, <double> y, <int> hp)
 	};
 
 	ret.Draw = @@_Draw(ret);
+	ret.Damaged = @@_Damaged;
 	ret.Dead = @@_Dead;
 
 	return ret;
@@ -33,7 +34,7 @@ function* <generatorForTask> @@_Draw(<Enemy_t> enemy)
 	{
 		enemy.Y += 2.0;
 
-		if (FIELD_B < enemy.Y)
+		if (Screen_H < enemy.Y)
 		{
 			break;
 		}
@@ -46,7 +47,13 @@ function* <generatorForTask> @@_Draw(<Enemy_t> enemy)
 	}
 }
 
-function <void> @@_Dead(<Enemy_t> enemy)
+function <void> @@_Damaged(<Enemy_t> enemy, <int> damagePoint)
 {
-	EnemyCommon_Dead(enemy);
+	EnemyCommon_Damaged(enemy, damagePoint);
+}
+
+function <void> @@_Dead(<Enemy_t> enemy, <boolean> destroyed)
+{
+	EnemyCommon_AddScore(100);
+	EnemyCommon_Dead(enemy, destroyed);
 }

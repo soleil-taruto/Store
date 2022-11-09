@@ -26,6 +26,7 @@ namespace Charlotte
 			"Claes20200001", // CUI
 			"Silvia20200001", // GUI
 			"Gattonero20200001", // GameJS
+			"Petra20200001", // C-Lang
 		};
 	}
 }

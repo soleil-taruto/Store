@@ -37,10 +37,11 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\temp", "/E", "2" }));
+			//Main4(new ArgsReader(new string[] { @"C:\temp", "/E", "2" }));
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/T", "0", "0" }));
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/TC", "255", "255", "255" }));
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/BC", "255", "255", "255" }));
+			Main4(new ArgsReader(new string[] { @"C:\temp", "/ACM" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -167,6 +168,10 @@ namespace Charlotte
 
 					canvas = ToUntransparent(canvas, new I3Color(r, g, b));
 				}
+				else if (ar.ArgIs("/ACM"))
+				{
+					canvas = AutoCutMargin(canvas);
+				}
 				else
 				{
 					throw new Exception("不明なオプション");
@@ -199,6 +204,67 @@ namespace Charlotte
 			dest.DrawImage(canvas, 0, 0, true);
 
 			return dest;
+		}
+
+		private Canvas AutoCutMargin(Canvas canvas)
+		{
+			return canvas.GetSubImage(GetRectWithoutMargin(canvas));
+		}
+
+		private I4Rect GetRectWithoutMargin(Canvas canvas)
+		{
+			I4Color marginColor = canvas[0, 0];
+
+			int l = 0;
+			int t = 0;
+			int r = canvas.W;
+			int b = canvas.H;
+
+			ProcMain.WriteLog(string.Format("LTRB-1: {0}, {1}, {2}, {3}", l, t, r, b));
+
+			for (; ; l++)
+			{
+				for (int y = 0; y < canvas.H; y++)
+					if (!Common.IsSame(canvas[l, y], marginColor))
+						goto endLoop_L;
+			}
+		endLoop_L:
+
+			for (; ; t++)
+			{
+				for (int x = 0; x < canvas.W; x++)
+					if (!Common.IsSame(canvas[x, t], marginColor))
+						goto endLoop_T;
+			}
+		endLoop_T:
+
+			for (; ; r--)
+			{
+				for (int y = 0; y < canvas.H; y++)
+					if (!Common.IsSame(canvas[r - 1, y], marginColor))
+						goto endLoop_R;
+			}
+		endLoop_R:
+
+			for (; ; b--)
+			{
+				for (int x = 0; x < canvas.W; x++)
+					if (!Common.IsSame(canvas[x, b - 1], marginColor))
+						goto endLoop_B;
+			}
+		endLoop_B:
+
+			ProcMain.WriteLog(string.Format("LTRB-2: {0}, {1}, {2}, {3}", l, t, r, b));
+
+			if (l <= 0) throw new Exception("左側にマージンがありません。");
+			if (t <= 0) throw new Exception("上側にマージンがありません。");
+			if (canvas.W <= r) throw new Exception("右側にマージンがありません。");
+			if (canvas.H <= b) throw new Exception("下側にマージンがありません。");
+
+			if (r <= l) throw new Exception("マージンがありません。(LR)");
+			if (b <= t) throw new Exception("マージンがありません。(TB)");
+
+			return I4Rect.LTRB(l, t, r, b);
 		}
 	}
 }

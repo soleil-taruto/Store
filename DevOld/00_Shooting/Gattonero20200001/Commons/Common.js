@@ -6,7 +6,7 @@ function <Func boolean> Supplier(<generatorForTask> task)
 {
 	var ret = function <Func boolean> ()
 	{
-		return task.next().value;
+		return NextVal(task);
 	};
 
 	return ret;
@@ -52,9 +52,14 @@ function <boolean> IsOut(<D2Point_t> pt, <D4Rect_t> rect, <double> margin)
 	return ret;
 }
 
-function <boolean> IsOutOfScreen(<D2Point_t> pt, <Number> margin)
+function <boolean> IsOutOfScreen(<D2Point_t> pt, <double> margin)
 {
-	return IsOut(pt, CreateD4Rect(0, 0, Screen_W, Screen_H), margin);
+	return IsOut(pt, CreateD4Rect(0.0, 0.0, Screen_W, Screen_H), margin);
+}
+
+function <boolean> IsOutOfCamera(<D2Point_t> pt, <double> margin)
+{
+	return IsOut(pt, CreateD4Rect(Camera.X, Camera.Y, Screen_W, Screen_H), margin);
 }
 
 /*

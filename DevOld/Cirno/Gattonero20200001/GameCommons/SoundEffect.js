@@ -39,8 +39,8 @@ function <void> @(UNQN)_EACH()
 	{
 		var<SE_t> se = @@_SEBuff.shift();
 
-		se.Handles[se.Index].volume = SEVolume;
-		se.Handles[se.Index].play();
+		se.Handles[se.Index].Handle.volume = SEVolume;
+		se.Handles[se.Index].Handle.play();
 
 		se.Index++;
 		se.Index %= 5;

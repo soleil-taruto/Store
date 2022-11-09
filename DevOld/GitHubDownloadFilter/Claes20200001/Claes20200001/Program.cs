@@ -83,19 +83,26 @@ namespace Charlotte
 			string[] dirs = Directory.GetDirectories(rootDir, "*", SearchOption.AllDirectories);
 			string[] files = Directory.GetFiles(rootDir, "*", SearchOption.AllDirectories);
 
-			Array.Sort(dirs, (a, b) => SCommon.Comp(a, b) * -1); // 逆順 -- 配下のディレクトリから処理するため
+			Array.Sort(dirs, (a, b) => SCommon.Comp(a, b) * -1); // 逆順
 			Array.Sort(files, SCommon.Comp);
 
-			// 1. ファイルの編集
-			// 2. ファイル名の変更
-			// 3. ディレクトリ名の変更(配下のディレクトリから)
-			// ...の順で実行すること。
+			for (int index = 0; index < files.Length; index++) // ファイルの削除
+			{
+				string file = files[index];
+
+				if (SCommon.EqualsIgnoreCase(Path.GetFileName(file), "$$GHRF_Empty"))
+				{
+					SCommon.DeletePath(file);
+					files[index] = null; // 削除マーク
+				}
+			}
+			files = files.Where(file => file != null).ToArray(); // 削除マーク除去
 
 			foreach (string file in files) // ファイルの編集
 			{
 				byte[] fileData = File.ReadAllBytes(file);
 
-				if (IsEncodingUTF8WithBOM(fileData) || Common.ExtIs(file, ".js"))
+				if (IsEncodingUTF8WithBOM(fileData) || IsEncodingSJIS(fileData))
 				{
 					fileData = NewLineToCRLF(fileData).ToArray();
 
@@ -143,6 +150,39 @@ namespace Charlotte
 				fileData[0] == 0xef &&
 				fileData[1] == 0xbb &&
 				fileData[2] == 0xbf;
+		}
+
+		private bool IsEncodingSJIS(byte[] fileData)
+		{
+			for (int index = 0; index < fileData.Length; index++)
+			{
+				byte bChr = fileData[index];
+
+				// ? 半角文字
+				if (
+					bChr == 0x09 || // 水平タブ
+					bChr == 0x0a || // LF
+					bChr == 0x0d || // CR
+					(0x20 <= bChr && bChr <= 0x7e) || // US-ASCII
+					(0xa1 <= bChr && bChr <= 0xdf) // 半角カナ
+					)
+				{
+					// noop
+				}
+				// ? 全角文字
+				else if (
+					index + 1 < fileData.Length &&
+					Common.IsJChar(fileData[index], fileData[index + 1])
+					)
+				{
+					index++;
+				}
+				else // ? SJIS-テキストではない。
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 
 		private IEnumerable<byte> NewLineToCRLF(byte[] fileData)

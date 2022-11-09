@@ -45,15 +45,15 @@ gameLoop:
 
 		var<double> R = 20.0;
 
-		if (GetMapCell(ToTablePoint_XY(enemy.X - R, enemy.Y)).Tile.WallFlag)
+		if (IsPtWall_XY(enemy.X - R, enemy.Y))
 		{
 			enemy.XAdd = Math.abs(enemy.XAdd);
 		}
-		if (GetMapCell(ToTablePoint_XY(enemy.X + R, enemy.Y)).Tile.WallFlag)
+		if (IsPtWall_XY(enemy.X + R, enemy.Y))
 		{
 			enemy.XAdd = Math.abs(enemy.XAdd) * -1;
 		}
-		if (GetMapCell(ToTablePoint_XY(enemy.X, enemy.Y + R)).Tile.WallFlag)
+		if (IsPtWall_XY(enemy.X, enemy.Y + R))
 		{
 			enemy.YAdd = Math.abs(enemy.YAdd) * -1;
 			bouncedCount++;

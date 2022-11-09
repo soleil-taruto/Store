@@ -150,7 +150,7 @@ main()
 	printf("| 右シフト --------> 左ボタン連打 |\n");
 	printf("| 右コントロール --> 右ボタン連打 |\n");
 	printf("| 左シフト ----> 状態ロック・解除 |\n");
-	printf("| 左コントロール ----------> 終了 |\n");
+	printf("| 左シフト＆コントロール --> 終了 |\n");
 	printf("+---------------------------------+\n");
 	printf("START...\n");
 
@@ -160,7 +160,7 @@ main()
 
 		CheckKeyEach();
 
-		if (IsPressLControl())
+		if (IsPressLShift() && IsPressLControl())
 		{
 			break;
 		}
@@ -174,7 +174,15 @@ main()
 
 				if (locked)
 				{
-					printf("ロックしました。状態は %d %d です。\n", lBtnKeyPress, rBtnKeyPress);
+					if (!lBtnKeyPress && !rBtnKeyPress)
+					{
+						locked = 0;
+						printf("状態が空のためロックしません。\n");
+					}
+					else
+					{
+						printf("ロックしました。状態は %d %d です。\n", lBtnKeyPress, rBtnKeyPress);
+					}
 				}
 				else
 				{

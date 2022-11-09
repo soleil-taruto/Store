@@ -49,43 +49,48 @@ namespace Charlotte.Novels.Surfaces
 			if (command == "Image")
 			{
 				this.Act.AddOnce(() => this.ImageFile = arguments[c++]);
+				return;
 			}
-			else if (command == "A")
+			if (command == "A")
 			{
 				this.Act.AddOnce(() => this.A = double.Parse(arguments[c++]));
+				return;
 			}
-			else if (command == "Zoom")
+			if (command == "Zoom")
 			{
 				this.Act.AddOnce(() => this.Zoom = double.Parse(arguments[c++]));
+				return;
 			}
-			else if (command == "待ち")
+			if (command == "待ち")
 			{
 				this.Act.Add(SCommon.Supplier(this.待ち(int.Parse(arguments[c++]))));
+				return;
 			}
-			else if (command == "フェードイン")
+			if (command == "フェードイン")
 			{
 				this.Act.Add(SCommon.Supplier(this.フェードイン()));
+				return;
 			}
-			else if (command == "フェードアウト")
+			if (command == "フェードアウト")
 			{
 				this.Act.Add(SCommon.Supplier(this.フェードアウト()));
+				return;
 			}
-			else if (command == "モード変更")
+			if (command == "モード変更")
 			{
 				this.Act.Add(SCommon.Supplier(this.モード変更(arguments[c++])));
+				return;
 			}
-			else if (command == "スライド")
+			if (command == "スライド")
 			{
 				double x = double.Parse(arguments[c++]);
 				double y = double.Parse(arguments[c++]);
 
 				this.Act.Add(SCommon.Supplier(this.スライド(x, y)));
+				return;
 			}
-			else
-			{
-				ProcMain.WriteLog(command);
-				throw new DDError();
-			}
+			ProcMain.WriteLog(command);
+			throw new DDError(); // Bad command
 		}
 
 		private IEnumerable<bool> 待ち(int frame)

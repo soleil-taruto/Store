@@ -8,6 +8,11 @@ namespace Charlotte.Games
 	public static class GameConsts
 	{
 		/// <summary>
+		/// セーブデータ・スロット数
+		/// </summary>
+		public const int SAVE_DATA_SLOT_NUM = 14;
+
+		/// <summary>
 		/// 何もない空間のタイル名
 		/// </summary>
 		public const string TILE_NONE = "None";

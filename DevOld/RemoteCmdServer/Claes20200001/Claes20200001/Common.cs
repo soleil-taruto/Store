@@ -40,7 +40,6 @@ namespace Charlotte
 					)
 				{
 					SCommon.CreateDir(dir);
-					//SCommon.Batch(new string[] { "START " + dir });
 					return dir;
 				}
 			}
@@ -69,109 +68,9 @@ namespace Charlotte
 
 		#endregion
 
-		#region ToFairLocalPath, ToFairRelPath
-
-		/// <summary>
-		/// ローカル名に使用できない予約名のリストを返す。
-		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L460-L491
-		/// </summary>
-		/// <returns>予約名リスト</returns>
-		private static IEnumerable<string> GetReservedWordsForWindowsPath()
+		public static void HelloWorld()
 		{
-			yield return "AUX";
-			yield return "CON";
-			yield return "NUL";
-			yield return "PRN";
-
-			for (int no = 1; no <= 9; no++)
-			{
-				yield return "COM" + no;
-				yield return "LPT" + no;
-			}
-
-			// グレーゾーン
-			{
-				yield return "COM0";
-				yield return "LPT0";
-				yield return "CLOCK$";
-				yield return "CONFIG$";
-			}
-		}
-
-		public const int MY_PATH_MAX = 240;
-
-		/// <summary>
-		/// 歴としたローカル名に変換する。
-		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L503-L552
-		/// </summary>
-		/// <param name="str">対象文字列(対象パス)</param>
-		/// <param name="dirSize">対象パスが存在するディレクトリのフルパスの長さ、考慮しない場合は 0 を指定すること。</param>
-		/// <returns>ローカル名</returns>
-		public static string ToFairLocalPath(string str, int dirSize)
-		{
-			const string CHRS_NG = "\"*/:<>?\\|";
-			const string CHR_ALT = "_";
-
-			int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
-
-			if (maxLen < str.Length)
-				str = str.Substring(0, maxLen);
-
-			str = SCommon.ToJString(SCommon.ENCODING_SJIS.GetBytes(str), true, false, false, true);
-
-			string[] words = str.Split('.');
-
-			for (int index = 0; index < words.Length; index++)
-			{
-				string word = words[index];
-
-				word = word.Trim();
-
-				if (
-					index == 0 &&
-					GetReservedWordsForWindowsPath().Any(resWord => SCommon.EqualsIgnoreCase(resWord, word)) ||
-					word.Any(chr => CHRS_NG.IndexOf(chr) != -1)
-					)
-					word = CHR_ALT;
-
-				words[index] = word;
-			}
-			str = string.Join(".", words);
-
-			if (str == "")
-				str = CHR_ALT;
-
-			if (str.EndsWith("."))
-				str = str.Substring(0, str.Length - 1) + CHR_ALT;
-
-			return str;
-		}
-
-		public static string ToFairRelPath(string path, int dirSize)
-		{
-			string[] ptkns = SCommon.Tokenize(path, "\\/", false, true);
-
-			if (ptkns.Length == 0)
-				ptkns = new string[] { "_" };
-
-			for (int index = 0; index < ptkns.Length; index++)
-				ptkns[index] = ToFairLocalPath(ptkns[index], 0);
-
-			path = string.Join("\\", ptkns);
-
-			int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
-
-			if (maxLen < path.Length)
-				path = ToFairLocalPath(path, dirSize);
-
-			return path;
-		}
-
-		#endregion
-
-		public static double GetDistance(D2Point pt)
-		{
-			return Math.Sqrt(pt.X * pt.X + pt.Y * pt.Y);
+			Console.WriteLine("Hello, world!");
 		}
 	}
 }

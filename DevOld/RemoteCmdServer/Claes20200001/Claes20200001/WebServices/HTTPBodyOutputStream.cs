@@ -4,24 +4,114 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Charlotte.Commons;
+using Charlotte.Utilities;
 
 namespace Charlotte.WebServices
 {
 	public class HTTPBodyOutputStream : IDisposable
 	{
-		private WorkingDir WD = null;
-		private string BuffFile = null;
-		private int WroteSize = 0;
-
-		private string GetBuffFile()
+		private class InnerInfo : IDisposable
 		{
-			if (this.WD == null)
+			public WorkingDir WD = new WorkingDir();
+			public string BufferFile;
+			public long WroteSize = 0;
+			public CtrCipher CtrCipher = CtrCipher.CreateTemporary();
+
+			public InnerInfo()
 			{
-				this.WD = new WorkingDir();
-				this.BuffFile = this.WD.MakePath();
+				this.BufferFile = this.WD.MakePath();
 			}
-			return this.BuffFile;
+
+			public void Write(byte[] data, int offset = 0)
+			{
+				this.Write(data, offset, data.Length - offset);
+			}
+
+			public void Write(byte[] data, int offset, int count)
+			{
+				this.CtrCipher.Mask(data, offset, count);
+
+				using (FileStream writer = new FileStream(this.BufferFile, FileMode.Append, FileAccess.Write))
+				{
+					writer.Write(data, offset, count);
+				}
+				this.WroteSize += count;
+			}
+
+			public long Count
+			{
+				get
+				{
+					return this.WroteSize;
+				}
+			}
+
+			public byte[] ToByteArray()
+			{
+				byte[] data = File.ReadAllBytes(this.BufferFile);
+				SCommon.DeletePath(this.BufferFile);
+				this.WroteSize = 0;
+
+				this.CtrCipher.Reset();
+				this.CtrCipher.Mask(data);
+				this.CtrCipher.Reset();
+
+				return data;
+			}
+
+			public void ToFile(string destFile)
+			{
+				this.CtrCipher.Reset();
+
+				using (FileStream reader = new FileStream(this.BufferFile, FileMode.Open, FileAccess.Read))
+				using (FileStream writer = new FileStream(destFile, FileMode.Create, FileAccess.Write))
+				{
+					SCommon.ReadToEnd(reader.Read, (buff, offset, count) =>
+					{
+						this.CtrCipher.Mask(buff, offset, count);
+						writer.Write(buff, offset, count);
+					});
+				}
+
+				SCommon.DeletePath(this.BufferFile);
+				this.WroteSize = 0;
+
+				this.CtrCipher.Reset();
+			}
+
+			public void ReadToEnd(SCommon.Write_d writer)
+			{
+				this.CtrCipher.Reset();
+
+				using (FileStream reader = new FileStream(this.BufferFile, FileMode.Open, FileAccess.Read))
+				{
+					SCommon.ReadToEnd(reader.Read, (buff, offset, count) =>
+					{
+						this.CtrCipher.Mask(buff, offset, count);
+						writer(buff, offset, count);
+					});
+				}
+
+				SCommon.DeletePath(this.BufferFile);
+				this.WroteSize = 0;
+
+				this.CtrCipher.Reset();
+			}
+
+			public void Dispose()
+			{
+				if (this.WD != null)
+				{
+					this.WD.Dispose();
+					this.WD = null;
+
+					this.CtrCipher.Dispose();
+					this.CtrCipher = null;
+				}
+			}
 		}
+
+		private InnerInfo Inner = null;
 
 		public void Write(byte[] data, int offset = 0)
 		{
@@ -30,44 +120,63 @@ namespace Charlotte.WebServices
 
 		public void Write(byte[] data, int offset, int count)
 		{
-			using (FileStream writer = new FileStream(this.GetBuffFile(), FileMode.Append, FileAccess.Write))
-			{
-				writer.Write(data, offset, count);
-			}
-			this.WroteSize += count;
+			if (this.Inner == null)
+				this.Inner = new InnerInfo();
+
+			this.Inner.Write(data, offset, count);
 		}
 
-		public int Count
+		public long Count
 		{
 			get
 			{
-				return this.WroteSize;
+				return this.Inner == null ? 0 : this.Inner.WroteSize;
 			}
 		}
 
+		/// <summary>
+		/// 書き出されたデータをバイト列に変換して返し、
+		/// この出力ストリームをリセットする。
+		/// </summary>
+		/// <returns>バイト列</returns>
 		public byte[] ToByteArray()
 		{
-			byte[] data;
-
-			if (this.WroteSize == 0)
-			{
-				data = SCommon.EMPTY_BYTES;
-			}
+			if (this.Inner == null)
+				return SCommon.EMPTY_BYTES;
 			else
-			{
-				data = File.ReadAllBytes(this.BuffFile);
-				File.WriteAllBytes(this.BuffFile, SCommon.EMPTY_BYTES);
-				this.WroteSize = 0;
-			}
-			return data;
+				return this.Inner.ToByteArray();
+		}
+
+		/// <summary>
+		/// 書き出されたデータを出力ファイルに書き出し、
+		/// この出力ストリームをリセットする。
+		/// </summary>
+		/// <param name="destFile">出力ファイル</param>
+		public void ToFile(string destFile)
+		{
+			if (this.Inner == null)
+				File.WriteAllBytes(destFile, SCommon.EMPTY_BYTES);
+			else
+				this.Inner.ToFile(destFile);
+		}
+
+		/// <summary>
+		/// 書き出されたデータを最後まで読み込み、
+		/// この出力ストリームをリセットする。
+		/// </summary>
+		/// <param name="writer">出力先</param>
+		public void ReadToEnd(SCommon.Write_d writer)
+		{
+			if (this.Inner != null)
+				this.Inner.ReadToEnd(writer);
 		}
 
 		public void Dispose()
 		{
-			if (this.WD != null)
+			if (this.Inner != null)
 			{
-				this.WD.Dispose();
-				this.WD = null;
+				this.Inner.Dispose();
+				this.Inner = null;
 			}
 		}
 	}

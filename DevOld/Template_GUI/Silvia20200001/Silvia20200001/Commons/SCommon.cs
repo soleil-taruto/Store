@@ -54,9 +54,9 @@ namespace Charlotte.Commons
 			return Comp(a.Count, b.Count);
 		}
 
-		public static int IndexOf<T>(IList<T> list, Predicate<T> match)
+		public static int IndexOf<T>(IList<T> list, Predicate<T> match, int startIndex = 0)
 		{
-			for (int index = 0; index < list.Count; index++)
+			for (int index = startIndex; index < list.Count; index++)
 				if (match(list[index]))
 					return index;
 
@@ -89,16 +89,9 @@ namespace Charlotte.Commons
 			return Comp(a, b, Comp);
 		}
 
-		public static byte[] GetSubBytes(byte[] src, int offset, int size)
+		public static byte[] IntToBytes(int value)
 		{
-			byte[] dest = new byte[size];
-			Array.Copy(src, offset, dest, 0, size);
-			return dest;
-		}
-
-		public static byte[] ToBytes(int value)
-		{
-			return ToBytes((uint)value);
+			return UIntToBytes((uint)value);
 		}
 
 		public static int ToInt(byte[] src, int index = 0)
@@ -106,14 +99,14 @@ namespace Charlotte.Commons
 			return (int)ToUInt(src, index);
 		}
 
-		public static byte[] ToBytes(uint value)
+		public static byte[] UIntToBytes(uint value)
 		{
 			byte[] dest = new byte[4];
-			ToBytes(value, dest);
+			UIntToBytes(value, dest);
 			return dest;
 		}
 
-		public static void ToBytes(uint value, byte[] dest, int index = 0)
+		public static void UIntToBytes(uint value, byte[] dest, int index = 0)
 		{
 			dest[index + 0] = (byte)((value >> 0) & 0xff);
 			dest[index + 1] = (byte)((value >> 8) & 0xff);
@@ -128,6 +121,48 @@ namespace Charlotte.Commons
 				((uint)src[index + 1] << 8) |
 				((uint)src[index + 2] << 16) |
 				((uint)src[index + 3] << 24);
+		}
+
+		public static byte[] LongToBytes(long value)
+		{
+			return ULongToBytes((ulong)value);
+		}
+
+		public static long ToLong(byte[] src, int index = 0)
+		{
+			return (long)ToULong(src, index);
+		}
+
+		public static byte[] ULongToBytes(ulong value)
+		{
+			byte[] dest = new byte[8];
+			ULongToBytes(value, dest);
+			return dest;
+		}
+
+		public static void ULongToBytes(ulong value, byte[] dest, int index = 0)
+		{
+			dest[index + 0] = (byte)((value >> 0) & 0xff);
+			dest[index + 1] = (byte)((value >> 8) & 0xff);
+			dest[index + 2] = (byte)((value >> 16) & 0xff);
+			dest[index + 3] = (byte)((value >> 24) & 0xff);
+			dest[index + 4] = (byte)((value >> 32) & 0xff);
+			dest[index + 5] = (byte)((value >> 40) & 0xff);
+			dest[index + 6] = (byte)((value >> 48) & 0xff);
+			dest[index + 7] = (byte)((value >> 56) & 0xff);
+		}
+
+		public static ulong ToULong(byte[] src, int index = 0)
+		{
+			return
+				((ulong)src[index + 0] << 0) |
+				((ulong)src[index + 1] << 8) |
+				((ulong)src[index + 2] << 16) |
+				((ulong)src[index + 3] << 24) |
+				((ulong)src[index + 4] << 32) |
+				((ulong)src[index + 5] << 40) |
+				((ulong)src[index + 6] << 48) |
+				((ulong)src[index + 7] << 56);
 		}
 
 		/// <summary>
@@ -174,7 +209,7 @@ namespace Charlotte.Commons
 
 			foreach (byte[] block in src)
 			{
-				Array.Copy(ToBytes(block.Length), 0, dest, offset, 4);
+				Array.Copy(IntToBytes(block.Length), 0, dest, offset, 4);
 				offset += 4;
 				Array.Copy(block, 0, dest, offset, block.Length);
 				offset += block.Length;
@@ -195,10 +230,17 @@ namespace Charlotte.Commons
 			{
 				int size = ToInt(src, offset);
 				offset += 4;
-				dest.Add(GetSubBytes(src, offset, size));
+				dest.Add(P_GetBytesRange(src, offset, size));
 				offset += size;
 			}
 			return dest.ToArray();
+		}
+
+		private static byte[] P_GetBytesRange(byte[] src, int offset, int size)
+		{
+			byte[] dest = new byte[size];
+			Array.Copy(src, offset, dest, 0, size);
+			return dest;
 		}
 
 		public class Serializer
@@ -376,6 +418,8 @@ namespace Charlotte.Commons
 			};
 		}
 
+		// memo: list を変更するので IList<T> list にはできないよ！
+		//
 		public static T DesertElement<T>(List<T> list, int index)
 		{
 			T ret = list[index];
@@ -585,6 +629,166 @@ namespace Charlotte.Commons
 
 			return path;
 		}
+
+		#region ToFairLocalPath, ToFairRelPath
+
+		/// <summary>
+		/// ローカル名に使用できない予約名のリストを返す。
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L460-L491
+		/// </summary>
+		/// <returns>予約名リスト</returns>
+		private static IEnumerable<string> GetReservedWordsForWindowsPath()
+		{
+			yield return "AUX";
+			yield return "CON";
+			yield return "NUL";
+			yield return "PRN";
+
+			for (int no = 1; no <= 9; no++)
+			{
+				yield return "COM" + no;
+				yield return "LPT" + no;
+			}
+
+			// グレーゾーン
+			{
+				yield return "COM0";
+				yield return "LPT0";
+				yield return "CLOCK$";
+				yield return "CONFIG$";
+			}
+		}
+
+		public const int MY_PATH_MAX = 240;
+
+		/// <summary>
+		/// 歴としたローカル名に変換する。
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L503-L552
+		/// </summary>
+		/// <param name="str">対象文字列(対象パス)</param>
+		/// <param name="dirSize">対象パスが存在するディレクトリのフルパスの長さ、考慮しない場合は 0 を指定すること。</param>
+		/// <returns>ローカル名</returns>
+		public static string ToFairLocalPath(string str, int dirSize)
+		{
+			const string CHRS_NG = "\"*/:<>?\\|";
+			const string CHR_ALT = "_";
+
+			int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
+
+			if (maxLen < str.Length)
+				str = str.Substring(0, maxLen);
+
+			str = SCommon.ToJString(SCommon.ENCODING_SJIS.GetBytes(str), true, false, false, true);
+
+			string[] words = str.Split('.');
+
+			for (int index = 0; index < words.Length; index++)
+			{
+				string word = words[index];
+
+				word = word.Trim();
+
+				if (
+					index == 0 &&
+					GetReservedWordsForWindowsPath().Any(resWord => SCommon.EqualsIgnoreCase(resWord, word)) ||
+					word.Any(chr => CHRS_NG.IndexOf(chr) != -1)
+					)
+					word = CHR_ALT;
+
+				words[index] = word;
+			}
+			str = string.Join(".", words);
+
+			if (str == "")
+				str = CHR_ALT;
+
+			if (str.EndsWith("."))
+				str = str.Substring(0, str.Length - 1) + CHR_ALT;
+
+			return str;
+		}
+
+		public static string ToFairRelPath(string path, int dirSize)
+		{
+			string[] ptkns = SCommon.Tokenize(path, "\\/", false, true);
+
+			if (ptkns.Length == 0)
+				ptkns = new string[] { "_" };
+
+			for (int index = 0; index < ptkns.Length; index++)
+				ptkns[index] = ToFairLocalPath(ptkns[index], 0);
+
+			path = string.Join("\\", ptkns);
+
+			int maxLen = Math.Max(0, MY_PATH_MAX - dirSize);
+
+			if (maxLen < path.Length)
+				path = ToFairLocalPath(path, dirSize);
+
+			return path;
+		}
+
+		#endregion
+
+		public static bool IsFairLocalPath(string str, int dirSize)
+		{
+			return ToFairLocalPath(str, dirSize) == str;
+		}
+
+		public static bool IsFairRelPath(string path, int dirSize)
+		{
+			return ToFairRelPath(path, dirSize) == path;
+		}
+
+		#region ReadPart, WritePart
+
+		public static int ReadPartInt(Stream reader)
+		{
+			return (int)ReadPartLong(reader);
+		}
+
+		public static long ReadPartLong(Stream reader)
+		{
+			return long.Parse(ReadPartString(reader));
+		}
+
+		public static string ReadPartString(Stream reader)
+		{
+			return Encoding.UTF8.GetString(ReadPart(reader));
+		}
+
+		public static byte[] ReadPart(Stream reader)
+		{
+			int size = ToInt(Read(reader, 4));
+
+			if (size < 0)
+				throw new Exception("Bad size: " + size);
+
+			return Read(reader, size);
+		}
+
+		public static void WritePartInt(Stream writer, int value)
+		{
+			WritePartLong(writer, (long)value);
+		}
+
+		public static void WritePartLong(Stream writer, long value)
+		{
+			WritePartString(writer, value.ToString());
+		}
+
+		public static void WritePartString(Stream writer, string str)
+		{
+			WritePart(writer, Encoding.UTF8.GetBytes(str));
+		}
+
+		public static void WritePart(Stream writer, byte[] data)
+		{
+			Write(writer, IntToBytes(data.Length));
+			Write(writer, data);
+		}
+
+		#endregion
 
 		public static byte[] Read(Stream reader, int size)
 		{

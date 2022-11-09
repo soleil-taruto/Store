@@ -49,7 +49,7 @@ function* <generatorForTask> @@_Draw(<Enemy_t> enemy)
 		enemy.Crash = CreateCrash_Rect(CreateD4Rect_XYWH(enemy.X, enemy.Y, 200.0, 140.0));
 
 		{
-			var<Image> picture;
+			var<Picture_t> picture;
 
 			switch (enemy.ItemType)
 			{

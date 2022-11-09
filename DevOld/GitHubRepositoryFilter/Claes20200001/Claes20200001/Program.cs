@@ -30,7 +30,7 @@ namespace Charlotte
 			{
 				Main4(ar);
 			}
-			Common.OpenOutputDirIfCreated();
+			SCommon.OpenOutputDirIfCreated();
 		}
 
 		private void Main3()
@@ -44,7 +44,7 @@ namespace Charlotte
 
 			// --
 
-			//Common.Pause();
+			//SCommon.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -141,6 +141,13 @@ namespace Charlotte
 						File.Move(path, pathNew);
 				}
 			}
+
+			// ---- 以下 2022.10 以降に追加
+
+			// パス名を変更したので再取得する。
+			paths = SCommon.Concat(repositoryDirs.Select(repositoryDir => GetCommitingPaths(repositoryDir))).ToArray();
+
+			CompressMapDataFiles(paths); // 注意：パス名を変更するかもしれない。
 		}
 
 		private bool IsEmptyDir(string path)
@@ -208,6 +215,79 @@ namespace Charlotte
 
 				yield return file;
 			}
+		}
+
+		// ---- 以下 2022.10 以降に追加
+
+		private void CompressMapDataFiles(string[] paths)
+		{
+			string[] files = paths
+				.Where(v => SCommon.ContainsIgnoreCase(v, @"\dat\res\World\Map\"))
+				.Where(v => SCommon.EndsWithIgnoreCase(v, ".txt"))
+				.Where(v => !SCommon.EndsWithIgnoreCase(v, ".txt_$$Compress.txt"))
+				.Where(v => File.Exists(v))
+				.Where(v => IsMapDataFile(v))
+				.ToArray();
+
+			foreach (string file in files)
+			{
+				string destFile = file + "_$$Compress.txt";
+
+				Console.WriteLine("< " + file);
+				Console.WriteLine("> " + destFile);
+
+				string[] lines = File.ReadAllLines(file, SCommon.ENCODING_SJIS);
+				string[] destLines = CompressMapData(lines);
+
+				SCommon.DeletePath(file);
+				File.WriteAllLines(destFile, destLines, SCommon.ENCODING_SJIS);
+			}
+		}
+
+		private bool IsMapDataFile(string file)
+		{
+			using (StreamReader reader = new StreamReader(file, SCommon.ENCODING_SJIS))
+			{
+				return
+					IsNextLineSimpleUInt(reader) &&
+					IsNextLineSimpleUInt(reader);
+			}
+		}
+
+		private bool IsNextLineSimpleUInt(StreamReader reader)
+		{
+			string line = reader.ReadLine();
+
+			return
+				line != null &&
+				Regex.IsMatch(line, "^[0-9]+$");
+		}
+
+		private string[] CompressMapData(string[] lines)
+		{
+			List<string> destLines = new List<string>();
+
+			for (int index = 0; index < lines.Length; )
+			{
+				int c;
+
+				for (c = 1; index + c < lines.Length; c++)
+					if (lines[index] != lines[index + c])
+						break;
+
+				if (c == 1)
+				{
+					destLines.Add(lines[index]);
+				}
+				else
+				{
+					destLines.Add(";;REPEAT;;");
+					destLines.Add("" + c);
+					destLines.Add(lines[index]);
+				}
+				index += c;
+			}
+			return destLines.ToArray();
 		}
 	}
 }

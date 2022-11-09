@@ -88,5 +88,19 @@ namespace Charlotte
 
 			return SCommon.CompIgnoreCase(a, b);
 		}
+
+		/// <summary>
+		/// ランダムな識別子を生成する。
+		/// 重複を考慮しなくて良いランダムな文字列を返す。
+		/// </summary>
+		/// <returns>新しい識別子</returns>
+		public static string CreateRandIdent()
+		{
+			return
+				"A_" +
+				SCommon.CRandom.GetUInt64().ToString("D20") + "_" +
+				SCommon.CRandom.GetUInt64().ToString("D20") +
+				"_Z";
+		}
 	}
 }

@@ -50,7 +50,22 @@ namespace Charlotte.Games
 			if (mapFile == "")
 				return defval;
 
-			return mapFile; // as mapName
+			string mapName = mapFile.Replace('\\', '/');
+			return mapName;
+		}
+
+		/// <summary>
+		/// 同じマップ名であるか判定する。
+		/// </summary>
+		/// <param name="mapName1">マップ名1</param>
+		/// <param name="mapName2">マップ名2</param>
+		/// <returns>同じマップ名か</returns>
+		public static bool IsSameMapName(string mapName1, string mapName2)
+		{
+			mapName1 = mapName1.Replace('\\', '/');
+			mapName2 = mapName2.Replace('\\', '/');
+
+			return mapName1 == mapName2;
 		}
 
 		/// <summary>

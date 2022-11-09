@@ -12,9 +12,7 @@ namespace Charlotte.Commons
 		public const char DELIMITER_TAB = '\t';
 
 		private char Delimiter = DELIMITER_COMMA;
-
 		private StreamWriter Writer;
-		private bool RowBegin;
 
 		public CsvFileWriter(string file, bool append = false)
 			: this(file, append, SCommon.ENCODING_SJIS)
@@ -33,13 +31,17 @@ namespace Charlotte.Commons
 		public CsvFileWriter(StreamWriter writer_binding)
 		{
 			this.Writer = writer_binding;
-			this.RowBegin = true;
 		}
+
+		/// <summary>
+		/// 次に書き込むセルが行の最初のセルか
+		/// </summary>
+		private bool FirstCell = true;
 
 		public void WriteCell(string cell, bool forceQuote = false)
 		{
-			if (this.RowBegin)
-				this.RowBegin = false;
+			if (this.FirstCell)
+				this.FirstCell = false;
 			else
 				this.Writer.Write(this.Delimiter);
 
@@ -61,7 +63,7 @@ namespace Charlotte.Commons
 		public void EndRow()
 		{
 			this.Writer.Write('\n');
-			this.RowBegin = true;
+			this.FirstCell = true;
 		}
 
 		public void WriteCells(IList<string> cells)

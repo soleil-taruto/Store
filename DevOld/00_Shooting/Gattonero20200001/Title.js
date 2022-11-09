@@ -9,7 +9,7 @@ var @@_Buttons =
 		Pressed : function* ()
 		{
 			LOGPOS();
-			yield* GameMain();
+			yield* GameProgressMaster();
 			LOGPOS();
 		},
 	},
@@ -36,7 +36,8 @@ var @@_Buttons =
 		Pressed : function* ()
 		{
 			LOGPOS();
-			window.location.href = "..";
+			window.location.href = "/";
+//			window.location.href = "..";
 //			window.location.href = "https://www.google.com/";
 			LOGPOS();
 		},
@@ -49,6 +50,9 @@ function* <generatorForTask> TitleMain()
 
 	SetCurtain();
 	FreezeInput();
+	FreezeInputUntilRelease();
+
+	Play(M_Title);
 
 	for (; ; )
 	{
@@ -56,11 +60,11 @@ function* <generatorForTask> TitleMain()
 		PrintRect(0, 0, Screen_W, Screen_H);
 
 		SetColor("#000000");
-		SetPrint(40, 320, 0);
-		SetFSize(160);
-		PrintLine("Template");
+		SetPrint(50, 250, 0);
+		SetFSize(100);
+		PrintLine("Title");
 
-		selectIndex = DrawSimpleMenu(selectIndex, 100, Screen_H - 300, 70, @@_Buttons.map(v => v.Text));
+		selectIndex = DrawSimpleMenu(selectIndex, 70, 440, 600, 30, @@_Buttons.map(v => v.Text));
 
 		if (DSM_Desided)
 		{
@@ -70,6 +74,8 @@ function* <generatorForTask> TitleMain()
 
 			SetCurtain();
 			FreezeInput();
+
+			Play(M_Title);
 		}
 		yield 1;
 	}

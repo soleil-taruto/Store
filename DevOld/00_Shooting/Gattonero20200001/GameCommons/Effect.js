@@ -21,7 +21,7 @@ function <void> @(UNQN)_EACH()
 	{
 		var<generatorForTask> effect = @@_Effects[index];
 
-		if (effect.next().value) // ? true -> エフェクト継続
+		if (NextVal(effect)) // ? true -> エフェクト継続
 		{
 			// noop
 		}
@@ -44,16 +44,4 @@ function <generatorForTask[]> GetEffects()
 function <void> ClearAllEffect()
 {
 	@@_Effects = [];
-}
-
-function <generatorForTask[]> EjectEffects()
-{
-	var ret = @@_Effects;
-	@@_Effects = [];
-	return ret;
-}
-
-function <void> SetEffects(<generatorForTask[]> effects)
-{
-	@@_Effects = effects;
 }

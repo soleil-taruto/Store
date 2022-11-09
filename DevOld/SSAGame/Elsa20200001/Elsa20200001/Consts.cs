@@ -7,6 +7,6 @@ namespace Charlotte
 {
 	public static class Consts
 	{
-		public const int SAVE_DATA_SLOT_NUM = 14;
+		// none
 	}
 }

@@ -372,7 +372,7 @@ WriteByte
 WriteLine
 Zero
 
-; ★★★ 新しいキーワードをここへ追加する。
+; ★★★ 新しい予約語をここへ追加する。
 
 ";
 
@@ -404,6 +404,8 @@ Regex
 string
 Math
 Encoding
+
+; ★★★ 新しい予約語クラス名をここへ追加する。
 
 ";
 

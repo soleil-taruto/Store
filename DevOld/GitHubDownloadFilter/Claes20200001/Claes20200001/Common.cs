@@ -77,5 +77,21 @@ namespace Charlotte
 		{
 			return SCommon.EqualsIgnoreCase(Path.GetExtension(file), ext);
 		}
+
+		private static bool[,] S_JChars = null;
+
+		public static bool IsJChar(byte lead, byte trail)
+		{
+			if (S_JChars == null)
+			{
+				S_JChars = new bool[256, 256];
+
+				foreach (UInt16 chr in SCommon.GetJCharCodes())
+				{
+					S_JChars[chr >> 8, chr & 0xff] = true;
+				}
+			}
+			return S_JChars[lead, trail];
+		}
 	}
 }

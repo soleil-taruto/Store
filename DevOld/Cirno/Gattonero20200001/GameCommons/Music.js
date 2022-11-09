@@ -9,12 +9,12 @@
 var<double> MusicVolume = DEFAULT_VOLUME;
 
 var<int> @@_State = 0; // 0 == 停止中, 1 == 再生中, 2 == フェードアウト中, 3 == 曲停止, 4 == 次の曲を再生
-var<Audio> @@_Music = null;
-var<Audio> @@_NextMusic = null;
+var<Sound_t> @@_Music = null;
+var<Sound_t> @@_NextMusic = null;
 
 // 再生
 // music: 曲
-function <void> Play(<Audio> music)
+function <void> Play(<Sound_t> music)
 {
 	if (!music)
 	{
@@ -35,10 +35,10 @@ function <void> Play(<Audio> music)
 		return;
 	}
 
-	music.loop = true;
-	music.currentTime = 0;
-	music.volume = MusicVolume;
-	music.play();
+	music.Handle.loop = true;
+	music.Handle.currentTime = 0;
+	music.Handle.volume = MusicVolume;
+	music.Handle.play();
 
 	@@_State = 1;
 	@@_Music = music;
@@ -66,13 +66,13 @@ function <void> @(UNQN)_EACH()
 			@@_Volume = 0.0;
 			@@_State = 3;
 		}
-		@@_Music.volume = @@_Volume * MusicVolume;
+		@@_Music.Handle.volume = @@_Volume * MusicVolume;
 	}
 	else if (@@_State == 3) // ? 曲停止
 	{
 		@@_State = 4;
 
-		@@_Music.pause();
+		@@_Music.Handle.pause();
 		@@_Music = null;
 	}
 	else if (@@_State == 4) // ? 次の曲を再生
@@ -128,6 +128,6 @@ function <void> MusicVolumeChanged()
 {
 	if (@@_Music != null)
 	{
-		@@_Music.volume = MusicVolume;
+		@@_Music.Handle.volume = MusicVolume;
 	}
 }

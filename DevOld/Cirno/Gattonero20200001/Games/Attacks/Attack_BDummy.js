@@ -21,14 +21,28 @@ function* <generatorForTask> CreateAttack_BDummy()
 		AttackProcPlayer_Ceiling();
 		AttackProcPlayer_Ground();
 
-		AttackProcPlayer_Atari(true);
+		AttackProcPlayer_Status();
 
-		SetPrint(PlayerX - Camera.X - 90, PlayerY - Camera.Y - 40, 0);
-		SetColor("#ffffff");
-		SetFSize(16);
-		PrintLine("Attack - BDummy テスト");
+		var<double> plA = 1.0;
 
-		Draw(P_PlayerStand, PlayerX - Camera.X, PlayerY - Camera.Y, 1.0, 0.0, 1.0);
+		if (1 <= PlayerInvincibleFrame) // ? 無敵時間中
+		{
+			plA = 0.5;
+		}
+		else
+		{
+			AttackProcPlayer_Atari();
+		}
+
+		AddTask(PlayerDrawTasks, function* <generatorForTask> ()
+		{
+			SetPrint(PlayerX - Camera.X - 90, PlayerY - Camera.Y - 40, 0);
+			SetColor("#ffffff");
+			SetFSize(16);
+			PrintLine("Attack - BDummy テスト");
+
+			Draw(P_PlayerStand, PlayerX - Camera.X, PlayerY - Camera.Y, plA, 0.0, 1.0);
+		}());
 
 		yield 1;
 	}

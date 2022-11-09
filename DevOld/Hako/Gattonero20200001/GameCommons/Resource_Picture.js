@@ -2,26 +2,9 @@
 	‰æ‘œ
 */
 
-function <Image> @@_Load(<string> url)
+function <Picture_t> @@_Load(<string> url)
 {
-	LOGPOS();
-	Loading++;
-
-	var image = new Image();
-
-	image.src = url;
-	image.onload = function()
-	{
-		LOGPOS();
-		Loading--;
-	};
-
-	image.onerror = function()
-	{
-		error();
-	};
-
-	return image;
+	return LoadPicture(url);
 }
 
 // ‚±‚±‚©‚çŠeí‰æ‘œ
@@ -29,17 +12,17 @@ function <Image> @@_Load(<string> url)
 // ƒvƒŠƒtƒBƒNƒX
 // P_ ... ‰æ‘œ
 
-var<Image> P_Dummy = @@_Load(Resources.General__Dummy_png);
-var<Image> P_WhiteBox = @@_Load(Resources.General__WhiteBox_png);
-var<Image> P_WhiteCircle = @@_Load(Resources.General__WhiteCircle_png);
+var<Picture_t> P_Dummy = @@_Load(RESOURCE_General__Dummy_png);
+var<Picture_t> P_WhiteBox = @@_Load(RESOURCE_General__WhiteBox_png);
+var<Picture_t> P_WhiteCircle = @@_Load(RESOURCE_General__WhiteCircle_png);
 
 // š‚±‚±‚Ü‚ÅŒÅ’è -- ‚¿‰ñ‚è_‹¤’Ê -- ƒTƒ“ƒvƒ‹‚Æ‚µ‚ÄƒL[ƒv
 
-var<Image> P_Star_S = @@_Load(Resources.Picture__Œõ‚é¯20_png);
-var<Image> P_Player = @@_Load(Resources.Picture__Player_png);
-var<Image> P_Wall = @@_Load(Resources.Picture__Wall_png);
-var<Image> P_Goal = @@_Load(Resources.Picture__Goal_png);
-var<Image> P_”wŒi = @@_Load(Resources.Picture__Background_png);
-var<Image> P_Enemy_B = @@_Load(Resources.Picture__“GÂ_png);
-var<Image> P_Enemy_R = @@_Load(Resources.Picture__“GÔ_png);
-var<Image> P_Enemy_G = @@_Load(Resources.Picture__“G—Î_png);
+var<Picture_t> P_Star_S = @@_Load(RESOURCE_Picture__Œõ‚é¯20_png);
+var<Picture_t> P_Player = @@_Load(RESOURCE_Picture__Player_png);
+var<Picture_t> P_Wall = @@_Load(RESOURCE_Picture__Wall_png);
+var<Picture_t> P_Goal = @@_Load(RESOURCE_Picture__Goal_png);
+var<Picture_t> P_”wŒi = @@_Load(RESOURCE_Picture__Background_png);
+var<Picture_t> P_Enemy_B = @@_Load(RESOURCE_Picture__“GÂ_png);
+var<Picture_t> P_Enemy_R = @@_Load(RESOURCE_Picture__“GÔ_png);
+var<Picture_t> P_Enemy_G = @@_Load(RESOURCE_Picture__“G—Î_png);

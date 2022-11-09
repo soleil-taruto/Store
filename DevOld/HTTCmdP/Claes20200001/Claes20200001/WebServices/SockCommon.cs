@@ -22,7 +22,7 @@ namespace Charlotte.WebServices
 		public static void WriteLog(ErrorLevel_e errorLevel, object message)
 		{
 			if (message is Exception)
-				message = ((Exception)message).Message; // 他のメッセージが見えなくなるのでスタックトレースを抑止
+				message = ((Exception)message).Message;
 
 			switch (errorLevel)
 			{
@@ -59,7 +59,7 @@ namespace Charlotte.WebServices
 		{
 #if true
 			return routine();
-#else // 遅延モニタ_抑止
+#else
 			DateTime startedTime = DateTime.Now;
 			try
 			{
@@ -241,6 +241,21 @@ namespace Charlotte.WebServices
 			private static DateTime GetNextRotateTime()
 			{
 				return DateTime.Now + TimeSpan.FromSeconds((double)CTR_ROT_SEC);
+			}
+		}
+
+		public static void Shuffle_7<T>(IList<T> list)
+		{
+			if (list.Count < 14)
+			{
+				SCommon.CRandom.Shuffle(list);
+			}
+			else
+			{
+				for (int n = 1; n <= 7; n++)
+				{
+					SCommon.Swap(list, SCommon.CRandom.GetInt(list.Count - n), list.Count - n);
+				}
 			}
 		}
 	}

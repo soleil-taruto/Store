@@ -258,3 +258,37 @@ function <MapCell_t> GetMapCell_XY(<int> x, <int> y)
 
 	return Map.Table[x][y];
 }
+
+// ================================
+// マップの壁・足場等の判定ここから
+// ================================
+
+/*
+	指定位置(テーブル・インデックス)が壁であるか判定する。
+*/
+function <boolean> IsWall(<I2Point_t> pt)
+{
+	return GetMapCell(pt).Tile.WallFlag;
+}
+
+function <boolean> IsWall_XY(<int> x, <int> y)
+{
+	return IsWall(CreateI2Point(x, y));
+}
+
+/*
+	指定位置(ドット単位・マップ上の座標)が壁であるか判定する。
+*/
+function <boolean> IsPtWall(<D2Point_t> pt)
+{
+	return GetMapCell(ToTablePoint(pt)).Tile.WallFlag;
+}
+
+function <boolean> IsPtWall_XY(<double> x, <double> y)
+{
+	return IsPtWall(CreateD2Point(x, y));
+}
+
+// ================================
+// マップの壁・足場等の判定ここまで
+// ================================

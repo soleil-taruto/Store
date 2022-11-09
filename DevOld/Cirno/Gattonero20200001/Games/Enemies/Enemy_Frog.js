@@ -38,7 +38,7 @@ function* <generatorForTask> @@_Draw(<Enemy_t> enemy)
 
 	for (; ; )
 	{
-		if (GetMapCell(ToTablePoint_XY(enemy.X, enemy.Y + ATARI_Y)).Tile.WallFlag) // ínñ Ç÷ÇÃÇﬂÇËçûÇ›Çâè¡
+		if (IsPtWall_XY(enemy.X, enemy.Y + ATARI_Y)) // ínñ Ç÷ÇÃÇﬂÇËçûÇ›Çâè¡
 		{
 			enemy.Y = ToTileCenterY(enemy.Y + ATARI_Y) - TILE_H / 2.0 - ATARI_Y;
 		}
@@ -88,19 +88,19 @@ function* <generatorForTask> @@_Draw(<Enemy_t> enemy)
 			enemy.X += xSpeed;
 			enemy.Y += ySpeed;
 
-			if (GetMapCell(ToTablePoint_XY(enemy.X - ATARI_X, enemy.Y)).Tile.WallFlag)
+			if (IsPtWall_XY(enemy.X - ATARI_X, enemy.Y))
 			{
 				xSpeed = SPEED;
 			}
-			if (GetMapCell(ToTablePoint_XY(enemy.X + ATARI_X, enemy.Y)).Tile.WallFlag)
+			if (IsPtWall_XY(enemy.X + ATARI_X, enemy.Y))
 			{
 				xSpeed = -SPEED;
 			}
-			if (GetMapCell(ToTablePoint_XY(enemy.X, enemy.Y - ATARI_Y)).Tile.WallFlag)
+			if (IsPtWall_XY(enemy.X, enemy.Y - ATARI_Y))
 			{
 				ySpeed = Math.max(0.0, ySpeed);
 			}
-			if (GetMapCell(ToTablePoint_XY(enemy.X, enemy.Y + ATARI_Y)).Tile.WallFlag)
+			if (IsPtWall_XY(enemy.X, enemy.Y + ATARI_Y))
 			{
 				break;
 			}

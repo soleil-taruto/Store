@@ -375,21 +375,26 @@ namespace Charlotte.CSSolutions
 			text = SAM_Replace(text, "{ private get; set; }", ";");
 			text = SAM_Replace(text, "{ set; private get; }", ";");
 			text = SAM_Replace(text, "{ private set; get; }", ";");
+
+			// const -> static
+			{
 #if true // string 以外 (int や double など) は const のままにする。
-			text = SAM_Replace(text, "private const string", "public static string");
-			text = SAM_Replace(text, "protected const string", "public static string");
-			text = SAM_Replace(text, "public const string", "public static string");
-			text = SAM_Replace(text, "const string", "string");
-			// ----
-			text = SAM_Replace(text, "private const", "public const");
-			text = SAM_Replace(text, "protected const", "public const");
-			//text = SAM_Replace(text, "public const", "public const"); // 同じ
+				text = SAM_Replace(text, "private const string", "public static string");
+				text = SAM_Replace(text, "protected const string", "public static string");
+				text = SAM_Replace(text, "public const string", "public static string");
+				text = SAM_Replace(text, "const string", "string");
+
+				text = SAM_Replace(text, "private const", "public const"); // HACK: 継承クラスに同名のメンバが居たらマズくない？
+				text = SAM_Replace(text, "protected const", "public const");
+				//text = SAM_Replace(text, "public const", "public const"); // 同じ
 #else // old
-			text = SAM_Replace(text, "private const", "public static");
-			text = SAM_Replace(text, "protected const", "public static");
-			text = SAM_Replace(text, "public const", "public static");
-			text = SAM_Replace(text, "const", "");
+				text = SAM_Replace(text, "private const", "public static");
+				text = SAM_Replace(text, "protected const", "public static");
+				text = SAM_Replace(text, "public const", "public static");
+				text = SAM_Replace(text, "const", "");
 #endif
+			}
+
 			text = SAM_Replace(text, "readonly", "");
 			//text = SAM_Replace(text, "private", "public"); // 継承クラスに同名のメンバが居るとマズい。
 			//text = SAM_Replace(text, "protected", "public"); // protected override に対応していない。
@@ -574,7 +579,7 @@ namespace Charlotte.CSSolutions
 					return " int.Parse(" + CSConsts.CRLF + "\"" + initValue + "\")";
 				}
 			}
-			// else -- ng!
+			// else-にしては駄目
 			if (Regex.IsMatch(initValue, "^[-]?[0-9]{0,19}[Ll]?$"))
 			{
 				string sVal = Regex.Match(initValue, "[-]?[0-9]+").Value;
@@ -803,13 +808,14 @@ namespace Charlotte.CSSolutions
 			for (int index = 0; index < lines.Length; index++)
 			{
 				string line = lines[index];
+				string trLine = line.Trim();
 
 				// 以下のリテラル文字列は変数化できない。
 				// -- switch の case
 				// -- デフォルト引数
 				// -- [DllImport(... とか
 
-				if (line.Trim().StartsWith("case ")) // ? switch の case
+				if (trLine.StartsWith("case ")) // ? switch の case
 				{
 					// noop
 				}
@@ -817,7 +823,7 @@ namespace Charlotte.CSSolutions
 				{
 					// noop
 				}
-				else if (line.Trim().StartsWith("[")) // ? [DllImport(... とか
+				else if (trLine.StartsWith("[")) // ? [DllImport(... とか
 				{
 					// noop
 				}
@@ -852,22 +858,72 @@ namespace Charlotte.CSSolutions
 							varName + "_String; }"
 							);
 
+						int[][] ranges = SLS2_GetStringRanges(c + 1, (c2 - c) - 2);
+
+						for (int rangeIndex = 0; rangeIndex < ranges.Length; rangeIndex++)
+						{
+							AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_S_GetString_" + rangeIndex + "_Z");
+							varLines.Add("\t\tpublic static string " +
+								varName + "_S_GetString_" +
+								rangeIndex + "_Z() { return new string(" +
+								varName + "_E_GetString_" +
+								rangeIndex + "_Z().Where(" +
+								varName + "_Var => " +
+								varName + "_Var % 65537 != 0).Select(" +
+								varName + "_Var2 => (char)(" +
+								varName + "_Var2 % 65537 - 1)).ToArray()); }"
+								);
+
+							AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_E_GetString_" + rangeIndex + "_Z");
+							varLines.Add("\t\tpublic static IEnumerable<int> " +
+								varName + "_E_GetString_" +
+								rangeIndex + "_Z() { " +
+								string.Join(" ", SLS2_ToYR(line.Substring(ranges[rangeIndex][0], ranges[rangeIndex][1]))) + " }"
+								);
+						}
+
+						SLS2_RangeTreeInfo rangeTree = new SLS2_RangeTreeInfo(Enumerable.Range(0, ranges.Length).ToArray());
+						SLS2_MakeRangeTree(rangeTree);
+
 						AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_GetString");
 						varLines.Add("\t\tpublic static string " +
-							varName + "_GetString() { return new string(" +
-							varName + "_E_GetString().Where(" +
-							varName + "_Var => " +
-							varName + "_Var % 65537 != 0).Select(" +
-							varName + "_Var2 => (char)(" +
-							varName + "_Var2 % 65537 - 1)).ToArray()); }"
+							varName + "_GetString() { return " +
+							rangeTree.Ident + "(); }"
 							);
 
-						AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_E_GetString");
-						varLines.Add("\t\tpublic static IEnumerable<int> " +
-							varName + "_E_GetString() { " +
-							string.Join(" ", SLS2_ToYR(line.Substring(c, c2 - c))) + " }"
-							);
+						Queue<SLS2_RangeTreeInfo> qRangeTree = new Queue<SLS2_RangeTreeInfo>();
+						qRangeTree.Enqueue(rangeTree);
 
+						while (1 <= qRangeTree.Count)
+						{
+							rangeTree = qRangeTree.Dequeue();
+
+							if (rangeTree.Children != null)
+							{
+								if (rangeTree.RangeIndexes != null)
+									throw null; // never
+
+								AddWarpableMemberMark(varLines, beforeWarpableMemberLine, rangeTree.Ident);
+								varLines.Add("\t\tpublic static string " +
+									rangeTree.Ident + "() { return " +
+									string.Join(" + ", rangeTree.Children.Select(v => v.Ident + "()")) + "; }"
+									);
+
+								foreach (var v in rangeTree.Children)
+									qRangeTree.Enqueue(v);
+							}
+							else
+							{
+								if (rangeTree.RangeIndexes == null)
+									throw null; // never
+
+								AddWarpableMemberMark(varLines, beforeWarpableMemberLine, rangeTree.Ident);
+								varLines.Add("\t\tpublic static string " +
+									rangeTree.Ident + "() { return " +
+									string.Join(" + ", rangeTree.RangeIndexes.Select(v => varName + "_S_GetString_" + v + "_Z()")) + "; }"
+									);
+							}
+						}
 						line = line.Substring(0, c) + varName + "_01()" + line.Substring(c2);
 					}
 					lines[index] = line;
@@ -893,19 +949,53 @@ namespace Charlotte.CSSolutions
 				"_z";
 		}
 
+		private static int[][] SLS2_GetStringRanges(int start, int length)
+		{
+			List<int[]> ranges = new List<int[]>();
+
+			ranges.Add(new int[] { start, length });
+
+			for (; ; )
+			{
+				int index = SLS2_GSR_GetMaxRange(ranges);
+
+				// 注意：実際の1文字を6文字で表現
+				//
+				if (ranges[index][1] < 600) // 100文字くらい -- rough limit
+					break;
+
+				SLS2_GSR_Divide(ranges, index);
+			}
+			for (int c = SCommon.CRandom.GetRange(1, 3); 0 < c; c--) // rough limit
+			{
+				SLS2_GSR_Divide(ranges, SCommon.CRandom.GetInt(ranges.Count));
+			}
+			return ranges.ToArray();
+		}
+
+		private static int SLS2_GSR_GetMaxRange(List<int[]> ranges)
+		{
+			int ret = 0;
+
+			for (int index = 1; index < ranges.Count; index++)
+				if (ranges[ret][1] < ranges[index][1])
+					ret = index;
+
+			return ret;
+		}
+
+		private static void SLS2_GSR_Divide(List<int[]> ranges, int index)
+		{
+			// 注意：実際の1文字を6文字で表現
+			//
+			int newLength = SCommon.CRandom.GetInt(ranges[index][1] / 6 + 1) * 6;
+
+			ranges.Insert(index + 1, new int[] { ranges[index][0] + newLength, ranges[index][1] - newLength });
+			ranges[index][1] = newLength;
+		}
+
 		private static IEnumerable<string> SLS2_ToYR(string code)
 		{
-			if (code.Length < 2)
-				throw null;
-
-			if (code[0] != '"')
-				throw null;
-
-			if (code[code.Length - 1] != '"')
-				throw null;
-
-			code = code.Substring(1, code.Length - 2);
-
 			if (code.Length % 6 != 0)
 				throw null;
 
@@ -915,8 +1005,6 @@ namespace Charlotte.CSSolutions
 				for (int c = 0; c < dmyYRNum; c++)
 					yield return SLS2_MakeYR(-1);
 			}
-
-			int divFuncPermil = 100; // 廃止 @ 2022.2.23
 
 			for (int index = 0; index < code.Length; index += 6)
 			{
@@ -929,24 +1017,6 @@ namespace Charlotte.CSSolutions
 					!CSCommon.IsHexadecimal(code[index + 5])
 					)
 					throw null;
-
-				// メソッド分割
-				{
-					if (SCommon.CRandom.GetInt(1000) < divFuncPermil)
-					{
-						string name = SLS2_CreateVarName();
-
-						yield return "foreach (int " +
-							name + "_Char in " +
-							name + "_Next()) { yield return " +
-							name + "_Char; }} public static IEnumerable<int> " + // HACK: メンバーの並びシャッフルのために改行が要る。<- WLSのため不可となった。
-							name + "_Next() {";
-
-						divFuncPermil = 1;
-					}
-					else
-						divFuncPermil++;
-				}
 
 				if (SCommon.CRandom.GetInt(2) == 0) // ランダムにダミー値を差し込む
 					yield return SLS2_MakeYR(-1);
@@ -964,10 +1034,65 @@ namespace Charlotte.CSSolutions
 			// (0x0000 + 1) + 65537 * 32766 == 2147385343
 			// (0xffff + 1) + 65537 * 32766 == 2147450878 (0x7fff7ffe)
 
-			int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(15259, 32766);
-			//int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(0, 32766); // old
+			int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(15259, 32766); // 10桁
+			//int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(0, 32766); // 1～10桁
 
 			return "yield return " + value + ";";
+		}
+
+		private class SLS2_RangeTreeInfo
+		{
+			public string Ident = CSCommon.CreateNewIdent();
+			public SLS2_RangeTreeInfo[] Children = null;
+			public int[] RangeIndexes;
+
+			public SLS2_RangeTreeInfo(int[] rangeIndexes)
+			{
+				this.RangeIndexes = rangeIndexes;
+			}
+		}
+
+		private void SLS2_MakeRangeTree(SLS2_RangeTreeInfo rangeTree)
+		{
+			Queue<SLS2_RangeTreeInfo> q = new Queue<SLS2_RangeTreeInfo>();
+
+			q.Enqueue(rangeTree);
+
+			while (1 <= q.Count)
+			{
+				rangeTree = q.Dequeue();
+
+				if ((
+					2 <= rangeTree.RangeIndexes.Length // ? 分割可能な最小の個数
+					) && (
+					5 <= rangeTree.RangeIndexes.Length || // ? 分割しなければならない最小の個数 -- rough limit
+					SCommon.CRandom.GetInt(3) == 0 // 33.333 %
+					))
+				{
+					// n個を { 1個,(n-1)個 } ～ { (n-1)個,1個 } に分割する。
+
+					int subLength = SCommon.CRandom.GetRange(1, rangeTree.RangeIndexes.Length - 1);
+
+					SLS2_RangeTreeInfo a = new SLS2_RangeTreeInfo(
+						rangeTree.RangeIndexes.Take(subLength).ToArray()
+						);
+					SLS2_RangeTreeInfo b = new SLS2_RangeTreeInfo(
+						rangeTree.RangeIndexes.Skip(subLength).ToArray()
+						);
+
+					// ConfuserForElsa-のデバッグ用にメソッド名を変更
+					{
+						a.Ident += "_MRT_Divided";
+						b.Ident += "_MRT_Divided";
+					}
+
+					rangeTree.Children = new SLS2_RangeTreeInfo[] { a, b };
+					rangeTree.RangeIndexes = null;
+
+					q.Enqueue(a);
+					q.Enqueue(b);
+				}
+			}
 		}
 
 		private IEnumerable<string> SLS2_クラスの先頭に挿入(string[] lines, List<string> varLines)
@@ -1462,7 +1587,7 @@ namespace Charlotte.CSSolutions
 
 			File.WriteAllLines(_file, lines, Encoding.UTF8);
 
-			this.RUI_Formatting();
+			this.RUI_FormatSource();
 		}
 
 		/// <summary>
@@ -1489,7 +1614,7 @@ namespace Charlotte.CSSolutions
 		/// ソースコードの整形
 		/// -- 尚更実行しなくても良い処理
 		/// </summary>
-		private void RUI_Formatting()
+		private void RUI_FormatSource()
 		{
 			{
 				string text = File.ReadAllText(_file, Encoding.UTF8);
@@ -1525,150 +1650,151 @@ namespace Charlotte.CSSolutions
 					return line;
 				});
 
-				lines = RUI_F_P1_GetOutputLines(lines.ToArray());
-				lines = RUI_F_P2A_GetOutputLines(lines.ToArray());
-				lines = RUI_F_P2B_GetOutputLines(lines.ToArray());
-				lines = RUI_F_P3_GetOutputLines(lines); // クラス・メソッド etc. の summary コメント
+				lines = lines.Where(line => line != ""); // 空行を除去
+
+				lines = RUI_FS_P1(lines);
+				lines = RUI_FS_P2(lines);
+				lines = RUI_FS_P3(lines);
+				lines = RUI_FS_P4(lines);
+				lines = RUI_FS_P5(lines);
 
 				File.WriteAllLines(_file, lines, Encoding.UTF8);
 			}
 		}
 
-		private static IEnumerable<string> RUI_F_P1_GetOutputLines(string[] lines)
+		private static IEnumerable<string> RUI_FS_P1(IEnumerable<string> lines)
 		{
-			for (int index = 0; index < lines.Length; index++)
+			string lastLine = null;
+			string trLastLine = null;
+
+			foreach (string line in lines)
 			{
+				bool _2行目以降 = lastLine != null;
+				string trLine = line.Trim();
+
 				if (
-					lines[index].StartsWith("namespace ") ||
-					1 <= index &&
-					lines[index - 1].Trim() != "{" &&
+					line.StartsWith("namespace ") ||
+					_2行目以降 &&
+					trLastLine != "{" &&
 					(
-						lines[index].Trim().StartsWith("public ") ||
-						lines[index].Trim().StartsWith("protected ") ||
-						lines[index].Trim().StartsWith("private ")
+						trLine.StartsWith("public ") ||
+						trLine.StartsWith("protected ") ||
+						trLine.StartsWith("private ")
 					))
 					yield return "";
 
-				yield return lines[index];
+				yield return line;
+
+				lastLine = line;
+				trLastLine = trLine;
 			}
 		}
 
-		private static IEnumerable<string> RUI_F_P2A_GetOutputLines(string[] lines)
+		private static IEnumerable<string> RUI_FS_P2(IEnumerable<string> lines)
 		{
-			for (int index = 0; index < lines.Length; index++)
+			string lastLine = null;
+			string trLastLine = null;
+
+			foreach (string line in lines)
 			{
+				bool _2行目以降 = lastLine != null;
+				string trLine = line.Trim();
+
 				if (
-					1 <= index &&
-					CSCommon.GetIndentDepth(lines[index]) < CSCommon.GetIndentDepth(lines[index - 1]) &&
-					lines[index - 1].Trim() != "" &&
-					lines[index - 0].Trim() != "" &&
-					lines[index - 0].Trim() != "else" &&
-					!lines[index].Trim().StartsWith("else ") &&
-					CSCommon.IsCSWordChar(lines[index - 1].Trim()[0]) &&
-					CSCommon.IsCSWordChar(lines[index - 0].Trim()[0])
+					_2行目以降 &&
+					CSCommon.GetIndentDepth(lastLine) > CSCommon.GetIndentDepth(line) &&
+					trLastLine != "" &&
+					trLine != "" &&
+					trLine != "else" &&
+					!trLine.StartsWith("else ") &&
+					CSCommon.IsCSWordChar(trLastLine[0]) &&
+					CSCommon.IsCSWordChar(trLine[0])
 					)
 					yield return "";
 
-				yield return lines[index];
+				yield return line;
+
+				lastLine = line;
+				trLastLine = trLine;
 			}
 		}
 
-		private static IEnumerable<string> RUI_F_P2B_GetOutputLines(string[] lines)
+		private static IEnumerable<string> RUI_FS_P3(IEnumerable<string> lines)
 		{
-			for (int index = 0; index < lines.Length; index++)
+			string lastLine = null;
+			string trLastLine = null;
+
+			foreach (string line in lines)
 			{
+				bool _2行目以降 = lastLine != null;
+				string trLine = line.Trim();
+
 				if (
-					1 <= index &&
-					CSCommon.GetIndentDepth(lines[index]) == CSCommon.GetIndentDepth(lines[index - 1]) &&
-					lines[index - 1].Trim() != "" &&
-					lines[index - 0].Trim() != "" &&
-					CSCommon.IsCSWordChar(lines[index - 1].Trim()[0]) &&
-					CSCommon.IsCSWordChar(lines[index - 0].Trim()[0]) &&
-					(
-						lines[index].Trim().StartsWith("if (") ||
-						lines[index].Trim().StartsWith("for (") ||
-						lines[index].Trim().StartsWith("foreach (") ||
-						lines[index].Trim().StartsWith("switch (") ||
-						lines[index].Trim().StartsWith("using (") ||
-						lines[index].Trim().StartsWith("while (")
-					))
+					_2行目以降 &&
+					CSCommon.GetIndentDepth(lastLine) == CSCommon.GetIndentDepth(line) &&
+					trLastLine != "" &&
+					trLine != "" &&
+					CSCommon.IsCSWordChar(trLastLine[0]) &&
+					CSCommon.IsCSWordChar(trLine[0]) &&
+					Regex.IsMatch(trLine, "^[a-z]+ \\(") && // ? if ( ... , for ( ... など
+					!trLine.StartsWith("using ")
+					)
 					yield return "";
 
-				yield return lines[index];
+				yield return line;
+
+				lastLine = line;
+				trLastLine = trLine;
 			}
 		}
 
-#if true // シンプル ver
-		private static string RUI_F_P3_GOL_DateTime = null;
-
-		private static IEnumerable<string> RUI_F_P3_GetOutputLines(IEnumerable<string> lines)
+		private static IEnumerable<string> RUI_FS_P4(IEnumerable<string> lines)
 		{
-			if (RUI_F_P3_GOL_DateTime == null)
-				RUI_F_P3_GOL_DateTime = SCommon.SimpleDateTime.Now().ToString("{0}/{1:D2}/{2:D2} {4:D2}:{5:D2}:{6:D2}");
+			string lastLine = null;
+			string trLastLine = null;
 
-			string commentMessage = "Confused by ConfuserForElsa @ " + RUI_F_P3_GOL_DateTime;
+			foreach (string line in lines)
+			{
+				bool _2行目以降 = lastLine != null;
+				string trLine = line.Trim();
+
+				if (
+					_2行目以降 &&
+					Regex.IsMatch(trLastLine, "^[\\)\\}]+;$") && // ? ); , }; , }); など
+					trLine != ""
+					)
+					yield return "";
+
+				yield return line;
+
+				lastLine = line;
+				trLastLine = trLine;
+			}
+		}
+
+		private static string RUI_FS_CommentMessage = null;
+
+		private static IEnumerable<string> RUI_FS_P5(IEnumerable<string> lines)
+		{
+			if (RUI_FS_CommentMessage == null)
+				RUI_FS_CommentMessage = "Confused by ConfuserForElsa REV " + new FileInfo(ProcMain.SelfFile).LastWriteTime + ", BLT " + DateTime.Now;
 
 			foreach (string line in lines)
 			{
 				if (line.StartsWith("\tpublic ")) // ? クラス || 構造体
 				{
 					yield return "\t/// <summary>";
-					yield return "\t/// " + commentMessage;
+					yield return "\t/// " + RUI_FS_CommentMessage;
 					yield return "\t/// </summary>";
 				}
 				else if (line.StartsWith("\t\tpublic ")) // ? メソッド || フィールド || プロパティ || サブクラス
 				{
 					yield return "\t\t/// <summary>";
-					yield return "\t\t/// " + commentMessage;
+					yield return "\t\t/// " + RUI_FS_CommentMessage;
 					yield return "\t\t/// </summary>";
 				}
 				yield return line;
 			}
 		}
-#else // エセ英語コメント ver
-		private static IEnumerable<string> RUI_F_P3_GetOutputLines(IEnumerable<string> lines)
-		{
-			foreach (string line in lines)
-			{
-				if (line.StartsWith("\tpublic ")) // ? クラス || 構造体
-				{
-					yield return "\t/// <summary>";
-
-					for (int c = SCommon.CRandom.GetRange(3, 7); 0 < c; c--)
-						yield return "\t/// " + RUI_F_P3_GOL_MakeCommentLine();
-
-					yield return "\t/// </summary>";
-				}
-				else if (line.StartsWith("\t\tpublic ")) // ? メソッド || フィールド || プロパティ || サブクラス
-				{
-					yield return "\t\t/// <summary>";
-
-					for (int c = SCommon.CRandom.GetRange(1, 5); 0 < c; c--)
-						yield return "\t\t/// " + RUI_F_P3_GOL_MakeCommentLine();
-
-					yield return "\t\t/// </summary>";
-				}
-				yield return line;
-			}
-		}
-
-		private static string[] RUI_F_P3_GOL_MCL_Words = SCommon.TextToLines(CSResources.英単語リスト)
-			.Select(v => v.Trim())
-			.Where(v => v != "" && v[0] != ';') // ? 空行ではない && コメント行ではない
-			.Select(v => v.Substring(0, v.IndexOf('\t'))) // 品詞の部分を除去
-			.ToArray();
-
-		private static string RUI_F_P3_GOL_MakeCommentLine()
-		{
-			string[] tokens = new string[SCommon.CRandom.GetRange(7, 13)];
-
-			for (int index = 0; index < tokens.Length; index++)
-				tokens[index] = SCommon.CRandom.ChooseOne(RUI_F_P3_GOL_MCL_Words);
-
-			string line = string.Join(", ", tokens);
-			line = new string(line.ToCharArray().Where(chr => chr != ',' || SCommon.CRandom.GetInt(10) == 0).ToArray());
-			return line.Substring(0, 1).ToUpper() + line.Substring(1).ToLower() + ".";
-		}
-#endif
 	}
 }

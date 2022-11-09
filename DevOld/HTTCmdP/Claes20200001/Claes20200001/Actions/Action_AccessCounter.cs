@@ -39,6 +39,8 @@ namespace Charlotte.Actions
 				if (group == null)
 					throw new ArgumentNullException("group is null");
 
+				group = SCommon.ToJString(Encoding.ASCII.GetBytes(group), false, false, false, false); // 2bs
+
 				if (!Regex.IsMatch(group, "^[-0-9A-Za-z]+$"))
 					throw new Exception("Bad group: " + group);
 
@@ -101,7 +103,7 @@ namespace Charlotte.Actions
 
 				if (accessHistoryIndex != -1) // ? アクセス履歴に有り
 				{
-					// nop
+					// noop
 				}
 				else // ? アクセス履歴に無し
 				{

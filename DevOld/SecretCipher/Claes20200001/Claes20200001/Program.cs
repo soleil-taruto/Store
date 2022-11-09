@@ -37,18 +37,10 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { "/K1", "/E", @"C:\temp\1.txt", @"C:\temp\2.txt" }));
-			//Main4(new ArgsReader(new string[] { "/K2", "/E", @"C:\temp\1.txt", @"C:\temp\2.txt" }));
-			//Main4(new ArgsReader(new string[] { "/K3", "/E", @"C:\temp\1.txt", @"C:\temp\2.txt" }));
-			//Main4(new ArgsReader(new string[] { "/K1", "/D", @"C:\temp\2.txt", @"C:\temp\3.txt" }));
-			//Main4(new ArgsReader(new string[] { "/K2", "/D", @"C:\temp\2.txt", @"C:\temp\3.txt" }));
-			//Main4(new ArgsReader(new string[] { "/K3", "/D", @"C:\temp\2.txt", @"C:\temp\3.txt" }));
-			//Main4(new ArgsReader(new string[] { "/M", "/K1", "/E", @"C:\temp\1.txt", @"C:\temp\2.txt" }));
-			//Main4(new ArgsReader(new string[] { "/M", "/K2", "/E", @"C:\temp\1.txt", @"C:\temp\2.txt" }));
-			//Main4(new ArgsReader(new string[] { "/M", "/K3", "/E", @"C:\temp\1.txt", @"C:\temp\2.txt" }));
-			//Main4(new ArgsReader(new string[] { "/M", "/K1", "/D", @"C:\temp\2.txt", @"C:\temp\3.txt" }));
-			//Main4(new ArgsReader(new string[] { "/M", "/K2", "/D", @"C:\temp\2.txt", @"C:\temp\3.txt" }));
-			//Main4(new ArgsReader(new string[] { "/M", "/K3", "/D", @"C:\temp\2.txt", @"C:\temp\3.txt" }));
+			Main4(new ArgsReader(new string[] { "/E", @"C:\temp\1.txt", @"C:\temp\2.txt" }));
+			//Main4(new ArgsReader(new string[] { "/D", @"C:\temp\2.txt", @"C:\temp\3.txt" }));
+			//Main4(new ArgsReader(new string[] { "/M", "/E", @"C:\temp\1.txt", @"C:\temp\2.txt" }));
+			//Main4(new ArgsReader(new string[] { "/M", "/D", @"C:\temp\2.txt", @"C:\temp\3.txt" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -90,6 +82,8 @@ namespace Charlotte
 
 			string rFile = ar.NextArg();
 			string wFile = ar.NextArg();
+
+			ar.End();
 
 			if (wFile == "*")
 			{

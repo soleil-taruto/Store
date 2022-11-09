@@ -41,7 +41,7 @@ function* <generatorForTask> @@_Draw(<Enemy_t> enemy)
 		// •`‰æ‚±‚±‚©‚ç
 		// ====
 
-		var<Image> picture = P_Balls[enemy.Color];
+		var<Picture_t> picture = P_Balls[enemy.Color];
 
 		Draw(picture, enemy.X, enemy.Y, 1.0, 0.0, 1.0);
 

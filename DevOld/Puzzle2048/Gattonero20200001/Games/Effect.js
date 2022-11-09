@@ -76,7 +76,7 @@ function <void> AddEffect_BornPanel(<double> x, <double> y)
 	}
 }
 
-function* <generatorForTask> @@_Effect_Star(<Image> picture, <double> x, <double> y, <double> angle, <double> speed, <double> speedRate)
+function* <generatorForTask> @@_Effect_Star(<Picture_t> picture, <double> x, <double> y, <double> angle, <double> speed, <double> speedRate)
 {
 	var<double> rot = GetRand1() * Math.PI * 2.0;
 	var<double> rotAdd = GetRand2() * 0.5;

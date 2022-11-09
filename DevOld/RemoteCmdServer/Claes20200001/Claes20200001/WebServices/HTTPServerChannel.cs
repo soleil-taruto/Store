@@ -41,7 +41,7 @@ namespace Charlotte.WebServices
 		/// リクエストのボディの最大サイズ_バイト数
 		/// -1 == INFINITE
 		/// </summary>
-		public static int BodySizeMax = 300000000; // 300 MB
+		public static long BodySizeMax = 300000000; // 300 MB
 
 		public IEnumerable<int> RecvRequest()
 		{
@@ -98,7 +98,7 @@ namespace Charlotte.WebServices
 				{
 					if (src[index] == 0x25) // ? '%'
 					{
-						dest.WriteByte((byte)Convert.ToInt32(Encoding.ASCII.GetString(SCommon.GetSubBytes(src, index + 1, 2)), 16));
+						dest.WriteByte((byte)Convert.ToInt32(Encoding.ASCII.GetString(P_GetBytesRange(src, index + 1, 2)), 16));
 						index += 2;
 					}
 					else if (src[index] == 0x2b) // ? '+'
@@ -120,12 +120,19 @@ namespace Charlotte.WebServices
 			}
 		}
 
+		private static byte[] P_GetBytesRange(byte[] src, int offset, int size)
+		{
+			byte[] dest = new byte[size];
+			Array.Copy(src, offset, dest, 0, size);
+			return dest;
+		}
+
 		public string FirstLine;
 		public string Method;
 		public string PathQuery;
 		public string HTTPVersion;
 		public List<string[]> HeaderPairs = new List<string[]>();
-		public byte[] Body;
+		public HTTPBodyOutputStream Body;
 
 		private const byte CR = 0x0d;
 		private const byte LF = 0x0a;
@@ -209,7 +216,7 @@ namespace Charlotte.WebServices
 			}
 		}
 
-		public int ContentLength = 0;
+		public long ContentLength = 0;
 		public bool Chunked = false;
 		public string ContentType = null;
 		public bool Expect100Continue = false;
@@ -230,10 +237,10 @@ namespace Charlotte.WebServices
 
 				if (SCommon.EqualsIgnoreCase(key, "Content-Length"))
 				{
-					if (value.Length < 1 || 10 < value.Length)
+					if (value.Length < 1 || 19 < value.Length)
 						throw new Exception("Bad Content-Length value");
 
-					this.ContentLength = int.Parse(value);
+					this.ContentLength = long.Parse(value);
 				}
 				else if (SCommon.EqualsIgnoreCase(key, "Transfer-Encoding"))
 				{
@@ -293,16 +300,16 @@ namespace Charlotte.WebServices
 					if (size < 0)
 						throw new Exception("不正なチャンクサイズです。" + size);
 
-					if (BodySizeMax != -1 && BodySizeMax - buff.Count < size)
+					if (BodySizeMax != -1 && BodySizeMax - buff.Count < (long)size)
 						throw new Exception("ボディサイズが大きすぎます。" + buff.Count + " + " + size);
 
-					int chunkEnd = buff.Count + size;
+					long chunkEnd = buff.Count + (long)size;
 
 					while (buff.Count < chunkEnd)
 					{
 						byte[] data = null;
 
-						foreach (int relay in this.Channel.Recv(Math.Min(READ_SIZE_MAX, chunkEnd - buff.Count), ret => data = ret))
+						foreach (int relay in this.Channel.Recv((int)Math.Min((long)READ_SIZE_MAX, chunkEnd - buff.Count), ret => data = ret))
 							yield return relay;
 
 						if (data == null)
@@ -340,7 +347,7 @@ namespace Charlotte.WebServices
 				{
 					byte[] data = null;
 
-					foreach (int relay in this.Channel.Recv(Math.Min(READ_SIZE_MAX, this.ContentLength - buff.Count), ret => data = ret))
+					foreach (int relay in this.Channel.Recv((int)Math.Min((long)READ_SIZE_MAX, this.ContentLength - buff.Count), ret => data = ret))
 						yield return relay;
 
 					if (data == null)
@@ -349,14 +356,14 @@ namespace Charlotte.WebServices
 					buff.Write(data);
 				}
 			}
-			this.Body = buff.ToByteArray();
+			this.Body = buff;
 		}
 
 		// HTTPConnected 内で(必要に応じて)設定しなければならないフィールド -->
 
 		public int ResStatus = 200;
 		public List<string[]> ResHeaderPairs = new List<string[]>();
-		public IEnumerable<byte[]> ResBody = null;
+		public IEnumerable<byte[]> ResBody = null; // ゼロバイトの要素を含んでも良い。null-のときゼロバイトの応答ボディを応答する。
 
 		// <-- HTTPConnected 内で(必要に応じて)設定しなければならないフィールド
 

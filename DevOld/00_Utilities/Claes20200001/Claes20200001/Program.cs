@@ -67,7 +67,10 @@ namespace Charlotte
 			//new Test0006().Test03(); // JapaneseDate
 			//new Test0007().Test01(); // BitList
 			//new Test0008().Test01(); // StringSpliceSequencer
-			new Test0008().Test02(); // StringSpliceSequencer
+			//new Test0008().Test02(); // StringSpliceSequencer
+			//new Test0009().Test01(); // Adler32
+			//new Test0010().Test01(); // MillerRabin
+			new Test0010().Test02(); // MillerRabin
 
 			// --
 		}

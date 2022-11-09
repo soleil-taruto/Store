@@ -62,7 +62,7 @@ function <Action event> @@_GetEvMouse(<Action double double> touch)
 	return ret;
 }
 
-function <void> @@_INIT()
+function <void> @(UNQN)_INIT()
 {
 	if (window.ontouchstart === null)
 	{
@@ -81,7 +81,7 @@ function <void> @@_INIT()
 
 var<int> @@_DownCount;
 
-function <void> @@_EACH()
+function <void> @(UNQN)_EACH()
 {
 	if (1 <= @@_DownCount) // ? ‘O‰ñ_‰Ÿ‰º
 	{

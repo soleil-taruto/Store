@@ -57,7 +57,7 @@ function* <generatorForTask> @@_Draw(<Enemy_t> enemy)
 		// •`‰æ‚±‚±‚©‚ç
 		// ====
 
-		var<Image> picture;
+		var<Picture_t> picture;
 
 		if (enemy.B_Kind == Enemy_Block_Kind_e_SOFT)
 		{

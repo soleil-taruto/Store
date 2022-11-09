@@ -2,7 +2,7 @@
 	入力
 
 	ファイル名 Input.js -> KF_Input.js の理由：
-	本ソースの @@_EACH() を Gamepad.js, Keyboard.js の *_EACH より後に実行する必要がある。
+	本ソースの *_EACH() を Gamepad.js, Keyboard.js の *_EACH より後に実行する必要がある。
 */
 
 /*
@@ -15,6 +15,7 @@ var<int> PadInputIndex_6 = 106;
 var<int> PadInputIndex_8 = 108;
 var<int> PadInputIndex_A = 0;
 var<int> PadInputIndex_B = 3;
+var<int> PadInputIndex_Pause = 9;
 
 /*
 	各ボタンの押下状態カウンタ
@@ -25,6 +26,7 @@ var<int> @@_Count_6 = 0;
 var<int> @@_Count_8 = 0;
 var<int> @@_Count_A = 0;
 var<int> @@_Count_B = 0;
+var<int> @@_Count_Pause = 0;
 
 /*
 	各ボタンの押下状態カウンタの列挙
@@ -37,16 +39,18 @@ function* <int[]> @@_Counts()
 	yield @@_Count_8;
 	yield @@_Count_A;
 	yield @@_Count_B;
+	yield @@_Count_Pause;
 }
 
-function <void> @@_EACH()
+function <void> @(UNQN)_EACH()
 {
-	@@_Count_2 = @@_Check(@@_Count_2, PadInputIndex_2, [ 40, 74,  98 ]); // カーソル下 , J , テンキー2
-	@@_Count_4 = @@_Check(@@_Count_4, PadInputIndex_4, [ 37, 72, 100 ]); // カーソル左 , H , テンキー4
-	@@_Count_6 = @@_Check(@@_Count_6, PadInputIndex_6, [ 39, 76, 102 ]); // カーソル右 , L , テンキー6
-	@@_Count_8 = @@_Check(@@_Count_8, PadInputIndex_8, [ 38, 75, 104 ]); // カーソル上 , K , テンキー8
-	@@_Count_A = @@_Check(@@_Count_A, PadInputIndex_A, [ 90 ]); // Z
-	@@_Count_B = @@_Check(@@_Count_B, PadInputIndex_B, [ 88 ]); // X
+	@@_Count_2     = @@_Check(@@_Count_2,     PadInputIndex_2,     [ 40,  98, 83 ]); // カーソル下 , テンキー2 , S
+	@@_Count_4     = @@_Check(@@_Count_4,     PadInputIndex_4,     [ 37, 100, 65 ]); // カーソル左 , テンキー4 , A
+	@@_Count_6     = @@_Check(@@_Count_6,     PadInputIndex_6,     [ 39, 102, 68 ]); // カーソル右 , テンキー6 , D
+	@@_Count_8     = @@_Check(@@_Count_8,     PadInputIndex_8,     [ 38, 104, 87 ]); // カーソル上 , テンキー8 , W
+	@@_Count_A     = @@_Check(@@_Count_A,     PadInputIndex_A,     [ 90 ]); // Z
+	@@_Count_B     = @@_Check(@@_Count_B,     PadInputIndex_B,     [ 88 ]); // X
+	@@_Count_Pause = @@_Check(@@_Count_Pause, PadInputIndex_Pause, [ 32 ]); // スペース
 }
 
 function <int> @@_Check(<int> counter, <int> padInputIndex, <int[]> keyCodes)
@@ -66,15 +70,20 @@ function <int> @@_Check(<int> counter, <int> padInputIndex, <int[]> keyCodes)
 	if (status) // ? 押している。
 	{
 		// 前回 ⇒ 今回
+		// -2   ⇒ -2
 		// -1   ⇒  1
 		//  0   ⇒  1
 		//  1～ ⇒  2～
 
-		counter = Math.max(counter + 1, 1);
+		if (counter != -2)
+		{
+			counter = Math.max(counter + 1, 1);
+		}
 	}
 	else // ? 押していない。
 	{
 		// 前回 ⇒ 今回
+		// -2   ⇒  0
 		// -1   ⇒  0
 		//  0   ⇒  0
 		//  1～ ⇒ -1
@@ -84,22 +93,12 @@ function <int> @@_Check(<int> counter, <int> padInputIndex, <int[]> keyCodes)
 	return counter;
 }
 
-var @@_FreezeInputUntilReleaseFlag = false;
-
 function <int> @@_GetInput(<int> counter)
 {
-	if (@@_FreezeInputUntilReleaseFlag)
-	{
-		if (ToArray(@@_Counts()).some(counter => counter != 0))
-		{
-			return 0;
-		}
-
-		@@_FreezeInputUntilReleaseFlag = false;
-	}
-
-	return 1 <= FreezeInputFrame ? 0 : counter;
+	return 1 <= FreezeInputFrame || counter == -2 ? 0 : counter;
 }
+
+// ★★★ ボタン・キー押下は 1 マウス押下は -1 で判定する。
 
 // ----
 // GetInput_X ここから
@@ -107,40 +106,54 @@ function <int> @@_GetInput(<int> counter)
 
 function <int> GetInput_2()
 {
-	return @@_GetInput(@@_Count_2);
+	return @@_GetInput(@@_Count_2, true);
 }
 
 function <int> GetInput_4()
 {
-	return @@_GetInput(@@_Count_4);
+	return @@_GetInput(@@_Count_4, true);
 }
 
 function <int> GetInput_6()
 {
-	return @@_GetInput(@@_Count_6);
+	return @@_GetInput(@@_Count_6, true);
 }
 
 function <int> GetInput_8()
 {
-	return @@_GetInput(@@_Count_8);
+	return @@_GetInput(@@_Count_8, true);
 }
 
 /*
+	Z
 	決定
 	ジャンプ
+	etc.
 */
 function <int> GetInput_A()
 {
-	return @@_GetInput(@@_Count_A);
+	return @@_GetInput(@@_Count_A, false);
 }
 
 /*
+	X
 	キャンセル
 	攻撃
+	etc.
 */
 function <int> GetInput_B()
 {
-	return @@_GetInput(@@_Count_B);
+	return @@_GetInput(@@_Count_B, false);
+}
+
+/*
+	スペース
+	ポーズ
+	etc.
+*/
+function <int> GetInput_Pause()
+{
+	return @@_GetInput(@@_Count_Pause, false);
 }
 
 // ----
@@ -185,5 +198,21 @@ function <void> FreezeInput()
 
 function <void> FreezeInputUntilRelease()
 {
-	@@_FreezeInputUntilReleaseFlag = true;
+	var<int> COUNT_FREEZE_INPUT = -2;
+
+//	@@_Count_2     = COUNT_FREEZE_INPUT;
+//	@@_Count_4     = COUNT_FREEZE_INPUT;
+//	@@_Count_6     = COUNT_FREEZE_INPUT;
+//	@@_Count_8     = COUNT_FREEZE_INPUT;
+	@@_Count_A     = COUNT_FREEZE_INPUT;
+	@@_Count_B     = COUNT_FREEZE_INPUT;
+	@@_Count_Pause = COUNT_FREEZE_INPUT;
+}
+
+function* <generatorForTask> WaitToReleaseButton()
+{
+	while (ToArray(@@_Counts()).some(counter => counter != 0))
+	{
+		yield 1;
+	}
 }

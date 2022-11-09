@@ -164,23 +164,26 @@ namespace Charlotte.Novels.Surfaces
 
 		protected override void Invoke_02(string command, params string[] arguments)
 		{
-			//int c = 0;
+			int c = 0;
 
 			if (command == "選択肢") // 即時
 			{
+				string title = arguments[c++];
+
 				this.Options.Add(new OptionInfo()
 				{
-					Title = arguments[0],
+					Title = title,
 				});
+
+				return;
 			}
-			else if (command == "分岐先") // 即時
+			if (command == "分岐先") // 即時
 			{
-				this.Options[this.Options.Count - 1].ScenarioName = arguments[0];
+				this.Options[this.Options.Count - 1].ScenarioName = arguments[c++];
+				return;
 			}
-			else
-			{
-				throw new DDError();
-			}
+			ProcMain.WriteLog(command);
+			throw new DDError(); // Bad command
 		}
 	}
 }

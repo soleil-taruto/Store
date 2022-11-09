@@ -134,7 +134,6 @@ function* <generatorForTask> @@_VolumeSetting(<string> name, <double> initVolume
 			volumeChanged(volume / 100.0);
 		}
 
-
 		SetColor("#a0b0c0");
 		PrintRect(0, 0, Screen_W, Screen_H);
 

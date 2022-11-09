@@ -83,7 +83,7 @@ function* <generatorForTask> @@_Test01()
 
 function* <generatorForTask> @@_Test02()
 {
-	var<Audio[]> musics =
+	var<Sound_t[]> musics =
 	[
 		M_Stage01,
 		M_Stage01Boss,

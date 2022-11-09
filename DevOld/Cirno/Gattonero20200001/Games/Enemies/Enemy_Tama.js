@@ -50,7 +50,7 @@ function* <generatorForTask> @@_Draw(<Enemy_t> enemy)
 		enemy.X += enemy.XAdd;
 		enemy.Y += enemy.YAdd;
 
-		if (GetMapCell(ToTablePoint_XY(enemy.X, enemy.Y)).Tile.WallFlag)
+		if (IsPtWall_XY(enemy.X, enemy.Y))
 		{
 			KillEnemy(enemy);
 			break;

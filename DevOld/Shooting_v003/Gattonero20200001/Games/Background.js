@@ -83,7 +83,7 @@ function* <generatorForTask> @@_Stage03()
 	yield* @@_Field(P_Wall0003, 30.0);
 }
 
-function* <generatorForTask> @@_Field(<Image> picture, <double> speedMax)
+function* <generatorForTask> @@_Field(<Picture_t> picture, <double> speedMax)
 {
 	var<double> speed = 0.0;
 	var<double> t = 0.0;
@@ -131,7 +131,7 @@ function* <generatorForTask> @@_Stage03Boss()
 	yield* @@_Boss([ P_Wall0003, P_Wall0001, P_Wall0002 ]);
 }
 
-function* <generatorForTask> @@_Boss(<Image[]> pictures)
+function* <generatorForTask> @@_Boss(<Picture_t[]> pictures)
 {
 	var<double> lw = 0.0;
 	var<double> md = 0.0;
@@ -159,7 +159,7 @@ function* <generatorForTask> @@_Boss(<Image[]> pictures)
 	}
 }
 
-function <void> @@_DrawVertTiles(<double> dx, <double> t, <Image> picture)
+function <void> @@_DrawVertTiles(<double> dx, <double> t, <Picture_t> picture)
 {
 	for (var<double> dy = FIELD_T + t; dy < FIELD_B + 54.0; dy += 108.0)
 	{
@@ -180,7 +180,7 @@ function* <generatorForTask> @@_Ending()
 		{
 			AddTask(tasks, function* <generatorForTask> ()
 			{
-				var<Image> picture = ChooseOne([ P_Wall0001, P_Wall0002, P_Wall0003 ]);
+				var<Picture_t> picture = ChooseOne([ P_Wall0001, P_Wall0002, P_Wall0003 ]);
 				var<double> dx = GetRand3(FIELD_L - 54.0, FIELD_R + 54.0);
 				var<double> dy = FIELD_B + 54.0;
 				var<double> speed = GetRand3(3.0, 10.0);

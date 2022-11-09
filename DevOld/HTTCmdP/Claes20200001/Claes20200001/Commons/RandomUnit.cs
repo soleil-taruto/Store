@@ -121,6 +121,11 @@ namespace Charlotte.Commons
 			return (uint)this.GetUInt64_M((ulong)modulo);
 		}
 
+		public long GetLong(long modulo)
+		{
+			return (long)this.GetUInt64_M((ulong)modulo);
+		}
+
 		public int GetInt(int modulo)
 		{
 			return (int)this.GetUInt_M((uint)modulo);

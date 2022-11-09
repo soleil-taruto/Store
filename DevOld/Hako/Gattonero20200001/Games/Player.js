@@ -71,7 +71,7 @@ function <void> ResetPlayer()
 	PlayerMoveFrame = 0;
 	PlayerJumpCount = 0;
 	PlayerJumpFrame = 0;
-	PlayerAirborneFrame = IMAX / 2; // ゲーム開始直後に空中でジャンプできないように
+	PlayerAirborneFrame = ToFix(IMAX / 2); // ゲーム開始直後に空中でジャンプできないように
 	PlayerShagamiFrame = 0;
 	@@_JumpLock = false;
 	@@_MoveSlow = false;

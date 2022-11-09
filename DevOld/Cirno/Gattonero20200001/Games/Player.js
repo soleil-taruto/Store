@@ -125,7 +125,7 @@ function <void> ResetPlayer()
 	PlayerMoveFrame = 0;
 	PlayerJumpCount = 0;
 	PlayerJumpFrame = 0;
-	PlayerAirborneFrame = IMAX / 2; // ゲーム開始直後に空中でジャンプできないように
+	PlayerAirborneFrame = ToFix(IMAX / 2); // ゲーム開始直後に空中でジャンプできないように
 	PlayerShagamiFrame = 0;
 	PlayerUwamukiFrame = 0;
 	PlayerShitamukiFrame = 0;
@@ -136,17 +136,22 @@ function <void> ResetPlayer()
 }
 
 /*
-	行動と描画
+	行動
 	処理すべきこと：
 	-- 行動
 	-- 当たり判定の設置
-	-- 描画
 */
-function <void> DrawPlayer()
+function <void> ActPlayer()
 {
 	// reset
 	{
 		PlayerCrash = null;
+	}
+
+	if (DEBUG && GetKeyInput(84) == 1) // ? T 押下 -> 攻撃テスト
+	{
+		PlayerAttack = Supplier(CreateAttack_BDummy());
+		return; // HACK: このフレームのみ当たり判定無し問題 -- 1フレームなので看過する。様子見 @ 2022.7.31
 	}
 
 	// 入力
@@ -382,7 +387,18 @@ invincibleBlock:
 			}
 			else
 			{
-				speed = PLAYER_SPEED;
+				/*/
+				// 走り出し時に加速する。
+				{
+					speed = (PlayerMoveFrame + 1) / 2.0;
+					speed = Math.min(speed, PLAYER_SPEED);
+				}
+				/*/
+				// 走り出し時に加速しない。
+				{
+					speed = PLAYER_SPEED;
+				}
+				//*/
 			}
 			speed *= PlayerFacingLeft ? -1.0 : 1.0;
 
@@ -406,19 +422,19 @@ invincibleBlock:
 	// 位置矯正
 	{
 		var<boolean> touchSide_L =
-			GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY - PLAYER_側面判定Pt_YT )).Tile.WallFlag ||
-			GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY                        )).Tile.WallFlag ||
-			GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY + PLAYER_側面判定Pt_YB )).Tile.WallFlag;
+			IsPtWall_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY - PLAYER_側面判定Pt_YT ) ||
+			IsPtWall_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY                        ) ||
+			IsPtWall_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY + PLAYER_側面判定Pt_YB );
 
 		var<boolean> touchSide_R =
-			GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY - PLAYER_側面判定Pt_YT )).Tile.WallFlag ||
-			GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY                        )).Tile.WallFlag ||
-			GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY + PLAYER_側面判定Pt_YB )).Tile.WallFlag;
+			IsPtWall_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY - PLAYER_側面判定Pt_YT ) ||
+			IsPtWall_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY                        ) ||
+			IsPtWall_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY + PLAYER_側面判定Pt_YB );
 
 		if (touchSide_L && touchSide_R) // -> 壁抜け防止のため再チェック
 		{
-			touchSide_L = GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY)).Tile.WallFlag;
-			touchSide_R = GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY)).Tile.WallFlag;
+			touchSide_L = IsPtWall_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY);
+			touchSide_R = IsPtWall_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY);
 		}
 
 		if (touchSide_L && touchSide_R)
@@ -434,9 +450,9 @@ invincibleBlock:
 			PlayerX = ToTileCenterX(PlayerX + PLAYER_側面判定Pt_X) - TILE_W / 2.0 - PLAYER_側面判定Pt_X;
 		}
 
-		var<boolean> touchCeiling_L = GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_脳天判定Pt_X , PlayerY - PLAYER_脳天判定Pt_Y)).Tile.WallFlag;
-		var<boolean> touchCeiling_M = GetMapCell(ToTablePoint_XY(PlayerX                       , PlayerY - PLAYER_脳天判定Pt_Y)).Tile.WallFlag;
-		var<boolean> touchCeiling_R = GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_脳天判定Pt_X , PlayerY - PLAYER_脳天判定Pt_Y)).Tile.WallFlag;
+		var<boolean> touchCeiling_L = IsPtWall_XY(PlayerX - PLAYER_脳天判定Pt_X , PlayerY - PLAYER_脳天判定Pt_Y);
+		var<boolean> touchCeiling_M = IsPtWall_XY(PlayerX                       , PlayerY - PLAYER_脳天判定Pt_Y);
+		var<boolean> touchCeiling_R = IsPtWall_XY(PlayerX + PLAYER_脳天判定Pt_X , PlayerY - PLAYER_脳天判定Pt_Y);
 
 		if ((touchCeiling_L && touchCeiling_R) || touchCeiling_M)
 		{
@@ -462,8 +478,8 @@ invincibleBlock:
 		}
 
 		var<boolean> touchGround =
-			GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_接地判定Pt_X, PlayerY + PLAYER_接地判定Pt_Y)).Tile.WallFlag ||
-			GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_接地判定Pt_X, PlayerY + PLAYER_接地判定Pt_Y)).Tile.WallFlag;
+			IsPtWall_XY(PlayerX - PLAYER_接地判定Pt_X, PlayerY + PLAYER_接地判定Pt_Y) ||
+			IsPtWall_XY(PlayerX + PLAYER_接地判定Pt_X, PlayerY + PLAYER_接地判定Pt_Y);
 
 		// memo: @ 2022.7.11
 		// 上昇中(ジャンプ中)に接地判定が発生することがある。
@@ -525,10 +541,17 @@ invincibleBlock:
 			10.0
 			);
 	}
+}
 
-	// ここから描画
-
+/*
+	描画
+	処理すべきこと：
+	-- 描画
+*/
+function <void> DrawPlayer()
+{
 	var<double> plA = 1.0;
+	var<Picture_t> picture = P_Dummy;
 
 	if (
 		1 <= PlayerDamageFrame ||
@@ -540,7 +563,7 @@ invincibleBlock:
 
 	if (1 <= PlayerAirborneFrame)
 	{
-		Draw(PlayerFacingLeft ? P_PlayerMirrorJump : P_PlayerJump, PlayerX - Camera.X, PlayerY - Camera.Y, plA, 0.0, 1.0);
+		picture = PlayerFacingLeft ? P_PlayerMirrorJump : P_PlayerJump;
 	}
 	else if (1 <= PlayerMoveFrame)
 	{
@@ -560,14 +583,16 @@ invincibleBlock:
 			}
 		}
 
-		Draw((PlayerFacingLeft ? P_PlayerMirrorRun : P_PlayerRun)[koma], PlayerX - Camera.X, PlayerY - Camera.Y, plA, 0.0, 1.0);
+		picture = (PlayerFacingLeft ? P_PlayerMirrorRun : P_PlayerRun)[koma];
 	}
 	else if (1 <= PlayerAttackFrame && PlayerUwamukiFrame == 0)
 	{
-		Draw(PlayerFacingLeft ? P_PlayerMirrorAttack : P_PlayerAttack, PlayerX - Camera.X, PlayerY - Camera.Y, plA, 0.0, 1.0);
+		picture = PlayerFacingLeft ? P_PlayerMirrorAttack : P_PlayerAttack;
 	}
 	else
 	{
-		Draw(PlayerFacingLeft ? P_PlayerMirrorStand : P_PlayerStand, PlayerX - Camera.X, PlayerY - Camera.Y, plA, 0.0, 1.0);
+		picture = PlayerFacingLeft ? P_PlayerMirrorStand : P_PlayerStand;
 	}
+
+	Draw(picture, PlayerX - Camera.X, PlayerY - Camera.Y, plA, 0.0, 1.0);
 }

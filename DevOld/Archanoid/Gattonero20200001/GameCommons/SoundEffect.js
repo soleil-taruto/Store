@@ -2,7 +2,7 @@
 	Œø‰Ê‰¹Ä¶
 */
 
-var<Audio[]> @@_Handles = [];
+var<Sound_t[]> @@_Handles = [];
 
 function <void> SE(<SE_t> se)
 {
@@ -20,6 +20,6 @@ function <void> @(UNQN)_EACH()
 	{
 		var handle = @@_Handles.shift();
 
-		handle.play();
+		handle.Handle.play();
 	}
 }

@@ -38,15 +38,15 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			//Main4(new ArgsReader(new string[] { "80", @"..\..\..\..\dat\Batch", @"C:\temp" }));
-			Main4(new ArgsReader(new string[] { "/P", "80", @"..\..\..\..\dat\Batch", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { "80", @"..\..\..\..\dat\Batch", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { "/P", "80", @"..\..\..\..\dat\Batch", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
 
 			// --
 
-			//Common.Pause();
+			Common.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -55,13 +55,15 @@ namespace Charlotte
 			{
 				Main5(ar);
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				ProcMain.WriteLog(e);
-			}
+				ProcMain.WriteLog(ex);
 
-			// 終了時のコンソール出力が見えるように、少し待つ。
-			Thread.Sleep(500);
+				//MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
+				//Console.ReadLine();
+			}
 		}
 
 		private void Main5(ArgsReader ar)
@@ -85,7 +87,7 @@ namespace Charlotte
 				//HTTPServerChannel.ResponseTimeoutMillis = -1;
 				//HTTPServerChannel.FirstLineTimeoutMillis = 2000;
 				//HTTPServerChannel.IdleTimeoutMillis = 180000;
-				//HTTPServerChannel.BodySizeMax = 300000000;
+				HTTPServerChannel.BodySizeMax = 100000000000000; // 100 TB
 
 				//SockCommon.TimeWaitMonitor.CTR_ROT_SEC = 60;
 				//SockCommon.TimeWaitMonitor.COUNTER_NUM = 5;
@@ -169,7 +171,7 @@ namespace Charlotte
 
 			if (command == "B") // バッチ実行
 			{
-				string relPath = Common.ToFairRelPath(commandAndParams[1], this.BatchDir.Length);
+				string relPath = SCommon.ToFairRelPath(commandAndParams[1], this.BatchDir.Length);
 				string path = Path.Combine(this.BatchDir, relPath);
 
 				if (!File.Exists(path))
@@ -181,12 +183,12 @@ namespace Charlotte
 
 				SCommon.Batch(batch, Path.GetDirectoryName(path), SCommon.StartProcessWindowStyle_e.MINIMIZED);
 
-				channel.ResBody = new byte[][] { Encoding.ASCII.GetBytes("OK") };
-				channel.ResHeaderPairs.Add(new string[] { "Content-Type", "text/plain; charset=Shift_JIS" });
+				channel.ResBody = new byte[][] { Encoding.ASCII.GetBytes("B-OK") };
+				channel.ResHeaderPairs.Add(new string[] { "Content-Type", "text/plain; charset=US-ASCII" });
 			}
 			else
 			{
-				string relPath = Common.ToFairRelPath(commandAndParams[1], this.StoreDir.Length);
+				string relPath = SCommon.ToFairRelPath(commandAndParams[1], this.StoreDir.Length);
 				string path = Path.Combine(this.StoreDir, relPath);
 
 				if (command == "D") // ダウンロード
@@ -200,16 +202,16 @@ namespace Charlotte
 				else if (command == "U") // アップロード
 				{
 					SCommon.CreateDir(Path.GetDirectoryName(path));
-					File.WriteAllBytes(path, channel.Body);
+					channel.Body.ToFile(path);
 
-					channel.ResBody = new byte[][] { Encoding.ASCII.GetBytes("OK") };
+					channel.ResBody = new byte[][] { Encoding.ASCII.GetBytes("U-OK") };
 					channel.ResHeaderPairs.Add(new string[] { "Content-Type", "text/plain; charset=US-ASCII" });
 				}
 				else if (command == "K") // 削除
 				{
 					SCommon.DeletePath(path);
 
-					channel.ResBody = new byte[][] { Encoding.ASCII.GetBytes("OK") };
+					channel.ResBody = new byte[][] { Encoding.ASCII.GetBytes("K-OK") };
 					channel.ResHeaderPairs.Add(new string[] { "Content-Type", "text/plain; charset=US-ASCII" });
 				}
 				else

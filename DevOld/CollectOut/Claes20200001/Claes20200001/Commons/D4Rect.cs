@@ -29,6 +29,11 @@ namespace Charlotte.Commons
 			return new D4Rect(l, t, r - l, b - t);
 		}
 
+		public static D4Rect XYWH(double x, double y, double w, double h)
+		{
+			return new D4Rect(x - w / 2.0, y - h / 2.0, w, h);
+		}
+
 		public double R
 		{
 			get

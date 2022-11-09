@@ -62,7 +62,7 @@
 			this.RandText.Name = "RandText";
 			this.RandText.ReadOnly = true;
 			this.RandText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.RandText.Size = new System.Drawing.Size(870, 601);
+			this.RandText.Size = new System.Drawing.Size(870, 600);
 			this.RandText.TabIndex = 1;
 			this.RandText.TextChanged += new System.EventHandler(this.RandText_TextChanged);
 			this.RandText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.RandText_KeyPress);
@@ -80,7 +80,7 @@
 			// BtnGenRand
 			// 
 			this.BtnGenRand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.BtnGenRand.Location = new System.Drawing.Point(636, 639);
+			this.BtnGenRand.Location = new System.Drawing.Point(636, 638);
 			this.BtnGenRand.Name = "BtnGenRand";
 			this.BtnGenRand.Size = new System.Drawing.Size(120, 60);
 			this.BtnGenRand.TabIndex = 10;
@@ -91,7 +91,7 @@
 			// BtnClear
 			// 
 			this.BtnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.BtnClear.Location = new System.Drawing.Point(762, 639);
+			this.BtnClear.Location = new System.Drawing.Point(762, 638);
 			this.BtnClear.Name = "BtnClear";
 			this.BtnClear.Size = new System.Drawing.Size(120, 60);
 			this.BtnClear.TabIndex = 11;
@@ -103,7 +103,7 @@
 			// 
 			this.MessageLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.MessageLabel.AutoSize = true;
-			this.MessageLabel.Location = new System.Drawing.Point(12, 682);
+			this.MessageLabel.Location = new System.Drawing.Point(12, 681);
 			this.MessageLabel.Name = "MessageLabel";
 			this.MessageLabel.Size = new System.Drawing.Size(98, 20);
 			this.MessageLabel.TabIndex = 8;
@@ -113,7 +113,7 @@
 			// Numb行数
 			// 
 			this.Numb行数.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.Numb行数.Location = new System.Drawing.Point(336, 639);
+			this.Numb行数.Location = new System.Drawing.Point(336, 638);
 			this.Numb行数.Maximum = new decimal(new int[] {
             1024,
             0,
@@ -138,7 +138,7 @@
 			// 
 			this.Label行数.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.Label行数.AutoSize = true;
-			this.Label行数.Location = new System.Drawing.Point(272, 642);
+			this.Label行数.Location = new System.Drawing.Point(272, 641);
 			this.Label行数.Name = "Label行数";
 			this.Label行数.Size = new System.Drawing.Size(58, 20);
 			this.Label行数.TabIndex = 4;
@@ -155,7 +155,7 @@
             "32文字 (16バイト, 128 bit)",
             "48文字 (24バイト, 192 bit)",
             "64文字 (32バイト, 256 bit)"});
-			this.Combo桁数.Location = new System.Drawing.Point(66, 639);
+			this.Combo桁数.Location = new System.Drawing.Point(66, 638);
 			this.Combo桁数.Name = "Combo桁数";
 			this.Combo桁数.Size = new System.Drawing.Size(200, 28);
 			this.Combo桁数.TabIndex = 3;
@@ -165,7 +165,7 @@
 			// 
 			this.Label桁数.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.Label桁数.AutoSize = true;
-			this.Label桁数.Location = new System.Drawing.Point(12, 641);
+			this.Label桁数.Location = new System.Drawing.Point(12, 640);
 			this.Label桁数.Name = "Label桁数";
 			this.Label桁数.Size = new System.Drawing.Size(48, 20);
 			this.Label桁数.TabIndex = 2;
@@ -175,7 +175,7 @@
 			// Btn行数_5
 			// 
 			this.Btn行数_5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.Btn行数_5.Location = new System.Drawing.Point(402, 639);
+			this.Btn行数_5.Location = new System.Drawing.Point(402, 638);
 			this.Btn行数_5.Name = "Btn行数_5";
 			this.Btn行数_5.Size = new System.Drawing.Size(28, 28);
 			this.Btn行数_5.TabIndex = 6;
@@ -186,7 +186,7 @@
 			// Btn行数_32
 			// 
 			this.Btn行数_32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.Btn行数_32.Location = new System.Drawing.Point(436, 639);
+			this.Btn行数_32.Location = new System.Drawing.Point(436, 638);
 			this.Btn行数_32.Name = "Btn行数_32";
 			this.Btn行数_32.Size = new System.Drawing.Size(38, 28);
 			this.Btn行数_32.TabIndex = 7;
@@ -197,7 +197,7 @@
 			// BtnSave
 			// 
 			this.BtnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.BtnSave.Location = new System.Drawing.Point(510, 639);
+			this.BtnSave.Location = new System.Drawing.Point(510, 638);
 			this.BtnSave.Name = "BtnSave";
 			this.BtnSave.Size = new System.Drawing.Size(120, 60);
 			this.BtnSave.TabIndex = 9;
@@ -209,7 +209,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(894, 711);
+			this.ClientSize = new System.Drawing.Size(894, 710);
 			this.Controls.Add(this.BtnSave);
 			this.Controls.Add(this.Btn行数_32);
 			this.Controls.Add(this.Btn行数_5);

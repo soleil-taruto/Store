@@ -6,7 +6,7 @@
 // キーを押し続けていると keydown が何度も呼び出される。
 // keypress はカーソルキーなどの押下を拾えない。
 
-function <void> @@_INIT()
+function <void> @(UNQN)_INIT()
 {
 	document.addEventListener("keydown", @@_A_KeyDown, false);
 	document.addEventListener("keyup",   @@_A_KeyUp,   false);
@@ -26,7 +26,7 @@ function <void> @@_A_KeyUp(e)
 
 var @@_Counters = {};
 
-function <void> @@_EACH()
+function <void> @(UNQN)_EACH()
 {
 	for (var key in @@_Counters)
 	{

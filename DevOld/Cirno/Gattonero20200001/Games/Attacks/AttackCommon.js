@@ -12,7 +12,10 @@
 // AttackProcPlayer_Ceiling();  -- 脳天
 // AttackProcPlayer_Ground();   -- 接地
 //
-// AttackProcPlayer_Atari(ataru);
+// AttackProcPlayer_Status();
+// AttackProcPlayer_Atari();
+//
+// AddTask(PlayerDrawTasks, プレイヤー描画タスク );
 //
 
 // ========================
@@ -88,38 +91,40 @@ function <boolean> AttackCheckPlayer_IsSide()
 function <int> AttackCheckPlayer_GetSide()
 {
 	var<boolean> touchSide_L =
-		GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY - PLAYER_側面判定Pt_YT )).Tile.WallFlag ||
-		GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY                        )).Tile.WallFlag ||
-		GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY + PLAYER_側面判定Pt_YB )).Tile.WallFlag;
+		IsPtWall_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY - PLAYER_側面判定Pt_YT ) ||
+		IsPtWall_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY                        ) ||
+		IsPtWall_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY + PLAYER_側面判定Pt_YB );
 
 	var<boolean> touchSide_R =
-		GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY - PLAYER_側面判定Pt_YT )).Tile.WallFlag ||
-		GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY                        )).Tile.WallFlag ||
-		GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY + PLAYER_側面判定Pt_YB )).Tile.WallFlag;
+		IsPtWall_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY - PLAYER_側面判定Pt_YT ) ||
+		IsPtWall_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY                        ) ||
+		IsPtWall_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY + PLAYER_側面判定Pt_YB );
 
 	return (touchSide_L ? 1 : 0) | (touchSide_R ? 2 : 0);
 }
 
 function <int> AttackCheckPlayer_GetSideSub()
 {
-	var<boolean> touchSide_L = GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY)).Tile.WallFlag;
-	var<boolean> touchSide_R = GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY)).Tile.WallFlag;
+	var<boolean> touchSide_L = IsPtWall_XY(PlayerX - PLAYER_側面判定Pt_X, PlayerY);
+	var<boolean> touchSide_R = IsPtWall_XY(PlayerX + PLAYER_側面判定Pt_X, PlayerY);
 
 	return (touchSide_L ? 1 : 0) | (touchSide_R ? 2 : 0);
 }
 
-function <int> AttackCheckPlayer_GetCeiling()
+function <boolean> AttackCheckPlayer_GetCeiling()
 {
-	var<boolean> touchCeiling_L = GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_脳天判定Pt_X , PlayerY - PLAYER_脳天判定Pt_Y)).Tile.WallFlag;
-	var<boolean> touchCeiling_M = GetMapCell(ToTablePoint_XY(PlayerX                       , PlayerY - PLAYER_脳天判定Pt_Y)).Tile.WallFlag;
-	var<boolean> touchCeiling_R = GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_脳天判定Pt_X , PlayerY - PLAYER_脳天判定Pt_Y)).Tile.WallFlag;
+	var<boolean> touchCeiling_L = IsPtWall_XY(PlayerX - PLAYER_脳天判定Pt_X , PlayerY - PLAYER_脳天判定Pt_Y);
+	var<boolean> touchCeiling_M = IsPtWall_XY(PlayerX                       , PlayerY - PLAYER_脳天判定Pt_Y);
+	var<boolean> touchCeiling_R = IsPtWall_XY(PlayerX + PLAYER_脳天判定Pt_X , PlayerY - PLAYER_脳天判定Pt_Y);
+
+	return (touchCeiling_L && touchCeiling_R) || touchCeiling_M;
 }
 
-function <int> AttackCheckPlayer_GetGround()
+function <boolean> AttackCheckPlayer_GetGround()
 {
 	var<boolean> touchGround =
-		GetMapCell(ToTablePoint_XY(PlayerX - PLAYER_接地判定Pt_X, PlayerY + PLAYER_接地判定Pt_Y)).Tile.WallFlag ||
-		GetMapCell(ToTablePoint_XY(PlayerX + PLAYER_接地判定Pt_X, PlayerY + PLAYER_接地判定Pt_Y)).Tile.WallFlag;
+		IsPtWall_XY(PlayerX - PLAYER_接地判定Pt_X, PlayerY + PLAYER_接地判定Pt_Y) ||
+		IsPtWall_XY(PlayerX + PLAYER_接地判定Pt_X, PlayerY + PLAYER_接地判定Pt_Y);
 
 	return touchGround;
 }
@@ -128,7 +133,7 @@ function <int> AttackCheckPlayer_GetGround()
 // ==== プレイヤー動作・接地系処理 ====
 // ====================================
 
-function <void> AttackProcPlayer_Side()
+function <boolean> AttackProcPlayer_Side()
 {
 	var<int> flag = AttackCheckPlayer_GetSide();
 
@@ -160,7 +165,7 @@ function <void> AttackProcPlayer_Side()
 	return flag != 0;
 }
 
-function <void> AttackProcPlayer_Ceiling()
+function <boolean> AttackProcPlayer_Ceiling()
 {
 	var<boolean> ret = AttackCheckPlayer_GetCeiling();
 
@@ -172,7 +177,7 @@ function <void> AttackProcPlayer_Ceiling()
 	return ret;
 }
 
-function <void> AttackProcPlayer_Ground()
+function <boolean> AttackProcPlayer_Ground()
 {
 	var<boolean> ret = AttackCheckPlayer_GetGround();
 
@@ -184,29 +189,30 @@ function <void> AttackProcPlayer_Ground()
 	return ret;
 }
 
-// ====================================
-// ==== プレイヤー動作・当たり判定 ====
-// ====================================
+// ================================
+// ==== プレイヤー動作・その他 ====
+// ================================
 
-/*
-	ataru: 当たるか(無敵状態ではないか)
-*/
-function <void> AttackProcPlayer_Atari(<boolean> ataru)
+function <void> AttackProcPlayer_Status()
 {
-	PlayerCrash = null; // reset
+	if (1 <= PlayerDamageFrame && PLAYER_DAMAGE_FRAME_MAX < ++PlayerDamageFrame)
+	{
+		PlayerDamageFrame = 0;
+		PlayerInvincibleFrame = 1;
+	}
+	if (1 <= PlayerInvincibleFrame && PLAYER_INVINCIBLE_FRAME_MAX < ++PlayerInvincibleFrame)
+	{
+		PlayerInvincibleFrame = 0;
+	}
+}
 
-	if (!ataru) // ? 無敵
-	{
-		// noop
-	}
-	else
-	{
-		PlayerCrash = CreateCrash_Circle(
-			PlayerX,
-			PlayerY,
-			10.0
-			);
-	}
+function <void> AttackProcPlayer_Atari()
+{
+	PlayerCrash = CreateCrash_Circle(
+		PlayerX,
+		PlayerY,
+		10.0
+		);
 }
 
 // =====================================

@@ -54,9 +54,9 @@ namespace Charlotte.Games
 
 						d++; // Skip
 
-						cell.TileName = SCommon.GetElement(tokens, d++, GameConsts.TILE_NONE);
+						cell.TileName = SCommon.RefElement(tokens, d++, GameConsts.TILE_NONE);
 						cell.Tile = TileCatalog.Create(cell.TileName);
-						cell.EnemyName = SCommon.GetElement(tokens, d++, GameConsts.ENEMY_NONE);
+						cell.EnemyName = SCommon.RefElement(tokens, d++, GameConsts.ENEMY_NONE);
 
 						this.Table[x, y] = cell;
 					}
@@ -71,8 +71,8 @@ namespace Charlotte.Games
 			}
 			this.W = w;
 			this.H = h;
-			this.WallName = SCommon.GetElement(lines, c++, GameConsts.MAPPRM_DEFAULT_VALUE);
-			this.MusicName = SCommon.GetElement(lines, c++, GameConsts.MAPPRM_DEFAULT_VALUE);
+			this.WallName = SCommon.RefElement(lines, c++, GameConsts.MAPPRM_DEFAULT_VALUE);
+			this.MusicName = SCommon.RefElement(lines, c++, GameConsts.MAPPRM_DEFAULT_VALUE);
 		}
 
 		public void Save()

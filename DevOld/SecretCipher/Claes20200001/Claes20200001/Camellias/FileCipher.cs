@@ -88,8 +88,8 @@ namespace Charlotte.Camellias
 			AddHash(file);
 			AddCRandPart(file, 16);
 
-			foreach (Camellia transformer in this.Transformers)
-				EncryptRingCBC(file, transformer);
+			for (int index = 0; index < this.Transformers.Length; index++)
+				EncryptRingCBC(file, this.Transformers[index], index, this.Transformers.Length);
 
 			ProcMain.WriteLog("ファイルの暗号化を終了しました。");
 		}
@@ -118,8 +118,8 @@ namespace Charlotte.Camellias
 				)
 				throw new Exception("入力データの破損を検出しました。");
 
-			foreach (Camellia transformer in this.Transformers.Reverse())
-				DecryptRingCBC(file, transformer);
+			for (int index = 0; index < this.Transformers.Length; index++)
+				DecryptRingCBC(file, this.Transformers[this.Transformers.Length - 1 - index], index, this.Transformers.Length);
 
 			RemoveCRandPart(file, 16);
 			RemoveHash(file);
@@ -214,7 +214,7 @@ namespace Charlotte.Camellias
 
 		private const long REPORT_PERIOD = 16 * 500000;
 
-		private static void EncryptRingCBC(string file, Camellia transformer)
+		private static void EncryptRingCBC(string file, Camellia transformer, int progressNumer, int progressDenom)
 		{
 			byte[] input = new byte[16];
 			byte[] output = new byte[16];
@@ -238,9 +238,13 @@ namespace Charlotte.Camellias
 					if (offset % REPORT_PERIOD == 0L)
 						ProcMain.WriteLog(
 							"ファイルを暗号化しています。" +
+							((double)progressNumer / progressDenom + ((double)offset / fileSize) / progressDenom).ToString("F6") +
+							" " +
 							((double)offset / fileSize).ToString("F3") +
 							" " +
-							transformer.GetHashCode().ToString("x8")
+							progressNumer +
+							"/" +
+							progressDenom
 							);
 
 					SCommon.Read(stream, input);
@@ -252,7 +256,7 @@ namespace Charlotte.Camellias
 			}
 		}
 
-		private static void DecryptRingCBC(string file, Camellia transformer)
+		private static void DecryptRingCBC(string file, Camellia transformer, int progressNumer, int progressDenom)
 		{
 			byte[] input = new byte[16];
 			byte[] output = new byte[16];
@@ -275,9 +279,13 @@ namespace Charlotte.Camellias
 					if (offset % REPORT_PERIOD == 0L)
 						ProcMain.WriteLog(
 							"ファイルを復号しています。" +
-							((double)offset / fileSize).ToString("F3") +
+							((double)progressNumer / progressDenom + (1.0 - (double)offset / fileSize) / progressDenom).ToString("F6") +
 							" " +
-							transformer.GetHashCode().ToString("x8")
+							(1.0 - (double)offset / fileSize).ToString("F3") +
+							" " +
+							progressNumer +
+							"/" +
+							progressDenom
 							);
 
 					transformer.DecryptBlock(input, output);

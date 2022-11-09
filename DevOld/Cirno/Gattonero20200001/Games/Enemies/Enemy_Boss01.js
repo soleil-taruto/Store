@@ -12,7 +12,7 @@ function <Enemy_t> CreateEnemy_Boss01(<double> x, <double> y)
 		X: x,
 		Y: y,
 		HP: 100,
-		AttackPoint: 1,
+		AttackPoint: 5,
 		HitDie: false,
 		Crash: null,
 

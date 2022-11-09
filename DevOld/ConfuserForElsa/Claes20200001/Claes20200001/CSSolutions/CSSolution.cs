@@ -121,6 +121,9 @@ namespace Charlotte.CSSolutions
 				.Select(v => new CSFile(v))
 				.ToArray();
 
+			// 念のためソートしておく -- 不幸な並びになった時の何らかの偏りを懸念
+			Array.Sort(csFiles, (a, b) => SCommon.CompIgnoreCase(a.GetFile(), b.GetFile()));
+
 			string beforeWarpableMemberLine = CSCommon.CreateNewIdent() + " -- beforeWarpableMemberLine";
 
 			foreach (CSFile csFile in csFiles)
@@ -134,7 +137,8 @@ namespace Charlotte.CSSolutions
 				csFile.FormatCloseOrEmptyClass();
 				csFile.SolveLiteralStrings(beforeWarpableMemberLine);
 			}
-			foreach (CSFile csFile in csFiles.Shuffle())
+			//foreach (CSFile csFile in csFiles.Shuffle()) // del -- 不幸な並びになった時の何らかの偏りを懸念
+			foreach (CSFile csFile in csFiles)
 			{
 				Console.WriteLine("file.2: " + csFile.GetFile());
 

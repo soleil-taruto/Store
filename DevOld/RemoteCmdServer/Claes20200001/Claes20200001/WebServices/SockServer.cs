@@ -48,6 +48,14 @@ namespace Charlotte.WebServices
 
 		private List<SockChannel> Channels = new List<SockChannel>();
 
+		public int ChannelCount
+		{
+			get
+			{
+				return this.Channels.Count;
+			}
+		}
+
 		public void Perform()
 		{
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "サーバーを開始しています...");
@@ -76,7 +84,10 @@ namespace Charlotte.WebServices
 					while (this.Interlude())
 					{
 						if (waitMillis < 100)
+						{
+							//if (waitMillis == 70) SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "GOING TO IDLING");
 							waitMillis++;
+						}
 
 						for (int c = 0; c < 30; c++) // HACK: 繰り返し回数_適当
 						{
@@ -98,6 +109,7 @@ namespace Charlotte.WebServices
 								channel.ID = SockCommon.IDIssuer.Issue();
 								channel.Connected = SCommon.Supplier(this.E_Connected(channel));
 								channel.BodyOutputStream = new HTTPBodyOutputStream();
+								channel.Parent = this;
 
 								this.Channels.Add(channel);
 
@@ -139,7 +151,9 @@ namespace Charlotte.WebServices
 							}
 						}
 
-						//GC.Collect(); // GeoDemo の Server.sln が重くなるため、暫定削除 @ 2019.4.9
+						SockCommon.Shuffle_7(this.Channels); // 順序による何らかの偏りを懸念...
+
+						GC.Collect();
 
 						if (0 < waitMillis)
 							Thread.Sleep(waitMillis);

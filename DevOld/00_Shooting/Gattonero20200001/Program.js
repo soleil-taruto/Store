@@ -2,34 +2,34 @@
 	アプリケーション用メインモジュール
 */
 
-var<string> APP_IDENT = "{c9e92c41-52cf-44fe-8c46-b5139531e666}";
-
-window.onload = function()
-{
-	Main();
-};
+setTimeout(Main, 0);
 
 function <void> Main()
+{
+	@@_Loading();
+}
+
+function <void> @@_Loading()
+{
+	if (1 <= Loading)
+	{
+		PrintGameLoading();
+		setTimeout(@@_Loading, 100);
+	}
+	else
+	{
+		PrintGameLoaded();
+		@@_Loaded();
+	}
+}
+
+function <void> @@_Loaded()
 {
 	ProcMain(@@_Main());
 }
 
 function* <generatorForTask> @@_Main()
 {
-	// リソース読み込み中は待機
-	while (1 <= Loading)
-	{
-		SetColor("#ffffff");
-		PrintRect(0, 0, Screen_W, Screen_H);
-
-		SetColor("#000000");
-		SetPrint(10, 25, 50);
-		SetFSize(16);
-		PrintLine("リソースを読み込んでいます ...　残り " + Loading + " 個");
-
-		yield 1;
-	}
-
 	if (DEBUG)
 	{
 		// -- choose one --
@@ -47,8 +47,7 @@ function* <generatorForTask> @@_Main()
 	}
 }
 
-// 本番用メイン
 function* <generatorForTask> @@_Main2()
 {
-	yield* TitleMain();
+	yield* EntranceMain();
 }

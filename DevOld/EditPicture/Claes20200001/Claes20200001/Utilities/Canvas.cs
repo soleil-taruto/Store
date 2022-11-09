@@ -524,5 +524,32 @@ namespace Charlotte.Utilities
 			}
 			return dest;
 		}
+
+		/// <summary>
+		/// 部分イメージを返す。
+		/// </summary>
+		/// <param name="rect">部分イメージの領域</param>
+		/// <returns>部分イメージ</returns>
+		public Canvas GetSubImage(I4Rect rect)
+		{
+			if (
+				rect.L < 0 || this.W < rect.R ||
+				rect.T < 0 || this.H < rect.B ||
+				rect.W < 1 ||
+				rect.H < 1
+				)
+				throw new Exception("Bad rect");
+
+			Canvas dest = new Canvas(rect.W, rect.H);
+
+			for (int x = 0; x < rect.W; x++)
+			{
+				for (int y = 0; y < rect.H; y++)
+				{
+					dest[x, y] = this[rect.L + x, rect.T + y];
+				}
+			}
+			return dest;
+		}
 	}
 }

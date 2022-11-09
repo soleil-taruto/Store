@@ -15,5 +15,14 @@ namespace Charlotte
 				a.G == b.G &&
 				a.B == b.B;
 		}
+
+		public static bool IsSame(I4Color a, I4Color b)
+		{
+			return
+				a.R == b.R &&
+				a.G == b.G &&
+				a.B == b.B &&
+				a.A == b.A;
+		}
 	}
 }

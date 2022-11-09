@@ -7,8 +7,6 @@ namespace Charlotte
 {
 	public static class Consts
 	{
-		public const int SAVE_DATA_SLOT_NUM = 14;
-
 		/// <summary>
 		/// 2の平方根
 		/// </summary>

@@ -8,11 +8,20 @@ var<Enemy_t[]> @@_Enemies = [];
 // 自弾リスト
 var<Shot_t[]> @@_Shots = [];
 
-// カメラ位置
+// カメラ位置(実数)
+var<D2Point_t> @@_Camera = CreateD2Point(0.0, 0.0);
+
+// カメラ位置(整数)
 var<D2Point_t> Camera = CreateD2Point(0.0, 0.0);
 
 // ゲーム用タスク
 var<TaskManager_t> GameTasks = CreateTaskManager();
+
+// プレイヤー描画タスク
+var<TaskManager_t> PlayerDrawTasks = CreateTaskManager();
+
+// 当たり判定を表示するフラグ (デバッグ・テスト用)
+var<boolean> @@_PrintAtariFlag = false;
 
 /*
 	ゲーム終了理由
@@ -44,8 +53,10 @@ function* <generatorForTask> GameMain(<int> mapIndex)
 		@@_Enemies = [];
 		@@_Shots = [];
 
-		Camera = CreateD2Point(0.0, 0.0);
+		@@_Camera = CreateD2Point(0.0, 0.0);
+		Camera    = CreateD2Point(0.0, 0.0);
 		ClearAllTask(GameTasks);
+		ClearAllTask(PlayerDrawTasks);
 		GameEndReason = GameEndReason_e_STAGE_CLEAR;
 		GameRequestReturnToTitleMenu = false;
 		GameRequestStageClear = false;
@@ -96,9 +107,21 @@ gameLoop:
 			continue gameLoop;
 		}
 
-		if (DEBUG && GetKeyInput(84) == 1) // ? T 押下 -> 攻撃テスト
+	movePlayerBlock:
 		{
-			PlayerAttack = Supplier(CreateAttack_BDummy());
+			if (1 <= PlayerDamageFrame) // 被弾したら即終了
+			{
+				PlayerAttack = null;
+			}
+			if (PlayerAttack != null)
+			{
+				if (PlayerAttack())
+				{
+					break movePlayerBlock;
+				}
+				PlayerAttack = null;
+			}
+			ActPlayer();
 		}
 
 		@@_カメラ位置調整(false);
@@ -110,18 +133,13 @@ gameLoop:
 		@@_DrawWall();
 		@@_DrawMap();
 
-		if (
-			PlayerDamageFrame == 0 && // 被弾したら即終了
-			PlayerAttack != null &&
-			PlayerAttack()
-			)
+		if (1 <= GetTaskCount(PlayerDrawTasks))
 		{
-			// noop
+			ExecuteAllTask(PlayerDrawTasks);
 		}
 		else
 		{
-			PlayerAttack = null;
-			DrawPlayer(); // プレイヤーの描画
+			DrawPlayer();
 		}
 
 		// 敵の描画
@@ -165,7 +183,11 @@ gameLoop:
 		ExecuteAllTask(GameTasks);
 		@@_DrawFront();
 
-		if (DEBUG && 1 <= GetKeyInput(17)) // ? コントロール押下中 -> 当たり判定表示 (デバッグ用)
+		if (DEBUG && GetKeyInput(17) == 1) // ? コントロール押下中 -> 当たり判定表示 (デバッグ用)
+		{
+			@@_PrintAtariFlag = !@@_PrintAtariFlag;
+		}
+		if (@@_PrintAtariFlag)
 		{
 			var<double> dPlX = PlayerX - Camera.X;
 			var<double> dPlY = PlayerY - Camera.Y;
@@ -352,8 +374,10 @@ function <void> @@_カメラ位置調整(<boolean> 一瞬で)
 	targCamX = ToRange(targCamX, 0.0, TILE_W * Map.W - Screen_W);
 	targCamY = ToRange(targCamY, 0.0, TILE_H * Map.H - Screen_H);
 
-	Camera.X = Approach(Camera.X, targCamX, 一瞬で ? 0.0 : 0.8);
-	Camera.Y = Approach(Camera.Y, targCamY, 一瞬で ? 0.0 : 0.8);
+	@@_Camera.X = Approach(@@_Camera.X, targCamX, 一瞬で ? 0.0 : 0.8);
+	@@_Camera.Y = Approach(@@_Camera.Y, targCamY, 一瞬で ? 0.0 : 0.8);
+
+	Camera = I2PointToD2Point(D2PointToI2Point(@@_Camera));
 }
 
 function* <generatorForTask> @@_T_ゴミ回収()
@@ -423,9 +447,9 @@ function <void> @@_DrawWall()
 {
 	var<double> SLIDE_RATE = 0.1;
 
-	var<Image> wallImg = GetStageWallPicture(@@_MapIndex);
-	var<int> wallImg_w = wallImg.naturalWidth;
-	var<int> wallImg_h = wallImg.naturalHeight;
+	var<Picture_t> wallImg = GetStageWallPicture(@@_MapIndex);
+	var<int> wallImg_w = GetPicture_W(wallImg);
+	var<int> wallImg_h = GetPicture_H(wallImg);
 
 	var<int> cam_w = Map.W * TILE_W - Screen_W;
 	var<int> cam_h = Map.H * TILE_H - Screen_H;
@@ -597,6 +621,8 @@ function* <generatorForTask> @@_DeadAndRestartMotion(<boolean> restartRequested)
 		ResetPlayer();
 
 		ClearAllTask(GameTasks);
+		ClearAllTask(PlayerDrawTasks);
+
 		LoadEnemyOfMap();
 		MoveToStartPtOfMap();
 	}

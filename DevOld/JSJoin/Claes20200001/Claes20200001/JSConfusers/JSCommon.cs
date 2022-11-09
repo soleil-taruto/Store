@@ -29,15 +29,33 @@ namespace Charlotte.JSConfusers
 		/// 重複を考慮しなくて良いランダムな文字列を返す。
 		/// </summary>
 		/// <returns>新しい識別子</returns>
-		public static string CreateNewIdent()
+		public static string CreateNewIdent(Predicate<string> accept)
 		{
-			// crand 128 bit -> 重複を想定しない。
+			for (int c = 0; ; c++)
+			{
+				string name = TryCreateNameNew();
 
+				if (accept(name))
+					return name;
+
+				if (1000 < c) // rough limit
+					throw new Exception("識別子をほぼ使い果たしました。");
+			}
+		}
+
+		/// <summary>
+		/// 新しい識別子を作成する。
+		/// 標準のクラス名 List, StringBuilder などと被らない名前を返すこと。
+		/// -- 今の実装は厳密にこれを回避していない。@ 2020.11.x
+		/// </summary>
+		/// <returns>新しい識別子</returns>
+		private static string TryCreateNameNew()
+		{
 			return
-				"Gattonero_A_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") + "_" +
-				SCommon.CRandom.GetUInt64().ToString("D20") +
-				"_Z";
+				SCommon.CRandom.ChooseOne(JSResource.英単語リスト_動詞) +
+				SCommon.CRandom.ChooseOne(JSResource.英単語リスト_形容詞) +
+				SCommon.CRandom.ChooseOne(JSResource.ランダムな単語リスト) +
+				SCommon.CRandom.ChooseOne(JSResource.英単語リスト_名詞);
 		}
 	}
 }

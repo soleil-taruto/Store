@@ -34,7 +34,7 @@ function <void> AddEffect_Explode(<double> x, <double> y) // ”Ä—p”š”­
 			for (var<Scene_t> scene of CreateScene(20))
 			{
 				Draw(
-					P_Star_S,
+					P_ExplodePiece,
 					pt.X,
 					pt.Y,
 					scene.RemRate,
@@ -56,4 +56,48 @@ function <void> AddEffect_Explode(<double> x, <double> y) // ”Ä—p”š”­
 			}
 		}());
 	}
+}
+
+function <void> AddEffect_ShotExplode(<double> x, <double> y)
+{
+	AddEffect(function* <generatorForTask> ()
+	{
+		var<double> rot = GetRand1() * Math.PI * 2;
+
+		for (var<Scene_t> scene of CreateScene(10))
+		{
+			Draw(
+				P_Shot0001,
+				x,
+				y,
+				scene.RemRate,
+				rot,
+				1.0 + 4.0 * scene.Rate
+				);
+
+			yield 1;
+		}
+	}());
+}
+
+function <void> AddEffect_TamaExplode(<double> x, <double> y)
+{
+	AddEffect(function* <generatorForTask> ()
+	{
+		var<double> rot = GetRand1() * Math.PI * 2;
+
+		for (var<Scene_t> scene of CreateScene(10))
+		{
+			Draw(
+				P_Tama0001,
+				x,
+				y,
+				scene.RemRate,
+				rot,
+				1.0 + 4.0 * scene.Rate
+				);
+
+			yield 1;
+		}
+	}());
 }

@@ -1278,6 +1278,44 @@ namespace Charlotte.Commons
 			}
 		}
 
+		public static byte[] GetSHA512(IEnumerable<byte[]> src)
+		{
+			return GetSHA512(writePart =>
+			{
+				foreach (byte[] part in src)
+				{
+					writePart(part, 0, part.Length);
+				}
+			});
+		}
+
+		public static byte[] GetSHA512(Read_d reader)
+		{
+			return GetSHA512(writePart =>
+			{
+				SCommon.ReadToEnd(reader, (buff, offset, count) => writePart(buff, offset, count));
+			});
+		}
+
+		public static byte[] GetSHA512(Action<Write_d> execute)
+		{
+			using (SHA512 sha512 = SHA512.Create())
+			{
+				execute((buff, offset, count) => sha512.TransformBlock(buff, offset, count, null, 0));
+				sha512.TransformFinalBlock(EMPTY_BYTES, 0, 0);
+				return sha512.Hash;
+			}
+		}
+
+		public static byte[] GetSHA512File(string file)
+		{
+			using (SHA512 sha512 = SHA512.Create())
+			using (FileStream reader = new FileStream(file, FileMode.Open, FileAccess.Read))
+			{
+				return sha512.ComputeHash(reader);
+			}
+		}
+
 		public static class Hex
 		{
 			public static string ToString(byte[] src)
@@ -1660,6 +1698,20 @@ namespace Charlotte.Commons
 
 				remaining -= (long)count;
 				writer(buff, offset, count);
+			};
+		}
+
+		public static Read_d GetLimitedReader(Read_d reader, long remaining)
+		{
+			return (buff, offset, count) =>
+			{
+				if (remaining <= 0L)
+					return -1;
+
+				count = (int)Math.Min((long)count, remaining);
+				count = reader(buff, offset, count);
+				remaining -= (long)count;
+				return count;
 			};
 		}
 
@@ -2190,5 +2242,68 @@ namespace Charlotte.Commons
 		}
 
 		#endregion
+
+		/// <summary>
+		/// マージする。
+		/// </summary>
+		/// <typeparam name="T">任意の型</typeparam>
+		/// <param name="list1">リスト1 -- 勝手にソートすることに注意！</param>
+		/// <param name="list2">リスト2 -- 勝手にソートすることに注意！</param>
+		/// <param name="comp">要素の比較メソッド</param>
+		/// <param name="only1">出力先 -- リスト1のみ存在</param>
+		/// <param name="both1">出力先 -- 両方に存在 -- リスト1の要素を追加</param>
+		/// <param name="both2">出力先 -- 両方に存在 -- リスト2の要素を追加</param>
+		/// <param name="only2">出力先 -- リスト2のみ存在</param>
+		public static void Merge<T>(IList<T> list1, IList<T> list2, Comparison<T> comp, List<T> only1, List<T> both1, List<T> both2, List<T> only2)
+		{
+			P_Sort(list1, comp);
+			P_Sort(list2, comp);
+
+			int index1 = 0;
+			int index2 = 0;
+
+			while (index1 < list1.Count && index2 < list2.Count)
+			{
+				int ret = comp(list1[index1], list2[index2]);
+
+				if (ret < 0)
+				{
+					only1.Add(list1[index1++]);
+				}
+				else if (0 < ret)
+				{
+					only2.Add(list2[index2++]);
+				}
+				else
+				{
+					both1.Add(list1[index1++]);
+					both2.Add(list2[index2++]);
+				}
+			}
+			while (index1 < list1.Count)
+			{
+				only1.Add(list1[index1++]);
+			}
+			while (index2 < list2.Count)
+			{
+				only2.Add(list2[index2++]);
+			}
+		}
+
+		private static void P_Sort<T>(IList<T> list, Comparison<T> comp)
+		{
+			if (list is T[])
+			{
+				Array.Sort((T[])list, comp);
+			}
+			else if (list is List<T>)
+			{
+				((List<T>)list).Sort(comp);
+			}
+			else
+			{
+				throw null; // never
+			}
+		}
 	}
 }

@@ -18,5 +18,5 @@
 */
 function <void> DrawWall(<Wall_t> wall)
 {
-	wall.Draw.next();
+	NextRun(wall.Draw);
 }

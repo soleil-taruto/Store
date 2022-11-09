@@ -203,7 +203,7 @@ gameLoop:
 					break; // この敵(アイテム)は死亡したので、次の敵へ進む。
 				}
 				else if (
-					1 <= PlayerBornFrame && // ? 再登場中
+					1 <= PlayerBornFrame || // ? 再登場中
 					1 <= PlayerInvincibleFrame // ? 無敵状態中
 					)
 				{

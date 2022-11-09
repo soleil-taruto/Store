@@ -139,6 +139,8 @@ namespace Charlotte
 			// noop
 		}
 
+		private DateTime LastGenRandDateTime;
+
 		/// <summary>
 		/// 生成
 		/// </summary>
@@ -149,7 +151,7 @@ namespace Charlotte
 			int rowcnt = (int)this.Numb行数.Value;
 			int colcnt;
 
-			switch ((int)this.Combo桁数.SelectedIndex)
+			switch (this.Combo桁数.SelectedIndex)
 			{
 				case 0: colcnt = 16; break;
 				case 1: colcnt = 32; break;
@@ -166,6 +168,8 @@ namespace Charlotte
 			string text = SCommon.LinesToText(cryptoRandBytesList.Select(cryptoRandBytes => SCommon.Hex.ToString(cryptoRandBytes)).ToArray());
 			this.RandText.Text = text;
 			Clipboard.SetText(text);
+
+			this.LastGenRandDateTime = DateTime.Now;
 
 			this.RandStatus.Text = string.Format(
 				"行数：{0} , 桁数：{1}文字 ({2} バイト, {3} bit) , 長さ：{4}文字 ({5} バイト, {6} bit)",
@@ -216,7 +220,7 @@ namespace Charlotte
 				MessageBox.Show("先に生成を実行して下さい。", "なんか無理", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return;
 			}
-			string file = SaveCRandomFileDialog();
+			string file = this.SaveCRandomFileDialog();
 
 			if (file != null)
 			{
@@ -226,7 +230,7 @@ namespace Charlotte
 			}
 		}
 
-		private static string SaveCRandomFileDialog()
+		private string SaveCRandomFileDialog()
 		{
 			string homeDir = Directory.GetCurrentDirectory();
 			try
@@ -237,7 +241,7 @@ namespace Charlotte
 					dlg.Filter = "テキストファイル(*.txt)|*.txt|すべてのファイル(*.*)|*.*";
 					dlg.FilterIndex = 1;
 					dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-					dlg.FileName = "Key_" + SCommon.SimpleDateTime.Now().ToTimeStamp() + ".txt";
+					dlg.FileName = "Key_" + new SCommon.SimpleDateTime(this.LastGenRandDateTime).ToTimeStamp() + ".txt";
 
 					if (dlg.ShowDialog() == DialogResult.OK)
 					{

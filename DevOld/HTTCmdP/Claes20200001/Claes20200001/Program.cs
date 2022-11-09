@@ -67,14 +67,15 @@ namespace Charlotte
 			{
 				Main5(ar);
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				SockCommon.WriteLog(SockCommon.ErrorLevel_e.FATAL, e);
-			}
+				ProcMain.WriteLog(ex);
 
-			// 実行ファイルのダブルクリックやドキュメントルート(フォルダ)のドラッグアンドドロップで起動して
-			// エラーになった場合、一瞬でコンソールが閉じてしまうので、少しだけ待つ。
-			Thread.Sleep(500);
+				//MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
+				Console.ReadLine();
+			}
 		}
 
 		private void Main5(ArgsReader ar)
@@ -218,11 +219,11 @@ namespace Charlotte
 			}
 			else if (channel.Method == "GET")
 			{
-				// nop
+				// noop
 			}
 			else if (channel.Method == "POST")
 			{
-				// nop
+				// noop
 			}
 			else
 			{
@@ -283,8 +284,18 @@ namespace Charlotte
 
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "要求パス：" + urlPath);
 
-			string relPath = Common.ToFairRelPath(urlPath, docRoot.Length);
-			string path = Path.Combine(docRoot, relPath);
+			string relPath;
+			string path;
+			if (urlPath == "/")
+			{
+				relPath = "_ROOT"; // ダミーで何か入れておく
+				path = docRoot;
+			}
+			else
+			{
+				relPath = SCommon.ToFairRelPath(urlPath, docRoot.Length);
+				path = Path.Combine(docRoot, relPath);
+			}
 
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "目的パス：" + path);
 
@@ -308,7 +319,7 @@ namespace Charlotte
 			}
 			if (ActionServer.TryPerform(head, urlPath, channel))
 			{
-				// nop
+				// noop
 			}
 			else if (File.Exists(path))
 			{

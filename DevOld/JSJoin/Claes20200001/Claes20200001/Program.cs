@@ -94,8 +94,8 @@ namespace Charlotte
 			if (!Directory.Exists(this.ResourceDir))
 				throw new Exception("no ResourceDir");
 
-			SCommon.DeletePath(this.OutputDir);
-			SCommon.CreateDir(this.OutputDir);
+			if (!Directory.Exists(this.OutputDir))
+				throw new Exception("no OutputDir");
 
 			foreach (string file in Directory.GetFiles(this.SourceDir, "*", SearchOption.AllDirectories))
 				if (!file.Contains("\\_")) // ? アンダースコアで始まるローカル名を含まない。
@@ -123,7 +123,7 @@ namespace Charlotte
 
 				string[] lines = SCommon.TextToLines(text);
 
-				lines = ReplaceSpecialCode(lines, file, releaseMode);
+				lines = ReplaceSpecialCode_01(lines, file, releaseMode);
 
 				this.JSLines.Add("// ここから " + file);
 				this.JSLines.AddRange(lines);
@@ -141,19 +141,42 @@ namespace Charlotte
 					throw new Exception("識別子の重複：" + a);
 			});
 
+			this.JSLines = ReplaceSpecialCode_02(this.JSLines.ToArray()).ToList();
+
 			List<string> escapedJSLines = this.JSLines;
 			this.JSLines = new List<string>();
 
 			this.JSLines.Add("var Resources =");
 			this.JSLines.Add("{");
 
+			HashSet<string> resNames = new HashSet<string>();
 			int resIndex = 0;
 
 			foreach (string file in this.ResourceFiles)
 			{
 				string name = file;
 				name = SCommon.ChangeRoot(name, this.ResourceDir);
-				name = name.Replace('\\', '/');
+
+				// ex. @"Data\music-0001.mp3" -> "Data__music_0001_mp3"
+				{
+					StringBuilder buff = new StringBuilder();
+
+					foreach (char chr in name)
+					{
+						if (chr == '\\')
+							buff.Append("__");
+						else if (!JSCommon.IsJSWordChar(chr))
+							buff.Append('_');
+						else
+							buff.Append(chr);
+					}
+					name = buff.ToString();
+				}
+
+				if (resNames.Contains(name))
+					throw new Exception("リソース名の重複：" + name);
+
+				resNames.Add(name);
 
 				string url;
 
@@ -163,7 +186,7 @@ namespace Charlotte
 					string resFile = Path.Combine(resDir, resIndex.ToString("D8") + ".bin");
 
 					SCommon.CreateDir(resDir);
-					File.Copy(file, resFile);
+					File.Copy(file, resFile, true);
 
 					url = "res/" + Path.GetFileName(resFile);
 
@@ -174,31 +197,11 @@ namespace Charlotte
 					url = "file:" + file.Replace('\\', '/');
 				}
 
-				this.JSLines.Add(string.Format("\t\"{0}\": \"{1}\",", name, url));
+				this.JSLines.Add(string.Format("\t{0}: \"{1}\",", name, url));
 			}
-
 			this.JSLines.Add("};");
 			this.JSLines.Add("");
-			this.JSLines.Add("var Functions =");
-			this.JSLines.Add("{");
 
-			foreach (string functionName in this.JSFunctions)
-			{
-				this.JSLines.Add(string.Format("\t\"{0}\": function() {{ return {0}; }},", functionName));
-			}
-
-			this.JSLines.Add("};");
-			this.JSLines.Add("");
-			this.JSLines.Add("var Variables =");
-			this.JSLines.Add("{");
-
-			foreach (string variableName in this.JSVariables)
-			{
-				this.JSLines.Add(string.Format("\t\"{0}\": [ function() {{ return {0}; }}, function(value) {{ {0} = value; }} ],", variableName));
-			}
-
-			this.JSLines.Add("};");
-			this.JSLines.Add("");
 			this.JSLines.AddRange(escapedJSLines);
 			escapedJSLines = null;
 
@@ -227,13 +230,16 @@ namespace Charlotte
 		private int AutoCounter = 1;
 
 		/// <summary>
-		/// 特別なコードをJSコードに変換する。
+		/// 特別なコードをJSコードに変換する。#01
 		/// </summary>
 		/// <param name="lines">コード行リスト</param>
 		/// <param name="sourceFilePath">このソースファイルのパス</param>
+		/// <param name="releaseMode">リリースモードか</param>
 		/// <returns>処理後のコード行リスト</returns>
-		private string[] ReplaceSpecialCode(string[] lines, string sourceFilePath, bool releaseMode)
+		private string[] ReplaceSpecialCode_01(string[] lines, string sourceFilePath, bool releaseMode)
 		{
+			List<string> extendLines = new List<string>();
+
 			for (int index = 0; index < lines.Length; index++)
 			{
 				string line = lines[index];
@@ -263,7 +269,21 @@ namespace Charlotte
 				{
 					string trailer = line.Substring(7);
 
-					line = indent + "console.log(\"" + positionString + "\");" + trailer;
+					if (releaseMode)
+					{
+						string dummyFuncName = Common.CreateRandIdent();
+
+						line = indent + dummyFuncName + "();" + trailer;
+
+						extendLines.Add("function " + dummyFuncName + "()");
+						extendLines.Add("{");
+						extendLines.Add("\treturn;");
+						extendLines.Add("}");
+					}
+					else
+					{
+						line = indent + "console.log(\"" + positionString + "\");" + trailer;
+					}
 				}
 				else if (line.StartsWith("error;"))
 				{
@@ -279,7 +299,7 @@ namespace Charlotte
 				lines[index] = line; // 行を更新
 			}
 
-			string text = SCommon.LinesToText(lines);
+			string text = SCommon.LinesToText(lines.Concat(extendLines).ToArray());
 
 			text = RSC_ProcessWord(text, "@(AUTO)", () => "" + (AutoCounter++));
 			text = RSC_ProcessWord(text, "@(UUID)", () => Guid.NewGuid().ToString("B"));
@@ -304,6 +324,23 @@ namespace Charlotte
 				text = slnd[2];
 			}
 			return dest + text;
+		}
+
+		/// <summary>
+		/// 特別なコードをJSコードに変換する。#02
+		/// </summary>
+		/// <param name="lines">コード行リスト</param>
+		/// <returns>処理後のコード行リスト</returns>
+		private string[] ReplaceSpecialCode_02(string[] lines)
+		{
+			string text = SCommon.LinesToText(lines);
+
+			text = RSC_ProcessWord(text, "@(INIT)", () => string.Join(", ", this.JSFunctions.Where(v => v.EndsWith("_INIT"))));
+			text = RSC_ProcessWord(text, "@(EACH)", () => string.Join(", ", this.JSFunctions.Where(v => v.EndsWith("_EACH"))));
+
+			lines = SCommon.TextToLines(text);
+
+			return lines;
 		}
 
 		private void CollectTags()
@@ -335,6 +372,8 @@ namespace Charlotte
 				if (line[0] <= ' ') // ? 空白系文字で始まる == インデント有り
 					continue;
 
+				// デリミタ：空白系文字, ジェネレータ関数('*'), 引数の開始('(')
+				//
 				string[] tokens = SCommon.Tokenize(line, "\t *(", false, true);
 
 				if (tokens.Length < 2)
@@ -368,6 +407,8 @@ namespace Charlotte
 				if (line[0] <= ' ') // ? 空白系文字で始まる == インデント有り
 					continue;
 
+				// デリミタ：空白系文字, 初期値の開始('='), 宣言の終了(';')
+				//
 				string[] tokens = SCommon.Tokenize(line, "\t =;", false, true);
 
 				if (tokens.Length < 2)
@@ -395,6 +436,8 @@ namespace Charlotte
 			yield return "<head>";
 			yield return "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Shift_JIS\" />";
 			yield return "<script>";
+			yield return "";
+			yield return "'use strict'";
 			yield return "";
 
 			foreach (string line in this.JSLines)

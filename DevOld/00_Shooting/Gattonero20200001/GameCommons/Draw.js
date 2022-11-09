@@ -2,6 +2,18 @@
 	描画
 */
 
+// 画像の幅を取得する。
+function <int> GetPicture_W(<Picture_t> picture)
+{
+	return picture.Handle.naturalWidth;
+}
+
+// 画像の高さを取得する。
+function <int> GetPicture_H(<Picture_t> picture)
+{
+	return picture.Handle.naturalHeight;
+}
+
 // スクリーンのクリア
 function <void> ClearScreen()
 {
@@ -23,13 +35,18 @@ function <void> ClearScreen()
 		2.0 == 2倍
 		0.5 == 0.5倍
 */
-function <void> Draw(<Image> image, <double> x, <double> y, <double> a, <double> r, <double> z)
+function <void> Draw(<Picture_t> picture, <double> x, <double> y, <double> a, <double> r, <double> z)
 {
-	var<int> w = image.naturalWidth;
-	var<int> h = image.naturalHeight;
+	Draw2(picture, x, y, a, r, z, z);
+}
 
-	w *= z;
-	h *= z;
+function <void> Draw2(<Picture_t> picture, <double> x, <double> y, <double> a, <double> r, <double> zw, <double> zh)
+{
+	var<int> w = GetPicture_W(picture);
+	var<int> h = GetPicture_H(picture);
+
+	w *= zw;
+	h *= zh;
 
 	var<double> l = x - w / 2;
 	var<double> t = y - h / 2;
@@ -39,7 +56,7 @@ function <void> Draw(<Image> image, <double> x, <double> y, <double> a, <double>
 	Context.translate(-x, -y);
 	Context.globalAlpha = a;
 
-	Context.drawImage(image, l, t, w, h);
+	Context.drawImage(picture.Handle, l, t, w, h);
 
 	// restore
 	Context.translate(x, y);
