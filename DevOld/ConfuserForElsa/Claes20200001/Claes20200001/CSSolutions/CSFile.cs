@@ -877,16 +877,8 @@ namespace Charlotte.CSSolutions
 							AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_E_GetString_" + rangeIndex + "_Z");
 							varLines.Add("\t\tpublic static int[] " +
 								varName + "_E_GetString_" +
-								rangeIndex + "_Z() { return " +
-								varName + "_ArrString_" +
-								rangeIndex + "_Z; }"
-								);
-
-							AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_ArrString_" + rangeIndex + "_Z");
-							varLines.Add("\t\tpublic static int[] " +
-								varName + "_ArrString_" +
-								rangeIndex + "_Z = new int[] { " +
-								string.Join(", ", SLS2_ToYR(line.Substring(ranges[rangeIndex][0], ranges[rangeIndex][1]))) + " };"
+								rangeIndex + "_Z() { return new int[] { " +
+								string.Join(", ", SLS2_ToYR(line.Substring(ranges[rangeIndex][0], ranges[rangeIndex][1]))) + " }; }"
 								);
 						}
 

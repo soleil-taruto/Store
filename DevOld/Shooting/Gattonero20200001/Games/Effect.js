@@ -10,7 +10,7 @@
 */
 function* <generatorForTask> Effect_Explode(<double> x, <double> y)
 {
-	for (var<Image> image of P_Explode)
+	for (var<Picture_t> image of P_Explode)
 	for (var<int> c = 0; c < 4; c++)
 	{
 		Draw(image, x, y - 50, 1.0, 0.0, 1.0);

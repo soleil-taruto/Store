@@ -38,8 +38,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\Shooting\Program", @"C:\Dev\GameJS\Shooting\res", @"C:\temp" }));
-			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\Shooting\Program", @"C:\Dev\GameJS\Shooting\res", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { @"C:\Dev\Game\GameJS\Shooting\Gattonero20200001", @"C:\Dev\Game\GameJS\Shooting\res", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\Game\GameJS\Shooting\Gattonero20200001", @"C:\Dev\Game\GameJS\Shooting\res", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -221,6 +221,8 @@ namespace Charlotte
 			{
 				this.JSLines = new JSConfuser().Confuse(this.JSLines);
 			}
+
+			ReplaceWord("var", "let");
 
 			IEnumerable<string> htmlLines = this.CreateHtmlLines(releaseMode);
 
@@ -571,6 +573,44 @@ namespace Charlotte
 				//line = line.Replace("(int)", ""); // ToFix を使用しなければならない。
 
 				lines[index] = line;
+			}
+		}
+
+		private void ReplaceWord(string srcWord, string destWord)
+		{
+			for (int lineIndex = 0; lineIndex < this.JSLines.Count; lineIndex++)
+			{
+				string line = this.JSLines[lineIndex];
+
+				for (int index = 0; ; )
+				{
+					int p = line.IndexOf(srcWord, index);
+
+					if (p == -1)
+						break;
+
+					bool replaceable = true; // 置換するか
+
+					if (0 < p && ' ' < line[p - 1]) // ? 直前が行頭または空白系ではない。
+					{
+						replaceable = false;
+					}
+					else if (p + srcWord.Length < line.Length && ' ' < line[p + srcWord.Length]) // ? 直後が行末または空白系ではない。
+					{
+						replaceable = false;
+					}
+
+					if (replaceable) // ? 置換する。
+					{
+						line = line.Substring(0, p) + destWord + line.Substring(p + srcWord.Length);
+						index = p + destWord.Length;
+					}
+					else // ? 置換しない。
+					{
+						index = p + srcWord.Length;
+					}
+				}
+				this.JSLines[lineIndex] = line;
 			}
 		}
 	}
