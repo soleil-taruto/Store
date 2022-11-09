@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Charlotte.Commons;
+using Charlotte.Utilities;
 
 namespace Charlotte.JSConfusers
 {
@@ -378,16 +379,17 @@ $chrListFuncs
 
 		private void RenameEx()
 		{
-			string text = SCommon.LinesToText(this.JSLines);
+			ProcMain.WriteLog("RenameEx-ST");
 
-			text += " "; // 番兵設置
+			EditableString text = new EditableString(SCommon.LinesToText(this.JSLines));
+			CrossStringDictionary wordFilter = new CrossStringDictionary();
 
-			Dictionary<string, string> wordFilter = SCommon.CreateDictionary<string>();
+			text.Add(" "); // 番兵設置
 
 			foreach (string word in JSResource.予約語リスト)
 				wordFilter.Add(word, word);
 
-			for (int index = 0; index < text.Length; )
+			for (int index = 0; index < text.Count; )
 			{
 				// ? 文字列の開始
 				if (text[index] == '"')
@@ -456,24 +458,25 @@ $chrListFuncs
 						}
 						else // ? 予約語ではない。既知の置き換え
 						{
-							text = text.Substring(0, index) + destWord + text.Substring(end);
+							text.Replace(index, end - index, destWord);
 							index += destWord.Length;
 						}
 					}
 					else // ? 未知の置き換え
 					{
-						string destWord = JSCommon.CreateNewIdent(v => !wordFilter.ContainsKey(v));
+						string destWord = JSCommon.CreateNewIdent(v => !wordFilter.ContainsValue(v));
 
 						wordFilter.Add(word, destWord);
 
-						text = text.Substring(0, index) + destWord + text.Substring(end);
+						text.Replace(index, end - index, destWord);
 						index += destWord.Length;
 					}
 					continue;
 				}
 				index++;
 			}
-			this.JSLines = SCommon.TextToLines(text).ToList();
+			this.JSLines = SCommon.TextToLines(text.ToString()).ToList();
+			ProcMain.WriteLog("RenameEx-ED");
 		}
 
 		/// <summary>

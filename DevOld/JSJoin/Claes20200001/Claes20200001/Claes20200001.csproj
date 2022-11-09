@@ -75,6 +75,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Test0001.cs" />
+    <Compile Include="Utilities\CrossStringDictionary.cs" />
+    <Compile Include="Utilities\EditableString.cs" />
     <Compile Include="Utilities\UniqueFilter.cs" />
   </ItemGroup>
   <ItemGroup />
