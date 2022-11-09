@@ -38,8 +38,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			//Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
-			Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -157,8 +157,8 @@ namespace Charlotte
 			List<string> escapedJSLines = this.JSLines;
 			this.JSLines = new List<string>();
 
-			this.JSLines.Add("var Resources =");
-			this.JSLines.Add("{");
+			this.JSLines.Add("// RESOURCE_* ここから");
+			this.JSLines.Add("//");
 
 			string resDir = Path.Combine(this.OutputDir, Consts.OUTPUT_RES_DIR_NAME);
 
@@ -214,9 +214,10 @@ namespace Charlotte
 					url = "file:" + file.Replace('\\', '/');
 				}
 
-				this.JSLines.Add(string.Format("\t{0}: \"{1}\",", name, url));
+				this.JSLines.Add(string.Format("var RESOURCE_{0} = \"{1}\";", name, url));
 			}
-			this.JSLines.Add("};");
+			this.JSLines.Add("//");
+			this.JSLines.Add("// RESOURCE_* ここまで");
 			this.JSLines.Add("");
 
 			// DEBUG, RELEASE 定数
