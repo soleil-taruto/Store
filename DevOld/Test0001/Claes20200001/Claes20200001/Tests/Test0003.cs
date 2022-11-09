@@ -10,173 +10,104 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			Test01_a(10000, 2);
-			Test01_a(1000, 3);
-			Test01_a(100, 4);
-			Test01_a(10, 5);
+			Test01_a(1000, 10);
+			Test01_a(100, 30);
+			Test01_a(10, 100);
 
 			Console.WriteLine("OK!");
 		}
 
-		private void Test01_a(int testCount, int nMax)
+		private void Test01_a(int testCount, int cardCountMax)
 		{
-			Test01_a2(testCount, nMax, 7);
-			Test01_a2(testCount, nMax, 10);
-			Test01_a2(testCount, nMax, 100);
-			Test01_a2(testCount, nMax, 103);
-			Test01_a2(testCount, nMax, 1000);
-			Test01_a2(testCount, nMax, 1003);
+			Test01_a2(testCount, cardCountMax, 9);
+			Test01_a2(testCount, cardCountMax, 99);
+			Test01_a2(testCount, cardCountMax, 999);
+			Test01_a2(testCount, cardCountMax, 9999);
+			Test01_a2(testCount, cardCountMax, 99999);
+			Test01_a2(testCount, cardCountMax, 999999);
 		}
 
-		private void Test01_a2(int testCount, int nMax, int mMax)
+		private void Test01_a2(int testCount, int cardCountMax, int cardValueMax)
 		{
-			Console.WriteLine(string.Join(", ", testCount, nMax, mMax));
+			Console.WriteLine(string.Join(", ", testCount, cardCountMax, cardValueMax));
 
 			for (int testcnt = 0; testcnt < testCount; testcnt++)
 			{
-				int n = SCommon.CRandom.GetRange(1, nMax);
-				int m = SCommon.CRandom.GetRange(2, mMax);
+				int[] cards = Enumerable
+					.Range(0, SCommon.CRandom.GetRange(3, cardCountMax))
+					.Select(dummy => SCommon.CRandom.GetRange(1, cardValueMax))
+					.ToArray();
 
-				int[] aArr = Enumerable.Range(0, n * 2).Select(dummy => SCommon.CRandom.GetRange(0, m - 1)).ToArray();
+				long ans1 = Test01_b1(cards);
+				long ans2 = Test01_b2(cards);
 
-				string ans1 = Test01_b1(aArr, m);
-				string ans2 = Test01_b2(aArr, m);
-
-				if (ans1 != ans2)
+				if (ans1 != ans2) // ? 不正解
 					throw null;
 			}
 			Console.WriteLine("OK");
 		}
 
-		private string Test01_b1(int[] aArr, int m)
+		private long Test01_b1(int[] cards)
 		{
-			int[] aa = aArr.ToArray(); // 複製
-			int n = aa.Length;
-			int n_ = 0;
-			int i;
+			cards = cards.ToArray(); // 複製
 
-			Array.Sort(aa, SCommon.Comp);
+			Array.Sort(cards, SCommon.Comp);
 
-			for (i = 0; i < n; i++)
-			{
-				if (n_ == 0 || aa[n_ - 1] != aa[i])
-				{
-					aa[n_++] = aa[i];
-				}
-				else
-				{
-					n_--;
-				}
-			}
-			n = n_;
+			string[] sCards = cards
+				.Skip(cards.Length - 3)
+				.Select(card => card.ToString())
+				.ToArray();
 
-			if (m % 2 != 0)
+			long best = -1;
+
+			ChooseDifferentThreeAllOrder(3, (index1, index2, index3) =>
 			{
-				return n != 0 ? "Alice" : "Bob";
-			}
-			for (i = 0; i < n / 2; i++)
-			{
-				if (aa[i + n / 2] - aa[i] != m / 2)
-				{
-					return "Alice";
-				}
-			}
-			return n % 4 != 0 ? "Alice" : "Bob";
+				long value = long.Parse(string.Join("", sCards[index1], sCards[index2], sCards[index3]));
+
+				if (best < value)
+					best = value;
+			});
+
+			return best;
 		}
 
-		private string Test01_b2(int[] aArr, int m)
+		private long Test01_b2(int[] cards)
 		{
-			GameStatusInfo gameStatus = new GameStatusInfo()
+			long best = -1;
+
+			ChooseDifferentThreeAllOrder(cards.Length, (index1, index2, index3) =>
 			{
-				TurnWho = Player_e.Alice,
-				AArr = aArr,
-				AliceSum = 0,
-				BobSum = 0,
-				M = m,
-			};
+				string str = string.Format("{0}{1}{2}", cards[index1], cards[index2], cards[index3]);
+				long value = long.Parse(str);
 
-			Player_e winner = Judge(gameStatus);
+				if (best < value)
+					best = value;
+			});
 
-			return winner == Player_e.Alice ? "Alice" : "Bob";
+			return best;
 		}
 
-		private Player_e Judge(GameStatusInfo gameStatus)
+		private void ChooseDifferentThreeAllOrder(int count, Action<int, int, int> routine)
 		{
-			if (gameStatus.AArr.Length == 0)
+			for (int index1 = 0; index1 < count; index1++)
 			{
-				if (gameStatus.AliceSum % gameStatus.M == gameStatus.BobSum % gameStatus.M)
+				for (int index2 = 0; index2 < count; index2++)
 				{
-					return Player_e.Bob;
-				}
-				else
-				{
-					return Player_e.Alice;
-				}
-			}
-
-			bool canAliceWin = false;
-			bool canBobWin = false;
-
-			for (int index = 0; index < gameStatus.AArr.Length; index++)
-			{
-				GameStatusInfo nextGameStatus = new GameStatusInfo()
-				{
-					TurnWho = gameStatus.TurnWho == Player_e.Alice ? Player_e.Bob : Player_e.Alice,
-					AArr = gameStatus.AArr.Take(index).Concat(gameStatus.AArr.Skip(index + 1)).ToArray(),
-					AliceSum =
-						gameStatus.AliceSum + (
-						gameStatus.TurnWho == Player_e.Alice ?
-						gameStatus.AArr[index] : 0),
-					BobSum =
-						gameStatus.BobSum + (
-						gameStatus.TurnWho == Player_e.Bob ?
-						gameStatus.AArr[index] : 0),
-					M = gameStatus.M,
-				};
-
-				Player_e nextJudgement = Judge(nextGameStatus);
-
-				switch (nextJudgement)
-				{
-					case Player_e.Alice:
-						canAliceWin = true;
-						break;
-
-					case Player_e.Bob:
-						canBobWin = true;
-						break;
-
-					default:
-						throw null; // never
+					if (index1 != index2)
+					{
+						for (int index3 = 0; index3 < count; index3++)
+						{
+							if (
+								index1 != index3 &&
+								index2 != index3
+								)
+							{
+								routine(index1, index2, index3);
+							}
+						}
+					}
 				}
 			}
-
-			switch (gameStatus.TurnWho)
-			{
-				case Player_e.Alice:
-					return canAliceWin ? Player_e.Alice : Player_e.Bob;
-
-				case Player_e.Bob:
-					return canBobWin ? Player_e.Bob : Player_e.Alice;
-
-				default:
-					throw null; // never
-			}
-		}
-
-		private struct GameStatusInfo
-		{
-			public Player_e TurnWho;
-			public int[] AArr;
-			public int AliceSum;
-			public int BobSum;
-			public int M;
-		}
-
-		private enum Player_e
-		{
-			Alice,
-			Bob,
 		}
 	}
 }

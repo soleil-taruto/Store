@@ -592,11 +592,11 @@ namespace Charlotte
 
 					bool replaceable = true; // 置換するか
 
-					if (0 < p && ' ' < line[p - 1]) // ? 直前が行頭または空白系ではない。
+					if (0 < p && JSCommon.IsJSWordChar(line[p - 1])) // ? 直前が{行頭または非ワード文字}ではない。
 					{
 						replaceable = false;
 					}
-					else if (p + srcWord.Length < line.Length && ' ' < line[p + srcWord.Length]) // ? 直後が行末または空白系ではない。
+					else if (p + srcWord.Length < line.Length && JSCommon.IsJSWordChar(line[p + srcWord.Length])) // ? 直後が{行末または非ワード文字}ではない。
 					{
 						replaceable = false;
 					}

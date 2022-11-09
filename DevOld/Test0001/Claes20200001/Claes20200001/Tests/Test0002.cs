@@ -10,114 +10,59 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			Test01_a(1000, 10);
-			Test01_a(100, 100);
-			Test01_a(10, 300);
-
-			Console.WriteLine("OK!");
+			Test01_a(new int[] { 1, 2, 3, 3 }, 3); // -> 12
+			Test01_a(new int[] { 3, 1, 4, 1, 5, 9, 2, 6, 5, 3 }, 7); // -> 108
 		}
 
-		private void Test01_a(int testCount, int nMax)
+		private void Test01_a(int[] aArr, int k)
 		{
-			char[] S_CHARS = "dp".ToArray();
+			FoundCount = 0;
+			K = k;
+			KnownResults.Clear();
 
-			for (int testcnt = 0; testcnt < testCount; testcnt++)
+			Search(new int[0], aArr);
+
+			Console.WriteLine(FoundCount);
+
+			FoundCount = -1;
+			K = -1;
+			KnownResults.Clear();
+		}
+
+		private int FoundCount;
+		private int K;
+		private HashSet<string> KnownResults = new HashSet<string>();
+
+		private void Search(int[] dest, int[] src)
+		{
+			if (src.Length == 0)
 			{
-				string s = new string(Enumerable.Range(0, SCommon.CRandom.GetRange(0, nMax)).Select(dummy => SCommon.CRandom.ChooseOne(S_CHARS)).ToArray());
+				string result = string.Join(":", dest);
 
-				string ans1 = Test01_b1(s);
-				string ans2 = Test01_b2(s);
-
-				if (ans1 != ans2)
-					throw null;
+				if (!KnownResults.Contains(result))
+				{
+					KnownResults.Add(result);
+					FoundCount++;
+				}
+				return;
 			}
-			Console.WriteLine("OK");
-		}
 
-		private string Test01_b1(string s)
-		{
-			string best = s;
-			int p = s.IndexOf('p');
-
-			if (p != -1)
+			for (int index = 0; index < src.Length; index++)
 			{
-				int q = p;
+#if true
+				int[] nextDest = SCommon.E_AddRange(dest, new int[] { src[index] }).ToArray();
+				int[] nextSrc = SCommon.E_RemoveRange(src, index, 1).ToArray();
+#else // old same
+				int[] nextDest = dest.Concat(new int[] { src[index] }).ToArray();
+				int[] nextSrc = src.Take(index).Concat(src.Skip(index + 1)).ToArray();
+#endif
 
-				for (; ; )
-				{
-					q = s.IndexOf("pd", q);
+				if (2 <= nextDest.Length)
+					if (nextDest[nextDest.Length - 2] + nextDest[nextDest.Length - 1] < K) // ? 隣接する要素の和が K より小さい -> 条件不一致
+						continue;
 
-					if (q == -1)
-						break;
-
-					q++;
-					string t = s.Substring(0, p) + Turn(s.Substring(p, q - p)) + s.Substring(q);
-
-					if (SCommon.Comp(best, t) > 0)
-						best = t;
-				}
-
-				{
-					string t = s.Substring(0, p) + Turn(s.Substring(p));
-
-					if (SCommon.Comp(best, t) > 0)
-						best = t;
-				}
+				Search(nextDest, nextSrc);
 			}
-			return best;
-		}
-
-		private string Turn(string str)
-		{
-			str = new string(str.Reverse().ToArray());
-			str = str.Replace('d', 'x');
-			str = str.Replace('p', 'd');
-			str = str.Replace('x', 'p');
-			return str;
-		}
-
-		private string Test01_b2(string s)
-		{
-			string best = s;
-
-			for (int start = 0; start < s.Length; start++)
-			{
-				for (int count = 1; start + count <= s.Length; count++)
-				{
-					char[] buff = s.ToArray();
-
-					int l = start;
-					int r = start + count - 1;
-
-					while (l < r)
-					{
-						char a = buff[l];
-						char b = buff[r];
-
-						a = ChangeDP(a);
-						b = ChangeDP(b);
-
-						buff[l] = b;
-						buff[r] = a;
-
-						l++;
-						r--;
-					}
-					if (l == r)
-						buff[l] = ChangeDP(buff[l]);
-
-					string t = new string(buff);
-
-					if (SCommon.Comp(best, t) > 0)
-						best = t;
-				}
-			}
-			return best;
-		}
-
-		private char ChangeDP(char chr)
-		{
-			return chr == 'd' ? 'p' : 'd';
 		}
 	}
 }

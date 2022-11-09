@@ -8,180 +8,194 @@ namespace Charlotte.Tests
 {
 	public class Test0005
 	{
+		/// <summary>
+		/// 足し算
+		/// </summary>
 		public void Test01()
 		{
-			Test01_a(Enumerable.Range(1, 1).ToArray());
-			Test01_a(Enumerable.Range(1, 2).ToArray());
-			Test01_a(Enumerable.Range(1, 3).ToArray());
-			Test01_a(Enumerable.Range(1, 4).ToArray());
-			Test01_a(Enumerable.Range(1, 5).ToArray());
-			Test01_a(Enumerable.Range(1, 6).ToArray());
-			Test01_a(Enumerable.Range(1, 7).ToArray());
-			Test01_a(Enumerable.Range(1, 8).ToArray());
-			Test01_a(Enumerable.Range(1, 9).ToArray());
+			for (int testcnt = 0; testcnt < 1000000; testcnt++)
+			{
+				ulong a = SCommon.CRandom.GetULong();
+				ulong b = SCommon.CRandom.GetULong();
+
+				ulong ans1 = Test01_b1(a, b);
+				ulong ans2 = Test01_b2(a, b);
+
+				if (ans1 != ans2)
+					throw null;
+			}
+			Console.WriteLine("OK!");
 		}
 
+		private ulong Test01_b1(ulong a, ulong b)
+		{
+			while (b != 0)
+			{
+				ulong na = a ^ b;
+				b = (a & b) << 1;
+				a = na;
+			}
+			return a;
+		}
+
+		private ulong Test01_b2(ulong a, ulong b)
+		{
+			unchecked
+			{
+				return a + b;
+			}
+		}
+
+		/// <summary>
+		/// 掛け算
+		/// </summary>
 		public void Test02()
 		{
-			Test01_a(new int[] { 3, 5, 7 });
+			for (int testcnt = 0; testcnt < 1000000; testcnt++)
+			{
+				ulong a = SCommon.CRandom.GetULong();
+				ulong b = SCommon.CRandom.GetULong();
+
+				ulong ans1 = Test02_b1(a, b);
+				ulong ans2 = Test02_b2(a, b);
+
+				if (ans1 != ans2)
+					throw null;
+			}
+			Console.WriteLine("OK!");
 		}
 
+		private ulong Test02_b1(ulong s, ulong e)
+		{
+			ulong a = 0;
+
+			for (; e != 0; e >>= 1)
+			{
+				if ((e & 1) != 0)
+				{
+					ulong b = s;
+
+					while (b != 0)
+					{
+						ulong na = a ^ b;
+						b = (a & b) << 1;
+						a = na;
+					}
+				}
+				s <<= 1;
+			}
+			return a;
+		}
+
+		private ulong Test02_b2(ulong a, ulong b)
+		{
+			unchecked
+			{
+				return a * b;
+			}
+		}
+
+		/// <summary>
+		/// 引き算
+		/// </summary>
 		public void Test03()
 		{
-			const int BAR_FIRST = 1;
-			const int BAR_LAST = 10;
-
-			for (int a = BAR_FIRST; a <= BAR_LAST; a++)
+			for (int testcnt = 0; testcnt < 1000000; testcnt++)
 			{
-				for (int b = a; b <= BAR_LAST; b++)
-				{
-					for (int c = b; c <= BAR_LAST; c++)
-					{
-						GameStatusInfo gameStatus = new GameStatusInfo()
-						{
-							TurnWho = Player_e.Alice,
-							Parts = new int[] { a, b, c },
-						};
+				ulong a = SCommon.CRandom.GetULong();
+				ulong b = SCommon.CRandom.GetULong();
 
-						Player_e winner = Judge(gameStatus);
+				ulong ans1 = Test03_b1(a, b);
+				ulong ans2 = Test03_b2(a, b);
 
-						if (winner == Player_e.Bob)
-						{
-							Console.WriteLine(string.Join(", ", a, b, c));
-						}
-					}
-				}
+				if (ans1 != ans2)
+					throw null;
+			}
+			Console.WriteLine("OK!");
+		}
+
+		private ulong Test03_b1(ulong a, ulong b)
+		{
+			b ^= ulong.MaxValue;
+			unchecked { b++; }
+
+			while (b != 0)
+			{
+				ulong na = a ^ b;
+				b = (a & b) << 1;
+				a = na;
+			}
+			return a;
+		}
+
+		private ulong Test03_b2(ulong a, ulong b)
+		{
+			unchecked
+			{
+				return a - b;
 			}
 		}
 
-		private void Test01_a(int[] parts)
+		/// <summary>
+		/// 割り算
+		/// </summary>
+		public void Test04()
 		{
-			GameStatusInfo gameStatus = new GameStatusInfo()
-			{
-				TurnWho = Player_e.Alice,
-				Parts = parts.ToArray(), // Clone
-			};
+			Test04_a(ulong.MaxValue);
+			Test04_a(0x0000ffffffffffffUL);
+			Test04_a(0x00000000ffffffffUL);
+			Test04_a(0x000000000000ffffUL);
 
-			Player_e winner = Judge(gameStatus);
-
-			Console.WriteLine(string.Join(", ", parts) + " -> " + winner);
+			Console.WriteLine("OK!");
 		}
 
-		private enum Player_e
+		private void Test04_a(ulong m)
 		{
-			Alice,
-			Bob,
+			for (int testcnt = 0; testcnt < 1000000; testcnt++)
+			{
+				ulong a = SCommon.CRandom.GetULong();
+				ulong b = SCommon.CRandom.GetULong();
+
+				b &= m;
+
+				if (b == 0)
+					continue;
+
+				ulong ans1 = Test04_b1(a, b);
+				ulong ans2 = Test04_b2(a, b);
+
+				if (ans1 != ans2)
+					throw null;
+			}
+			Console.WriteLine("OK");
 		}
 
-		private class GameStatusInfo
+		private ulong Test04_b1(ulong a, ulong b)
 		{
-			public Player_e TurnWho;
-			public int[] Parts;
+			ulong d = 1;
+			ulong n = 0;
+
+			while ((b & (1UL << 63)) == 0)
+			{
+				b <<= 1;
+				d <<= 1;
+			}
+			while (d != 0)
+			{
+				if (a >= b)
+				{
+					a -= b;
+					n |= d;
+				}
+				b >>= 1;
+				d >>= 1;
+			}
+			return n;
 		}
 
-		private Player_e Judge(GameStatusInfo gameStatus)
+		private ulong Test04_b2(ulong a, ulong b)
 		{
-			if (gameStatus.Parts.Length == 0)
-			{
-				// 直前の消しが最後だった(相手の負けな)ので、棒が無い状態でターンが回ってきたら勝ちで良いはず。
-
-				if (gameStatus.TurnWho == Player_e.Alice)
-				{
-					return Player_e.Alice;
-				}
-				else
-				{
-					return Player_e.Bob;
-				}
-			}
-
-			string cacheStrParts = GetCacheStrParts(gameStatus.Parts);
-
-			if (CacheTurnWhoIsWinner.ContainsKey(cacheStrParts))
-			{
-				if (CacheTurnWhoIsWinner[cacheStrParts])
-				{
-					return gameStatus.TurnWho;
-				}
-				else
-				{
-					return gameStatus.TurnWho == Player_e.Alice ? Player_e.Bob : Player_e.Alice;
-				}
-			}
-
-			bool canAliceWin = false;
-			bool canBobWin = false;
-
-			for (int index = 0; index < gameStatus.Parts.Length; index++)
-			{
-				for (int start = 0; start < gameStatus.Parts[index]; start++)
-				{
-					for (int end = start + 1; end <= gameStatus.Parts[index]; end++)
-					{
-						List<int> nextParts = gameStatus.Parts.ToList(); // Clone
-
-						nextParts[index] = 0;
-						nextParts.Add(start);
-						nextParts.Add(gameStatus.Parts[index] - end);
-						nextParts.RemoveAll(v => v == 0);
-
-						GameStatusInfo nextGameStatus = new GameStatusInfo()
-						{
-							TurnWho = gameStatus.TurnWho == Player_e.Alice ? Player_e.Bob : Player_e.Alice,
-							Parts = nextParts.ToArray(),
-						};
-
-						Player_e nextWinner = Judge(nextGameStatus);
-
-						if (nextWinner == Player_e.Alice)
-						{
-							canAliceWin = true;
-						}
-						else
-						{
-							canBobWin = true;
-						}
-					}
-				}
-			}
-
-			if (gameStatus.TurnWho == Player_e.Alice)
-			{
-				if (canAliceWin)
-				{
-					CacheTurnWhoIsWinner.Add(cacheStrParts, true);
-					return Player_e.Alice;
-				}
-				else
-				{
-					CacheTurnWhoIsWinner.Add(cacheStrParts, false);
-					return Player_e.Bob;
-				}
-			}
-			else
-			{
-				if (canBobWin)
-				{
-					CacheTurnWhoIsWinner.Add(cacheStrParts, true);
-					return Player_e.Bob;
-				}
-				else
-				{
-					CacheTurnWhoIsWinner.Add(cacheStrParts, false);
-					return Player_e.Alice;
-				}
-			}
-		}
-
-		private Dictionary<string, bool> CacheTurnWhoIsWinner = SCommon.CreateDictionary<bool>();
-
-		private string GetCacheStrParts(int[] parts)
-		{
-			parts = parts.Where(v => 1 <= v).ToArray(); // Clone + ゼロ除去
-
-			Array.Sort(parts, SCommon.Comp);
-
-			return string.Join("_", parts);
+			return a / b;
 		}
 	}
 }

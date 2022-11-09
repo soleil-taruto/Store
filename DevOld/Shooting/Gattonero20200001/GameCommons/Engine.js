@@ -9,7 +9,7 @@ var<Action[]> @@_INIT_Events = [ @(INIT) ];
 var<Action[]> @@_EACH_Events = [ @(EACH) ];
 
 // アプリケーション側の処理
-// ジェネレータ関数であること。
+// ジェネレータであること。
 var<generatorForTask> @@_AppMain;
 
 // 描画先Canvasタグ
@@ -20,7 +20,7 @@ var CanvasBox;
 
 // ゲーム用メイン
 // appMain: アプリケーション側の処理
-// -- ジェネレータ関数であること。
+// -- ジェネレータであること。
 function <void> ProcMain(<generatorForTask> appMain)
 {
 	@@_AppMain = appMain;
