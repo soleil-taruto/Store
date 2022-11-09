@@ -190,7 +190,7 @@ namespace Charlotte.Games
 						DDGround.ICamera = new I2Point(cam_l, cam_t);
 					}
 
-					WallCreator.Create(map.WallName).Draw();
+					WallCatalog.Create(map.WallName).Draw();
 
 					// restore
 					{

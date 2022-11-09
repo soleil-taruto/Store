@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.IO;
 using Charlotte.Commons;
+using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
@@ -11,75 +13,61 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			Console.WriteLine(string.Join(", ",
-				SCommon.InsertRange(new int[] { 1, 2, 3, 4 }, 2, new int[] { 9, 8, 7 }))); // 1, 2, 9, 8, 7, 3, 4
-			Console.WriteLine(string.Join(", ",
-				SCommon.InsertRange(new int[] { 1, 2, 3 }, 0, new int[] { 999 }))); // 999, 1, 2, 3
-			Console.WriteLine(string.Join(", ",
-				SCommon.InsertRange(new int[] { 1, 2, 3 }, 3, new int[] { 999 }))); // 1, 2, 3, 999
-			Console.WriteLine(string.Join(", ",
-				SCommon.InsertRange(new int[] { 1, 2, 3 }, 0, new int[] { 7, 8, 9 }))); // 7, 8, 9, 1, 2, 3
-			Console.WriteLine(string.Join(", ",
-				SCommon.InsertRange(new int[] { 1, 2, 3 }, 3, new int[] { 7, 8, 9 }))); // 1, 2, 3, 7, 8, 9
-			Console.WriteLine(string.Join(", ",
-				SCommon.InsertRange(new int[] { }, 0, new int[] { 99, 98, 97 }))); // 99, 98, 97
-			Console.WriteLine(string.Join(", ",
-				SCommon.InsertRange(new int[] { 99, 98, 97 }, 0, new int[] { }))); // 99, 98, 97
-			Console.WriteLine(string.Join(", ",
-				SCommon.InsertRange(new int[] { 99, 98, 97 }, 3, new int[] { }))); // 99, 98, 97
-			Console.WriteLine(string.Join(", ",
-				SCommon.InsertRange(new int[] { 1, 2, 3, 4 }, 2, new int[] { }))); // 1, 2, 3, 4
+			string text = File.ReadAllText(@"C:\temp\Input.txt", SCommon.ENCODING_SJIS);
+			string dest = "";
 
-			// ----
+			for (; ; )
+			{
+				string[] encl = SCommon.ParseEnclosed(text, "[http://stackprobe.ccsp.mydns.jp", "]");
 
-			Console.WriteLine(string.Join(", ",
-				SCommon.RemoveRange(new int[] { 1, 2, 3, 4 }, 1, 2))); // 1, 4
-			Console.WriteLine(string.Join(", ",
-				SCommon.RemoveRange(new int[] { 1, 2, 3, 4 }, 0, 4))); // 空
-			Console.WriteLine(string.Join(", ",
-				SCommon.RemoveRange(new int[] { }, 0, 0))); // 空
-			Console.WriteLine(string.Join(", ",
-				SCommon.RemoveRange(new int[] { 1, 2, 3, 4 }, 0, 3))); // 4
-			Console.WriteLine(string.Join(", ",
-				SCommon.RemoveRange(new int[] { 1, 2, 3, 4 }, 1, 3))); // 1
-			Console.WriteLine(string.Join(", ",
-				SCommon.RemoveRange(new int[] { 1, 2, 3, 4 }, 0, 0))); // 1, 2, 3, 4
-			Console.WriteLine(string.Join(", ",
-				SCommon.RemoveRange(new int[] { 1, 2, 3, 4 }, 1, 0))); // 1, 2, 3, 4
-			Console.WriteLine(string.Join(", ",
-				SCommon.RemoveRange(new int[] { 1, 2, 3, 4 }, 2, 0))); // 1, 2, 3, 4
-			Console.WriteLine(string.Join(", ",
-				SCommon.RemoveRange(new int[] { 1, 2, 3, 4 }, 3, 0))); // 1, 2, 3, 4
+				if (encl == null)
+					break;
 
-			// ----
+				Action skip = () =>
+				{
+					dest += encl[0] + encl[1] + encl[2] + encl[3];
+					text = encl[4];
+				};
 
-			SCommon.ToThrowPrint(() =>
-				SCommon.InsertRange((int[])null, 0, null));
-			SCommon.ToThrowPrint(() =>
-				SCommon.InsertRange(null, 0, new int[] { 9, 8, 7 }));
-			SCommon.ToThrowPrint(() =>
-				SCommon.InsertRange(new int[] { 1, 2, 3 }, 0, null));
-			SCommon.ToThrowPrint(() =>
-				SCommon.InsertRange(new int[] { 1, 2, 3 }, -1, new int[] { 9, 8, 7 }));
-			SCommon.ToThrowPrint(() =>
-				SCommon.InsertRange(new int[] { 1, 2, 3 }, 4, new int[] { 9, 8, 7 }));
+				int start = encl[2].IndexOf(":image=http://stackprobe.ccsp.mydns.jp");
 
-			// ----
+				if (start == -1) // ? イメージじゃないっぽい。
+				{
+					skip();
+					continue;
+				}
 
-			SCommon.ToThrowPrint(() =>
-				SCommon.RemoveRange((int[])null, 0, 0));
-			SCommon.ToThrowPrint(() =>
-				SCommon.RemoveRange(new int[] { 1, 2, 3 }, 0, 4));
-			SCommon.ToThrowPrint(() =>
-				SCommon.RemoveRange(new int[] { 1, 2, 3 }, 4, 0));
-			SCommon.ToThrowPrint(() =>
-				SCommon.RemoveRange(new int[] { 1, 2, 3 }, -1, 0));
-			SCommon.ToThrowPrint(() =>
-				SCommon.RemoveRange(new int[] { 1, 2, 3 }, 0, -1));
+				string url = encl[2].Substring(start + 7);
+				url = url.Replace(":58946", "");
+				string mediaType = URLToMediaType(url);
+				byte[] data;
 
-			// ----
+				using (WorkingDir wd = new WorkingDir())
+				{
+					HTTPClient hc = new HTTPClient(url);
+					hc.ResFile = wd.MakePath();
+					hc.Get();
+					data = File.ReadAllBytes(hc.ResFile);
+				}
 
-			Console.WriteLine("OK!");
+				string dataUrl = "data:" + mediaType + ";base64," + SCommon.Base64.I.Encode(data);
+
+				dest += encl[0] + "><img src=\"" + dataUrl + "\"/><";
+				text = encl[4];
+			}
+			dest += text;
+
+			File.WriteAllText(SCommon.NextOutputPath() + ".txt", dest, SCommon.ENCODING_SJIS);
+		}
+
+		private string URLToMediaType(string url)
+		{
+			if (url.EndsWith(".png"))
+			{
+				return "image/png";
+			}
+
+			throw new Exception("不明なメディアタイプ");
 		}
 	}
 }

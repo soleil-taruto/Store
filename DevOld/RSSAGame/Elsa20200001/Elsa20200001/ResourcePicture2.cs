@@ -17,5 +17,7 @@ namespace Charlotte
 		public DDPicture[][,] Crystals = Ground.I.Picture.Crystals
 			.Select(crystal => DDDerivations.GetAnimation(crystal, 0, 0, 32, 32, 3, 4))
 			.ToArray();
+
+		public DDPicture[] Enemy_B神奈子 = DDDerivations.GetAnimation_YX(Ground.I.Picture.Enemy_B神奈子, 0, 0, 250, 250).ToArray();
 	}
 }

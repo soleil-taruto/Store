@@ -5,7 +5,7 @@ using System.Text;
 using Charlotte.Commons;
 using Charlotte.GameCommons;
 
-namespace Charlotte.Games.Shots
+namespace Charlotte.Games.Shots.Tests
 {
 	/// <summary>
 	/// テスト用_自弾

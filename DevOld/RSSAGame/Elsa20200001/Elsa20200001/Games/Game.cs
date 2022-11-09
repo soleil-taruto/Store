@@ -54,6 +54,7 @@ namespace Charlotte.Games
 		public int CamSlideY; // -1 ～ 1
 
 		public int Frame;
+		public bool UserInputDisabled = false;
 
 		public DDTaskList EL_AfterDrawMap = new DDTaskList();
 
@@ -99,7 +100,7 @@ namespace Charlotte.Games
 				}
 			}
 
-			this.Wall = WallCreator.Create(this.Map.WallName);
+			this.Wall = WallCatalog.Create(this.Map.WallName);
 
 			MusicCollection.Get(this.Map.MusicName).Play();
 
@@ -122,6 +123,7 @@ namespace Charlotte.Games
 			{
 				if (
 					//Game.I.Player.Attack == null && // ? プレイヤーの攻撃モーション中ではない。// モーション中でも構わないはず。
+					!this.UserInputDisabled &&
 					DDInput.PAUSE.GetInput() == 1
 					)
 				{
@@ -160,14 +162,14 @@ namespace Charlotte.Games
 
 				// プレイヤー入力
 				{
-					bool deadOrDamage = 1 <= this.Player.DeadFrame || 1 <= this.Player.DamageFrame;
+					bool deadOrDamageOrUID = 1 <= this.Player.DeadFrame || 1 <= this.Player.DamageFrame || this.UserInputDisabled;
 					bool move = false;
 					bool camSlide = false;
 					int jump = 0;
 					bool under = false;
 					int attack = 0;
 
-					if (!deadOrDamage && 1 <= DDInput.DIR_2.GetInput())
+					if (!deadOrDamageOrUID && 1 <= DDInput.DIR_2.GetInput())
 					{
 						I2Point pt1 = GameCommon.ToTablePoint(new D2Point(this.Player.X, this.Player.Y));
 						I2Point pt2 = pt1;
@@ -190,7 +192,7 @@ namespace Charlotte.Games
 
 						under = true;
 					}
-					if (!deadOrDamage && 1 <= DDInput.DIR_8.GetInput())
+					if (!deadOrDamageOrUID && 1 <= DDInput.DIR_8.GetInput())
 					{
 						if (Map.GetCell(GameCommon.ToTablePoint(new D2Point(this.Player.X, this.Player.Y))).Tile.GetKind() == Tile.Kind_e.LADDER)
 						{
@@ -205,12 +207,12 @@ namespace Charlotte.Games
 					int freezeInputFrameBackup = DDEngine.FreezeInputFrame;
 					DDEngine.FreezeInputFrame = 0;
 
-					if (!deadOrDamage && 1 <= DDInput.DIR_4.GetInput())
+					if (!deadOrDamageOrUID && 1 <= DDInput.DIR_4.GetInput())
 					{
 						this.Player.FacingLeft = true;
 						move = true;
 					}
-					if (!deadOrDamage && 1 <= DDInput.DIR_6.GetInput())
+					if (!deadOrDamageOrUID && 1 <= DDInput.DIR_6.GetInput())
 					{
 						this.Player.FacingLeft = false;
 						move = true;
@@ -223,11 +225,11 @@ namespace Charlotte.Games
 						move = false;
 						camSlide = true;
 					}
-					if (!deadOrDamage && 1 <= DDInput.A.GetInput())
+					if (!deadOrDamageOrUID && 1 <= DDInput.A.GetInput())
 					{
 						jump = DDInput.A.GetInput();
 					}
-					if (!deadOrDamage && 1 <= DDInput.B.GetInput())
+					if (!deadOrDamageOrUID && 1 <= DDInput.B.GetInput())
 					{
 						attack = DDInput.B.GetInput();
 					}
@@ -368,7 +370,7 @@ namespace Charlotte.Games
 					{
 						if (攻撃ボタンを押した瞬間撃つ && attack == 1)
 						{
-							if (!deadOrDamage) // 死亡中_攻撃_抑止
+							if (!deadOrDamageOrUID) // 死亡中_攻撃_抑止
 							{
 								this.Player.Shoot(1);
 							}
@@ -386,7 +388,7 @@ namespace Charlotte.Games
 
 						if (攻撃ボタンを押した瞬間撃つ ? 2 <= level : 1 <= chargePct)
 						{
-							if (!deadOrDamage) // 死亡中_攻撃_抑止
+							if (!deadOrDamageOrUID) // 死亡中_攻撃_抑止
 							{
 								this.Player.Shoot(level);
 							}
@@ -753,13 +755,15 @@ namespace Charlotte.Games
 								// -- 複数の敵に同時に当たると意図通りにならないが、厳格に制御する必要は無いので、看過する。
 
 								if (shot.LastCrashedEnemy == enemy) // ? 直前にクラッシュした -> 複数回クラッシュしない。
+								{
+									shot.CurrCrashedEnemy = enemy;
 									continue;
-
+								}
 								enemy.HP -= shot.AttackPoint;
 
 								if (shot.敵を貫通する)
 								{
-									shot.LastCrashedEnemy = enemy;
+									shot.CurrCrashedEnemy = enemy;
 								}
 								else // ? 敵を貫通しない -> 自弾の攻撃力と敵のHPを相殺
 								{
@@ -771,7 +775,7 @@ namespace Charlotte.Games
 
 								if (1 <= enemy.HP) // ? まだ生存している。
 								{
-									enemy.P_Damaged(shot);
+									enemy.Damaged(shot);
 								}
 								else // ? 撃破した。
 								{
@@ -818,14 +822,19 @@ namespace Charlotte.Games
 
 				foreach (Shot shot in this.Shots.Iterate())
 				{
-					// 壁への当たり判定は自弾の「中心座標のみ」であることに注意して下さい。
+					shot.CurrCrashedEnemy = shot.LastCrashedEnemy;
+					shot.LastCrashedEnemy = null;
 
-					if (
-						!shot.DeadFlag && // ? 自弾：生存
-						!shot.壁をすり抜ける && // ? この自弾は壁に当たる。
-						this.Map.GetCell(GameCommon.ToTablePoint(shot.X, shot.Y)).Tile.IsWall() // ? 壁に当たった。
-						)
-						shot.Kill();
+					// 壁への衝突
+					// 壁への当たり判定は自弾の「中心座標のみ」であることに注意して下さい。
+					{
+						if (
+							!shot.DeadFlag && // ? 自弾：生存
+							!shot.壁をすり抜ける && // ? この自弾は壁に当たる。
+							this.Map.GetCell(GameCommon.ToTablePoint(shot.X, shot.Y)).Tile.IsWall() // ? 壁に当たった。
+							)
+							shot.Kill();
+					}
 				}
 
 				// ====
@@ -1080,7 +1089,7 @@ namespace Charlotte.Games
 
 				// 廃止
 				//if (DDKey.GetInput(DX.KEY_INPUT_E) == 1)
-				//    break;
+				//	break;
 
 				I2Point cellPos = GameCommon.ToTablePoint(
 					DDGround.Camera.X + DDMouse.X,
@@ -1523,11 +1532,11 @@ namespace Charlotte.Games
 
 			switch (this.Status.Equipment)
 			{
-				case GameStatus.Equipment_e.Normal: tableMenu.SetSelectedPosition(0, 1); break;
-				case GameStatus.Equipment_e.跳ねる陰陽玉: tableMenu.SetSelectedPosition(0, 2); break;
-				case GameStatus.Equipment_e.ハンマー陰陽玉: tableMenu.SetSelectedPosition(0, 3); break;
-				case GameStatus.Equipment_e.エアーシューター: tableMenu.SetSelectedPosition(0, 4); break;
-				case GameStatus.Equipment_e.マグネットエアー: tableMenu.SetSelectedPosition(0, 5); break;
+				case ShotCatalog.武器_e.Normal: tableMenu.SetSelectedPosition(0, 1); break;
+				case ShotCatalog.武器_e.跳ねる陰陽玉: tableMenu.SetSelectedPosition(0, 2); break;
+				case ShotCatalog.武器_e.ハンマー陰陽玉: tableMenu.SetSelectedPosition(0, 3); break;
+				case ShotCatalog.武器_e.AirShooter: tableMenu.SetSelectedPosition(0, 4); break;
+				case ShotCatalog.武器_e.MagnetAir: tableMenu.SetSelectedPosition(0, 5); break;
 
 				default:
 					break;
@@ -1546,17 +1555,13 @@ namespace Charlotte.Games
 					tableMenu.AddColumn(130);
 					tableMenu.AddItem(true, "ＥＱＵＩＰＭＥＮＴ", color, borderColor);
 
-					Action<string, GameStatus.Equipment_e, bool> a_addEquipment = (title, equipment, 取得済み) =>
+					Action<string, ShotCatalog.武器_e, bool> a_addEquipment = (title, equipment, 取得済み) =>
 					{
-#if false // メニューを閉じない。
-						Action a_desided = () => this.Status.Equipment = equipment;
-#else // メニューを閉じる。
 						Action a_desided = () =>
 						{
 							this.Status.Equipment = equipment;
 							keepMenu = false;
 						};
-#endif
 
 						if (!取得済み)
 							tableMenu.AddItem(false, title, 未取得Color, 未取得BorderColor, () => { });
@@ -1566,11 +1571,11 @@ namespace Charlotte.Games
 							tableMenu.AddItem(false, title, color, borderColor, a_desided);
 					};
 
-					a_addEquipment("通常武器", GameStatus.Equipment_e.Normal, true);
-					a_addEquipment("跳ねる陰陽玉", GameStatus.Equipment_e.跳ねる陰陽玉, this.Status.InventoryFlags[GameStatus.Inventory_e.取得済み_跳ねる陰陽玉]);
-					a_addEquipment("ハンマー陰陽玉", GameStatus.Equipment_e.ハンマー陰陽玉, this.Status.InventoryFlags[GameStatus.Inventory_e.取得済み_ハンマー陰陽玉]);
-					a_addEquipment("ＡｉｒＳｈｏｏｔｅｒ", GameStatus.Equipment_e.エアーシューター, this.Status.InventoryFlags[GameStatus.Inventory_e.取得済み_エアーシューター]);
-					a_addEquipment("ＭａｇｎｅｔＡｉｒ", GameStatus.Equipment_e.マグネットエアー, this.Status.InventoryFlags[GameStatus.Inventory_e.取得済み_マグネットエアー]);
+					a_addEquipment("通常武器", ShotCatalog.武器_e.Normal, true);
+					a_addEquipment("跳ねる陰陽玉", ShotCatalog.武器_e.跳ねる陰陽玉, this.Status.InventoryFlags[GameStatus.Inventory_e.取得済み_跳ねる陰陽玉]);
+					a_addEquipment("ハンマー陰陽玉", ShotCatalog.武器_e.ハンマー陰陽玉, this.Status.InventoryFlags[GameStatus.Inventory_e.取得済み_ハンマー陰陽玉]);
+					a_addEquipment("ＡｉｒＳｈｏｏｔｅｒ", ShotCatalog.武器_e.AirShooter, this.Status.InventoryFlags[GameStatus.Inventory_e.取得済み_エアーシューター]);
+					a_addEquipment("ＭａｇｎｅｔＡｉｒ", ShotCatalog.武器_e.MagnetAir, this.Status.InventoryFlags[GameStatus.Inventory_e.取得済み_マグネットエアー]);
 
 					tableMenu.AddColumn(540);
 					tableMenu.AddItem(true, "システム", color, borderColor);

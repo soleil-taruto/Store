@@ -53,9 +53,9 @@ namespace Charlotte.GameCommons
 			return (int)(uint)this.Lw;
 		}
 
-		public override bool Equals(object other)
+		public override bool Equals(object another)
 		{
-			return other is DDHash && this == (DDHash)other;
+			return another is DDHash && this == (DDHash)another;
 		}
 
 		public override string ToString()

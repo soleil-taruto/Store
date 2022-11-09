@@ -48,7 +48,6 @@ namespace Charlotte.GameCommons
 				DDGround.INIT();
 				DDResource.INIT();
 				DDDatStrings.INIT();
-				DDUserDatStrings.INIT();
 				DDFontRegister.INIT();
 				DDKey.INIT();
 			}
@@ -193,12 +192,46 @@ namespace Charlotte.GameCommons
 
 		public static void SetMainWindowTitle()
 		{
-			string version = DDUserDatStrings.Version
-				.Replace('.', '-');
-			string builtDateTime = new SCommon.SimpleDateTime(SCommon.TimeStampToSec.ToSec(19700101090000) + ProcMain.GetPETimeDateStamp())
-				.ToString("{0}-{1:D2}-{2:D2}-{4:D2}-{5:D2}-{6:D2}");
+			string revision = GetRevision(
+				new SCommon.SimpleDateTime(SCommon.TimeStampToSec.ToSec(19700101090000) + ProcMain.GetPETimeDateStamp())
+				);
 
-			DX.SetMainWindowText(DDDatStrings.Title + " / " + version + " / " + builtDateTime);
+			DX.SetMainWindowText(DDDatStrings.Title + " / " + revision);
+		}
+
+		/// <summary>
+		/// 指定日時をリビジョン文字列に変換する。
+		/// 但し、区切り文字に半角ハイフンを使用する。
+		/// 元の実装：
+		/// -- https://github.com/stackprobe/Factory/blob/master/DevTools/rev.c#L28-L71
+		/// </summary>
+		/// <param name="dateTime">指定日時</param>
+		/// <returns>リビジョン文字列</returns>
+		private static string GetRevision(SCommon.SimpleDateTime dateTime)
+		{
+			SCommon.SimpleDateTime firstDateTimeOfYear =
+				SCommon.SimpleDateTime.FromTimeStamp(dateTime.Year * 10000000000L + 101000000);
+
+			int revY = dateTime.Year;
+			int revD = (int)((dateTime - firstDateTimeOfYear) / 86400 + 1);
+			int revT = dateTime.Hour * 3600 + dateTime.Minute * 60 + dateTime.Second;
+
+			if (revT < 10000)
+			{
+				revD--;
+				revT += 86400;
+			}
+			if (revD < 100)
+			{
+				SCommon.SimpleDateTime firstDateTimeOfLastYear =
+					SCommon.SimpleDateTime.FromTimeStamp((dateTime.Year - 1) * 10000000000L + 101000000);
+
+				int daysOfLastYear = (int)((firstDateTimeOfYear - firstDateTimeOfLastYear) / 86400);
+
+				revY--;
+				revD += daysOfLastYear;
+			}
+			return string.Format("{0}-{1}-{2}", revY, revD, revT);
 		}
 
 		private static IntPtr GetAppIcon()

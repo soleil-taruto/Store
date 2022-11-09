@@ -112,9 +112,8 @@ namespace Charlotte.Games.Enemies
 		/// -- 描画
 		/// -- Crash を設定する。-- プレイヤーに当たらないなら設定しない。
 		/// -- 必要に応じて Game.I.Enemies.Add(enemy); する。-- 敵の追加
-		/// -- 必要に応じて DeadFlag に true を設定する。(または false を返す) -- 敵(自分自身)の削除
-		/// ---- 呼び出し関係がややこしくなりそうなので Kill, Killed は呼び出さないこと。
-		/// ---- 敵(自分以外)を削除するには otherEnemy.DeadFlag = true; する。
+		/// -- 必要に応じて DeadFlag に true を設定する。または false を返す。または Kill を呼び出す。-- 敵(自分自身)の削除
+		/// ---- 敵(自分以外)を削除するには otherEnemy.DeadFlag = true; または otherEnemy.Kill を呼び出す。
 		/// </summary>
 		/// <returns>列挙：この敵は生存しているか</returns>
 		protected abstract IEnumerable<bool> E_Draw();
@@ -133,7 +132,7 @@ namespace Charlotte.Games.Enemies
 		/// この敵の固有の被弾イベント
 		/// </summary>
 		/// <param name="shot">この敵が被弾したプレイヤーの弾</param>
-		public virtual void P_Damaged(Shot shot)
+		protected virtual void P_Damaged(Shot shot)
 		{
 			EnemyCommon.Damaged(this, shot);
 		}
@@ -154,9 +153,7 @@ namespace Charlotte.Games.Enemies
 
 		/// <summary>
 		/// 撃破されて消滅した。
-		/// 死亡フラグ立てなどは呼び出し側でやっている。
-		/// 注意：本メソッドを複数回実行しないように注意すること！
-		/// -- DeadFlag == true の敵を { DeadFlag = true; Killed(); } してしまわないように！
+		/// マップから離れすぎて消された場合・シナリオ的に消された場合などでは呼び出されない。
 		/// </summary>
 		private void Killed()
 		{

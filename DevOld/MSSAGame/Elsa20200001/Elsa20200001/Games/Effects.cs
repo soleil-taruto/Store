@@ -75,6 +75,23 @@ namespace Charlotte.Games
 			}
 		}
 
+		public static IEnumerable<bool> 閉鎖_開放(double x, double y) // ★サンプルとしてキープ
+		{
+			foreach (DDScene scene in DDSceneUtils.Create(15))
+			{
+				DDDraw.SetAlpha(0.5);
+				DDDraw.SetBright(0.0, 1.0, 1.0);
+				DDDraw.DrawBegin(Ground.I.Picture.WhiteBox, x - DDGround.ICamera.X, y - DDGround.ICamera.Y);
+				DDDraw.DrawSetSize(GameConsts.TILE_W, GameConsts.TILE_H);
+				DDDraw.DrawZoom(1.0 - scene.Rate * 0.5);
+				DDDraw.DrawRotate(Math.PI * 2.0 * scene.Rate);
+				DDDraw.DrawEnd();
+				DDDraw.Reset();
+
+				yield return true;
+			}
+		}
+
 		public static IEnumerable<bool> FireBall爆発(double x, double y)
 		{
 			foreach (DDScene scene in DDSceneUtils.Create(10))
@@ -110,23 +127,6 @@ namespace Charlotte.Games
 
 					yield return true;
 				}
-			}
-		}
-
-		public static IEnumerable<bool> 閉鎖_開放(double x, double y)
-		{
-			foreach (DDScene scene in DDSceneUtils.Create(15))
-			{
-				DDDraw.SetAlpha(0.5);
-				DDDraw.SetBright(0.0, 1.0, 1.0);
-				DDDraw.DrawBegin(Ground.I.Picture.WhiteBox, x - DDGround.ICamera.X, y - DDGround.ICamera.Y);
-				DDDraw.DrawSetSize(GameConsts.TILE_W, GameConsts.TILE_H);
-				DDDraw.DrawZoom(1.0 - scene.Rate * 0.5);
-				DDDraw.DrawRotate(Math.PI * 2.0 * scene.Rate);
-				DDDraw.DrawEnd();
-				DDDraw.Reset();
-
-				yield return true;
 			}
 		}
 	}

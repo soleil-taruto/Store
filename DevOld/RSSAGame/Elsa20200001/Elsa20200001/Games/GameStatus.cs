@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Charlotte.Games.Shots;
 
 namespace Charlotte.Games
 {
@@ -69,27 +70,18 @@ namespace Charlotte.Games
 		/// </summary>
 		public int ExitDirection = 5;
 
-		public enum Equipment_e
-		{
-			Normal = 1, // 通常攻撃
-			跳ねる陰陽玉,
-			ハンマー陰陽玉,
-			エアーシューター,
-			マグネットエアー,
-
-			// 新しい項目をここへ追加...
-		}
-
 		/// <summary>
 		/// 装備している武器
 		/// </summary>
-		public Equipment_e Equipment = Equipment_e.Normal;
+		public ShotCatalog.武器_e Equipment = ShotCatalog.武器_e.Normal;
 
 		/// <summary>
 		/// game_進行・インベントリ(enum)
 		/// </summary>
 		public enum Inventory_e
 		{
+			B神奈子を倒した, // テスト用
+
 			取得済み_跳ねる陰陽玉,
 			取得済み_ハンマー陰陽玉,
 			取得済み_エアーシューター,

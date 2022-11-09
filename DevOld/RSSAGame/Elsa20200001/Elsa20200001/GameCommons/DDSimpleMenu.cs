@@ -343,8 +343,8 @@ namespace Charlotte.GameCommons
 						// スキップ禁止
 						//if (DDMouse.L.GetInput() == -1)
 						//{
-						//    currBtnIndex++;
-						//    goto endInput;
+						//	currBtnIndex++;
+						//	goto endInput;
 						//}
 
 						{

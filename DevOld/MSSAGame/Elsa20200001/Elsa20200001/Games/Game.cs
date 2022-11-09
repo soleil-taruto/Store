@@ -82,7 +82,7 @@ namespace Charlotte.Games
 				}
 			}
 
-			// ★★★★★
+			// ★★★★★ *****PSH (<-このパターンで検索できるようにしておく)
 			// プレイヤー・ステータス反映(マップ入場時)
 			// その他の反映箇所：
 			// -- マップ退場時
@@ -93,7 +93,7 @@ namespace Charlotte.Games
 				this.Player.武器 = this.Status.Start_武器;
 			}
 
-			this.Wall = WallCreator.Create(this.Map.WallName);
+			this.Wall = WallCatalog.Create(this.Map.WallName);
 
 			MusicCollection.Get(this.Map.MusicName).Play();
 
@@ -132,7 +132,7 @@ namespace Charlotte.Games
 
 				// 死亡時にカメラ移動を止める。
 				//if (this.Player.DeadFrame == 0)
-				//    this.カメラ位置調整(false);
+				//	this.カメラ位置調整(false);
 
 				this.カメラ位置調整(false);
 
@@ -565,13 +565,15 @@ namespace Charlotte.Games
 								// -- 複数の敵に同時に当たると意図通りにならないが、厳格に制御する必要は無いので、看過する。
 
 								if (shot.LastCrashedEnemy == enemy) // ? 直前にクラッシュした -> 複数回クラッシュしない。
+								{
+									shot.CurrCrashedEnemy = enemy;
 									continue;
-
+								}
 								enemy.HP -= shot.AttackPoint;
 
 								if (shot.敵を貫通する)
 								{
-									shot.LastCrashedEnemy = enemy;
+									shot.CurrCrashedEnemy = enemy;
 								}
 								else // ? 敵を貫通しない -> 自弾の攻撃力と敵のHPを相殺
 								{
@@ -629,14 +631,19 @@ namespace Charlotte.Games
 
 				foreach (Shot shot in this.Shots.Iterate())
 				{
-					// 壁への当たり判定は自弾の「中心座標のみ」であることに注意して下さい。
+					shot.LastCrashedEnemy = shot.CurrCrashedEnemy;
+					shot.CurrCrashedEnemy = null;
 
-					if (
-						!shot.DeadFlag && // ? 自弾：生存
-						!shot.壁をすり抜ける && // ? この自弾は壁に当たる。
-						this.Map.GetCell(GameCommon.ToTablePoint(shot.X, shot.Y)).Tile.IsWall() // ? 壁に当たった。
-						)
-						shot.Kill();
+					// 壁への衝突
+					// 壁への当たり判定は自弾の「中心座標のみ」であることに注意して下さい。
+					{
+						if (
+							!shot.DeadFlag && // ? 自弾：生存
+							!shot.壁をすり抜ける && // ? この自弾は壁に当たる。
+							this.Map.GetCell(GameCommon.ToTablePoint(shot.X, shot.Y)).Tile.IsWall() // ? 壁に当たった。
+							)
+							shot.Kill();
+					}
 				}
 
 				// ====
@@ -714,7 +721,7 @@ namespace Charlotte.Games
 				DDCurtain.SetCurtain(0, -1.0);
 			}
 
-			// ★★★★★
+			// ★★★★★ *****PSH (<-このパターンで検索できるようにしておく)
 			// プレイヤー・ステータス反映(マップ退場時)
 			// その他の反映箇所：
 			// -- マップ入場時
@@ -766,7 +773,7 @@ namespace Charlotte.Games
 
 			// 不要
 			//if (this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W < GameConsts.TILE_W) // ? カメラの横の可動域が1タイルより狭い場合
-			//    targCamX = (this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W) / 2; // 中心に合わせる。
+			//	targCamX = (this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W) / 2; // 中心に合わせる。
 
 			if (this.Map.H * GameConsts.TILE_H - DDConsts.Screen_H < GameConsts.TILE_H) // ? カメラの縦の可動域が1タイルより狭い場合
 				targCamY = (this.Map.H * GameConsts.TILE_H - DDConsts.Screen_H) / 2; // 中心に合わせる。
@@ -801,7 +808,7 @@ namespace Charlotte.Games
 
 				// 廃止
 				//if (DDKey.GetInput(DX.KEY_INPUT_E) == 1)
-				//    break;
+				//	break;
 
 				I2Point cellPos = GameCommon.ToTablePoint(
 					DDGround.Camera.X + DDMouse.X,
@@ -1205,14 +1212,14 @@ namespace Charlotte.Games
 
 			//switch (this.Status.Equipment)
 			//{
-			//    case GameStatus.Equipment_e.Normal: tableMenu.SetSelectedPosition(0, 1); break;
-			//    case GameStatus.Equipment_e.跳ねる陰陽玉: tableMenu.SetSelectedPosition(0, 2); break;
-			//    case GameStatus.Equipment_e.ハンマー陰陽玉: tableMenu.SetSelectedPosition(0, 3); break;
-			//    case GameStatus.Equipment_e.エアーシューター: tableMenu.SetSelectedPosition(0, 4); break;
-			//    case GameStatus.Equipment_e.マグネットエアー: tableMenu.SetSelectedPosition(0, 5); break;
+			//	case GameStatus.Equipment_e.Normal: tableMenu.SetSelectedPosition(0, 1); break;
+			//	case GameStatus.Equipment_e.跳ねる陰陽玉: tableMenu.SetSelectedPosition(0, 2); break;
+			//	case GameStatus.Equipment_e.ハンマー陰陽玉: tableMenu.SetSelectedPosition(0, 3); break;
+			//	case GameStatus.Equipment_e.エアーシューター: tableMenu.SetSelectedPosition(0, 4); break;
+			//	case GameStatus.Equipment_e.マグネットエアー: tableMenu.SetSelectedPosition(0, 5); break;
 
-			//    default:
-			//        break;
+			//	default:
+			//		break;
 			//}
 
 			for (bool keepMenu = true; keepMenu; )
@@ -1384,7 +1391,7 @@ namespace Charlotte.Games
 					"デバッグ用メニュー",
 					new string[]
 					{
-						"装備している武器の切り替え [ 現在装備している武器：" + Player.武器_e_Names[(int)this.Player.武器] + " ]",
+						"装備している武器の切り替え [ 現在装備している武器：" + ShotCatalog.武器_e_Names[(int)this.Player.武器] + " ]",
 						"強制遅延 [ 現在の設定：" + DDEngine.SlowdownLevel + " ]",
 						"当たり判定表示 [ 現在の設定：" + this.当たり判定表示 + " ]",
 						"ゲームに戻る",
@@ -1397,7 +1404,7 @@ namespace Charlotte.Games
 				switch (selectIndex)
 				{
 					case 0:
-						this.Player.武器 = (Player.武器_e)(((int)this.Player.武器 + 1) % Enum.GetValues(typeof(Player.武器_e)).Length);
+						this.Player.武器 = (ShotCatalog.武器_e)(((int)this.Player.武器 + 1) % ShotCatalog.武器_e_Names.Length);
 						break;
 
 					case 1:

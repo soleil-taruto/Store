@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Charlotte.Commons;
+using Charlotte.Games.Shots;
 
 namespace Charlotte.Games
 {
@@ -56,7 +57,7 @@ namespace Charlotte.Games
 		/// <summary>
 		/// (マップ入場時に)プレイヤーが装備している武器
 		/// </summary>
-		public Player.武器_e Start_武器 = Player.武器_e.NORMAL;
+		public ShotCatalog.武器_e Start_武器 = ShotCatalog.武器_e.NORMAL;
 
 		/// <summary>
 		/// game_進行・インベントリ(enum)
@@ -139,7 +140,7 @@ namespace Charlotte.Games
 			this.StartPointDirection = int.Parse(lines[c++]);
 			this.StartFacingLeft = int.Parse(lines[c++]) != 0;
 			this.ExitDirection = int.Parse(lines[c++]);
-			this.Start_武器 = (Player.武器_e)int.Parse(lines[c++]);
+			this.Start_武器 = (ShotCatalog.武器_e)int.Parse(lines[c++]);
 			this.InventoryFlags.Deserialize(lines[c++]);
 
 			// ★★★ デシリアライズ_ここまで ★★★

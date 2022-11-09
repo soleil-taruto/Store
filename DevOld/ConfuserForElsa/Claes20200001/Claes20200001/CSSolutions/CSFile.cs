@@ -779,6 +779,7 @@ namespace Charlotte.CSSolutions
 									break;
 
 								case '\\': break;
+								case '"': break;
 
 								default:
 									throw null; // 想定外

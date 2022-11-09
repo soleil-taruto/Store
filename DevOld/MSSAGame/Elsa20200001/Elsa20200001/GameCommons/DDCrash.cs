@@ -14,9 +14,9 @@ namespace Charlotte.GameCommons
 		public D4Rect Rect;
 		public DDCrash[] Crashes;
 
-		public bool IsCrashed(DDCrash other)
+		public bool IsCrashed(DDCrash another)
 		{
-			return DDCrashUtils.IsCrashed(this, other);
+			return DDCrashUtils.IsCrashed(this, another);
 		}
 	}
 }

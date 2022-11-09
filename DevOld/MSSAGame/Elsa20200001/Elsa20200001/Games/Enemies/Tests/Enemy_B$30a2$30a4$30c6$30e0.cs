@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Charlotte.Commons;
 using Charlotte.GameCommons;
+using Charlotte.Games.Shots;
 
 namespace Charlotte.Games.Enemies.Tests
 {
@@ -64,15 +65,15 @@ namespace Charlotte.Games.Enemies.Tests
 			switch (this.効用)
 			{
 				case 効用_e.WEAPON_FIRE_BALL:
-					Game.I.Player.武器 = Player.武器_e.FIRE_BALL; // 仮
+					Game.I.Player.武器 = ShotCatalog.武器_e.FIRE_BALL; // 仮 -- なぜ仮？
 					break;
 
 				case 効用_e.WEAPON_LASER:
-					Game.I.Player.武器 = Player.武器_e.LASER; // 仮
+					Game.I.Player.武器 = ShotCatalog.武器_e.LASER; // 仮 -- なぜ仮？
 					break;
 
 				case 効用_e.WEAPON_WAVE_BEAM:
-					Game.I.Player.武器 = Player.武器_e.WAVE_BEAM; // 仮
+					Game.I.Player.武器 = ShotCatalog.武器_e.WAVE_BEAM; // 仮 -- なぜ仮？
 					break;
 
 				default:

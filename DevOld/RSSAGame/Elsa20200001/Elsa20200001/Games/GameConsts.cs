@@ -20,6 +20,8 @@ namespace Charlotte.Games
 		/// <summary>
 		/// デフォルトの壁紙の名前
 		/// デフォルトの音楽の名前
+		/// デフォルトの敵のグループ名
+		/// デフォルトのタイルのグループ名
 		/// </summary>
 		public const string NAME_DEFAULT = "Default";
 

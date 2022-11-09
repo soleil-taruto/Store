@@ -142,7 +142,6 @@
     <Compile Include="GameCommons\DDSubScreenUtils.cs" />
     <Compile Include="GameCommons\DDSystem.cs" />
     <Compile Include="GameCommons\DDTaskList.cs" />
-    <Compile Include="GameCommons\DDUserDatStrings.cs" />
     <Compile Include="GameCommons\DDUtils.cs" />
     <Compile Include="GameCommons\DDWin32.cs" />
     <Compile Include="GameCommons\MaskGZDataUtils\MaskGZDataEng.cs" />
@@ -231,7 +230,9 @@
   <ItemGroup>
     <Content Include="game_app.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="★ここはGameBaseです！\" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>

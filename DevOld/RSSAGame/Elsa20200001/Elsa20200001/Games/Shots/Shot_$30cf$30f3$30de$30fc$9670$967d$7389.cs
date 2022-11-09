@@ -71,7 +71,7 @@ namespace Charlotte.Games.Shots
 
 			for (int frame = 0; ; frame++)
 			{
-				if (Game.I.Status.Equipment != GameStatus.Equipment_e.ハンマー陰陽玉) // 武器を切り替えたら消滅
+				if (Game.I.Status.Equipment != ShotCatalog.武器_e.ハンマー陰陽玉) // 武器を切り替えたら消滅
 				{
 					this.Kill();
 					break;

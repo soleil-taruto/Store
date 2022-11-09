@@ -94,7 +94,7 @@ namespace Charlotte.Games.Enemies.Tests
 		{
 			//this.X += 10.0 * (shot.FacingLeft ? -1 : 1); // ヒットバック
 			this.HitBackFrame = 1;
-			base.P_Damaged(shot);
+			EnemyCommon.Damaged(this, shot);
 		}
 	}
 }

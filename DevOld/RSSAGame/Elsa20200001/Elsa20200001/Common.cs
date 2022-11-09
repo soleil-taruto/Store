@@ -8,11 +8,11 @@ namespace Charlotte
 {
 	public static class Common
 	{
-		public static T GetElement<T>(T[] arr, int index, T defval)
+		public static T GetElement<T>(IList<T> list, int index, T defval)
 		{
-			if (index < arr.Length)
+			if (index < list.Count)
 			{
-				return arr[index];
+				return list[index];
 			}
 			else
 			{

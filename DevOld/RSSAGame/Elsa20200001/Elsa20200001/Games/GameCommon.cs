@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using Charlotte.Commons;
 using Charlotte.Games;
 using Charlotte.Games.Tiles;
-using System.IO;
+using Charlotte.Games.Tiles.Tests;
 
 namespace Charlotte.Games
 {
@@ -116,7 +117,7 @@ namespace Charlotte.Games
 					_defaultMapCell_ladder = new MapCell()
 					{
 						TileName = GameConsts.TILE_NONE,
-						Tile = new Tile_Ladder(),
+						Tile = new Tile_BLadder(),
 						EnemyName = GameConsts.ENEMY_NONE,
 					};
 				}

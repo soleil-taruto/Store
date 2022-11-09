@@ -79,25 +79,25 @@
     <Compile Include="GameCommons\DDTableMenu.cs" />
     <Compile Include="GameCommons\DDTouch.cs" />
     <Compile Include="Games\Confirm.cs" />
-    <Compile Include="Games\Enemies\Bosses\ゆドレミーs\Enemy_Boss_ゆドレミー.cs" />
     <Compile Include="Games\Enemies\EnemyCommon.cs" />
-    <Compile Include="Games\Enemies\Enemy_Bird.cs" />
-    <Compile Include="Games\Enemies\Enemy_BirdShit.cs" />
-    <Compile Include="Games\Enemies\Enemy_Chaser.cs" />
-    <Compile Include="Games\Enemies\Enemy_Dog.cs" />
-    <Compile Include="Games\Enemies\Enemy_Frog.cs" />
-    <Compile Include="Games\Enemies\Enemy_Helmet.cs" />
-    <Compile Include="Games\Enemies\Enemy_天井針.cs" />
-    <Compile Include="Games\Enemies\Enemy_ノコノコ.cs" />
-    <Compile Include="Games\Enemies\Enemy_地蔵.cs" />
-    <Compile Include="Games\Enemies\Enemy_弾.cs" />
-    <Compile Include="Games\Enemies\Enemy_即死トラップ針.cs" />
-    <Compile Include="Games\Enemies\アイテムs\EnemyCommon_Item.cs" />
-    <Compile Include="Games\Enemies\アイテムs\Enemy_Item.cs" />
-    <Compile Include="Games\Enemies\アイテムs\Enemy_Item_跳ねる陰陽玉.cs" />
-    <Compile Include="Games\Enemies\アイテムs\Enemy_Item_ハンマー陰陽玉.cs" />
-    <Compile Include="Games\Enemies\アイテムs\Enemy_Item_エアーシューター.cs" />
-    <Compile Include="Games\Enemies\アイテムs\Enemy_Item_マグネットエアー.cs" />
+    <Compile Include="Games\Enemies\Enemy_Item.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_BBird.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_BBirdShit.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_BChaser.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_BDog.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_BFrog.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_BHelmet.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_B天井針.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_Bノコノコ.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_B地蔵.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_B弾.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_B即死トラップ針.cs" />
+    <Compile Include="Games\Enemies\Tests\神奈子s\EnemyCommon_B神奈子.cs" />
+    <Compile Include="Games\Enemies\Tests\神奈子s\Enemy_B神奈子.cs" />
+    <Compile Include="Games\Enemies\Tests\神奈子s\Enemy_B神奈子0001.cs" />
+    <Compile Include="Games\Enemies\Tests\神奈子s\Enemy_B神奈子9901.cs" />
+    <Compile Include="Games\Enemies\Tests\神奈子s\Enemy_B神奈子9902.cs" />
+    <Compile Include="Games\Enemies\Tests\神奈子s\Enemy_B神奈子_Tama.cs" />
     <Compile Include="Games\GameCommon.cs" />
     <Compile Include="Commons\ArgsReader.cs" />
     <Compile Include="Commons\D2Point.cs" />
@@ -161,7 +161,6 @@
     <Compile Include="GameCommons\DDSystem.cs" />
     <Compile Include="GameCommons\DDTask.cs" />
     <Compile Include="GameCommons\DDTaskList.cs" />
-    <Compile Include="GameCommons\DDUserDatStrings.cs" />
     <Compile Include="GameCommons\DDUtils.cs" />
     <Compile Include="GameCommons\DDWin32.cs" />
     <Compile Include="GameCommons\MaskGZDataUtils\MaskGZDataEng.cs" />
@@ -190,6 +189,7 @@
     <Compile Include="Games\PasswordInput.cs" />
     <Compile Include="Games\RingMenu.cs" />
     <Compile Include="Games\SettingMenu.cs" />
+    <Compile Include="Games\Shots\ShotCatalog.cs" />
     <Compile Include="Games\Shots\ShotCommon.cs" />
     <Compile Include="Games\Shots\Shot_AirShooter.cs" />
     <Compile Include="Games\Shots\Shot_MagnetAir.cs" />
@@ -200,19 +200,20 @@
     <Compile Include="Games\Tests\GameTestSubMenu.cs" />
     <Compile Include="Games\Tests\GameTestMenu2.cs" />
     <Compile Include="Games\Tests\GameTestSubMenu2.cs" />
-    <Compile Include="Games\Tiles\Tile_Brick_Back.cs" />
-    <Compile Include="Games\Tiles\Tile_Brick_Front.cs" />
-    <Compile Include="Games\Tiles\Tile_Double.cs" />
-    <Compile Include="Games\Tiles\Tile_Front.cs" />
-    <Compile Include="Games\Tiles\Tile_Ladder.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_Bボス部屋Shutter.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_Brick_Back.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_Brick_Front.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_BDouble.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_BFront.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_BLadder.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_BStandard.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_BWaterfall_Back.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_BWaterfall_Front.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_BWaterfall_Ground.cs" />
+    <Compile Include="Games\Tiles\Tests\Tile_Brick.cs" />
     <Compile Include="Games\Tiles\Tile_Standard.cs" />
-    <Compile Include="Games\Tiles\Tile_Waterfall_Back.cs" />
-    <Compile Include="Games\Tiles\Tile_Waterfall_Front.cs" />
-    <Compile Include="Games\Tiles\Tile_Waterfall_Ground.cs" />
-    <Compile Include="Games\Tiles\Tile_Brick.cs" />
-    <Compile Include="Games\Walls\Wall_None.cs" />
-    <Compile Include="Games\Walls\Wall_ロックマン風.cs" />
-    <Compile Include="Games\Walls\Wall_東方風.cs" />
+    <Compile Include="Games\Walls\Tests\Wall_Bロックマン風.cs" />
+    <Compile Include="Games\Walls\Tests\Wall_B東方風.cs" />
     <Compile Include="Games\WilyStageStartMotion.cs" />
     <Compile Include="Games\WorldGameMaster.cs" />
     <Compile Include="Games\Player.cs" />
@@ -228,7 +229,7 @@
     <Compile Include="Games\Tiles\Tile_None.cs" />
     <Compile Include="Games\TitleMenu.cs" />
     <Compile Include="Games\Walls\Wall.cs" />
-    <Compile Include="Games\Walls\WallCreator.cs" />
+    <Compile Include="Games\Walls\WallCatalog.cs" />
     <Compile Include="Games\Walls\Wall_Dark.cs" />
     <Compile Include="Games\Walls\Wall_Simple.cs" />
     <Compile Include="Games\World.cs" />
@@ -320,7 +321,9 @@
   <ItemGroup>
     <Content Include="game_app.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="★ここはGameBaseです！\" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>

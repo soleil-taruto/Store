@@ -45,6 +45,12 @@ namespace Charlotte.Games.Shots
 		public Enemy LastCrashedEnemy = null;
 
 		/// <summary>
+		/// 今回クラッシュした敵
+		/// 当たり判定の後で LastCrashedEnemy にセットする。
+		/// </summary>
+		public Enemy CurrCrashedEnemy = null;
+
+		/// <summary>
 		/// 現在のフレームにおける当たり判定を保持する。
 		/// -- Draw によって設定される。
 		/// </summary>
@@ -68,9 +74,8 @@ namespace Charlotte.Games.Shots
 		/// -- 描画
 		/// -- Crash を設定する。-- 敵に当たらないなら設定しない。
 		/// -- 必要に応じて Game.I.Shots.Add(shot); する。-- 自弾の追加
-		/// -- 必要に応じて DeadFlag に true を設定する。(または false を返す) -- 自弾(自分自身)の削除
-		/// ---- 呼び出し関係がややこしくなりそうなので Kill, Killed は呼び出さないこと。
-		/// ---- 自弾(自分以外)を削除するには otherShot.DeadFlag = true; する。
+		/// -- 必要に応じて DeadFlag に true を設定する。または false を返す。または Kill を呼び出す。-- 自弾(自分自身)の削除
+		/// ---- 自弾(自分以外)を削除するには otherShot.DeadFlag = true; または otherShot.Kill を呼び出す。
 		/// </summary>
 		/// <returns>列挙：この自弾は生存しているか</returns>
 		protected abstract IEnumerable<bool> E_Draw();
@@ -89,6 +94,7 @@ namespace Charlotte.Games.Shots
 
 		/// <summary>
 		/// 何かと衝突して消滅した。
+		/// マップから離れすぎて消された場合・シナリオ的に消された場合などでは呼び出されない。
 		/// </summary>
 		protected virtual void Killed()
 		{
