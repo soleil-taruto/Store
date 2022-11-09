@@ -38,8 +38,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\Dev\Game\GameJS\Shooting\Gattonero20200001", @"C:\Dev\Game\GameJS\Shooting\res", @"C:\temp" }));
-			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\Game\GameJS\Shooting\Gattonero20200001", @"C:\Dev\Game\GameJS\Shooting\res", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\00_Shooting\Gattonero20200001", @"C:\Dev\GameJS\00_Shooting\res", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\00_Shooting\Gattonero20200001", @"C:\Dev\GameJS\00_Shooting\res", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -213,6 +213,15 @@ namespace Charlotte
 			}
 			this.JSLines.Add("};");
 			this.JSLines.Add("");
+
+			// DEBUG, RELEASE 定数
+			{
+				int releaseModeValue = releaseMode ? 1 : 0;
+
+				this.JSLines.Add("var DEBUG = 0 == " + releaseModeValue + ";");
+				this.JSLines.Add("var RELEASE = 1 == " + releaseModeValue + ";");
+				this.JSLines.Add("");
+			}
 
 			this.JSLines.AddRange(escapedJSLines);
 			escapedJSLines = null;

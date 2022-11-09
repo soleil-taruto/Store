@@ -2,200 +2,53 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using Charlotte.Commons;
+using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
 	public class Test0005
 	{
-		/// <summary>
-		/// 足し算
-		/// </summary>
+		private const string TARGET_DIR = @"C:\temp"; // ★★★ 注意：このフォルダ配下のファイルを変更する！
+
 		public void Test01()
 		{
-			for (int testcnt = 0; testcnt < 1000000; testcnt++)
+			string[] pngFiles = Directory.GetFiles(TARGET_DIR, "*.png", SearchOption.AllDirectories);
+
+			foreach (string pngFile in pngFiles)
 			{
-				ulong a = SCommon.CRandom.GetULong();
-				ulong b = SCommon.CRandom.GetULong();
+				Canvas canvas = Canvas.LoadFromFile(pngFile);
 
-				ulong ans1 = Test01_b1(a, b);
-				ulong ans2 = Test01_b2(a, b);
+				int w = canvas.W;
+				int h = canvas.H;
 
-				if (ans1 != ans2)
-					throw null;
-			}
-			Console.WriteLine("OK!");
-		}
-
-		private ulong Test01_b1(ulong a, ulong b)
-		{
-			while (b != 0)
-			{
-				ulong na = a ^ b;
-				b = (a & b) << 1;
-				a = na;
-			}
-			return a;
-		}
-
-		private ulong Test01_b2(ulong a, ulong b)
-		{
-			unchecked
-			{
-				return a + b;
-			}
-		}
-
-		/// <summary>
-		/// 掛け算
-		/// </summary>
-		public void Test02()
-		{
-			for (int testcnt = 0; testcnt < 1000000; testcnt++)
-			{
-				ulong a = SCommon.CRandom.GetULong();
-				ulong b = SCommon.CRandom.GetULong();
-
-				ulong ans1 = Test02_b1(a, b);
-				ulong ans2 = Test02_b2(a, b);
-
-				if (ans1 != ans2)
-					throw null;
-			}
-			Console.WriteLine("OK!");
-		}
-
-		private ulong Test02_b1(ulong s, ulong e)
-		{
-			ulong a = 0;
-
-			for (; e != 0; e >>= 1)
-			{
-				if ((e & 1) != 0)
+				if (w < 20 || h < 20)
 				{
-					ulong b = s;
-
-					while (b != 0)
-					{
-						ulong na = a ^ b;
-						b = (a & b) << 1;
-						a = na;
-					}
+					canvas.Fill(MakeFillColor());
 				}
-				s <<= 1;
-			}
-			return a;
-		}
-
-		private ulong Test02_b2(ulong a, ulong b)
-		{
-			unchecked
-			{
-				return a * b;
-			}
-		}
-
-		/// <summary>
-		/// 引き算
-		/// </summary>
-		public void Test03()
-		{
-			for (int testcnt = 0; testcnt < 1000000; testcnt++)
-			{
-				ulong a = SCommon.CRandom.GetULong();
-				ulong b = SCommon.CRandom.GetULong();
-
-				ulong ans1 = Test03_b1(a, b);
-				ulong ans2 = Test03_b2(a, b);
-
-				if (ans1 != ans2)
-					throw null;
-			}
-			Console.WriteLine("OK!");
-		}
-
-		private ulong Test03_b1(ulong a, ulong b)
-		{
-			b ^= ulong.MaxValue;
-			unchecked { b++; }
-
-			while (b != 0)
-			{
-				ulong na = a ^ b;
-				b = (a & b) << 1;
-				a = na;
-			}
-			return a;
-		}
-
-		private ulong Test03_b2(ulong a, ulong b)
-		{
-			unchecked
-			{
-				return a - b;
-			}
-		}
-
-		/// <summary>
-		/// 割り算
-		/// </summary>
-		public void Test04()
-		{
-			Test04_a(ulong.MaxValue);
-			Test04_a(0x0000ffffffffffffUL);
-			Test04_a(0x00000000ffffffffUL);
-			Test04_a(0x000000000000ffffUL);
-
-			Console.WriteLine("OK!");
-		}
-
-		private void Test04_a(ulong m)
-		{
-			for (int testcnt = 0; testcnt < 1000000; testcnt++)
-			{
-				ulong a = SCommon.CRandom.GetULong();
-				ulong b = SCommon.CRandom.GetULong();
-
-				b &= m;
-
-				if (b == 0)
-					continue;
-
-				ulong ans1 = Test04_b1(a, b);
-				ulong ans2 = Test04_b2(a, b);
-
-				if (ans1 != ans2)
-					throw null;
-			}
-			Console.WriteLine("OK");
-		}
-
-		private ulong Test04_b1(ulong a, ulong b)
-		{
-			ulong d = 1;
-			ulong n = 0;
-
-			while ((b & (1UL << 63)) == 0)
-			{
-				b <<= 1;
-				d <<= 1;
-			}
-			while (d != 0)
-			{
-				if (a >= b)
+				else
 				{
-					a -= b;
-					n |= d;
+					int halfW = w / 2;
+					int halfH = h / 2;
+
+					canvas.FillRect(MakeFillColor(), I4Rect.LTRB(0, 0, halfW, halfH)); // 左上
+					canvas.FillRect(MakeFillColor(), I4Rect.LTRB(halfW, 0, w, halfH)); // 右上
+					canvas.FillRect(MakeFillColor(), I4Rect.LTRB(halfW, halfH, w, h)); // 右下
+					canvas.FillRect(MakeFillColor(), I4Rect.LTRB(0, halfH, halfW, h)); // 左下
 				}
-				b >>= 1;
-				d >>= 1;
+				canvas.Save(pngFile);
 			}
-			return n;
 		}
 
-		private ulong Test04_b2(ulong a, ulong b)
+		private I4Color MakeFillColor()
 		{
-			return a / b;
+			return new I4Color(
+				SCommon.CRandom.GetRange(0, 255),
+				SCommon.CRandom.GetRange(0, 255),
+				SCommon.CRandom.GetRange(0, 255),
+				128 // 半透明
+				);
 		}
 	}
 }

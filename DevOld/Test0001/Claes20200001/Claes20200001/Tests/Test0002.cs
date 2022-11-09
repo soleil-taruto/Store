@@ -10,59 +10,69 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			Test01_a(new int[] { 1, 2, 3, 3 }, 3); // -> 12
-			Test01_a(new int[] { 3, 1, 4, 1, 5, 9, 2, 6, 5, 3 }, 7); // -> 108
+			for (int testcnt = 0; testcnt < 1000000; testcnt++)
+			{
+				ulong a = SCommon.CRandom.GetULong();
+				ulong b = SCommon.CRandom.GetULong();
+				ulong m = SCommon.CRandom.GetULong();
+
+				if (m == 0)
+					continue;
+
+				ulong ans1 = Test01_b1(a, b, m);
+				ulong ans2 = Test01_b2(a, b, m);
+
+				if (ans1 != ans2)
+					throw null;
+			}
+			Console.WriteLine("OK!");
 		}
 
-		private void Test01_a(int[] aArr, int k)
+		private ulong Test01_b1(ulong a, ulong b, ulong m)
 		{
-			FoundCount = 0;
-			K = k;
-			KnownResults.Clear();
+			const ulong MA = (1UL << 63) - 0;
+			const ulong MB = (1UL << 63) - 1;
 
-			Search(new int[0], aArr);
+			ulong r = (ulong.MaxValue % m + 1) % m;
 
-			Console.WriteLine(FoundCount);
+			for (int c = 0; c < 2; c++)
+			{
+				int k = 0;
 
-			FoundCount = -1;
-			K = -1;
-			KnownResults.Clear();
+				if ((a & MA) != 0) k++;
+				if ((b & MA) != 0) k++;
+
+				a = (a & MB) + (b & MB);
+
+				if ((a & MA) != 0) k++;
+
+				a &= MB;
+
+				if ((k & 1) != 0)
+					a |= MA;
+
+				b = (k & 2) != 0 ? r : 0;
+			}
+			return (a + b) % m;
 		}
 
-		private int FoundCount;
-		private int K;
-		private HashSet<string> KnownResults = new HashSet<string>();
-
-		private void Search(int[] dest, int[] src)
+		private ulong Test01_b2(ulong a, ulong b, ulong m)
 		{
-			if (src.Length == 0)
+			return ModAdd64(a, b, m);
+		}
+
+		// ====
+
+		private static ulong ModAdd64(ulong a, ulong b, ulong m)
+		{
+			ulong r = (ulong.MaxValue % m + 1) % m;
+
+			while (ulong.MaxValue - a < b)
 			{
-				string result = string.Join(":", dest);
-
-				if (!KnownResults.Contains(result))
-				{
-					KnownResults.Add(result);
-					FoundCount++;
-				}
-				return;
+				unchecked { a += b; }
+				b = r;
 			}
-
-			for (int index = 0; index < src.Length; index++)
-			{
-#if true
-				int[] nextDest = SCommon.E_AddRange(dest, new int[] { src[index] }).ToArray();
-				int[] nextSrc = SCommon.E_RemoveRange(src, index, 1).ToArray();
-#else // old same
-				int[] nextDest = dest.Concat(new int[] { src[index] }).ToArray();
-				int[] nextSrc = src.Take(index).Concat(src.Skip(index + 1)).ToArray();
-#endif
-
-				if (2 <= nextDest.Length)
-					if (nextDest[nextDest.Length - 2] + nextDest[nextDest.Length - 1] < K) // ? 隣接する要素の和が K より小さい -> 条件不一致
-						continue;
-
-				Search(nextDest, nextSrc);
-			}
+			return (a + b) % m;
 		}
 	}
 }

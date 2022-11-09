@@ -2209,8 +2209,9 @@ namespace Charlotte.Commons
 					ret += m * 31;
 				}
 				else
+				{
 					ret += (m - 1) * 31;
-
+				}
 				ret += d - 1;
 				ret *= 24;
 				ret += h;

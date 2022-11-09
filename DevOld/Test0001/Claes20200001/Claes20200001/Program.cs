@@ -55,15 +55,23 @@ namespace Charlotte
 			// -- choose one --
 
 			//new Test0001().Test01();
-			//new Test0001().Test02();
-			//new Test0001().Test03();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
 			//new Test0004().Test01();
 			//new Test0005().Test01();
-			//new Test0005().Test02();
-			//new Test0005().Test03();
-			new Test0005().Test04();
+			//new Test0006().Test01();
+			//new Test0007().Test01();
+			//new Test0008().Test01();
+			//new Test0009().Test01();
+			//new Test0010().Test01();
+			//new Test0011().Test01();
+			//new Test0011().Test02();
+			//new Test0011().Test03();
+			//new Test0011().Test04();
+			//new Test0011().Test05();
+			//new Test0012().Test01();
+			//new Test0013().Test01();
+			new Test0014().Test01();
 
 			// --
 		}
