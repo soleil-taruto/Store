@@ -1,0 +1,292 @@
+﻿dat
+	-> Directory
+dat\Designs
+	-> Directory
+dat\Designs\Simple0001
+	-> Directory
+dat\Designs\Simple0001\Background0001.png
+	-> File 2022/04/29 (金) 12:42:20 / 2019/09/21 (土) 04:05:06 / 2,866
+dat\Designs\Simple0001\Gate0001.png
+	-> File 2022/04/29 (金) 12:42:20 / 2019/09/19 (木) 03:59:39 / 3,022
+dat\Designs\Simple0001\Wall0001.png
+	-> File 2022/04/29 (金) 12:42:20 / 2019/09/19 (木) 03:59:39 / 12,206
+dat\Font
+	-> Directory
+dat\Font\K Gothic
+	-> Directory
+dat\Font\K Gothic\K Gothic.ttf
+	-> File 2022/04/29 (金) 12:42:20 / 2020/05/17 (日) 21:13:19 / 9,673,584
+dat\Font\K Gothic\_source.txt
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/27 (土) 06:01:45 / 45
+dat\Font\K Gothic\はじめにお読みください.txt
+	-> File 2022/04/29 (金) 12:42:20 / 2020/05/17 (日) 21:13:19 / 2,483
+dat\Font\木漏れ日ゴシック
+	-> Directory
+dat\Font\木漏れ日ゴシック\_source.txt
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/23 (火) 06:17:14 / 56
+dat\Font\木漏れ日ゴシック\komorebi-gothic-P.ttf
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/23 (火) 06:16:29 / 4,346,028
+dat\Font\木漏れ日ゴシック\komorebi-gothic.ttf
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/23 (火) 06:16:29 / 4,309,524
+dat\Font\木漏れ日ゴシック\readme.txt
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/23 (火) 06:16:29 / 1,242
+dat\General
+	-> Directory
+dat\General\Dummy.png
+	-> File 2022/04/29 (金) 12:42:20 / 2019/09/21 (土) 13:03:55 / 188
+dat\General\DummyScreen.png
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/18 (木) 13:54:30 / 440,596
+dat\General\WhiteBox.png
+	-> File 2022/04/29 (金) 12:42:20 / 2019/09/21 (土) 13:03:55 / 124
+dat\General\WhiteCircle.png
+	-> File 2022/04/29 (金) 12:42:20 / 2019/09/21 (土) 13:03:55 / 1,448
+dat\General\game_app.ico
+	-> File 2022/04/29 (金) 12:42:20 / 2019/09/21 (土) 13:03:55 / 2,734
+dat\General\muon.wav
+	-> File 2022/04/29 (金) 12:42:20 / 2019/09/21 (土) 13:03:55 / 88,246
+dat\Logo
+	-> Directory
+dat\Logo\Copyright.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/04/21 (火) 21:50:34 / 5,134
+dat\Novel
+	-> Directory
+dat\Novel\Instagram
+	-> Directory
+dat\Novel\Instagram\IMG_20160000_000040.jpg
+	-> File 2022/04/29 (金) 12:42:20 / 2020/12/03 (木) 20:46:55 / 195,532
+dat\Novel\Instagram\IMG_20160000_000106.jpg
+	-> File 2022/04/29 (金) 12:42:20 / 2021/01/11 (月) 13:46:34 / 100,697
+dat\Novel\フリー素材
+	-> Directory
+dat\Novel\フリー素材\からい
+	-> Directory
+dat\Novel\フリー素材\からい\_source.txt
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/27 (土) 06:03:11 / 189
+dat\Novel\フリー素材\からい\ゆかマキ制服
+	-> Directory
+dat\Novel\フリー素材\からい\ゆかマキ制服\maki01.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/12 (土) 04:59:55 / 403,485
+dat\Novel\フリー素材\からい\ゆかマキ制服\maki02.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/12 (土) 04:59:55 / 418,071
+dat\Novel\フリー素材\からい\ゆかマキ制服\yukari02.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/12 (土) 04:59:56 / 373,774
+dat\Novel\フリー素材\からい\ゆかマキ制服\yukari03.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/12 (土) 04:59:56 / 415,767
+dat\Novel\フリー素材\空想曲線
+	-> Directory
+dat\Novel\フリー素材\空想曲線\Messageframe_29
+	-> Directory
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material
+	-> Directory
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\01 message
+	-> Directory
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\01 message\message.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:08 / 18,086
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\02 button
+	-> Directory
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\02 button\button.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:08 / 6,158
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\02 button\button2.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:08 / 8,657
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\02 button\button3.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:08 / 8,734
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button
+	-> Directory
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\auto.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:08 / 970
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\auto2.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 869
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\load.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 949
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\load2.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 851
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\log.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 1,384
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\log2.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 1,271
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\menu.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 1,068
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\menu2.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 960
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\save.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 995
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\save2.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 902
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\skip.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 998
+dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\skip2.png
+	-> File 2022/04/29 (金) 12:42:20 / 2020/09/10 (木) 03:56:09 / 916
+dat\Novel\フリー素材\空想曲線\_source.txt
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/27 (土) 06:06:08 / 251
+dat\Novel\フリー素材\魔王魂
+	-> Directory
+dat\Novel\フリー素材\魔王魂\_source.txt
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/27 (土) 06:07:26 / 104
+dat\Novel\フリー素材\魔王魂\bgm_maoudamashii_piano
+	-> Directory
+dat\Novel\フリー素材\魔王魂\bgm_maoudamashii_piano\bgm_maoudamashii_piano07.mp3
+	-> File 2022/04/29 (金) 12:42:20 / 2020/10/02 (金) 12:49:17 / 976,770
+dat\Novel\フリー素材\魔王魂\bgm_maoudamashii_piano\bgm_maoudamashii_piano39.mp3
+	-> File 2022/04/29 (金) 12:42:20 / 2021/02/18 (木) 15:07:03 / 3,114,774
+dat\Title
+	-> Directory
+dat\Title\おまけ.png
+	-> File 2022/04/29 (金) 12:42:22 / 2021/06/15 (火) 12:56:10 / 1,545
+dat\Title\ゲームスタート.png
+	-> File 2022/04/29 (金) 12:42:22 / 2021/06/15 (火) 12:56:08 / 1,825
+dat\Title\コンテニュー.png
+	-> File 2022/04/29 (金) 12:42:22 / 2021/06/15 (火) 12:56:09 / 1,362
+dat\Title\終了.png
+	-> File 2022/04/29 (金) 12:42:22 / 2021/06/15 (火) 12:56:12 / 1,428
+dat\Title\設定.png
+	-> File 2022/04/29 (金) 12:42:22 / 2021/06/15 (火) 12:56:11 / 1,437
+dat\run
+	-> Directory
+dat\run\22350006_big_p12.jpg
+	-> File 2022/04/29 (金) 12:42:20 / 2013/10/29 (火) 17:15:46 / 437,415
+dat\run\_orig
+	-> Directory
+dat\run\_orig\22350006_big_p0.jpg
+	-> File 2022/04/29 (金) 12:42:20 / 2013/10/29 (火) 17:14:36 / 412,150
+dat\run\_orig\22350006_big_p1.jpg
+	-> File 2022/04/29 (金) 12:42:20 / 2013/10/29 (火) 17:14:42 / 720,670
+dat\run\_orig\22350006_big_p10.jpg
+	-> File 2022/04/29 (金) 12:42:20 / 2013/10/29 (火) 17:15:36 / 812,348
+dat\run\_orig\22350006_big_p11.jpg
+	-> File 2022/04/29 (金) 12:42:20 / 2013/10/29 (火) 17:15:40 / 481,676
+dat\run\_orig\22350006_big_p12.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:15:46 / 437,415
+dat\run\_orig\22350006_big_p13.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:15:50 / 378,769
+dat\run\_orig\22350006_big_p14.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:15:56 / 508,566
+dat\run\_orig\22350006_big_p15.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:00 / 857,923
+dat\run\_orig\22350006_big_p16.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:06 / 887,705
+dat\run\_orig\22350006_big_p17.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:12 / 633,746
+dat\run\_orig\22350006_big_p18.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:20 / 778,377
+dat\run\_orig\22350006_big_p19.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:24 / 714,357
+dat\run\_orig\22350006_big_p2.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:14:48 / 784,985
+dat\run\_orig\22350006_big_p20.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:28 / 622,147
+dat\run\_orig\22350006_big_p21.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:32 / 816,603
+dat\run\_orig\22350006_big_p22.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:38 / 728,415
+dat\run\_orig\22350006_big_p23.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:44 / 694,564
+dat\run\_orig\22350006_big_p24.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:50 / 639,358
+dat\run\_orig\22350006_big_p25.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:54 / 771,624
+dat\run\_orig\22350006_big_p26.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:16:58 / 694,170
+dat\run\_orig\22350006_big_p27.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:06 / 741,495
+dat\run\_orig\22350006_big_p28.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:16 / 723,303
+dat\run\_orig\22350006_big_p29.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:20 / 702,853
+dat\run\_orig\22350006_big_p3.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:14:54 / 896,884
+dat\run\_orig\22350006_big_p30.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:26 / 498,606
+dat\run\_orig\22350006_big_p31.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:30 / 229,290
+dat\run\_orig\22350006_big_p32.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:36 / 174,225
+dat\run\_orig\22350006_big_p33.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:42 / 566,521
+dat\run\_orig\22350006_big_p34.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:46 / 489,175
+dat\run\_orig\22350006_big_p35.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:52 / 394,525
+dat\run\_orig\22350006_big_p36.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:17:56 / 281,884
+dat\run\_orig\22350006_big_p4.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:15:00 / 899,083
+dat\run\_orig\22350006_big_p5.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:15:06 / 596,016
+dat\run\_orig\22350006_big_p6.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:15:12 / 649,940
+dat\run\_orig\22350006_big_p7.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:15:16 / 810,212
+dat\run\_orig\22350006_big_p8.jpg
+	-> File 2022/04/29 (金) 12:42:21 / 2013/10/29 (火) 17:15:22 / 838,493
+dat\run\_orig\22350006_big_p9.jpg
+	-> File 2022/04/29 (金) 12:42:22 / 2013/10/29 (火) 17:15:30 / 1,017,693
+dat\run\_source.txt
+	-> File 2022/04/29 (金) 12:42:20 / 2020/11/05 (木) 06:29:14 / 83
+dat\run\ダンジョン枠.png
+	-> File 2022/04/29 (金) 12:42:20 / 2022/03/30 (水) 23:35:02 / 494,340
+dat\ユーフルカ
+	-> Directory
+dat\ユーフルカ\The-sacred-place_loop.ogg
+	-> File 2022/04/29 (金) 12:42:22 / 2020/11/14 (土) 22:31:53 / 2,419,808
+dat\ユーフルカ\The-sacred-place_loop.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2020/11/14 (土) 22:31:53 / 714
+dat\ユーフルカ\Voyage_loop.ogg
+	-> File 2022/04/29 (金) 12:42:22 / 2020/11/14 (土) 21:37:32 / 3,121,871
+dat\ユーフルカ\Voyage_loop.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2020/11/14 (土) 21:37:32 / 716
+dat\ユーフルカ\_source.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2020/10/23 (金) 14:42:12 / 42
+dat\小森平
+	-> Directory
+dat\小森平\_source.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2020/11/14 (土) 02:49:55 / 82
+dat\小森平\coin01.mp3
+	-> File 2022/04/29 (金) 12:42:22 / 2020/09/09 (水) 21:19:33 / 11,984
+dat\小森平\coin02.mp3
+	-> File 2022/04/29 (金) 12:42:22 / 2020/09/09 (水) 21:19:34 / 11,984
+dat\小森平\coin04.mp3
+	-> File 2022/04/29 (金) 12:42:22 / 2020/09/09 (水) 21:19:34 / 10,417
+dat\小森平\poka02.mp3
+	-> File 2022/04/29 (金) 12:42:22 / 2020/11/19 (木) 05:44:01 / 7,282
+res
+	-> Directory
+res\DatStrings.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/05/30 (日) 05:26:25 / 81
+res\Map
+	-> Directory
+res\Map\Tests
+	-> Directory
+res\Map\Tests\_memo.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2022/02/26 (土) 22:07:57 / 123
+res\Map\_memo.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2020/11/16 (月) 06:06:44 / 1,100
+res\Map\t0001.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/05/30 (日) 23:09:05 / 1,149
+res\Scenario
+	-> Directory
+res\Scenario\Include
+	-> Directory
+res\Scenario\Include\Define.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/09/07 (火) 23:28:56 / 756
+res\Scenario\Include\Startup.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/09/07 (火) 20:03:15 / 334
+res\Scenario\Include\_memo.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2022/02/27 (日) 18:51:29 / 44
+res\Scenario\Start.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/09/07 (火) 20:01:34 / 429
+res\Scenario\Tests
+	-> Directory
+res\Scenario\Tests\_memo.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2022/02/27 (日) 18:37:10 / 88
+res\Scenario\Tests\イベント0001.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/09/07 (火) 20:01:40 / 17
+res\Scenario\Tests\ダミーシナリオ.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/09/07 (火) 20:01:43 / 31
+res\Scenario\Tests\テスト0001.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2022/10/01 (土) 02:19:38 / 1,914
+res\Scenario\Tests\テスト0002.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/09/07 (火) 20:02:53 / 448
+res\Scenario\Tests\テスト0003.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/09/07 (火) 20:02:58 / 96
+res\Scenario\_memo.txt
+	-> File 2022/04/29 (金) 12:42:22 / 2021/09/03 (金) 00:10:17 / 1,012

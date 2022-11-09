@@ -1,0 +1,38 @@
+; 名前空間
+
+Charlotte
+DxLibDLL
+System
+
+; 型名
+
+sbyte
+byte
+short
+ushort
+int
+uint
+long
+ulong
+char
+float
+double
+bool
+decimal
+string
+
+; 静的メンバーを多用するクラス名
+
+Array
+Console
+Directory
+DX
+File
+Math
+Path
+Enumerable
+
+; ★★★ 新しい予約語クラス名をここへ追加する。
+; 注意：ここへ追加したワードは、
+; 同名のアプリ固有のワードとそのメンバーも置き換え禁止になるため影響が大きい。
+; 積極的な追加は避けること。

@@ -1,0 +1,17 @@
+$Recycle.Bin
+$SysReset
+$WinREAgent
+Config.Msi
+Documents and Settings
+MSOCache
+PerfLogs
+Program Files
+Program Files (x86)
+ProgramData
+Recovery
+RECYCLER
+System Volume Information
+Users
+Windows
+Windows.old
+WINNT
