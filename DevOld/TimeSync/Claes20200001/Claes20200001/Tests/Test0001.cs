@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Drawing;
+using Charlotte.Commons;
+
+namespace Charlotte.Tests
+{
+	public class Test0001
+	{
+		public void Test01()
+		{
+			Console.WriteLine(TimeClient.GetTime());
+		}
+
+		public void Test02()
+		{
+			TimeAdjustment.AdjustToServerTime();
+		}
+	}
+}
