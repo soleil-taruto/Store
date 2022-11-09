@@ -7,6 +7,10 @@ using Charlotte.Commons;
 
 namespace Charlotte.Utilities
 {
+	/// <summary>
+	/// メモリブロックの暗号化・復号を行う。
+	/// memo: RingCipher.cs と RingCipherFile.cs は同じ暗号化・復号を行うのでデータ互換性がある。
+	/// </summary>
 	public class RingCipher : IDisposable
 	{
 		private AESCipher[] Transformers;

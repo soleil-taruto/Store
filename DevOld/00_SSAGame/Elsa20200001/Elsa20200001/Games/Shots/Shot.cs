@@ -15,18 +15,21 @@ namespace Charlotte.Games.Shots
 	{
 		public double X;
 		public double Y;
-		public bool FacingLeft;
+
+		/// <summary>
+		/// 攻撃力
+		/// -1 == 死亡
+		/// 0～ == 攻撃力 -- ゼロの場合、被弾モーションは実行されるけど体力が減らない。
+		/// </summary>
 		public int AttackPoint;
-		public bool 壁をすり抜ける;
+
 		public bool 敵を貫通する;
 
-		public Shot(double x, double y, bool facingLeft, int attackPoint, bool 壁をすり抜ける, bool 敵を貫通する)
+		public Shot(double x, double y, int attackPoint, bool 敵を貫通する)
 		{
 			this.X = x;
 			this.Y = y;
-			this.FacingLeft = facingLeft;
 			this.AttackPoint = attackPoint;
-			this.壁をすり抜ける = 壁をすり抜ける;
 			this.敵を貫通する = 敵を貫通する;
 		}
 
@@ -35,20 +38,21 @@ namespace Charlotte.Games.Shots
 		/// 敵に当たった場合、画面外に出た場合などこの自弾を消滅させたい場合 true をセットすること。
 		/// これにより「フレームの最後に」自弾リストから除去される。
 		/// </summary>
-		public bool DeadFlag = false;
+		public bool DeadFlag
+		{
+			set
+			{
+				if (value)
+					this.AttackPoint = -1;
+				else
+					throw null; // never
+			}
 
-		/// <summary>
-		/// 直前にクラッシュした敵
-		/// 貫通武器について、貫通中に複数回ダメージを与えないように制御する。
-		/// -- 複数の敵に同時に当たると意図通りにならないが、厳格に制御する必要は無いので、看過する。
-		/// </summary>
-		public Enemy LastCrashedEnemy = null;
-
-		/// <summary>
-		/// 今回クラッシュした敵
-		/// 当たり判定の後で LastCrashedEnemy にセットする。
-		/// </summary>
-		public Enemy CurrCrashedEnemy = null;
+			get
+			{
+				return this.AttackPoint == -1;
+			}
+		}
 
 		/// <summary>
 		/// 現在のフレームにおける当たり判定を保持する。
@@ -73,8 +77,8 @@ namespace Charlotte.Games.Shots
 		/// -- 行動・移動
 		/// -- 描画
 		/// -- Crash を設定する。-- 敵に当たらないなら設定しない。
-		/// -- 必要に応じて Game.I.Shots.Add(shot); する。-- 自弾の追加
-		/// -- 必要に応じて DeadFlag に true を設定する。または false を返す。または Kill を呼び出す。-- 自弾(自分自身)の削除
+		/// -- 必要に応じて Game.I.Shots.Add(shot); する。== 自弾の追加
+		/// -- 必要に応じて DeadFlag に true を設定する。または false を返す。または Kill を呼び出す。== 自弾(自分自身)の削除
 		/// ---- 自弾(自分以外)を削除するには otherShot.DeadFlag = true; または otherShot.Kill を呼び出す。
 		/// </summary>
 		/// <returns>列挙：この自弾は生存しているか</returns>
@@ -96,7 +100,15 @@ namespace Charlotte.Games.Shots
 		/// 何かと衝突して消滅した。
 		/// マップから離れすぎて消された場合・シナリオ的に消された場合などでは呼び出されない。
 		/// </summary>
-		protected virtual void Killed()
+		private void Killed()
+		{
+			this.P_Killed();
+		}
+
+		/// <summary>
+		/// この自弾の固有の消滅イベント
+		/// </summary>
+		protected virtual void P_Killed()
 		{
 			ShotCommon.Killed(this);
 		}

@@ -239,7 +239,7 @@ namespace Charlotte.Games
 
 					// ---- Invincible
 
-					// nop
+					// noop
 				}
 			endInvincible:
 
@@ -634,7 +634,7 @@ namespace Charlotte.Games
 					enemy is Enemy_Bボス0003
 					)
 				{
-					// nop
+					// noop
 				}
 				else
 				{

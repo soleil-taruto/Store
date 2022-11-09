@@ -14,6 +14,8 @@ namespace Charlotte
 		public DDPicture WhiteCircle = DDPictureLoaders.Standard(@"dat\General\WhiteCircle.png");
 		public DDPicture DummyScreen = DDPictureLoaders.Standard(@"dat\General\DummyScreen.png");
 
+		// ★ここまで固定 -- 持ち回り_共通 -- サンプルとしてキープ
+
 		public DDPicture Copyright = DDPictureLoaders.Standard(@"dat\Logo\Copyright.png");
 
 		public DDPicture Title = DDPictureLoaders.Standard(@"dat\run\22350006_big_p12.jpg");
@@ -25,6 +27,8 @@ namespace Charlotte
 			DDPictureLoaders.Standard(@"dat\Title\設定.png"),
 			DDPictureLoaders.Standard(@"dat\Title\終了.png"),
 		};
+
+		public DDPicture ダンジョン枠 = DDPictureLoaders.Standard(@"dat\run\ダンジョン枠.png");
 
 		// ノベルパート用システム画像
 		public DDPicture MessageFrame_Message = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\空想曲線\Messageframe_29\material\01 message\message.png");

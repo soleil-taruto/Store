@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Charlotte.GameCommons;
 using Charlotte.Commons;
+using Charlotte.GameCommons;
+using Charlotte.GameTools;
 
 namespace Charlotte.Games.Tests
 {
@@ -34,7 +35,7 @@ namespace Charlotte.Games.Tests
 			DDCurtain.SetCurtain();
 			DDEngine.FreezeInput();
 
-			DDTableMenu tableMenu = new DDTableMenu(30, 30, 24, this.WallDrawer);
+			TableMenu tableMenu = new TableMenu(30, 30, 24, this.WallDrawer);
 
 			DDEngine.FreezeInput();
 

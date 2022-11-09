@@ -63,4 +63,27 @@ function <void> Draw2(<Picture_t> picture, <double> x, <double> y, <double> a, <
 	Context.rotate(-r);
 	Context.translate(-x, -y);
 	Context.globalAlpha = 1.0;
+
+	@@_CheckHover(picture, CreateD4Rect(l, t, w, h));
+}
+
+var<Picture_t> HoveredPicture = null;
+var<Picture_t> @@_CH_CurrHoveredPicture = null;
+var<int> @@_CH_LastProcFrame = 0;
+
+function <void> @@_CheckHover(<Picture_t> picture, <D4Rect_t> pictureRect)
+{
+	if (@@_CH_LastProcFrame != ProcFrame)
+	{
+		HoveredPicture = @@_CH_CurrHoveredPicture;
+		@@_CH_CurrHoveredPicture = null;
+		@@_CH_LastProcFrame = ProcFrame;
+	}
+
+	var<D2Point_t> mousePt = CreateD2Point(GetMouseX(), GetMouseY());
+
+	if (!IsOut(mousePt, pictureRect, 0.0))
+	{
+		@@_CH_CurrHoveredPicture = picture;
+	}
 }

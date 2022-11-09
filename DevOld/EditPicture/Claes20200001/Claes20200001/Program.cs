@@ -37,7 +37,10 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { @"C:\temp", "/E", "2" }));
+			//Main4(new ArgsReader(new string[] { @"C:\temp", "/T", "0", "0" }));
+			//Main4(new ArgsReader(new string[] { @"C:\temp", "/TC", "255", "255", "255" }));
+			//Main4(new ArgsReader(new string[] { @"C:\temp", "/BC", "255", "255", "255" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -105,7 +108,7 @@ namespace Charlotte
 					Console.WriteLine("< " + file);
 					Console.WriteLine("> " + outputFile);
 
-					EditPicture(file, outputFile, ar.GetClone());
+					EditPicture(file, outputFile, ar.GetClone()); // 読み進められるよう、複製する。
 
 					Console.WriteLine("done");
 				}
@@ -127,16 +130,42 @@ namespace Charlotte
 
 					canvas = canvas.Expand(canvas.W * magnification, canvas.H * magnification, 1);
 				}
-				else if (ar.ArgIs("/TLT"))
-				{
-					ToTransparent(canvas, canvas[0, 0].WithoutAlpha());
-				}
 				else if (ar.ArgIs("/T"))
 				{
 					int x = int.Parse(ar.NextArg());
 					int y = int.Parse(ar.NextArg());
 
 					ToTransparent(canvas, canvas[x, y].WithoutAlpha());
+				}
+				else if (ar.ArgIs("/TC"))
+				{
+					int r = int.Parse(ar.NextArg());
+					int g = int.Parse(ar.NextArg());
+					int b = int.Parse(ar.NextArg());
+
+					if (
+						r < 0 || 255 < r ||
+						g < 0 || 255 < g ||
+						b < 0 || 255 < b
+						)
+						throw new Exception("不正な色");
+
+					ToTransparent(canvas, new I3Color(r, g, b));
+				}
+				else if (ar.ArgIs("/BC"))
+				{
+					int r = int.Parse(ar.NextArg());
+					int g = int.Parse(ar.NextArg());
+					int b = int.Parse(ar.NextArg());
+
+					if (
+						r < 0 || 255 < r ||
+						g < 0 || 255 < g ||
+						b < 0 || 255 < b
+						)
+						throw new Exception("不正な色");
+
+					canvas = ToUntransparent(canvas, new I3Color(r, g, b));
 				}
 				else
 				{
@@ -156,10 +185,20 @@ namespace Charlotte
 
 					if (Common.IsSame(color, transTargColor))
 					{
-						canvas[x, y] = color.WithAlpha(0);
+						canvas[x, y] = color.WithAlpha(0); // 透明にする。
 					}
 				}
 			}
+		}
+
+		private Canvas ToUntransparent(Canvas canvas, I3Color bgColor)
+		{
+			Canvas dest = new Canvas(canvas.W, canvas.H);
+
+			dest.Fill(bgColor.WithAlpha());
+			dest.DrawImage(canvas, 0, 0, true);
+
+			return dest;
 		}
 	}
 }

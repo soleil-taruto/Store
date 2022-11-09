@@ -100,33 +100,35 @@ namespace Charlotte.Novels.Surfaces
 			if (command == "画像")
 			{
 				this.Act.AddOnce(() => this.Layers.Add(new LayerInfo() { ImageFile = arguments[c++] }));
+				return;
 			}
-			else if (command == "スライド")
+			if (command == "スライド")
 			{
 				if (arguments.Length == 1)
 				{
 					this.Act.AddOnce(() => this.前面.DestSlideRate = double.Parse(arguments[c++]));
+					return;
 				}
-				else if (arguments.Length == 2)
+				if (arguments.Length == 2)
 				{
 					this.Act.AddOnce(() =>
 					{
 						this.前面.SlideRate = double.Parse(arguments[c++]);
 						this.前面.DestSlideRate = double.Parse(arguments[c++]);
 					});
+
+					return;
 				}
-				else
-				{
-					throw new DDError();
-				}
+				throw new DDError(); // Bad arguments
 			}
-			else if (command == "画像フェードイン")
+			if (command == "画像フェードイン")
 			{
 				if (arguments.Length == 1)
 				{
 					this.Act.Add(SCommon.Supplier(this.画像フェードイン(() => new LayerInfo() { ImageFile = arguments[c++] })));
+					return;
 				}
-				else if (arguments.Length == 3)
+				if (arguments.Length == 3)
 				{
 					this.Act.Add(SCommon.Supplier(this.画像フェードイン(() =>
 					{
@@ -139,20 +141,18 @@ namespace Charlotte.Novels.Surfaces
 						return layer;
 					}
 					)));
+
+					return;
 				}
-				else
-				{
-					throw new DDError();
-				}
+				throw new DDError(); // Bad arguments
 			}
-			else if (command == "フェードアウト")
+			if (command == "フェードアウト")
 			{
 				this.Act.Add(SCommon.Supplier(this.フェードアウト()));
+				return;
 			}
-			else
-			{
-				throw new DDError();
-			}
+			ProcMain.WriteLog(command);
+			throw new DDError(); // Bad command
 		}
 
 		private IEnumerable<bool> 画像フェードイン(Func<LayerInfo> createLayer)

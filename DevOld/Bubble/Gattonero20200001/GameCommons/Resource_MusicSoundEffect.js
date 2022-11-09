@@ -11,27 +11,83 @@ function <Audio> @@_Load(<string> url)
 	LOGPOS();
 	Loading++;
 
-	var<Audio> audio = new Audio(url);
+	var<map> m = {};
 
-	var<Action> loaded = function()
+	m.Handle = new Audio(url);
+	m.TryLoadCount = 0;
+
+	if (DEBUG)
 	{
-		audio.removeEventListener("canplaythrough", loaded);
-		audio.removeEventListener("error", errorLoad);
+		m.Handle.load();
+		Loading--;
+	}
+	else
+	{
+		@@_Standby(m);
+	}
+	return m.Handle;
+}
+
+function <void> @@_Standby(<map> m)
+{
+	setTimeout(
+		function()
+		{
+			@@_TryLoad(m);
+		},
+		100
+		);
+}
+
+var<boolean> @@_Loading = false;
+
+function <void> @@_TryLoad(<map> m)
+{
+	if (@@_Loading)
+	{
+		@@_Standby(m);
+		return;
+	}
+	@@_Loading = true;
+
+	m.Loaded = function()
+	{
+		m.Handle.removeEventListener("canplaythrough", m.Loaded);
+		m.Handle.removeEventListener("error", m.Errored);
+
+		m.Loaded = null;
+		m.Errored = null;
 
 		LOGPOS();
 		Loading--;
+		@@_Loading = false;
 	};
 
-	var<Action> errorLoad = function()
+	m.Errored = function()
 	{
-		error();
+		m.Handle.removeEventListener("canplaythrough", m.Loaded);
+		m.Handle.removeEventListener("error", m.Errored);
+
+		m.Loaded = null;
+		m.Errored = null;
+
+		if (m.TryLoadCount < 10) // rough limit
+		{
+			LOGPOS();
+			@@_Standby(m);
+			@@_Loading = false;
+		}
+		else
+		{
+			LOGPOS();
+			error();
+		}
 	};
 
-	audio.addEventListener("canplaythrough", loaded);
-	audio.addEventListener("error", errorLoad);
-	audio.load();
-
-	return audio;
+	m.Handle.addEventListener("canplaythrough", m.Loaded);
+	m.Handle.addEventListener("error", m.Errored);
+	m.Handle.load();
+	m.TryLoadCount++;
 }
 
 /@(ASTR)

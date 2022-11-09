@@ -2,24 +2,40 @@
 	効果音再生
 */
 
-var<Audio[]> @@_Handles = [];
+var<SE_t[]> @@_SEBuff = [];
 
 function <void> SE(<SE_t> se)
 {
-	var handle = se.Handles[se.Index];
+	// 重複チェック
+	{
+		var<int> count = 0;
 
-	@@_Handles.push(handle);
+		for (var<SE_t> elem_se of @@_SEBuff)
+		{
+			if (elem_se == se)
+			{
+				count++;
 
-	se.Index++;
-	se.Index %= 3;
+				if (2 <= count)
+				{
+					return;
+				}
+			}
+		}
+	}
+
+	@@_SEBuff.push(se);
 }
 
 function <void> @(UNQN)_EACH()
 {
-	if (ProcFrame % 2 == 0 && 1 <= @@_Handles.length)
+	if (ProcFrame % 2 == 0 && 1 <= @@_SEBuff.length)
 	{
-		var handle = @@_Handles.shift();
+		var<SE_t> se = @@_SEBuff.shift();
 
-		handle.play();
+		se.Handles[se.Index].play();
+
+		se.Index++;
+		se.Index %= 5;
 	}
 }

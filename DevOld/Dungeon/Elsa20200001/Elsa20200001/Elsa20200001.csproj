@@ -54,9 +54,8 @@
     <ApplicationIcon>game_app.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DxLibDotNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Dat\DxLibDotNet\DxLibDotNet3_20f\DxLibDotNet.dll</HintPath>
+    <Reference Include="DxLibDotNet">
+      <HintPath>C:\Dat\DxLibDotNet\DxLibDotNet3_23\DxLibDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,6 +72,7 @@
     <Compile Include="Common.cs" />
     <Compile Include="Commons\ArgsReader.cs" />
     <Compile Include="Commons\CsvFileReader.cs" />
+    <Compile Include="Commons\CsvFileWriter.cs" />
     <Compile Include="Commons\D2Point.cs" />
     <Compile Include="Commons\D2Size.cs" />
     <Compile Include="Commons\D3Color.cs" />
@@ -148,6 +148,7 @@
     <Compile Include="GameCommons\DDWin32.cs" />
     <Compile Include="GameCommons\MaskGZDataUtils\MaskGZDataEng.cs" />
     <Compile Include="GameProgressMasters\GameProgressMaster.cs" />
+    <Compile Include="Games\Battles\Battle.cs" />
     <Compile Include="Games\Confirm.cs" />
     <Compile Include="Games\Dungeon.cs" />
     <Compile Include="Games\Effects.cs" />
@@ -271,7 +272,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY C:\Dat\DxLibDotNet\DxLibDotNet3_20f\DxLib.dll $(TargetDir).
+    <PostBuildEvent>COPY C:\Dat\DxLibDotNet\DxLibDotNet3_23\DxLib.dll $(TargetDir).
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

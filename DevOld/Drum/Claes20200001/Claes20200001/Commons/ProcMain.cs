@@ -7,6 +7,7 @@ using System.Threading;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using Microsoft.Win32;
 
@@ -14,8 +15,8 @@ namespace Charlotte.Commons
 {
 	public static class ProcMain
 	{
-		public const string APP_IDENT = "{f5194fed-ab7b-4ab6-9034-f85a358a99c7}"; // アプリ毎に変更する。
-		public const string APP_TITLE = "Claes20200001";
+		public const string APP_IDENT = "{c9e92c41-52cf-44fe-8c46-b5139531e666}";
+		public const string APP_TITLE = "APP-20200001";
 
 		public static string SelfFile;
 		public static string SelfDir;
@@ -44,10 +45,13 @@ namespace Charlotte.Commons
 			{
 				WriteLog(e);
 
-				//MessageBox.Show("" + e, Path.GetFileNameWithoutExtension(SelfFile ?? APP_TITLE) + " / Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				// ここに到達する場合は想定外の致命的なエラーである。-> 何か出すべき。
+				// ウィンドウ非表示で実行されているかもしれないのでメッセージダイアログを出す。
 
-				Console.WriteLine("Press ENTER key. (Error termination)");
-				Console.ReadLine();
+				MessageBox.Show("" + e, APP_TITLE + " / Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				//Console.WriteLine("Press ENTER key. (Error termination)");
+				//Console.ReadLine();
 			}
 		}
 
@@ -62,11 +66,23 @@ namespace Charlotte.Commons
 			SelfFile = Assembly.GetEntryAssembly().Location;
 			SelfDir = Path.GetDirectoryName(SelfFile);
 
-			Mutex procMutex = new Mutex(false, APP_IDENT);
+			string procMutexName;
+
+			using (SHA512 sha512 = SHA512.Create())
+			{
+				string s = APP_IDENT + GetPETimeDateStamp(SelfFile).ToString();
+				byte[] b = Encoding.UTF8.GetBytes(s);
+				byte[] bh = sha512.ComputeHash(b);
+				string h = string.Join("", bh.Select(bChr => bChr.ToString("x02")));
+
+				procMutexName = h;
+			}
+
+			Mutex procMutex = new Mutex(false, procMutexName);
 
 			if (procMutex.WaitOne(0))
 			{
-				if (GlobalProcMtx.Create(APP_IDENT, APP_TITLE))
+				if (GlobalProcMtx.Create(procMutexName, APP_TITLE))
 				{
 					CheckSelfFile();
 					Directory.SetCurrentDirectory(SelfDir);
@@ -278,6 +294,48 @@ namespace Charlotte.Commons
 
 				ProcMtx = null;
 			}
+		}
+
+		private static uint GetPETimeDateStamp(string file)
+		{
+			using (FileStream reader = new FileStream(file, FileMode.Open, FileAccess.Read))
+			{
+				if (F_ReadByte(reader) != 'M') throw null;
+				if (F_ReadByte(reader) != 'Z') throw null;
+
+				reader.Seek(0x3c, SeekOrigin.Begin);
+
+				uint peHedPos = (uint)F_ReadByte(reader);
+				peHedPos |= (uint)F_ReadByte(reader) << 8;
+				peHedPos |= (uint)F_ReadByte(reader) << 16;
+				peHedPos |= (uint)F_ReadByte(reader) << 24;
+
+				reader.Seek(peHedPos, SeekOrigin.Begin);
+
+				if (F_ReadByte(reader) != 'P') throw null;
+				if (F_ReadByte(reader) != 'E') throw null;
+				if (F_ReadByte(reader) != 0x00) throw null;
+				if (F_ReadByte(reader) != 0x00) throw null;
+
+				reader.Seek(0x04, SeekOrigin.Current);
+
+				uint timeDateStamp = (uint)F_ReadByte(reader);
+				timeDateStamp |= (uint)F_ReadByte(reader) << 8;
+				timeDateStamp |= (uint)F_ReadByte(reader) << 16;
+				timeDateStamp |= (uint)F_ReadByte(reader) << 24;
+
+				return timeDateStamp;
+			}
+		}
+
+		private static int F_ReadByte(FileStream reader)
+		{
+			int bChr = reader.ReadByte();
+
+			if (bChr == -1) // ? EOF
+				throw new Exception("Read EOF");
+
+			return bChr;
 		}
 
 		public static bool DEBUG

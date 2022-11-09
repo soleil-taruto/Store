@@ -57,15 +57,15 @@ namespace Charlotte.GameCommons
 
 		// カメラ位置
 		//
-		// カメラ位置を変更する場合、フレームループ内で描画を行う前に Camera を更新し、その直後に以下のとおり ICamera を更新すること。
-		// DDGround.ICamera.X = DoubleTools.ToInt(DDGround.Camera.X);
-		// DDGround.ICamera.Y = DoubleTools.ToInt(DDGround.Camera.Y);
+		// カメラ位置を変更する場合、フレームループ内で描画を行う前に RealCamera を更新し、その直後に以下のとおり Camera を更新すること。
+		// DDGround.Camera.X = DoubleTools.ToInt(DDGround.RealCamera.X);
+		// DDGround.Camera.Y = DoubleTools.ToInt(DDGround.RealCamera.Y);
 		//
-		// カメラ位置に影響を受ける画像の描画には ICamera の座標を使うこと。
-		// 例：DDDraw.DrawCenter(picture, drawX - ICamera.X, drawY - ICamera.Y);
+		// カメラ位置に影響を受ける画像の描画には Camera の座標を使うこと。
+		// 例：DDDraw.DrawCenter(picture, drawX - Camera.X, drawY - Camera.Y);
 		//
-		public static D2Point Camera = new D2Point();
-		public static I2Point ICamera = new I2Point();
+		public static D2Point RealCamera = new D2Point();
+		public static I2Point Camera = new I2Point();
 
 		public static void INIT()
 		{
@@ -94,10 +94,10 @@ namespace Charlotte.GameCommons
 			DDInput.B.KeyId = DX.KEY_INPUT_X;
 			DDInput.C.KeyId = DX.KEY_INPUT_C;
 			DDInput.D.KeyId = DX.KEY_INPUT_V;
-			DDInput.E.KeyId = DX.KEY_INPUT_A;
-			DDInput.F.KeyId = DX.KEY_INPUT_S;
-			DDInput.L.KeyId = DX.KEY_INPUT_D;
-			DDInput.R.KeyId = DX.KEY_INPUT_F;
+			DDInput.E.KeyId = DX.KEY_INPUT_B;
+			DDInput.F.KeyId = DX.KEY_INPUT_N;
+			DDInput.L.KeyId = DX.KEY_INPUT_LCONTROL;
+			DDInput.R.KeyId = DX.KEY_INPUT_LSHIFT;
 			DDInput.PAUSE.KeyId = DX.KEY_INPUT_SPACE;
 			DDInput.START.KeyId = DX.KEY_INPUT_RETURN;
 

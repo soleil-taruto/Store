@@ -378,7 +378,7 @@ namespace Charlotte.Games
 
 					// ----
 
-					// nop
+					// noop
 				}
 			endInvincible:
 
@@ -731,7 +731,7 @@ namespace Charlotte.Games
 
 				if (cell.IsDefault)
 				{
-					// nop
+					// noop
 				}
 				else if (1 <= DDKey.GetInput(DX.KEY_INPUT_LSHIFT) && 1 <= DDKey.GetInput(DX.KEY_INPUT_LCONTROL)) // 左シフト・コントロール押下 -> 塗り潰し_L / 塗り潰し_R
 				{

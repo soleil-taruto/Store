@@ -23,7 +23,7 @@ function <void> Play(<Music> music)
 	{
 		if (@@_State == 1) // ? 再生中
 		{
-			Fadeout(60);
+			Fadeout();
 		}
 		@@_NextMusic = music;
 		return;
@@ -89,8 +89,14 @@ function <void> @(UNQN)_EACH()
 }
 
 // フェードアウト
+function <void> Fadeout()
+{
+	Fadeout_F(30);
+}
+
+// フェードアウト
 // frame: 1～
-function <void> Fadeout(<int> frame)
+function <void> Fadeout_F(<int> frame)
 {
 	if (frame < 1 || !Number.isInteger(frame))
 	{

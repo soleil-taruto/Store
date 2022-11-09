@@ -156,7 +156,7 @@ function <double> Approach(<double> value, <double> dest, <double> rate)
 			{ Numer: 29, Denom: 30, Rem: 1, Rate: 29 / 30, RemRate: 1 / 30 }
 			{ Numer: 30, Denom: 30, Rem: 0, Rate: 1.0,     RemRate: 0.0    }
 */
-function* <generator_Scene_t> CreateScene(<int> frameMax)
+function* <Scene_t[]> CreateScene(<int> frameMax)
 {
 	for (var<int> frame = 0; frame <= frameMax; frame++)
 	{

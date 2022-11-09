@@ -12,12 +12,6 @@ namespace Charlotte.Games.Attacks
 	/// </summary>
 	public abstract class Attack
 	{
-		/// <summary>
-		/// 攻撃中は無敵であるかどうかを返す。
-		/// </summary>
-		/// <returns>攻撃中は無敵であるか</returns>
-		public abstract bool IsInvincibleMode();
-
 		private Func<bool> _eachFrame = null;
 
 		public bool EachFrame()

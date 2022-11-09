@@ -5,6 +5,7 @@ using System.Text;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.GameCommons;
+using Charlotte.GameTools;
 using Charlotte.Games;
 using Charlotte.Novels.Surfaces;
 
@@ -428,7 +429,7 @@ namespace Charlotte.Novels
 			DDMain.KeepMainScreen();
 			SCommon.Swap(ref DDGround.KeptMainScreen, ref SystemMenu_KeptMainScreen); // 使用後は Unload すること。
 
-			DDSimpleMenu simpleMenu = new DDSimpleMenu()
+			SimpleMenu simpleMenu = new SimpleMenu()
 			{
 				BorderColor = new I3Color(0, 64, 0),
 				WallDrawer = () =>
@@ -447,6 +448,7 @@ namespace Charlotte.Novels
 			for (; ; )
 			{
 				selectIndex = simpleMenu.Perform(
+					selectIndex,
 					100,
 					180,
 					50,
@@ -457,16 +459,14 @@ namespace Charlotte.Novels
 						"設定",
 						"タイトルに戻る",
 						"ゲームに戻る",
-					},
-					selectIndex
-					);
+					});
 
 				switch (selectIndex)
 				{
 					case 0:
 						using (new SettingMenu()
 						{
-							SimpleMenu = new DDSimpleMenu()
+							SimpleMenu = new SimpleMenu()
 							{
 								BorderColor = new I3Color(0, 64, 0),
 								WallDrawer = () =>

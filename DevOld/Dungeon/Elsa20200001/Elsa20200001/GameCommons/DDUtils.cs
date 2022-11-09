@@ -55,7 +55,7 @@ namespace Charlotte.GameCommons
 
 		public static void Noop(params object[] dummyPrms)
 		{
-			// nop
+			// noop
 		}
 
 		public static T FastDesertElement<T>(List<T> list, Predicate<T> match, T defval = default(T))
@@ -376,8 +376,8 @@ namespace Charlotte.GameCommons
 		/// <summary>
 		/// (0, 0), (0.5, 1), (1, 0) を通る放物線
 		/// </summary>
-		/// <param name="x">x軸の値</param>
-		/// <returns>y軸の値</returns>
+		/// <param name="x">X軸の値</param>
+		/// <returns>Y軸の値</returns>
 		public static double Parabola(double x)
 		{
 			return (x - x * x) * 4.0;
@@ -528,27 +528,19 @@ namespace Charlotte.GameCommons
 			return 0;
 		}
 
-		public static Func<bool> Scripter(IEnumerable<int> script)
+		/// <summary>
+		/// スクリプト向け列挙フィルタ
+		/// </summary>
+		/// <param name="script">スクリプト</param>
+		/// <returns>実行状態のスクリプト</returns>
+		public static IEnumerable<bool> Scripter(IEnumerable<int> script)
 		{
-			return SCommon.Supplier(E_Scripter(SCommon.Supplier(script)));
-		}
-
-		private static IEnumerable<bool> E_Scripter(Func<int> a_script)
-		{
-			for (; ; )
+			foreach (int waitCount in script)
 			{
-				int wait = a_script();
+				if (waitCount < 0)
+					throw new Exception("Bad waitCount: " + waitCount);
 
-				if (
-					wait < 0 ||
-					SCommon.IMAX < wait // ? 大きすぎる
-					)
-					throw new DDError("Bad wait: " + wait);
-
-				if (wait == 0) // ? default(int) -- スクリプト終了
-					break;
-
-				for (int c = 0; c < wait; c++)
+				for (int c = 0; c < waitCount; c++)
 					yield return true;
 			}
 		}

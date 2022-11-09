@@ -53,77 +53,32 @@ namespace Charlotte
 
 		private void Main5()
 		{
-			string resInputFiles = @"
-
-C:\home\旧画像\壁紙\ゆるゆり大(ファイルサイズ大)\yande.re_206181.jpg
-C:\home\旧画像\壁紙\ゆるゆり大(ファイルサイズ大)\yande.re_206182.jpg
-C:\home\旧画像\壁紙\ゆるゆり大(ファイルサイズ大)\yande.re_206184.jpg
-C:\home\旧画像\壁紙\ゆるゆり大(ファイルサイズ大)\yande.re_206185.jpg
-C:\home\旧画像\壁紙\ゆるゆり大(ファイルサイズ大)\yande.re_206186.jpg
-C:\home\旧画像\壁紙\ゆるゆり大(ファイルサイズ大)\yande.re_206187.jpg
-C:\home\旧画像\壁紙\ゆるゆり大(ファイルサイズ大)\yande.re_206188.jpg
-C:\home\旧画像\壁紙\ゆるゆり大(ファイルサイズ大)\yande.re_206189.jpg
-
-C:\home\旧画像\壁紙\ゆるゆり大(ファイルサイズ小)\1554822098.jpg
-
-C:\home\旧画像\壁紙\三人組yandere\yande.re_268445.jpg
-C:\home\旧画像\壁紙\三人組yandere\yande.re_268446.jpg
-C:\home\旧画像\壁紙\三人組yandere\yande.re_329013.jpg
-
-C:\home\旧画像\壁紙\三人組yandere\yande.re_268450.jpg
-C:\home\旧画像\壁紙\三人組yandere\yande.re_268451.jpg
-C:\home\旧画像\壁紙\三人組yandere\yande.re_329015.jpg
-
-C:\home\旧画像\壁紙\三人組yandere\yande.re_268452.jpg
-C:\home\旧画像\壁紙\三人組yandere\yande.re_268453.jpg
-C:\home\旧画像\壁紙\三人組yandere\yande.re_329014.jpg
-
-C:\home\旧画像\壁紙\三人組大\yande.re_268447.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_268448.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_268449.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_268454.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_268455.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_329009.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_329010.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_329011.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_329012.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_329019.jpg
-C:\home\旧画像\壁紙\三人組大\yande.re_329020.jpg
-
-C:\home\旧画像\壁紙\ふたごちゃん大\yande.re_48162.jpg
-C:\home\旧画像\壁紙\ふたごちゃん大\yande.re_48163.jpg
-C:\home\旧画像\壁紙\ふたごちゃん大\yande.re_48164.jpg
-C:\home\旧画像\壁紙\ふたごちゃん大\yande.re_48165.jpg
-C:\home\旧画像\壁紙\ふたごちゃん大\yande.re_48167.jpg
-C:\home\旧画像\壁紙\ふたごちゃん大\yande.re_48169.jpg
-
-C:\home\旧画像\壁紙\ふたごちゃん中\uki127.jpg
-C:\home\旧画像\壁紙\ふたごちゃん中\uki128.jpg
-C:\home\旧画像\壁紙\ふたごちゃん中\uki129.jpg
-C:\home\旧画像\壁紙\ふたごちゃん中\uki131.jpg
-C:\home\旧画像\壁紙\ふたごちゃん中\uki132.jpg
-
-";
-
-			string[] inputFiles = SCommon.TextToLines(resInputFiles)
-				.Select(v => v.Trim())
-				.Where(v => v != "")
-				.ToArray();
+			var inputFileInfos = new[]
+			{
+				new { FilePath = @"C:\home\旧画像\Ex0EF79UUAIRHvg.jpg", Bokashi = 10 },
+				new { FilePath = @"C:\home\旧画像\dcb2114265be35ee35485838584c76e8ffff7e22.jpg", Bokashi = 5 },
+				new { FilePath = @"C:\home\旧画像\tumblr_80a2496b574e14abaab4506f3f7bad50_336cb80d_2048.jpg", Bokashi = 0 },
+				new { FilePath = @"C:\home\旧画像\tumblr_2296ea2ed3503eea337113f8663b4b7c_0f28c736_1280.png", Bokashi = 10 },
+				new { FilePath = @"C:\home\旧画像\壁紙\83361169_p0.jpg", Bokashi = 0 },
+				new { FilePath = @"C:\home\旧画像\壁紙\81769967_p0.png", Bokashi = 0 },
+			};
 
 			string outputDir = Common.GetOutputDir();
 			string outputDir_w1920 = Path.Combine(outputDir, "1920x1080");
-			string outputDir_w1366 = Path.Combine(outputDir, "1366x768");
+			//string outputDir_w1366 = Path.Combine(outputDir, "1366x768");
 
 			SCommon.CreateDir(outputDir_w1920);
-			SCommon.CreateDir(outputDir_w1366);
+			//SCommon.CreateDir(outputDir_w1366);
 
-			for (int index = 0; index < inputFiles.Length; index++)
+			for (int index = 0; index < inputFileInfos.Length; index++)
 			{
-				string inputFile = inputFiles[index];
-				string outputLocalFile = "studio_sdt_" + (index + 1).ToString("D4") + ".png";
+				var inputFileInfo = inputFileInfos[index];
+				string inputFile = inputFileInfo.FilePath;
+				string outputLocalFile = "wall_20220222_" + (index + 1).ToString("D4") + ".png";
+				int bokashiLevel = inputFileInfo.Bokashi;
 
-				MakeWallPaper(inputFile, Path.Combine(outputDir_w1920, outputLocalFile), 1920, 1080);
-				MakeWallPaper(inputFile, Path.Combine(outputDir_w1366, outputLocalFile), 1366, 768);
+				MakeWallPaper(inputFile, Path.Combine(outputDir_w1920, outputLocalFile), 1920, 1080, bokashiLevel);
+				//MakeWallPaper(inputFile, Path.Combine(outputDir_w1366, outputLocalFile), 1366, 768, bokashiLevel);
 			}
 		}
 
@@ -134,7 +89,7 @@ C:\home\旧画像\壁紙\ふたごちゃん中\uki132.jpg
 		/// <param name="outputFile">出力ファイル</param>
 		/// <param name="w">作成する壁紙の幅</param>
 		/// <param name="h">作成する壁紙の高さ</param>
-		private void MakeWallPaper(string inputFile, string outputFile, int w, int h)
+		private void MakeWallPaper(string inputFile, string outputFile, int w, int h, int bokashiLevel)
 		{
 			Console.WriteLine("< " + inputFile);
 			Console.WriteLine("> " + outputFile);
@@ -152,6 +107,7 @@ C:\home\旧画像\壁紙\ふたごちゃん中\uki132.jpg
 
 			canvas = canvas.Expand(exterior.W, exterior.H);
 			canvas = canvas.SubRect(new I4Rect((canvas.W - w) / 2, (canvas.H - h) / 2, w, h));
+			canvas.ぼかし(bokashiLevel);
 			canvas.Filter(dot => { dot.R /= 2; dot.G /= 2; dot.B /= 2; return dot; }); // 暗くする。
 
 			canvas.DrawImage(surface, (w - surface.W) / 2, (h - surface.H) / 2, false);

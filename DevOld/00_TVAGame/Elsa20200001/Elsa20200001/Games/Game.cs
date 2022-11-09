@@ -42,8 +42,8 @@ namespace Charlotte.Games
 			public bool DIR_4 = false;
 			public bool DIR_6 = false;
 			public bool DIR_8 = false;
-			public bool Slow = false;
 			public bool Fast = false;
+			public bool Slow = false;
 			public bool Attack = false;
 			//public bool 武器切り替え = false; // 直接 this.Player.選択武器 を変更した方が早い
 		}
@@ -63,6 +63,7 @@ namespace Charlotte.Games
 		public bool RequestReturnToTitleMenu = false;
 
 		public DDTaskList Tasks = new DDTaskList();
+		public DDActionList FrontActions = new DDActionList(true);
 
 		public void Perform()
 		{
@@ -197,19 +198,25 @@ namespace Charlotte.Games
 						camSlide = true;
 					}
 
-					bool slow = !damageOrUID && 1 <= DDInput.A.GetInput() || this.PlayerHacker.Slow;
-					bool fast = !damageOrUID && 1 <= DDInput.R.GetInput() || this.PlayerHacker.Fast;
+					bool fast =
+						!damageOrUID && 1 <= DDInput.R.GetInput() || this.PlayerHacker.Fast;
+					bool slow =
+						!damageOrUID && 1 <= DDInput.A.GetInput() || this.PlayerHacker.Slow;
+					bool attack =
+						!damageOrUID && 1 <= DDInput.B.GetInput() || this.PlayerHacker.Attack;
+					bool changeWeapon =
+						!damageOrUID && DDInput.C.GetInput() == 1;
 
 					if (Ground.I.FastReverseMode)
 						fast = !fast;
 
 					double speed = GameConsts.PLAYER_SPEED;
 
-					if (slow)
-						speed = GameConsts.PLAYER_SLOW_SPEED;
-
 					if (fast)
-						speed = GameConsts.PLAYER_FAST_SPEED;
+						speed *= GameConsts.PLAYER_FAST_SPEED_RATE;
+
+					if (slow)
+						speed *= GameConsts.PLAYER_SLOW_SPEED_RATE;
 
 					double nanameSpeed = speed / Consts.ROOT_OF_2;
 
@@ -257,7 +264,7 @@ namespace Charlotte.Games
 						default:
 							throw null; // never
 					}
-					if (dir != 5 && !slow)
+					if (dir != 5 && !slow && !attack)
 						this.Player.FaceDirection = dir;
 
 					if (dir != 5)
@@ -271,16 +278,12 @@ namespace Charlotte.Games
 						this.Player.Y = SCommon.ToInt(this.Player.Y);
 					}
 
-					bool attack = !damageOrUID && 1 <= DDInput.B.GetInput() || this.PlayerHacker.Attack;
-
 					if (attack)
 						this.Player.AttackFrame++;
 					else
 						this.Player.AttackFrame = 0;
 
-					bool 武器切り替え = !damageOrUID && DDInput.C.GetInput() == 1;
-
-					if (武器切り替え)
+					if (changeWeapon)
 						this.Player.選択武器 = (ShotCatalog.武器_e)(((int)this.Player.選択武器 + 1) % ShotCatalog.武器_e_Names.Length);
 				}
 
@@ -465,6 +468,7 @@ namespace Charlotte.Games
 				}
 
 				this.Tasks.ExecuteAllTask();
+				this.FrontActions.ExecuteAllAction();
 				this.DrawFront();
 
 				if (this.当たり判定表示)
@@ -1201,6 +1205,11 @@ namespace Charlotte.Games
 
 		private void ReloadEnemies()
 		{
+			// 敵をクリアする前にちゃんと殺しておく。
+			// -- 敵の死亡をモニタして終了(自滅)するタスクのため -- 例：Enemy_B1001.E_AttackTask
+			foreach (Enemy enemy in this.Enemies.Iterate())
+				enemy.DeadFlag = true;
+
 			this.Enemies.Clear();
 
 			for (int x = 0; x < this.Map.W; x++)

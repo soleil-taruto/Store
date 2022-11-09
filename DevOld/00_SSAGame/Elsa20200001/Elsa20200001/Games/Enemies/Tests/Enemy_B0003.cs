@@ -50,8 +50,8 @@ namespace Charlotte.Games.Enemies.Tests
 
 				DDDraw.DrawCenter(
 					Ground.I.Picture.Enemy_B0003,
-					this.X - DDGround.ICamera.X + xBure,
-					this.Y - DDGround.ICamera.Y + yBure
+					this.X - DDGround.Camera.X + xBure,
+					this.Y - DDGround.Camera.Y + yBure
 					);
 
 				this.Crash = DDCrashUtils.Circle(new D2Point(this.X, this.Y), 50.0);

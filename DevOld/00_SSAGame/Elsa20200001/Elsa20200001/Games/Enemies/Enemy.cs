@@ -16,7 +16,7 @@ namespace Charlotte.Games.Enemies
 		// Game.I.ReloadEnemies() からロードされた場合、初期位置として「配置されたマップセルの中心座標」が与えられる。
 
 		// this.X, this.Y はマップの座標(マップの左上を0,0とする)
-		// -- 描画する際は DDGround.ICamera.X, DDGround.ICamera.Y をそれぞれ減じること。
+		// -- 描画する際は DDGround.Camera.X, DDGround.Camera.Y をそれぞれ減じること。
 
 		// プレイヤーに撃破されない(自弾に当たらない)敵を作る場合 HP == 0 にすること。
 		// -- アイテム・敵弾など
@@ -36,7 +36,7 @@ namespace Charlotte.Games.Enemies
 
 		/// <summary>
 		/// 攻撃力
-		/// 1～
+		/// 0～ == 攻撃力 -- ゼロの場合、被弾モーションは実行されるけど体力が減らない。
 		/// </summary>
 		public int AttackPoint;
 
@@ -116,20 +116,23 @@ namespace Charlotte.Games.Enemies
 		/// <summary>
 		/// 被弾した。
 		/// 体力の減少などは呼び出し側でやっている。
+		/// -- 自弾の攻撃力は既に減じられていることに注意！
 		/// </summary>
 		/// <param name="shot">この敵が被弾したプレイヤーの弾</param>
-		public void Damaged(Shot shot)
+		/// <param name="damagePoint">削られた体力</param>
+		public void Damaged(Shot shot, int damagePoint)
 		{
-			this.P_Damaged(shot);
+			this.P_Damaged(shot, damagePoint);
 		}
 
 		/// <summary>
 		/// この敵の固有の被弾イベント
 		/// </summary>
 		/// <param name="shot">この敵が被弾したプレイヤーの弾</param>
-		protected virtual void P_Damaged(Shot shot)
+		/// <param name="damagePoint">削られた体力</param>
+		protected virtual void P_Damaged(Shot shot, int damagePoint)
 		{
-			EnemyCommon.Damaged(this, shot);
+			EnemyCommon.Damaged(this, shot, damagePoint);
 		}
 
 		/// <summary>
@@ -137,12 +140,13 @@ namespace Charlotte.Games.Enemies
 		/// 注意：HP を減らして -1 になったとき Kill を呼んでも(DeadFlag == true になるため) Killed は実行されない！
 		/// -- HP == -1 の可能性がある場合は HP = 0; を忘れずに！
 		/// </summary>
-		public void Kill()
+		/// <param name="destroyed">プレイヤー等(の攻撃行動)によって撃破されたか</param>
+		public void Kill(bool destroyed = false)
 		{
 			if (!this.DeadFlag)
 			{
 				this.DeadFlag = true;
-				this.Killed();
+				this.Killed(destroyed);
 			}
 		}
 
@@ -150,17 +154,19 @@ namespace Charlotte.Games.Enemies
 		/// 撃破されて消滅した。
 		/// マップから離れすぎて消された場合・シナリオ的に消された場合などでは呼び出されない。
 		/// </summary>
-		private void Killed()
+		/// <param name="destroyed">プレイヤー等(の攻撃行動)によって撃破されたか</param>
+		private void Killed(bool destroyed)
 		{
-			this.P_Killed();
+			this.P_Killed(destroyed);
 		}
 
 		/// <summary>
 		/// この敵の固有の消滅イベント
 		/// </summary>
-		protected virtual void P_Killed()
+		/// <param name="destroyed">プレイヤー等(の攻撃行動)によって撃破されたか</param>
+		protected virtual void P_Killed(bool destroyed)
 		{
-			EnemyCommon.Killed(this);
+			EnemyCommon.Killed(this, destroyed);
 		}
 	}
 }

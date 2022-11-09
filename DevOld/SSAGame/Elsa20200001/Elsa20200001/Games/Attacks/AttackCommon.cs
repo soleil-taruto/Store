@@ -140,7 +140,7 @@ namespace Charlotte.Games.Attacks
 
 			if (flag == 3) // 左右両方
 			{
-				// nop
+				// noop
 			}
 			else if (flag == 1) // 左側面
 			{
@@ -152,7 +152,7 @@ namespace Charlotte.Games.Attacks
 			}
 			else if (flag == 0) // なし
 			{
-				// nop
+				// noop
 			}
 			else
 			{

@@ -48,8 +48,9 @@ namespace Charlotte
 
 		private void MainWin_Shown(object sender, EventArgs e)
 		{
-			this.EM.StartTimer();
+			Common.PostShown(this);
 			this.BtnMkPwDig.Focus();
+			this.EM.StartTimer();
 		}
 
 		private void MainWin_FormClosed(object sender, FormClosedEventArgs e)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Charlotte.GameCommons;
+using Charlotte.GameTools;
 using Charlotte.Commons;
 
 namespace Charlotte.Games.Tests
@@ -25,7 +26,7 @@ namespace Charlotte.Games.Tests
 			I = null;
 		}
 
-		private DDSimpleMenu SimpleMenu;
+		private SimpleMenu SimpleMenu;
 
 		public void Perform()
 		{
@@ -34,7 +35,7 @@ namespace Charlotte.Games.Tests
 
 			Ground.I.Music.Title.Play();
 
-			this.SimpleMenu = new DDSimpleMenu()
+			this.SimpleMenu = new SimpleMenu()
 			{
 				BorderColor = new I3Color(32, 64, 96),
 				WallDrawer = () => DDDraw.DrawSimple(Ground.I.Picture.DummyScreen, 0, 0),
@@ -55,7 +56,7 @@ namespace Charlotte.Games.Tests
 					"戻る",
 				};
 
-				selectIndex = this.SimpleMenu.Perform(40, 40, 40, 24, "Game用テストメニュー", items, selectIndex);
+				selectIndex = this.SimpleMenu.Perform(selectIndex, 40, 40, 40, 24, "Game用テストメニュー", items);
 
 				switch (selectIndex)
 				{

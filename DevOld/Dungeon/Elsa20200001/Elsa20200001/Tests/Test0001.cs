@@ -11,7 +11,12 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			// none
+			for (; ; )
+			{
+				// TODO
+
+				DDEngine.EachFrame();
+			}
 		}
 	}
 }

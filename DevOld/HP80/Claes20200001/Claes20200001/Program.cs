@@ -38,7 +38,7 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { "80", @"..\..\..\..\dat\favicon.ico", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { "80", @"..\..\..\..\dat\favicon.ico" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -102,11 +102,9 @@ namespace Charlotte
 				{
 					hs.PortNo = int.Parse(ar.NextArg());
 					this.FaviconFile = ar.NextArg();
-					this.OutputDir = ar.NextArg();
 
 					ProcMain.WriteLog("PortNo: " + hs.PortNo);
 					ProcMain.WriteLog("FaviconFile: " + this.FaviconFile);
-					ProcMain.WriteLog("OutputDir: " + this.OutputDir);
 
 					if (hs.PortNo < 1 || 65535 < hs.PortNo)
 						throw new Exception("Bad PortNo");
@@ -116,12 +114,6 @@ namespace Charlotte
 
 					if (!File.Exists(this.FaviconFile))
 						throw new Exception("no FaviconFile");
-
-					if (string.IsNullOrEmpty(this.OutputDir))
-						throw new Exception("Bad OutputDir");
-
-					if (!Directory.Exists(this.OutputDir))
-						throw new Exception("no OutputDir");
 
 					this.FaviconData = File.ReadAllBytes(this.FaviconFile);
 
@@ -136,7 +128,6 @@ namespace Charlotte
 
 		private string FaviconFile;
 		private byte[] FaviconData;
-		private string OutputDir;
 
 		private void P_Connected(HTTPServerChannel channel)
 		{
@@ -202,8 +193,6 @@ namespace Charlotte
 			}
 			else if (Consts.HP80_HostNames.Contains(hostName))
 			{
-				BiscuitReceiver(channel);
-
 				if (urlPath == "/")
 				{
 					channel.ResStatus = 200;
@@ -247,44 +236,6 @@ namespace Charlotte
 				SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "RES-HEADER " + pair[0] + " = " + pair[1]);
 
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "RES-BODY " + (channel.ResBody != null));
-		}
-
-		private long BR_LastTimeStamp = 0L;
-
-		private void BiscuitReceiver(HTTPServerChannel channel)
-		{
-			string value = GetHeaderValue(channel, "User-Agent");
-
-			if (value == null)
-				return;
-
-			if (!value.Contains("Biscuit/1.0"))
-				return;
-
-			// 追加チェック
-			{
-				string cookie = GetHeaderValue(channel, "Cookie");
-
-				if (cookie == null)
-					return;
-
-				if (!cookie.Contains("BID=11843881-1-23-809-2;"))
-					return;
-
-				if (!cookie.Contains("ORZ=67414-874-31;"))
-					return;
-
-				if (!cookie.Contains("IP=1992-13-63-69;"))
-					return;
-			}
-
-			string text = SCommon.LinesToText(channel.HeaderPairs.Select(pair => pair[0] + ": " + pair[1]).ToArray());
-			BR_LastTimeStamp = Math.Max(BR_LastTimeStamp + 1L, SCommon.SimpleDateTime.Now().ToTimeStamp());
-			string file = Path.Combine(this.OutputDir, "Biscuit_" + BR_LastTimeStamp + ".txt");
-
-			channel.ResHeaderPairs.Add(new string[] { "X-Biscuit", text.Length.ToString() });
-
-			File.WriteAllText(file, text, Encoding.ASCII);
 		}
 
 		private static string GetHeaderValue(HTTPServerChannel channel, string name)

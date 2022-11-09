@@ -10,7 +10,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using Charlotte.Commons;
 using Charlotte.Tests;
-using Charlotte.WebServices;
+using Charlotte.Utilities;
 
 namespace Charlotte
 {
@@ -38,7 +38,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { "http://ccsp.mydns.jp" }));
+			Main4(new ArgsReader(new string[] { "http://cdimage.ubuntulinux.jp/releases/22.04/ubuntu-ja-22.04-desktop-amd64.iso", "/R", @"C:\temp\ubuntu-ja-22.04-desktop-amd64.iso" }));
+			//Main4(new ArgsReader(new string[] { "http://cdimage.ubuntulinux.jp/releases/22.04/ubuntu-ja-22.04-desktop-amd64.iso" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -52,15 +53,23 @@ namespace Charlotte
 		{
 			try
 			{
-				Main5(ar);
+				using (WorkingDir wd = new WorkingDir())
+				{
+					Main5(ar, wd);
+				}
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				ProcMain.WriteLog(e);
+				ProcMain.WriteLog(ex);
+
+				//MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
+				//Console.ReadLine();
 			}
 		}
 
-		private void Main5(ArgsReader ar)
+		private void Main5(ArgsReader ar, WorkingDir wd)
 		{
 			bool liteMode = ar.ArgIs("/L");
 
@@ -71,14 +80,14 @@ namespace Charlotte
 				hc.ConnectTimeoutMillis = 10000; // 10 sec
 				hc.TimeoutMillis = 15000; // 15 sec
 				hc.IdleTimeoutMillis = 5000; // 5 sec
-				//hc.ResBodySizeMax = 20000000; // 20 MB
+				hc.ResBodySizeMax = 333000000; // 333 MB
 			}
 			else
 			{
 				hc.ConnectTimeoutMillis = 3600000; // 1 hour
 				hc.TimeoutMillis = 86400000; // 1 day
 				hc.IdleTimeoutMillis = 180000; // 3 min
-				hc.ResBodySizeMax = 300000000; // 300 MB
+				hc.ResBodySizeMax = 100000000000000; // 100 TB
 			}
 
 			if (ar.ArgIs("/B"))
@@ -89,51 +98,48 @@ namespace Charlotte
 				hc.SetAuthorization(user, password);
 			}
 
-			byte[] body;
+			string bodyFile;
 
 			if (ar.ArgIs("/P"))
 			{
 				if (ar.ArgIs("*"))
 				{
-					body = SCommon.EMPTY_BYTES;
+					bodyFile = wd.MakePath();
+					File.WriteAllBytes(bodyFile, SCommon.EMPTY_BYTES); // 空の要求ファイルを作成
 				}
 				else
 				{
-					body = File.ReadAllBytes(ar.NextArg());
+					bodyFile = SCommon.ToFullPath(ar.NextArg());
 				}
 			}
 			else
 			{
-				body = null;
+				bodyFile = null;
 			}
-
-			string resBodyFile;
 
 			if (ar.ArgIs("/R"))
 			{
-				resBodyFile = ar.NextArg();
+				hc.ResFile = SCommon.ToFullPath(ar.NextArg());
+				File.WriteAllBytes(hc.ResFile, SCommon.EMPTY_BYTES); // 出力テスト
+				SCommon.DeletePath(hc.ResFile);
 			}
 			else
 			{
-				resBodyFile = null;
+				hc.ResFile = null;
 			}
 
 			ar.End();
 
-			hc.Send(body);
+			if (bodyFile == null)
+				hc.Get();
+			else
+				hc.Post(bodyFile);
 
 			foreach (KeyValuePair<string, string> pair in hc.ResHeaders)
-				Console.WriteLine(SCommon.ToJString(Encoding.ASCII.GetBytes(pair.Key + " = " + pair.Value), false, false, false, true));
+				Console.WriteLine(SCommon.ToJString(pair.Key + " = " + pair.Value, false, false, false, true));
 
-			if (resBodyFile != null)
-			{
-				File.WriteAllBytes(resBodyFile, hc.ResBody);
-			}
-			else
-			{
-				Console.WriteLine("");
-				Console.WriteLine(SCommon.ToJString(hc.ResBody, true, true, true, true));
-			}
+			Console.WriteLine("");
+			Console.WriteLine("HTTP-受信完了");
 		}
 	}
 }

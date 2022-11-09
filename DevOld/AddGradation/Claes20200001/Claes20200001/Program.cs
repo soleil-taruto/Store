@@ -84,13 +84,13 @@ namespace Charlotte
 
 			int aLT = int.Parse(ar.NextArg());
 			int aRT = int.Parse(ar.NextArg());
-			int aRB = int.Parse(ar.NextArg());
 			int aLB = int.Parse(ar.NextArg());
+			int aRB = int.Parse(ar.NextArg());
 
 			if (aLT < 0 || 255 < aLT) throw new Exception("Bad command-option (left top alpha)");
 			if (aRT < 0 || 255 < aRT) throw new Exception("Bad command-option (right top alpha)");
-			if (aRB < 0 || 255 < aRB) throw new Exception("Bad command-option (right bottom alpha)");
 			if (aLB < 0 || 255 < aLB) throw new Exception("Bad command-option (left bottom alpha)");
+			if (aRB < 0 || 255 < aRB) throw new Exception("Bad command-option (right bottom alpha)");
 
 			string path = SCommon.MakeFullPath(ar.NextArg());
 
@@ -126,8 +126,8 @@ namespace Charlotte
 					dot => true,
 					color.WithAlpha(aLT),
 					color.WithAlpha(aRT),
-					color.WithAlpha(aRB),
-					color.WithAlpha(aLB)
+					color.WithAlpha(aLB),
+					color.WithAlpha(aRB)
 					);
 				Canvas back = canvas.GetClone();
 				canvas.DrawImage(mask, 0, 0, true);

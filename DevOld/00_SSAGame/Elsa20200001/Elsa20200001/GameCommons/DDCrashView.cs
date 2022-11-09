@@ -36,13 +36,13 @@ namespace Charlotte.GameCommons
 							break;
 
 						case DDCrashUtils.Kind_e.POINT:
-							DDDraw.DrawBegin(Ground.I.Picture.WhiteBox, crash.Pt.X - DDGround.ICamera.X, crash.Pt.Y - DDGround.ICamera.Y);
+							DDDraw.DrawBegin(Ground.I.Picture.WhiteBox, crash.Pt.X - DDGround.Camera.X, crash.Pt.Y - DDGround.Camera.Y);
 							DDDraw.DrawSetSize(POINT_WH, POINT_WH);
 							DDDraw.DrawEnd();
 							break;
 
 						case DDCrashUtils.Kind_e.CIRCLE:
-							DDDraw.DrawBegin(Ground.I.Picture.WhiteCircle, crash.Pt.X - DDGround.ICamera.X, crash.Pt.Y - DDGround.ICamera.Y);
+							DDDraw.DrawBegin(Ground.I.Picture.WhiteCircle, crash.Pt.X - DDGround.Camera.X, crash.Pt.Y - DDGround.Camera.Y);
 							DDDraw.DrawSetSize(crash.R * 2.0, crash.R * 2.0);
 							DDDraw.DrawEnd();
 							break;
@@ -50,8 +50,8 @@ namespace Charlotte.GameCommons
 						case DDCrashUtils.Kind_e.RECT:
 							DDDraw.DrawRect(
 								Ground.I.Picture.WhiteBox,
-								crash.Rect.L - DDGround.ICamera.X,
-								crash.Rect.T - DDGround.ICamera.Y,
+								crash.Rect.L - DDGround.Camera.X,
+								crash.Rect.T - DDGround.Camera.Y,
 								crash.Rect.W,
 								crash.Rect.H
 								);

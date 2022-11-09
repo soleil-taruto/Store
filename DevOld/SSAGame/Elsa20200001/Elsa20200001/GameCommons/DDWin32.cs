@@ -135,7 +135,11 @@ namespace Charlotte.GameCommons
 		public static I2Point GetMousePosition()
 		{
 			return new I2Point(
-				Cursor.Position.X, Cursor.Position.Y // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				Cursor.Position.
+					X // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				,
+				Cursor.Position.
+					Y // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
 				);
 		}
 
@@ -144,19 +148,20 @@ namespace Charlotte.GameCommons
 		public static I4Rect[] GetAllMonitor()
 		{
 			if (Monitors == null)
-				Monitors =
-					Screen.AllScreens.Select( // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-						screen => new I4Rect(
-							screen
-								.Bounds.Left, // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-							screen
-								.Bounds.Top, // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-							screen
-								.Bounds.Width, // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-							screen
-								.Bounds.Height // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-							))
-							.ToArray();
+				Monitors = Screen.AllScreens.Select(screen => new I4Rect(
+					screen.Bounds.
+						Left // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+						,
+					screen.Bounds.
+						Top // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+						,
+					screen.Bounds.
+						Width // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+						,
+					screen.Bounds.
+						Height // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+					))
+					.ToArray();
 
 			return Monitors;
 		}

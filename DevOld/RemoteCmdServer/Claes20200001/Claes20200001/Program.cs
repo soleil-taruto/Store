@@ -38,7 +38,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { "80", @"..\..\..\..\dat\Batch", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { "80", @"..\..\..\..\dat\Batch", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { "/P", "80", @"..\..\..\..\dat\Batch", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -100,9 +101,13 @@ namespace Charlotte
 				}
 				else
 				{
+					this.PostRequestOnlyMode = ar.ArgIs("/P");
+
 					hs.PortNo = int.Parse(ar.NextArg());
 					this.BatchDir = SCommon.MakeFullPath(ar.NextArg());
 					this.StoreDir = SCommon.MakeFullPath(ar.NextArg());
+
+					ar.End();
 
 					ProcMain.WriteLog("PortNo: " + hs.PortNo);
 					ProcMain.WriteLog("BatchDir: " + this.BatchDir);
@@ -130,6 +135,7 @@ namespace Charlotte
 			}
 		}
 
+		private bool PostRequestOnlyMode;
 		private string BatchDir;
 		private string StoreDir;
 
@@ -150,6 +156,9 @@ namespace Charlotte
 		private void P_Connected2(HTTPServerChannel channel)
 		{
 			ProcMain.WriteLog("Client: " + channel.Channel.Handler.RemoteEndPoint);
+
+			if (this.PostRequestOnlyMode && channel.Method != "POST")
+				throw new Exception("POST-リクエスト以外は受け付けません。");
 
 			string urlPath = channel.PathQuery;
 

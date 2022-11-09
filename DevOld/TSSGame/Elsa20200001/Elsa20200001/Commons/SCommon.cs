@@ -257,9 +257,7 @@ namespace Charlotte.Commons
 			{
 				if (
 					serializedString == null ||
-					!RegexSerializedString
-						.IsMatch // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-							(serializedString)
+					!RegexSerializedString.IsMatch(serializedString)
 					)
 					throw new ArgumentException();
 
@@ -845,7 +843,7 @@ namespace Charlotte.Commons
 					}
 					else if (chr <= 0x7e) // ? ascii
 					{
-						// nop
+						// noop
 					}
 					else if (0xa1 <= chr && chr <= 0xdf) // ? kana
 					{
@@ -1794,18 +1792,24 @@ namespace Charlotte.Commons
 			public static long ToTimeStamp(DateTime dateTime)
 			{
 				return
-					10000000000L * dateTime
-						.Year + // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-					100000000L * dateTime
-						.Month + // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-					1000000L * dateTime
-						.Day + // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-					10000L * dateTime
-						.Hour + // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-					100L * dateTime
-						.Minute + // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-					dateTime
-						.Second; // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+					10000000000L * dateTime.
+						Year // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+						+
+					100000000L * dateTime.
+						Month // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+						+
+					1000000L * dateTime.
+						Day // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+						+
+					10000L * dateTime.
+						Hour // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+						+
+					100L * dateTime.
+						Minute // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+						+
+					dateTime.
+						Second // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+						;
 			}
 		}
 

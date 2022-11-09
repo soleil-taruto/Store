@@ -11,7 +11,7 @@ namespace Charlotte.Games
 		public static DDMusic Get(string name)
 		{
 			if (name == GameConsts.MAPPRM_DEFAULT_VALUE)
-				return Ground.I.Music.Dummy;
+				return Ground.I.Music.Muon;
 
 			DDMusic music;
 

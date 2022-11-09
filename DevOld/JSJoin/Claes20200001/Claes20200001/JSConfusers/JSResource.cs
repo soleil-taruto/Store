@@ -75,7 +75,7 @@ enum
 
 of
 
-; オブジェクト？
+; よく使うオブジェクト？
 
 console
 document
@@ -87,24 +87,13 @@ Date
 Math
 Image
 Audio
+Number
 
 ; 関数
 
 clearTimeout
 setTimeout
 requestAnimationFrame
-
-; メソッド
-
-push
-endsWith
-
-; 特別なグローバル変数名
-
-Gattonero
-Canvas
-CanvasBox
-Context
 
 ";
 

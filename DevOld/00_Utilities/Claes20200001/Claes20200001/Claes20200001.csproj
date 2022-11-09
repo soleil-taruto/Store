@@ -77,6 +77,7 @@
     <Compile Include="Tests\Test0005.cs" />
     <Compile Include="Tests\Test0006.cs" />
     <Compile Include="Tests\Test0007.cs" />
+    <Compile Include="Tests\Test0008.cs" />
     <Compile Include="Utilities\AESCipher.cs" />
     <Compile Include="Utilities\BitList.cs" />
     <Compile Include="Utilities\Canvas.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Utilities\JsonNode.cs" />
     <Compile Include="Utilities\RingCipher.cs" />
     <Compile Include="Utilities\JapaneseDate.cs" />
+    <Compile Include="Utilities\StringSpliceSequencer.cs" />
     <Compile Include="Utilities\XMLNode.cs" />
     <Compile Include="WebServices\HTTPBodyOutputStream.cs" />
     <Compile Include="WebServices\HTTPServer.cs" />

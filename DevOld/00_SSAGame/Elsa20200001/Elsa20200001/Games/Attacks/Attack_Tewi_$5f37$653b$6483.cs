@@ -10,11 +10,6 @@ namespace Charlotte.Games.Attacks
 {
 	public class Attack_Tewi_強攻撃 : Attack
 	{
-		public override bool IsInvincibleMode()
-		{
-			return false;
-		}
-
 		protected override IEnumerable<bool> E_Draw()
 		{
 			for (int frame = 0; ; frame++)
@@ -37,22 +32,34 @@ namespace Charlotte.Games.Attacks
 				{
 					Game.I.Shots.Add(new Shot_OneTime(
 						5,
-						//30,
-						DDCrashUtils.Rect_CenterSize(
-							new D2Point(
-								Game.I.Player.X + 50.0 * (Game.I.Player.FacingLeft ? -1.0 : 1.0),
-								Game.I.Player.Y - 15.0
-								),
-							new D2Size(100.0, 130.0)
-							)
+						DDCrashUtils.Rect(D4Rect.XYWH(
+							Game.I.Player.X + 50.0 * (Game.I.Player.FacingLeft ? -1.0 : 1.0),
+							Game.I.Player.Y - 15.0,
+							100.0,
+							130.0
+							))
 						));
 				}
 
+				AttackCommon.ProcPlayer_Status();
+
+				double plA = 1.0;
+
+				if (1 <= Game.I.Player.InvincibleFrame)
+				{
+					plA = 0.5;
+				}
+				else
+				{
+					AttackCommon.ProcPlayer_当たり判定();
+				}
+
 				DDDraw.SetTaskList(Game.I.Player.Draw_EL);
+				DDDraw.SetAlpha(plA);
 				DDDraw.DrawBegin(
 					Ground.I.Picture2.Tewi_強攻撃[koma],
-					x - DDGround.ICamera.X,
-					y - DDGround.ICamera.Y
+					x - DDGround.Camera.X,
+					y - DDGround.Camera.Y
 				);
 				DDDraw.DrawZoom_X(xZoom);
 				DDDraw.DrawEnd();

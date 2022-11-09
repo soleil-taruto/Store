@@ -24,6 +24,11 @@ namespace Charlotte.Games.Attacks
 		// ProcPlayer_脳天();
 		// ProcPlayer_接地();
 		//
+		// ProcPlayer_Status();
+		// ProcPlayer_当たり判定();
+		//
+		// プレイヤーの描画 -> Game.I.Player.Draw_EL
+		//
 
 		// ======================
 		// ==== プレイヤー動作 ====
@@ -31,7 +36,8 @@ namespace Charlotte.Games.Attacks
 
 		public static void ProcPlayer_移動()
 		{
-			// 攻撃中は左右の方向転換を抑止する。
+			if (CamSlide())
+				return;
 
 			double speed;
 
@@ -39,6 +45,8 @@ namespace Charlotte.Games.Attacks
 				speed = GameConsts.PLAYER_SLOW_SPEED;
 			else
 				speed = GameConsts.PLAYER_SPEED;
+
+			// 攻撃中は左右の方向転換を抑止する。
 
 			if (1 <= DDInput.DIR_4.GetInput())
 			{
@@ -193,18 +201,43 @@ namespace Charlotte.Games.Attacks
 			return ret;
 		}
 
-		// =================================
-		// ==== プレイヤー動作系 (ここまで) ====
-		// =================================
+		// ============================
+		// ==== プレイヤー動作・その他 ====
+		// ============================
+
+		public static void ProcPlayer_Status()
+		{
+			if (1 <= Game.I.Player.DamageFrame && GameConsts.PLAYER_DAMAGE_FRAME_MAX < ++Game.I.Player.DamageFrame)
+			{
+				Game.I.Player.DamageFrame = 0;
+				Game.I.Player.InvincibleFrame = 1;
+			}
+			if (1 <= Game.I.Player.InvincibleFrame && GameConsts.PLAYER_INVINCIBLE_FRAME_MAX < ++Game.I.Player.InvincibleFrame)
+			{
+				Game.I.Player.InvincibleFrame = 0;
+			}
+		}
+
+		public static void ProcPlayer_当たり判定()
+		{
+			Game.I.Player.Crash = DDCrashUtils.Point(new D2Point(
+				Game.I.Player.X,
+				Game.I.Player.Y + 10.0
+				));
+		}
+
+		// ====================================
+		// ==== プレイヤー動作・カメラ・スライド ====
+		// ====================================
 
 		private static bool CamSlideMode = false; // ? カメラ・スライド_モード中
 		private static int CamSlideCount;
 
 		/// <summary>
-		/// Attack-からのカメラ・スライド
+		/// カメラ・スライド
 		/// </summary>
 		/// <returns>カメラ・スライド_モード中か</returns>
-		public static bool CamSlide()
+		private static bool CamSlide()
 		{
 			if (1 <= DDInput.L.GetInput())
 			{
@@ -245,5 +278,9 @@ namespace Charlotte.Games.Attacks
 			}
 			return CamSlideMode;
 		}
+
+		// =================================
+		// ==== プレイヤー動作系 (ここまで) ====
+		// =================================
 	}
 }

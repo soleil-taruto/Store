@@ -33,7 +33,7 @@ function* <generatorForTask> @@_Draw(<Enemy_t> enemy)
 	{
 		enemy.Y += 2.0;
 
-		if (Screen_H < enemy.Y)
+		if (FIELD_B < enemy.Y)
 		{
 			break;
 		}

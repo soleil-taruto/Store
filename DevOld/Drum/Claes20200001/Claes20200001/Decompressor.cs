@@ -224,7 +224,10 @@ namespace Charlotte
 				ProcMain.WriteLog("< *Stream");
 				ProcMain.WriteLog("> " + files[0].FullPath);
 
-				SCommon.ReadToEnd(SCommon.GetLimitedReader(reader.Read, length), writer.Write);
+				SCommon.ReadToEnd(
+					SCommon.GetLimitedReader(SCommon.GetReader(reader.Read), length),
+					writer.Write
+					);
 			}
 
 			foreach (FileEntry file in files.Skip(1))

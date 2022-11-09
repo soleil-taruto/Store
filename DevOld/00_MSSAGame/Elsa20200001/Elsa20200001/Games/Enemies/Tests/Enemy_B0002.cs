@@ -35,6 +35,8 @@ namespace Charlotte.Games.Enemies.Tests
 				double xBuru = 0.0;
 				double yBuru = 0.0;
 
+				// memo: SpecialDraw-方式を検討のこと。
+
 				if (1 <= this.HitBackFrame)
 				{
 					if (HIT_BACK_FRAME_MAX < ++this.HitBackFrame)

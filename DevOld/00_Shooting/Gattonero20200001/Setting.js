@@ -51,7 +51,7 @@ gameLoop:
 
 function* <generatorForTask> @@_PadSetting(<string> name, <Action int> a_setBtn)
 {
-	yield* @@_WaitToReleaseButton();
+	WaitToReleaseButton();
 	FreezeInput();
 
 	for (; ; )
@@ -81,16 +81,8 @@ function* <generatorForTask> @@_PadSetting(<string> name, <Action int> a_setBtn)
 
 		yield 1;
 	}
-	yield* @@_WaitToReleaseButton();
+	WaitToReleaseButton();
 	FreezeInput();
-}
-
-function* <generatorForTask> @@_WaitToReleaseButton()
-{
-	while (@@_GetPressButtonIndex() != -1)
-	{
-		yield 1;
-	}
 }
 
 function <int> @@_GetPressButtonIndex()

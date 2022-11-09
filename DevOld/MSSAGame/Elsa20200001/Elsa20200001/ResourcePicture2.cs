@@ -9,7 +9,7 @@ namespace Charlotte
 {
 	public class ResourcePicture2
 	{
-		//public DDPicture[] Dummy = DDDerivations.GetAnimation_YX(Ground.I.Picture.Dummy, 0, 0, 25, 25, 2, 2).ToArray();
+		public DDPicture[,] Dummy = DDDerivations.GetAnimation(Ground.I.Picture.Dummy, 0, 0, 25, 25, 2, 2); // ★サンプルとしてキープ
 
 		public DDPicture[] Enemy_神奈子 = DDDerivations.GetAnimation_YX(Ground.I.Picture.Enemy_神奈子, 0, 0, 250, 250).ToArray();
 

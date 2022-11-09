@@ -14,7 +14,7 @@ namespace Charlotte.Commons
 {
 	public static class ProcMain
 	{
-		public const string APP_IDENT = "{a2d64fe6-66ac-4b55-84dd-b81f7eb640bb}"; // アプリ毎に変更する。
+		public const string APP_IDENT = "{fd45e8fb-5bcc-428a-bd21-0f710a086772}"; // アプリ毎に変更する。
 		public const string APP_TITLE = "Claes20200001";
 
 		public static string SelfFile;
@@ -44,10 +44,10 @@ namespace Charlotte.Commons
 			{
 				WriteLog(e);
 
-				MessageBox.Show("" + e, Path.GetFileNameWithoutExtension(SelfFile ?? APP_TITLE) + " / Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				//MessageBox.Show("" + e, Path.GetFileNameWithoutExtension(SelfFile ?? APP_TITLE) + " / Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-				//Console.WriteLine("Press ENTER key. (Error termination)");
-				//Console.ReadLine();
+				Console.WriteLine("Press ENTER key. (Error termination)");
+				Console.ReadLine();
 			}
 		}
 
@@ -189,7 +189,7 @@ namespace Charlotte.Commons
 					MessageBoxIcon.Error
 					);
 
-				Environment.Exit(7);
+				Environment.Exit(6);
 			}
 
 			string tmp = Environment.GetEnvironmentVariable("TMP");
@@ -198,7 +198,6 @@ namespace Charlotte.Commons
 				tmp == null ||
 				tmp == "" ||
 				tmp != SJIS.GetString(SJIS.GetBytes(tmp)) ||
-				//tmp.Length < 3 ||
 				tmp.Length < 4 || // ルートDIR禁止
 				tmp[1] != ':' ||
 				tmp[2] != '\\' ||
@@ -213,11 +212,11 @@ namespace Charlotte.Commons
 					MessageBoxIcon.Error
 					);
 
-				Environment.Exit(8);
+				Environment.Exit(7);
 			}
 		}
 
-		private class GlobalProcMtx
+		private static class GlobalProcMtx
 		{
 			private static Mutex ProcMtx;
 

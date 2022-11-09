@@ -70,7 +70,7 @@ namespace Charlotte.Games.Enemies
 
 		protected override void Killed()
 		{
-			// nop
+			// noop
 		}
 	}
 }

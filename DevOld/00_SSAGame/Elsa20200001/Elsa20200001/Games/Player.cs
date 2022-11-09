@@ -22,21 +22,18 @@ namespace Charlotte.Games
 			CIRNO,
 		}
 
-		public static string GetName(Chara_e chara)
+		public static string[] Chara_e_Names = new string[]
 		{
-			return new string[]
-			{
-				"因幡てゐ",
-				"チルノ",
-			}
-			[(int)chara];
-		}
+			"因幡てゐ",
+			"チルノ",
+		};
 
 		public Chara_e Chara;
 		public double X;
 		public double Y;
 		public double YSpeed;
 		public bool FacingLeft;
+		public DDCrash Crash;
 		public int MoveFrame;
 		public bool MoveSlow; // ? 低速移動
 		public bool JumpLock; // ? ジャンプ・ロック -- ジャンプしたらボタンを離すまでロックする。
@@ -44,16 +41,32 @@ namespace Charlotte.Games
 		public int JumpCount;
 		public int AirborneFrame; // 0 == 接地状態, 1～ == 滞空状態
 		public int ShagamiFrame; // 0 == 無効, 1～ == しゃがみ中
-		public int StandFrame = SCommon.IMAX / 2; // 0 == 無効, 1～ == 立っている
-		public int DamageFrame = 0; // 0 == 無効, 1～ == ダメージ中
-		public int InvincibleFrame = 0; // 0 == 無効, 1～ == 無敵時間中
-		public int HP = 1; // -1 == 死亡, 1～ == 生存
+		public int UwamukiFrame; // 0 == 無効, 1～ == 上向き中
+		public int ShitamukiFrame; // 0 == 無効, 1～ == 下向き中
+		public int AttackFrame; // 0 == 無効, 1～ == 攻撃中
+		public int DamageFrame; // 0 == 無効, 1～ == ダメージ中
+		public int InvincibleFrame; // 0 == 無効, 1～ == 無敵時間中
+
+		/// <summary>
+		/// 体力
+		/// -1 == 死亡
+		/// 0 == (不使用・予約)
+		/// 1～ == 残り体力
+		/// </summary>
+		public int HP = 1;
+
+		public bool FacingTop
+		{
+			get { return 1 <= this.UwamukiFrame; }
+		}
 
 		public int 上昇_Frame;
 		public int 下降_Frame;
+		public int StandFrame = SCommon.IMAX / 2; // 0 == 無効, 1～ == しゃがんでいない(立っている・跳んでいる)
 
 		/// <summary>
 		/// プレイヤーの攻撃モーション
+		/// -- 攻撃(Attack)と言っても攻撃以外の利用(スライディング・梯子など)も想定する。
 		/// null の場合は無効
 		/// null ではない場合 Attack.EachFrame() が実行される代わりに、プレイヤーの入力・被弾処理などは実行されない。
 		/// </summary>
@@ -223,12 +236,21 @@ namespace Charlotte.Games
 			}
 			DDDraw.DrawBegin(
 				picture,
-				this.X - DDGround.ICamera.X,
-				this.Y - DDGround.ICamera.Y
+				this.X - DDGround.Camera.X,
+				this.Y - DDGround.Camera.Y
 				);
 			DDDraw.DrawZoom_X(this.FacingLeft ? -1.0 : 1.0);
 			DDDraw.DrawEnd();
 			DDDraw.Reset();
+		}
+
+		/// <summary>
+		/// 攻撃を行う。
+		/// -- Attack から呼び出されるかもしれない。
+		/// </summary>
+		public void Fire()
+		{
+			// none
 		}
 	}
 }

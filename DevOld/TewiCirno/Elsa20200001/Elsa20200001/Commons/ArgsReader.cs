@@ -43,5 +43,21 @@ namespace Charlotte.Commons
 			this.ArgIndex++;
 			return arg;
 		}
+
+		public IEnumerable<string> TrailArgs()
+		{
+			while (this.HasArgs())
+				yield return this.NextArg();
+		}
+
+		/// <summary>
+		/// コマンド引数を読み終えたら呼ぶこと。(任意)
+		/// コマンド引数の誤指定対策として、コマンド引数が余っていたら例外を投げる。
+		/// </summary>
+		public void End()
+		{
+			if (this.HasArgs())
+				throw new Exception("Bad command line option-num");
+		}
 	}
 }

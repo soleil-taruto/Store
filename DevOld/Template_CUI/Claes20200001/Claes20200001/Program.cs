@@ -53,7 +53,7 @@ namespace Charlotte
 			// --
 		}
 
-		// Main5 -- テスト用なら Test01 不要なら削除 -- ★要削除
+		// Main5 -- テスト用なら Test01 にリネーム/不要なら削除 -- ★要削除
 
 		private void Main5()
 		{

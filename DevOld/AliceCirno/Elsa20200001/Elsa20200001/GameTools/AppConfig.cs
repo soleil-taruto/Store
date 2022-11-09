@@ -39,7 +39,7 @@ namespace Charlotte.GameTools
 				new SimpleMenu.ButtonInfo(DDInput.DIR_2, "下"),
 				new SimpleMenu.ButtonInfo(DDInput.DIR_4, "左"),
 				new SimpleMenu.ButtonInfo(DDInput.DIR_6, "右"),
-				new SimpleMenu.ButtonInfo(DDInput.A, "方向ロック・低速移動／決定"),
+				new SimpleMenu.ButtonInfo(DDInput.A, "低速移動／決定"),
 				new SimpleMenu.ButtonInfo(DDInput.B, "攻撃ボタン／キャンセル"),
 				new SimpleMenu.ButtonInfo(DDInput.C, "武器切り替え"),
 				//new SimpleMenu.ButtonInfo(DDInput.D, ""),

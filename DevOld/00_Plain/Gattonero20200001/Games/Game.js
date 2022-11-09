@@ -2,23 +2,41 @@
 	ゲーム・メイン
 */
 
+// カメラ位置(整数)
+var<D2Point_t> Camera = CreateD2Point(0.0, 0.0);
+
+// ゲーム用タスク
+var<TaskManager_t> GameTasks = CreateTaskManager();
+
 function* <generatorForTask> GameMain()
 {
+	FreezeInput();
+	ClearAllActor();
+	ClearAllTask(GameTasks);
+
+	var<Actor_t> card = CreateActor_Trump(Screen_W + 300, -300, 1, 1, false);
+	SetTrumpDest(card, Screen_W / 2.0, Screen_H / 2.0);
+	AddActor(card);
+
 	for (; ; )
 	{
-		if (GetInput_A() == 1)
+		ClearScreen();
+
+		if (GetInput_Pause() == 1)
 		{
 			break;
 		}
 
-		SetColor("#000000");
-		PrintRect(0.0, 0.0, Screen_W, Screen_H);
+		if (GetMouseDown() == -1)
+		{
+			SetTrumpReversed(card, !IsTrumpReversed(card));
+		}
 
-		SetColor("#00ff00");
-		SetPrint(20, 40, 0);
-		SetFSize(20);
-		PrintLine("Ａボタンを押すと終了...");
-
+		ExecuteAllActor();
+		ExecuteAllTask(GameTasks);
 		yield 1;
 	}
+	FreezeInput();
+	ClearAllActor();
+	ClearAllTask(GameTasks);
 }

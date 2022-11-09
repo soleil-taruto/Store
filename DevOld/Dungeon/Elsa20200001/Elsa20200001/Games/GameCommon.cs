@@ -34,18 +34,6 @@ namespace Charlotte.Games
 		// ==== Map 関連 (ここまで) ====
 		// ===========================
 
-		public static T GetElement<T>(T[] arr, int index, T defval) // HACK: 不使用？
-		{
-			if (index < arr.Length)
-			{
-				return arr[index];
-			}
-			else
-			{
-				return defval;
-			}
-		}
-
 		public static int RotL(int direction)
 		{
 			return direction / 2 + ((direction / 2) % 2) * 5;

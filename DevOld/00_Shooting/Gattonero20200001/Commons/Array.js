@@ -170,3 +170,17 @@ function <void> RemoveFalse(<T[]> arr)
 
 	RemoveAll(arr, match);
 }
+
+/*
+	配列またはジェネレータを配列に変換する。
+*/
+function <T[]> ToArray(<T[]> src)
+{
+	var<T[]> dest = [];
+
+	for (var<T> element of src)
+	{
+		dest.push(element);
+	}
+	return dest;
+}

@@ -35,25 +35,25 @@ namespace Charlotte.Games.Enemies.Tests
 		{
 			for (; ; )
 			{
-				if (DDUtils.GetDistance(new D2Point(Game.I.Player.X, Game.I.Player.Y), new D2Point(this.X, this.Y)) < 30.0)
+				if (DDUtils.GetDistanceLessThan(new D2Point(Game.I.Player.X, Game.I.Player.Y), new D2Point(this.X, this.Y), 30.0)) // 当たり判定
 				{
 					this.プレイヤーがアイテムを取得した();
 					break;
 				}
 
-				if (!DDUtils.IsOutOfCamera(new D2Point(this.X, this.Y), 50.0))
+				if (!DDUtils.IsOutOfCamera(new D2Point(this.X, this.Y), 50.0)) // カメラ外では描画しない。
 				{
-					DDDraw.DrawBegin(Ground.I.Picture.Dummy, this.X - DDGround.ICamera.X, this.Y - DDGround.ICamera.Y);
+					DDDraw.DrawBegin(Ground.I.Picture.Dummy, this.X - DDGround.Camera.X, this.Y - DDGround.Camera.Y);
 					DDDraw.DrawRotate(DDEngine.ProcFrame / 10.0);
 					DDDraw.DrawEnd();
 
-					DDPrint.SetDebug((int)this.X - DDGround.ICamera.X, (int)this.Y - DDGround.ICamera.Y);
+					DDPrint.SetDebug((int)this.X - DDGround.Camera.X, (int)this.Y - DDGround.Camera.Y);
 					DDPrint.SetBorder(new I3Color(0, 0, 0));
 					DDPrint.PrintLine("アイテム");
 					DDPrint.PrintLine("効用：" + 効用_e_Names[(int)this.効用]);
 					DDPrint.Reset();
 
-					// 当たり判定無し
+					// アイテム系につき this.Crash への当たり判定セット無し
 				}
 				yield return true;
 			}

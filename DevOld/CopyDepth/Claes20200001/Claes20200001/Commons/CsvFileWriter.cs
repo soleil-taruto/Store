@@ -57,7 +57,9 @@ namespace Charlotte.Commons
 				this.Writer.Write('"');
 			}
 			else
+			{
 				this.Writer.Write(cell);
+			}
 		}
 
 		public void EndRow()

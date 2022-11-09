@@ -22,7 +22,7 @@ namespace Charlotte.Games.Enemies
 		{
 			for (; ; )
 			{
-				// nop
+				// noop
 
 				yield return true;
 			}

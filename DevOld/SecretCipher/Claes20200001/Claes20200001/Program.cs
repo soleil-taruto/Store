@@ -70,48 +70,24 @@ namespace Charlotte
 			}
 		}
 
-		private bool OnMemoryMode = false;
-
 		private void Main5(ArgsReader ar)
 		{
-			this.OnMemoryMode = ar.ArgIs("/M");
+			bool onMemoryMode = ar.ArgIs("/M");
+			bool encryptMode;
 
-			if (ar.ArgIs("/K1")) // ? 鍵-01
-			{
-				Main6(ar, KeyBundles.RAW_KEY_01);
-			}
-			else if (ar.ArgIs("/K2")) // ? 鍵-02
-			{
-				Main6(ar, KeyBundles.RAW_KEY_02);
-			}
-			else if (ar.ArgIs("/K3")) // ? 鍵-03
-			{
-				Main6(ar, KeyBundles.RAW_KEY_03);
-			}
-			else
-			{
-				throw new Exception("不明なオプション");
-			}
-		}
-
-		private void Main6(ArgsReader ar, byte[] rawKey)
-		{
 			if (ar.ArgIs("/E")) // ? 暗号化
 			{
-				Main7(ar, rawKey, true);
+				encryptMode = true;
 			}
 			else if (ar.ArgIs("/D")) // ? 復号
 			{
-				Main7(ar, rawKey, false);
+				encryptMode = false;
 			}
 			else
 			{
 				throw new Exception("不明なオプション");
 			}
-		}
 
-		private void Main7(ArgsReader ar, byte[] rawKey, bool encryptMode)
-		{
 			string rFile = ar.NextArg();
 			string wFile = ar.NextArg();
 
@@ -150,9 +126,9 @@ namespace Charlotte
 
 			try
 			{
-				if (this.OnMemoryMode)
+				if (onMemoryMode)
 				{
-					using (RingCipher cipher = new RingCipher(rawKey))
+					using (RingCipher cipher = new RingCipher(KeyBundle.RAW_KEY))
 					{
 						byte[] fileData = File.ReadAllBytes(wFile);
 
@@ -166,7 +142,7 @@ namespace Charlotte
 				}
 				else
 				{
-					using (FileCipher cipher = new FileCipher(rawKey))
+					using (FileCipher cipher = new FileCipher(KeyBundle.RAW_KEY))
 					{
 						if (encryptMode)
 							cipher.Encrypt(wFile);

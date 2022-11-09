@@ -61,6 +61,7 @@ namespace Charlotte.Games
 		public bool RequestReturnToTitleMenu = false;
 
 		public DDTaskList Tasks = new DDTaskList();
+		public DDActionList FrontActions = new DDActionList(true);
 
 		public void Perform()
 		{
@@ -459,7 +460,7 @@ namespace Charlotte.Games
 					// memo: @ 2022.7.11
 					// 上昇中(ジャンプ中)に接地判定が発生することがある。
 					// 接地中は重力により PlayerYSpeed がプラスに振れる。
-					// -> 接地による位置等の調整は PlayerYSpeed がプラスに触れている場合のみ行う。
+					// -> 接地による位置等の調整は PlayerYSpeed がプラスに振れている場合のみ行う。
 
 					if (touchGround && 0.0 < this.Player.YSpeed)
 					{
@@ -560,6 +561,7 @@ namespace Charlotte.Games
 				}
 
 				this.Tasks.ExecuteAllTask();
+				this.FrontActions.ExecuteAllAction();
 				this.DrawFront();
 
 				if (this.当たり判定表示)
@@ -891,7 +893,7 @@ namespace Charlotte.Games
 
 					yield return true;
 				}
-				yield return true; //  this.Enemies, this.Shots が空の場合、ループ内の yield return は実行されないので、ここにも yield return を設置しておく。
+				yield return true; // this.Enemies, this.Shots が空の場合、ループ内の yield return は実行されないので、ここにも yield return を設置しておく。
 			}
 		}
 
@@ -1295,6 +1297,11 @@ namespace Charlotte.Games
 
 		private void ReloadEnemies()
 		{
+			// 敵をクリアする前にちゃんと殺しておく。
+			// -- 敵の死亡をモニタして終了(自滅)するタスクのため -- 例：Enemy_B1001.E_AttackTask
+			foreach (Enemy enemy in this.Enemies.Iterate())
+				enemy.DeadFlag = true;
+
 			this.Enemies.Clear();
 
 			for (int x = 0; x < this.Map.W; x++)

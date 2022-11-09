@@ -137,6 +137,10 @@ static void DoKeyboard(unsigned __int16 vk, int down)
 main()
 {
 	int loopCount;
+	int lockKeyPressed = 0;
+	int locked = 0;
+	int lBtnKeyPress = 0;
+	int rBtnKeyPress = 0;
 	int lBtnPressed = 0;
 	int rBtnPressed = 0;
 	int lBtnPress;
@@ -145,7 +149,8 @@ main()
 	printf("+---------------------------------+\n");
 	printf("| 右シフト --------> 左ボタン連打 |\n");
 	printf("| 右コントロール --> 右ボタン連打 |\n");
-	printf("| 左シフトとコントロール --> 終了 |\n");
+	printf("| 左シフト ----> 状態ロック・解除 |\n");
+	printf("| 左コントロール ----------> 終了 |\n");
 	printf("+---------------------------------+\n");
 	printf("START...\n");
 
@@ -155,13 +160,41 @@ main()
 
 		CheckKeyEach();
 
-		if (IsPressLShift() && IsPressLControl())
+		if (IsPressLControl())
 		{
 			break;
 		}
 
-		lBtnPress = IsPressRShift()   ? loopCount % 2 == 0 : 0;
-		rBtnPress = IsPressRControl() ? loopCount % 2 == 1 : 0;
+		if (IsPressLShift())
+		{
+			if (!lockKeyPressed)
+			{
+				lockKeyPressed = 1;
+				locked = !locked;
+
+				if (locked)
+				{
+					printf("ロックしました。状態は %d %d です。\n", lBtnKeyPress, rBtnKeyPress);
+				}
+				else
+				{
+					printf("ロックを解除しました。\n");
+				}
+			}
+		}
+		else
+		{
+			lockKeyPressed = 0;
+		}
+
+		if (!locked)
+		{
+			lBtnKeyPress = IsPressRShift();
+			rBtnKeyPress = IsPressRControl();
+		}
+
+		lBtnPress = lBtnKeyPress ? loopCount % 2 == 0 : 0;
+		rBtnPress = rBtnKeyPress ? loopCount % 2 == 0 : 0;
 
 		if (lBtnPressed ? !lBtnPress : lBtnPress)
 		{

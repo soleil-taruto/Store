@@ -55,7 +55,7 @@ namespace Charlotte.GameCommons
 
 		public static void Noop(params object[] dummyPrms)
 		{
-			// nop
+			// noop
 		}
 
 		public static T FastDesertElement<T>(List<T> list, Predicate<T> match, T defval = default(T))
@@ -123,6 +123,17 @@ namespace Charlotte.GameCommons
 			w = x * Math.Cos(rot) - y * Math.Sin(rot);
 			y = x * Math.Sin(rot) + y * Math.Cos(rot);
 			x = w;
+		}
+
+		public static void Rotate(ref double x, ref double y, D2Point origin, double rot)
+		{
+			x -= origin.X;
+			y -= origin.Y;
+
+			Rotate(ref x, ref y, rot);
+
+			x += origin.X;
+			y += origin.Y;
 		}
 
 		public static double GetDistance(double x, double y)
@@ -365,8 +376,8 @@ namespace Charlotte.GameCommons
 		/// <summary>
 		/// (0, 0), (0.5, 1), (1, 0) を通る放物線
 		/// </summary>
-		/// <param name="x">x軸の値</param>
-		/// <returns>y軸の値</returns>
+		/// <param name="x">X軸の値</param>
+		/// <returns>Y軸の値</returns>
 		public static double Parabola(double x)
 		{
 			return (x - x * x) * 4.0;

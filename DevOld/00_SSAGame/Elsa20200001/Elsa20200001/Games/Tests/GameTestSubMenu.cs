@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Charlotte.GameCommons;
+using Charlotte.GameTools;
 
 namespace Charlotte.Games.Tests
 {
@@ -12,7 +13,7 @@ namespace Charlotte.Games.Tests
 	/// </summary>
 	public class GameTestSubMenu : IDisposable
 	{
-		public DDSimpleMenu SimpleMenu;
+		public SimpleMenu SimpleMenu;
 
 		// <---- prm
 
@@ -45,7 +46,7 @@ namespace Charlotte.Games.Tests
 					"戻る",
 				};
 
-				selectIndex = this.SimpleMenu.Perform(40, 40, 40, 24, "Game用テスト(サブ)メニュー", items, selectIndex);
+				selectIndex = this.SimpleMenu.Perform(selectIndex, 40, 40, 40, 24, "Game用テスト(サブ)メニュー", items);
 
 				switch (selectIndex)
 				{

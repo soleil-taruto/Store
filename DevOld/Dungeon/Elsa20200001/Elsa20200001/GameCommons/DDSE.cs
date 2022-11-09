@@ -10,7 +10,7 @@ namespace Charlotte.GameCommons
 		public bool Globally = true;
 		public bool Locally { get { return !this.Globally; } }
 		public DDSound Sound;
-		public double Volume = 0.5; // 0.0 ～ 1.0
+		public double Volume = 0.5; // 0.0 ～ 1.0 // 変更は非推奨 -- 音声ファイル自体の音量を調節するべき
 		public int HandleIndex = 0;
 
 		public DDSE(string file)
@@ -48,11 +48,6 @@ namespace Charlotte.GameCommons
 			else
 				DDSEUtils.PlayLoop(this);
 		}
-
-		//public void Fade(int frameMax = 30)
-		//{
-		//    throw null; // 未実装
-		//}
 
 		public void Stop()
 		{

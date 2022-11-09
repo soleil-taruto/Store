@@ -72,17 +72,5 @@ namespace Charlotte
 		{
 			Console.WriteLine("Hello, world!");
 		}
-
-		public static int FirstPosition(string text, int index, Predicate<char> match)
-		{
-			for (; ; index++)
-			{
-				if (match(text[index]))
-				{
-					break;
-				}
-			}
-			return index;
-		}
 	}
 }

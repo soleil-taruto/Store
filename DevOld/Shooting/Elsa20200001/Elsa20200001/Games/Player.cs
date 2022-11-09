@@ -48,7 +48,7 @@ namespace Charlotte.Games
 			}
 			if (1 <= this.DeadFrame)
 			{
-				// nop // 描画は Game.Perform で行う。
+				// noop // 描画は Game.Perform で行う。
 
 				return;
 			}

@@ -5,7 +5,9 @@ using System.Text;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.GameCommons;
+using Charlotte.GameTools;
 using Charlotte.Games.Attacks;
+using Charlotte.Games.Attacks.Tests;
 using Charlotte.Games.Enemies;
 using Charlotte.Games.Shots;
 using Charlotte.Games.Tiles;
@@ -47,9 +49,12 @@ namespace Charlotte.Games
 		public bool UserInputDisabled = false;
 		public bool RequestReturnToTitleMenu = false;
 
+		public DDTaskList Tasks = new DDTaskList();
+
 		public void Perform()
 		{
-			Func<bool> f_ゴミ回収 = SCommon.Supplier(this.E_ゴミ回収());
+			//Func<bool> f_ゴミ回収 = SCommon.Supplier(this.E_ゴミ回収()); // メソッド版_廃止
+			this.Tasks.Add(SCommon.Supplier(this.E_ゴミ回収()));
 
 			this.Map = new Map(GameCommon.GetMapFile(this.World.GetCurrMapName()));
 			this.ReloadEnemies();
@@ -93,8 +98,8 @@ namespace Charlotte.Games
 
 			MusicCollection.Get(this.Map.MusicName).Play();
 
-			DDGround.Camera.X = this.Player.X - DDConsts.Screen_W / 2.0;
-			DDGround.Camera.Y = this.Player.Y - DDConsts.Screen_H / 2.0;
+			DDGround.RealCamera.X = this.Player.X - DDConsts.Screen_W / 2.0;
+			DDGround.RealCamera.Y = this.Player.Y - DDConsts.Screen_H / 2.0;
 
 			DDCurtain.SetCurtain(0, -1.0);
 			DDCurtain.SetCurtain(10);
@@ -117,7 +122,8 @@ namespace Charlotte.Games
 					this.Status.ExitDirection = 5;
 					break;
 				}
-				if (DDConfig.LOG_ENABLED && DDKey.GetInput(DX.KEY_INPUT_RETURN) == 1)
+				if (DDConfig.LOG_ENABLED && DDInput.START.GetInput() == 1)
+				//if (DDConfig.LOG_ENABLED && DDKey.GetInput(DX.KEY_INPUT_RETURN) == 1)
 				{
 					this.DebugPause();
 				}
@@ -129,6 +135,11 @@ namespace Charlotte.Games
 					this.Edit();
 					this.ReloadEnemies();
 					this.Frame = 0;
+				}
+
+				if (DDConfig.LOG_ENABLED && DDKey.GetInput(DX.KEY_INPUT_T) == 1) // Attack テスト
+				{
+					this.Player.Attack = new Attack_B0001();
 				}
 
 				if (this.Player.Attack != null) // プレイヤー攻撃中
@@ -146,15 +157,23 @@ namespace Charlotte.Games
 					bool damageOrUID = 1 <= this.Player.DamageFrame || this.UserInputDisabled;
 					bool move = false;
 					bool slow = false;
+					bool attack = false;
 					bool shagami = false;
+					bool uwamuki = false;
+					bool shitamuki = false;
 					int jump = 0;
 					int attack_弱 = 0;
 					int attack_中 = 0;
 					int attack_強 = 0;
 
+					if (!damageOrUID && 1 <= DDInput.DIR_8.GetInput())
+					{
+						uwamuki = true;
+					}
 					if (!damageOrUID && 1 <= DDInput.DIR_2.GetInput())
 					{
 						shagami = true;
+						shitamuki = true;
 					}
 
 					// 入力抑止中であるか否かに関わらず左右の入力は受け付けるようにする。
@@ -189,14 +208,17 @@ namespace Charlotte.Games
 					}
 					if (!damageOrUID && 1 <= DDInput.B.GetInput())
 					{
+						attack = true;
 						attack_弱 = DDInput.B.GetInput();
 					}
 					if (!damageOrUID && 1 <= DDInput.C.GetInput())
 					{
+						attack = true;
 						attack_中 = DDInput.C.GetInput();
 					}
 					if (!damageOrUID && 1 <= DDInput.D.GetInput())
 					{
+						attack = true;
 						attack_強 = DDInput.D.GetInput();
 					}
 
@@ -204,16 +226,19 @@ namespace Charlotte.Games
 					{
 						this.Player.MoveFrame++;
 						shagami = false;
+						//uwamuki = false;
+						//shitamuki = false;
 					}
 					else
+					{
 						this.Player.MoveFrame = 0;
-
+					}
 					this.Player.MoveSlow = move && slow;
 
 					if (jump == 0)
 						this.Player.JumpLock = false;
 
-					if (1 <= this.Player.JumpFrame)
+					if (1 <= this.Player.JumpFrame) // ? ジャンプ中
 					{
 						if (1 <= jump)
 						{
@@ -229,7 +254,7 @@ namespace Charlotte.Games
 								this.Player.YSpeed /= 2.0;
 						}
 					}
-					else
+					else // ? 接地中 || 滞空中
 					{
 						// 事前入力 == 着地前の数フレーム間にジャンプボタンを押し始めてもジャンプできるようにする。
 						// 入力猶予 == 落下(地面から離れた)直後の数フレーム間にジャンプボタンを押し始めてもジャンプできるようにする。
@@ -261,7 +286,7 @@ namespace Charlotte.Games
 							if (this.Player.JumpCount < 1)
 								this.Player.JumpCount = 1;
 
-							if (1 <= jump && jump < 事前入力時間 && this.Player.JumpCount < GameConsts.JUMP_MAX && !this.Player.JumpLock)
+							if (1 <= jump && jump < 事前入力時間 && this.Player.JumpCount < GameConsts.PLAYER_JUMP_MAX && !this.Player.JumpLock)
 							{
 								// ★ 空中(n-段)ジャンプを開始した。
 
@@ -270,7 +295,7 @@ namespace Charlotte.Games
 
 								this.Player.YSpeed = GameConsts.PLAYER_JUMP_SPEED;
 
-								DDGround.EL.Add(SCommon.Supplier(Effects.空中ジャンプの足場(this.Player.X, this.Player.Y + 48)));
+								DDGround.EL.Add(SCommon.Supplier(Effects.空中ジャンプの足場(this.Player.X, this.Player.Y + GameConsts.PLAYER_接地判定Pt_Y)));
 
 								this.Player.JumpLock = true;
 							}
@@ -283,22 +308,35 @@ namespace Charlotte.Games
 
 					if (this.Player.JumpFrame == 1) // ? ジャンプ開始
 					{
-						Ground.I.SE.Coin01.Play(); // test test test test test
+						Ground.I.SE.PlayerJump.Play();
 					}
 
 					if (1 <= this.Player.AirborneFrame)
+					{
 						shagami = false;
+						//uwamuki = false;
+						//shitamuki = false;
+					}
 
 					if (shagami)
-					{
 						this.Player.ShagamiFrame++;
-						this.Player.StandFrame = 0;
-					}
 					else
-					{
 						this.Player.ShagamiFrame = 0;
-						this.Player.StandFrame++;
-					}
+
+					if (uwamuki)
+						this.Player.UwamukiFrame++;
+					else
+						this.Player.UwamukiFrame = 0;
+
+					if (shitamuki)
+						this.Player.ShitamukiFrame++;
+					else
+						this.Player.ShitamukiFrame = 0;
+
+					if (attack)
+						this.Player.AttackFrame++;
+					else
+						this.Player.AttackFrame = 0;
 
 					if (attack_弱 == 1)
 					{
@@ -444,6 +482,11 @@ namespace Charlotte.Games
 
 					// プレイヤー・ダメージ中の処理
 					{
+						if (frame == 2) // 初回のみ
+						{
+							Ground.I.SE.PlayerDamaged.Play();
+						}
+
 						this.Player.X -= (9.0 - 6.0 * rate) * (this.Player.FacingLeft ? -1 : 1);
 					}
 				}
@@ -470,7 +513,7 @@ namespace Charlotte.Games
 				{
 					if (1 <= this.Player.MoveFrame)
 					{
-						double speed = 0.0;
+						double speed;
 
 						if (this.Player.MoveSlow)
 						{
@@ -582,6 +625,40 @@ namespace Charlotte.Games
 						this.Player.AirborneFrame++;
 					}
 				}
+
+				// プレイヤー攻撃
+				{
+					// none -- 00_SSAGame -> プレイヤー入力に攻撃処理有り。
+
+					Player.Fire(); // 形だけ..
+				}
+
+				// プレイヤー当たり判定をセットする。
+				// -- プレイヤーのダメージ中・無敵時間中など、当たり判定無しの場合は DDCrashUtils.None をセットすること。
+				{
+					this.Player.Crash = DDCrashUtils.None(); // reset
+
+					if (1 <= this.Player.DamageFrame) // ? プレイヤー・ダメージ中
+					{
+						// noop
+					}
+					else if (1 <= this.Player.InvincibleFrame) // ? プレイヤー無敵時間中
+					{
+						// noop
+					}
+					else if (1 <= this.Player.AirborneFrame)
+					{
+						this.Player.Crash = DDCrashUtils.Point(new D2Point(this.Player.X, this.Player.Y));
+					}
+					else if (1 <= this.Player.ShagamiFrame)
+					{
+						this.Player.Crash = DDCrashUtils.Point(new D2Point(this.Player.X, this.Player.Y + 25.0));
+					}
+					else
+					{
+						this.Player.Crash = DDCrashUtils.Point(new D2Point(this.Player.X, this.Player.Y + 10.0));
+					}
+				}
 			endPlayer: // Attack 合流点
 
 				if (this.Player.YSpeed < -SCommon.MICRO)
@@ -599,6 +676,11 @@ namespace Charlotte.Games
 					this.Player.上昇_Frame = 0;
 					this.Player.下降_Frame = 0;
 				}
+
+				if (this.Player.ShagamiFrame == 0)
+					this.Player.StandFrame++;
+				else
+					this.Player.StandFrame = 0;
 
 				if (this.Player.X < 0.0) // ? マップの左側に出た。
 				{
@@ -628,24 +710,6 @@ namespace Charlotte.Games
 					this.カメラ位置調整(true);
 				}
 
-				// プレイヤーの当たり判定を plCrash にセットする。
-				// -- アイテムを取得したりすることを考慮して、ダメージ中・無敵時間中でも当たり判定は生成する。
-
-				DDCrash plCrash;
-
-				if (1 <= this.Player.AirborneFrame)
-				{
-					plCrash = DDCrashUtils.Point(new D2Point(this.Player.X, this.Player.Y));
-				}
-				else if (1 <= this.Player.ShagamiFrame)
-				{
-					plCrash = DDCrashUtils.Point(new D2Point(this.Player.X, this.Player.Y + 25.0));
-				}
-				else
-				{
-					plCrash = DDCrashUtils.Point(new D2Point(this.Player.X, this.Player.Y + 10.0));
-				}
-
 				// ====
 				// 描画ここから
 				// ====
@@ -671,6 +735,9 @@ namespace Charlotte.Games
 					shot.Draw();
 				}
 
+				this.Tasks.ExecuteAllTask();
+				this.DrawFront();
+
 				if (this.当たり判定表示)
 				{
 					// 最後に描画されるように DDGround.EL.Add() する。
@@ -679,9 +746,37 @@ namespace Charlotte.Games
 					{
 						DDCurtain.DrawCurtain(-0.7);
 
+						double dPlX = this.Player.X - DDGround.Camera.X;
+						double dPlY = this.Player.Y - DDGround.Camera.Y;
+
+						DDDraw.SetBright(0.0, 1.0, 0.0);
+						DDDraw.SetAlpha(0.3);
+						DDDraw.DrawRect_LTRB(
+							Ground.I.Picture.WhiteBox,
+							dPlX - GameConsts.PLAYER_側面判定Pt_X,
+							dPlY - GameConsts.PLAYER_側面判定Pt_YT,
+							dPlX + GameConsts.PLAYER_側面判定Pt_X,
+							dPlY + GameConsts.PLAYER_側面判定Pt_YB
+							);
+						DDDraw.DrawRect_LTRB(
+							Ground.I.Picture.WhiteBox,
+							dPlX - GameConsts.PLAYER_脳天判定Pt_X,
+							dPlY - GameConsts.PLAYER_脳天判定Pt_Y,
+							dPlX + GameConsts.PLAYER_脳天判定Pt_X,
+							dPlY
+							);
+						DDDraw.DrawRect_LTRB(
+							Ground.I.Picture.WhiteBox,
+							dPlX - GameConsts.PLAYER_接地判定Pt_X,
+							dPlY,
+							dPlX + GameConsts.PLAYER_接地判定Pt_X,
+							dPlY + GameConsts.PLAYER_接地判定Pt_Y
+							);
+						DDDraw.Reset();
+
 						const double A = 0.7;
 
-						DDCrashView.Draw(new DDCrash[] { plCrash }, new I3Color(255, 0, 0), 1.0);
+						DDCrashView.Draw(new DDCrash[] { this.Player.Crash }, new I3Color(255, 0, 0), 1.0);
 						DDCrashView.Draw(this.Enemies.Iterate().Select(v => v.Crash), new I3Color(255, 255, 255), A);
 						DDCrashView.Draw(this.Shots.Iterate().Select(v => v.Crash), new I3Color(0, 255, 255), A);
 
@@ -697,11 +792,6 @@ namespace Charlotte.Games
 				// 当たり判定ここから
 				// ====
 
-				// ? 無敵な攻撃中 -> 敵 x 自機 の衝突判定を行わない。
-				bool attackInvincibleMode =
-					Game.I.Player.Attack != null &&
-					Game.I.Player.Attack.IsInvincibleMode();
-
 				foreach (Enemy enemy in this.Enemies.Iterate())
 				{
 					if (1 <= enemy.HP) // ? 敵：生存 && 無敵ではない
@@ -716,36 +806,35 @@ namespace Charlotte.Games
 							{
 								// ★ 敵_被弾ここから
 
-								// 貫通武器について、貫通中に複数回クラッシュしないように制御する。
-								// -- 複数の敵に同時に当たると意図通りにならないが、厳格に制御する必要は無いので、看過する。
+								int damagePoint = Math.Min(enemy.HP, shot.AttackPoint);
 
-								if (shot.LastCrashedEnemy == enemy) // ? 直前にクラッシュした -> 複数回クラッシュしない。
-								{
-									shot.CurrCrashedEnemy = enemy;
-									continue;
-								}
 								enemy.HP -= shot.AttackPoint;
 
 								if (shot.敵を貫通する)
 								{
-									shot.CurrCrashedEnemy = enemy;
+									// noop
 								}
 								else // ? 敵を貫通しない -> 自弾の攻撃力と敵のHPを相殺
 								{
 									if (0 <= enemy.HP) // ? 丁度削りきった || 削りきれなかった -> 攻撃力を使い果たしたので、ショットは消滅
+									{
+										shot.AttackPoint = 0; // 攻撃力を使い果たした。
 										shot.Kill();
+									}
 									else
-										shot.AttackPoint = -enemy.HP; // 過剰に削った分を残りの攻撃力として反映
+									{
+										shot.AttackPoint = -enemy.HP; // 過剰に削った分を残りの攻撃力として還元
+									}
 								}
 
 								if (1 <= enemy.HP) // ? まだ生存している。
 								{
-									enemy.Damaged(shot);
+									enemy.Damaged(shot, damagePoint);
 								}
 								else // ? 撃破した。
 								{
 									enemy.HP = 0; // 過剰に削った分を正す。
-									enemy.Kill();
+									enemy.Kill(true);
 									goto nextEnemy; // この敵は死亡したので、この敵について以降の当たり判定は不要
 								}
 
@@ -756,17 +845,11 @@ namespace Charlotte.Games
 
 					// 衝突判定：敵 x 自機
 					if (
-						this.Player.DamageFrame == 0 && // ? プレイヤー・ダメージ中ではない。
-						this.Player.InvincibleFrame == 0 && // ? プレイヤー無敵時間中ではない。
-						!attackInvincibleMode && // 無敵になる攻撃中ではない。
 						!enemy.DeadFlag && // ? 敵：生存
-						DDCrashUtils.IsCrashed(enemy.Crash, plCrash) // ? 衝突
+						DDCrashUtils.IsCrashed(enemy.Crash, this.Player.Crash) // ? 衝突
 						)
 					{
 						// ★ 自機_被弾ここから
-
-						if (enemy.自機に当たると消滅する)
-							enemy.Kill();
 
 						this.Player.HP -= enemy.AttackPoint;
 
@@ -781,6 +864,9 @@ namespace Charlotte.Games
 							goto endGameLoop;
 						}
 
+						if (enemy.自機に当たると消滅する)
+							enemy.Kill();
+
 						// ★ 自機_被弾ここまで
 					}
 
@@ -792,24 +878,7 @@ namespace Charlotte.Games
 				// 当たり判定ここまで
 				// ====
 
-				foreach (Shot shot in this.Shots.Iterate()) // 自弾・フレーム事後処理
-				{
-					shot.CurrCrashedEnemy = shot.LastCrashedEnemy;
-					shot.LastCrashedEnemy = null;
-
-					// 壁への衝突
-					// 壁への当たり判定は自弾の「中心座標のみ」であることに注意して下さい。
-					{
-						if (
-							!shot.DeadFlag && // ? 自弾：生存
-							!shot.壁をすり抜ける && // ? この自弾は壁に当たる。
-							this.Map.GetCell(GameCommon.ToTablePoint(shot.X, shot.Y)).Tile.IsWall() // ? 壁に当たった。
-							)
-							shot.Kill();
-					}
-				}
-
-				f_ゴミ回収();
+				//f_ゴミ回収(); // メソッド版_廃止
 
 				this.Enemies.RemoveAll(v => v.DeadFlag);
 				this.Shots.RemoveAll(v => v.DeadFlag);
@@ -827,8 +896,8 @@ namespace Charlotte.Games
 				{
 					DDDraw.DrawBegin(
 						Ground.I.Picture2.Tewi_大ダメージ[Ground.I.Picture2.Tewi_大ダメージ.Length - 1],
-						SCommon.ToInt(this.Player.X - DDGround.ICamera.X),
-						SCommon.ToInt(this.Player.Y - DDGround.ICamera.Y)
+						SCommon.ToInt(this.Player.X - DDGround.Camera.X),
+						SCommon.ToInt(this.Player.Y - DDGround.Camera.Y)
 						);
 					DDDraw.DrawZoom_X(this.Player.FacingLeft ? -1.0 : 1.0);
 					DDDraw.DrawEnd();
@@ -1005,21 +1074,17 @@ namespace Charlotte.Games
 			DDUtils.ToRange(ref targCamX, 0.0, this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W);
 			DDUtils.ToRange(ref targCamY, 0.0, this.Map.H * GameConsts.TILE_H - DDConsts.Screen_H);
 
-			// 不要
-			//if (this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W < GameConsts.TILE_W) // ? カメラの横の可動域が1タイルより狭い場合
-			//	targCamX = (this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W) / 2; // 中心に合わせる。
+			if (this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W < GameConsts.TILE_W) // ? カメラの横の可動域が1タイルより狭い場合
+				targCamX = (this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W) / 2; // 中心に合わせる。
 
 			if (this.Map.H * GameConsts.TILE_H - DDConsts.Screen_H < GameConsts.TILE_H) // ? カメラの縦の可動域が1タイルより狭い場合
 				targCamY = (this.Map.H * GameConsts.TILE_H - DDConsts.Screen_H) / 2; // 中心に合わせる。
 
-			DDUtils.Approach(ref DDGround.Camera.X, targCamX, 一瞬で ? 0.0 : 0.8);
-			DDUtils.Approach(ref DDGround.Camera.Y, targCamY, 一瞬で ? 0.0 : 0.8);
+			DDUtils.Approach(ref DDGround.RealCamera.X, targCamX, 一瞬で ? 0.0 : 0.8);
+			DDUtils.Approach(ref DDGround.RealCamera.Y, targCamY, 一瞬で ? 0.0 : 0.8);
 
-			//DDUtils.ToRange(ref DDGround.Camera.X, 0.0, this.Map.W * Consts.TILE_W - DDConsts.Screen_W);
-			//DDUtils.ToRange(ref DDGround.Camera.Y, 0.0, this.Map.H * Consts.TILE_H - DDConsts.Screen_H);
-
-			DDGround.ICamera.X = SCommon.ToInt(DDGround.Camera.X);
-			DDGround.ICamera.Y = SCommon.ToInt(DDGround.Camera.Y);
+			DDGround.Camera.X = SCommon.ToInt(DDGround.RealCamera.X);
+			DDGround.Camera.Y = SCommon.ToInt(DDGround.RealCamera.Y);
 		}
 
 		#region Edit
@@ -1045,8 +1110,8 @@ namespace Charlotte.Games
 				//	break;
 
 				I2Point cellPos = GameCommon.ToTablePoint(
-					DDGround.Camera.X + DDMouse.X,
-					DDGround.Camera.Y + DDMouse.Y
+					DDGround.RealCamera.X + DDMouse.X,
+					DDGround.RealCamera.Y + DDMouse.Y
 					);
 
 				MapCell cell = Game.I.Map.GetCell(cellPos);
@@ -1114,14 +1179,14 @@ namespace Charlotte.Games
 				{
 					if (1 <= DDMouse.L.GetInput())
 					{
-						DDGround.Camera.X -= DDMouse.X - lastMouseX;
-						DDGround.Camera.Y -= DDMouse.Y - lastMouseY;
+						DDGround.RealCamera.X -= DDMouse.X - lastMouseX;
+						DDGround.RealCamera.Y -= DDMouse.Y - lastMouseY;
 
-						DDUtils.ToRange(ref DDGround.Camera.X, 0.0, this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W);
-						DDUtils.ToRange(ref DDGround.Camera.Y, 0.0, this.Map.H * GameConsts.TILE_H - DDConsts.Screen_H);
+						DDUtils.ToRange(ref DDGround.RealCamera.X, 0.0, this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W);
+						DDUtils.ToRange(ref DDGround.RealCamera.Y, 0.0, this.Map.H * GameConsts.TILE_H - DDConsts.Screen_H);
 
-						DDGround.ICamera.X = SCommon.ToInt(DDGround.Camera.X);
-						DDGround.ICamera.Y = SCommon.ToInt(DDGround.Camera.Y);
+						DDGround.Camera.X = SCommon.ToInt(DDGround.RealCamera.X);
+						DDGround.Camera.Y = SCommon.ToInt(DDGround.RealCamera.Y);
 					}
 					else if (1 <= DDMouse.R.GetInput())
 					{
@@ -1330,10 +1395,7 @@ namespace Charlotte.Games
 
 		private void DrawWall()
 		{
-			double xRate = (double)DDGround.ICamera.X / (this.Map.W * GameConsts.TILE_W - DDConsts.Screen_W);
-			double yRate = (double)DDGround.ICamera.Y / (this.Map.H * GameConsts.TILE_H - DDConsts.Screen_H);
-
-			this.Wall.Draw(xRate, yRate);
+			this.Wall.Draw();
 		}
 
 		private void DrawMap()
@@ -1341,8 +1403,8 @@ namespace Charlotte.Games
 			int w = this.Map.W;
 			int h = this.Map.H;
 
-			int cam_l = DDGround.ICamera.X;
-			int cam_t = DDGround.ICamera.Y;
+			int cam_l = DDGround.Camera.X;
+			int cam_t = DDGround.Camera.Y;
 			int cam_r = cam_l + DDConsts.Screen_W;
 			int cam_b = cam_t + DDConsts.Screen_H;
 
@@ -1377,6 +1439,11 @@ namespace Charlotte.Games
 					cell.Tile.Draw(tileX - cam_l, tileY - cam_t);
 				}
 			}
+		}
+
+		private void DrawFront()
+		{
+			// none -- ステータスなどを表示する。
 		}
 
 		public DDList<Enemy> Enemies = new DDList<Enemy>();
@@ -1418,7 +1485,7 @@ namespace Charlotte.Games
 			DDMain.KeepMainScreen();
 			SCommon.Swap(ref DDGround.KeptMainScreen, ref EquipmentMenu_KeptMainScreen); // 使用後は Unload すること。
 
-			DDTableMenu tableMenu = new DDTableMenu(130, 50, 24, () =>
+			TableMenu tableMenu = new TableMenu(130, 50, 24, () =>
 			{
 				DDDraw.DrawSimple(EquipmentMenu_KeptMainScreen.ToPicture(), 0, 0);
 
@@ -1498,7 +1565,7 @@ namespace Charlotte.Games
 			//DDMain.KeepMainScreen();
 			//SCommon.Swap(ref DDGround.KeptMainScreen, ref Pause_KeptMainScreen); // 使用後は Unload すること。
 
-			DDSimpleMenu simpleMenu = new DDSimpleMenu()
+			SimpleMenu simpleMenu = new SimpleMenu()
 			{
 				BorderColor = new I3Color(0, 64, 128),
 				WallDrawer = () =>
@@ -1519,6 +1586,7 @@ namespace Charlotte.Games
 			for (; ; )
 			{
 				selectIndex = simpleMenu.Perform(
+					selectIndex,
 					250,
 					180,
 					50,
@@ -1530,8 +1598,8 @@ namespace Charlotte.Games
 						"タイトルに戻る",
 						"戻る",
 					},
-					selectIndex,
-					true
+					true,
+					false // 武器メニューの配下であるため Pound でも良いと判断
 					);
 
 				switch (selectIndex)
@@ -1539,7 +1607,7 @@ namespace Charlotte.Games
 					case 0:
 						using (new SettingMenu()
 						{
-							SimpleMenu = new DDSimpleMenu()
+							SimpleMenu = new SimpleMenu()
 							{
 								BorderColor = new I3Color(0, 64, 128),
 								WallDrawer = () =>
@@ -1586,7 +1654,7 @@ namespace Charlotte.Games
 		{
 			DDMain.KeepMainScreen();
 
-			DDSimpleMenu simpleMenu = new DDSimpleMenu()
+			SimpleMenu simpleMenu = new SimpleMenu()
 			{
 				BorderColor = new I3Color(0, 128, 64),
 				WallDrawer = () =>
@@ -1603,6 +1671,7 @@ namespace Charlotte.Games
 			for (; ; )
 			{
 				selectIndex = simpleMenu.Perform(
+					selectIndex,
 					40,
 					40,
 					40,
@@ -1610,12 +1679,11 @@ namespace Charlotte.Games
 					"デバッグ用メニュー",
 					new string[]
 					{
-						"キャラクタ切り替え [ 現在のキャラクタ：" + Player.GetName(this.Player.Chara) + " ]",
+						"キャラクタ切り替え [ 現在のキャラクタ：" + Player.Chara_e_Names[(int)this.Player.Chara] + " ]",
 						"デバッグ強制遅延 [ 現在の設定：" + DDEngine.SlowdownLevel + " ]",
 						"当たり判定表示 [ 現在の設定：" + this.当たり判定表示 + " ]",
 						"ゲームに戻る",
 					},
-					selectIndex,
 					true,
 					true
 					);

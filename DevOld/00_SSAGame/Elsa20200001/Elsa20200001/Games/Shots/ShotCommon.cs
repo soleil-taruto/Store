@@ -9,6 +9,10 @@ namespace Charlotte.Games.Shots
 {
 	public static class ShotCommon
 	{
+		/// <summary>
+		/// 汎用・消滅イベント
+		/// </summary>
+		/// <param name="shot">自弾</param>
 		public static void Killed(Shot shot)
 		{
 			DDGround.EL.Add(SCommon.Supplier(Effects.B小爆発(shot.X, shot.Y)));

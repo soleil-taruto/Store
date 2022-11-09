@@ -53,5 +53,11 @@ namespace Charlotte.Commons
 			if (this.HasArgs())
 				throw new Exception("Bad command line option-num");
 		}
+
+		public IEnumerable<string> TrailArgs()
+		{
+			while (this.HasArgs())
+				yield return this.NextArg();
+		}
 	}
 }

@@ -42,7 +42,7 @@ function <void> ExecuteAllTask(<TaskManager_t> info)
 	{
 		var<generatorForTask> task = info.Tasks[index];
 
-		if (task.next().value)
+		if (NextVal(task))
 		{
 			// noop
 		}

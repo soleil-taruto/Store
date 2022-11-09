@@ -42,8 +42,9 @@ namespace Charlotte.Novels.Surfaces
 					else if (surface.InstanceName == name2)
 						surface.InstanceName = name1;
 				}
+				return;
 			}
-			else if (command == "WhileAct") // 即時
+			if (command == "WhileAct") // 即時
 			{
 				while (Novel.I.Status.Surfaces.Any(v => v.Act.Count != 0))
 				{
@@ -51,8 +52,9 @@ namespace Charlotte.Novels.Surfaces
 					DDEngine.EachFrame();
 				}
 				DDEngine.FreezeInput(NovelConsts.NEXT_PAGE_INPUT_INTERVAL);
+				return;
 			}
-			else if (command == "WhileActOrInput") // 即時
+			if (command == "WhileActOrInput") // 即時
 			{
 				while (Novel.I.Status.Surfaces.Any(v => v.Act.Count != 0))
 				{
@@ -68,11 +70,10 @@ namespace Charlotte.Novels.Surfaces
 					DDEngine.EachFrame();
 				}
 				DDEngine.FreezeInput(NovelConsts.NEXT_PAGE_INPUT_INTERVAL);
+				return;
 			}
-			else
-			{
-				throw new DDError();
-			}
+			ProcMain.WriteLog(command);
+			throw new DDError(); // Bad command
 		}
 	}
 }

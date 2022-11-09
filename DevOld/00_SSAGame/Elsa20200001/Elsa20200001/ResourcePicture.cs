@@ -114,20 +114,6 @@ namespace Charlotte
 
 		public DDPicture Enemy_神奈子 = DDPictureLoaders.Standard(@"dat\きつね仮\yukkuri-kanako.png"); // 1000x1000 resized png
 
-		// フランツ・カフカ
-		public DDPicture Teki_a01_Fly01 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a01_fly01.png", 2);
-		public DDPicture Teki_a01_Fly02 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a01_fly02.png", 2);
-		public DDPicture Teki_a01_Fly03 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a01_fly03.png", 2);
-		public DDPicture Teki_a01_Gliding01 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a01_gliding01.png", 2);
-		public DDPicture Teki_a01_Shit01 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a01_shit01.png", 2);
-		public DDPicture Teki_a02_Run01 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a02_run01.png", 2);
-		public DDPicture Teki_a02_Run02 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a02_run02.png", 2);
-		public DDPicture Teki_a02_Run03 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a02_run03.png", 2);
-		public DDPicture Teki_a02_Wait01 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a02_wait01.png", 2);
-		public DDPicture Teki_a03_Jump01 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a03_jump01.png", 2);
-		public DDPicture Teki_a03_Jump02 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a03_jump02.png", 2);
-		public DDPicture Teki_a03_Jump03 = DDPictureLoaders.Expand(@"dat\フランツカフカ\teki_a03_jump03.png", 2);
-
 		// ノベルパート用システム画像
 		public DDPicture MessageFrame_Message = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\空想曲線\Messageframe_29\material\01 message\message.png");
 		public DDPicture MessageFrame_Button = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\空想曲線\Messageframe_29\material\02 button\button.png");
@@ -146,10 +132,9 @@ namespace Charlotte
 		public DDPicture MessageFrame_Skip = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\skip.png");
 		public DDPicture MessageFrame_Skip2 = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\空想曲線\Messageframe_29\material\03 system_button\skip2.png");
 
-		public DDPicture 結月ゆかり02 = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\からい\ゆかマキ制服\yukari02.png"); // 仮
-		public DDPicture 結月ゆかり03 = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\からい\ゆかマキ制服\yukari03.png"); // 仮
-
-		public DDPicture 弦巻マキ01 = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\からい\ゆかマキ制服\maki01.png"); // 仮
-		public DDPicture 弦巻マキ02 = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\からい\ゆかマキ制服\maki02.png"); // 仮
+		public ResourcePicture()
+		{
+			// none
+		}
 	}
 }

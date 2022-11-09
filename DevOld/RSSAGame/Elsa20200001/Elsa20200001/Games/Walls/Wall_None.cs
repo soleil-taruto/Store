@@ -11,7 +11,7 @@ namespace Charlotte.Games.Walls
 		{
 			for (; ; )
 			{
-				// nop
+				// noop
 
 				yield return true;
 			}

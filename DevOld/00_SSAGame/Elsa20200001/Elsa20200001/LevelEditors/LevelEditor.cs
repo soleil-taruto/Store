@@ -41,8 +41,8 @@ namespace Charlotte.LevelEditors
 
 		public static void DrawEnemy()
 		{
-			int cam_l = DDGround.ICamera.X;
-			int cam_t = DDGround.ICamera.Y;
+			int cam_l = DDGround.Camera.X;
+			int cam_t = DDGround.Camera.Y;
 			int cam_r = cam_l + DDConsts.Screen_W;
 			int cam_b = cam_t + DDConsts.Screen_H;
 

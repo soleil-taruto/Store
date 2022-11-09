@@ -484,7 +484,7 @@ invincibleBlock:
 		// memo: @ 2022.7.11
 		// 上昇中(ジャンプ中)に接地判定が発生することがある。
 		// 接地中は重力により PlayerYSpeed がプラスに振れる。
-		// -> 接地による位置等の調整は PlayerYSpeed がプラスに触れている場合のみ行う。
+		// -> 接地による位置等の調整は PlayerYSpeed がプラスに振れている場合のみ行う。
 
 		if (touchGround && 0.0 < PlayerYSpeed)
 		{

@@ -36,7 +36,7 @@ namespace Charlotte.Games
 		{
 			for (int y = 0; y < this.MapNameTableRows.Length; y++)
 				for (int x = 0; x < this.MapNameTableRows[y].Length; x++)
-					if (this.MapNameTableRows[y][x] == mapName)
+					if (GameCommon.IsSameMapName(this.MapNameTableRows[y][x], mapName))
 						return new I2Point(x, y);
 
 			throw new DDError("そんなマップありません。" + mapName);

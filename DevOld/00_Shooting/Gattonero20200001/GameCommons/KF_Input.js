@@ -26,6 +26,19 @@ var<int> @@_Count_8 = 0;
 var<int> @@_Count_A = 0;
 var<int> @@_Count_B = 0;
 
+/*
+	各ボタンの押下状態カウンタの列挙
+*/
+function* <int[]> @@_Counts()
+{
+	yield @@_Count_2;
+	yield @@_Count_4;
+	yield @@_Count_6;
+	yield @@_Count_8;
+	yield @@_Count_A;
+	yield @@_Count_B;
+}
+
 function <void> @@_EACH()
 {
 	@@_Count_2 = @@_Check(@@_Count_2, PadInputIndex_2, [ 40, 74,  98 ]); // カーソル下 , J , テンキー2
@@ -71,8 +84,20 @@ function <int> @@_Check(<int> counter, <int> padInputIndex, <int[]> keyCodes)
 	return counter;
 }
 
+var @@_FreezeInputUntilReleaseFlag = false;
+
 function <int> @@_GetInput(<int> counter)
 {
+	if (@@_FreezeInputUntilReleaseFlag)
+	{
+		if (ToArray(@@_Counts()).some(counter => counter != 0))
+		{
+			return 0;
+		}
+
+		@@_FreezeInputUntilReleaseFlag = false;
+	}
+
 	return 1 <= FreezeInputFrame ? 0 : counter;
 }
 
@@ -156,4 +181,9 @@ function <void> FreezeInput_Frame(<int> frame) // frame: 1 == このフレームのみ, 
 function <void> FreezeInput()
 {
 	FreezeInput_Frame(1);
+}
+
+function <void> FreezeInputUntilRelease()
+{
+	@@_FreezeInputUntilReleaseFlag = true;
 }

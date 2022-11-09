@@ -3,133 +3,243 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using System.IO;
 using Charlotte.Commons;
+using System.IO;
 
 namespace Charlotte.Tests
 {
 	public class Test0001
 	{
+		/// <summary>
+		/// フェルマーの小定理
+		/// p == 素数
+		/// a == 0 以上 p 未満の整数
+		/// のとき
+		/// (a ^ p) % p == a となる。
+		/// </summary>
 		public void Test01()
 		{
-			//long timeStamp = 16010101085959; // 例外：有効な Win32 FileTime ではありません。
-			long timeStamp = 16010101090000; // ok
-			//long timeStamp = 19691231235959; // ok
-			//long timeStamp = 19700101000000; // ok
-			//long timeStamp = 30001231235959; // ok
-			//long timeStamp = 99991231235959; // ok
-			//long timeStamp = 100000101000000; // DateTimeが例外を投げる。
+			for (int p = 2; p < 2000; p++) // rough limit
+			{
+				if (IsPrime(p))
+				{
+					Console.WriteLine("p: " + p); // cout
 
-			File.WriteAllBytes(@"C:\temp\1.txt", SCommon.EMPTY_BYTES);
+					for (int a = 0; a < p; a++)
+					{
+						int v = 1;
 
-			FileInfo fileInfo = new FileInfo(@"C:\temp\1.txt");
+						for (int c = 0; c < p; c++)
+						{
+							v *= a;
+							v %= p;
+						}
 
-			fileInfo.CreationTime = SCommon.SimpleDateTime.FromTimeStamp(timeStamp).ToDateTime();
-			fileInfo.LastWriteTime = SCommon.SimpleDateTime.FromTimeStamp(timeStamp).ToDateTime();
-			fileInfo.LastAccessTime = SCommon.SimpleDateTime.FromTimeStamp(timeStamp).ToDateTime();
+						// (a ^ p) % p == a となるはず！
 
-			Console.WriteLine("OK!");
+						if (v != a)
+							throw null;
+					}
+				}
+			}
 		}
 
+		private static bool IsPrime(int v)
+		{
+			for (int c = 2; c < v; c++)
+			{
+				if (v % c == 0)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// 正規分布の曲線
+		/// </summary>
 		public void Test02()
 		{
-			for (int testcnt = 0; testcnt < 1000; testcnt++)
+			double[] map = new double[] { 1.0 };
+
+			for (int c = 0; c < 3000; c++) // rough limit
 			{
-				Console.WriteLine("testcnt: " + testcnt);
+				double[] next = new double[map.Length + 1];
 
-				int count = SCommon.CRandom.GetInt(100) + 1;
-
+				for (int i = 0; i < map.Length; i++)
 				{
-					// 重複無し
-					string[] lines = Enumerable.Range(1, count)
-						.Select(v => "" + v)
-						.ToArray();
-
-					SCommon.CRandom.Shuffle(lines);
-
-					if (SCommon.HasSame(lines, SCommon.Comp)) // ? 重複有り
-						throw null; // 想定外
+					next[i + 0] += map[i] * 0.5;
+					next[i + 1] += map[i] * 0.5;
 				}
+				map = next;
 
-				{
-					// 重複有り
-					string[] lines = Enumerable.Range(1, count)
-						.Select(v => "" + v)
-						.Concat(new string[] { "" + (SCommon.CRandom.GetInt(count) + 1) })
-						.ToArray();
-
-					SCommon.CRandom.Shuffle(lines);
-
-					if (!SCommon.HasSame(lines, SCommon.Comp)) // ? 重複無し
-						throw null; // 想定外
-				}
-
-				{
-					// 重複無し
-					string[] lines = Enumerable.Range(1, count)
-						.Select(v => "" + v)
-						.ToArray();
-
-					SCommon.CRandom.Shuffle(lines);
-
-					SCommon.ForEachPair(lines, (a, b) =>
-					{
-						if (a == b)
-							throw null; // 想定外
-					});
-				}
-
-				{
-					// 重複有り
-					string[] lines = Enumerable.Range(1, count)
-						.Select(v => "" + v)
-						.Concat(new string[] { "" + (SCommon.CRandom.GetInt(count) + 1) })
-						.ToArray();
-
-					SCommon.CRandom.Shuffle(lines);
-
-					bool threw = false;
-					try
-					{
-						SCommon.ForEachPair(lines, (a, b) =>
-						{
-							if (a == b)
-								throw null;
-						});
-					}
-					catch
-					{
-						threw = true;
-					}
-					if (!threw)
-						throw null; // 想定外
-				}
+				// 両端の小さい値を除去
+				while (map[0] < SCommon.MICRO) map = map.Skip(1).ToArray();
+				while (map[map.Length - 1] < SCommon.MICRO) map = map.Take(map.Length - 1).ToArray();
 			}
 
-			Console.WriteLine("OK!");
+			using (CsvFileWriter writer = new CsvFileWriter(Common.NextOutputPath() + ".csv"))
+			{
+				foreach (double v in map)
+				{
+					writer.WriteCell(v.ToString("F9"));
+					writer.EndRow();
+				}
+			}
 		}
 
+		/// <summary>
+		/// 正規分布の曲線
+		/// </summary>
 		public void Test03()
 		{
-			string[][] rows;
+			const int SPAN = 50;
+			int[] map = new int[SPAN * 2 + 1];
 
-			using (CsvFileReader reader = new CsvFileReader(@"C:\temp\1.csv"))
+			for (int c = 0; c < 1000000; c++) // rough limit
 			{
-				rows = reader.ReadToEnd();
+				if (c % 10000 == 0) Console.WriteLine(c); // cout
+
+				int v = SPAN;
+
+				for (int i = 0; i < SPAN; i++)
+					v += SCommon.CRandom.GetInt(2) * 2 - 1;
+
+				map[v]++;
 			}
 
-			using (CsvFileWriter writer = new CsvFileWriter(@"C:\temp\2.csv"))
+			// 両端の小さい値を除去
+			// 注意：SPAN-によってインデックスが偶数または奇数の位置が 0 になる。
+			map = map.Where(v => v != 0).ToArray();
+
+			using (CsvFileWriter writer = new CsvFileWriter(Common.NextOutputPath() + ".csv"))
 			{
-				writer.WriteRows(rows);
+				foreach (double v in map)
+				{
+					writer.WriteCell(v.ToString("F9"));
+					writer.EndRow();
+				}
 			}
 		}
 
 		public void Test04()
 		{
-			string retOnly = @"
-";
+			for (int testcnt = 0; testcnt < 100; testcnt++)
+			{
+				byte[][] parts = MakeParts().ToArray();
+				byte[][] destParts;
 
-			Console.WriteLine(string.Join(", ", retOnly.Select(chr => "" + (int)chr))); // 13, 10
+				using (WorkingDir wd = new WorkingDir())
+				{
+					string file = wd.MakePath();
+
+					Test04_Write(file, parts);
+					destParts = Test04_Read(file);
+				}
+
+				if (SCommon.Comp(parts, destParts, SCommon.Comp) != 0) // ? 不一致
+					throw null; // 想定外
+			}
+
+			Console.WriteLine("OK!");
+		}
+
+		private void Test04_Write(string file, byte[][] parts)
+		{
+			using (FileStream writer = new FileStream(file, FileMode.Create, FileAccess.Write))
+			{
+				SCommon.WritePartInt(writer, parts.Length);
+
+				foreach (byte[] part in parts)
+					SCommon.WritePart(writer, part);
+			}
+		}
+
+		private byte[][] Test04_Read(string file)
+		{
+			using (FileStream reader = new FileStream(file, FileMode.Open, FileAccess.Read))
+			{
+				byte[][] dest = new byte[SCommon.ReadPartInt(reader)][];
+
+				for (int index = 0; index < dest.Length; index++)
+					dest[index] = SCommon.ReadPart(reader);
+
+				return dest;
+			}
+		}
+
+		private IEnumerable<byte[]> MakeParts()
+		{
+			int count = SCommon.CRandom.GetInt(20);
+
+			for (int index = 0; index < count; index++)
+			{
+				yield return SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(300));
+			}
+		}
+
+		public void Test05()
+		{
+			Test06_a("ABCDABCD".ToArray(), chr => chr == 'C', 0, 2);
+			Test06_a("ABCDABCD".ToArray(), chr => chr == 'C', 2, 2);
+			Test06_a("ABCDABCD".ToArray(), chr => chr == 'C', 3, 6);
+
+			Console.WriteLine("OK!");
+		}
+
+		private void Test06_a<T>(T[] arr, Predicate<T> match, int startIndex, int assume)
+		{
+			int ans = SCommon.IndexOf(arr, match, startIndex);
+
+			if (ans != assume)
+				throw null; // 想定外
+		}
+
+		public void Test06()
+		{
+			for (int testcnt = 0; testcnt < 1000000; testcnt++)
+			{
+				// int
+				{
+					int value = SCommon.CRandom.GetInt(SCommon.IMAX) * SCommon.CRandom.ChooseOne(new int[] { -1, 1 });
+					byte[] data = SCommon.IntToBytes(value);
+					int ans = SCommon.ToInt(data);
+
+					if (value != ans)
+						throw null; // 想定外
+				}
+
+				// long
+				{
+					long value = SCommon.CRandom.GetLong(SCommon.IMAX_64) * SCommon.CRandom.ChooseOne(new int[] { -1, 1 });
+					byte[] data = SCommon.LongToBytes(value);
+					long ans = SCommon.ToLong(data);
+
+					if (value != ans)
+						throw null; // 想定外
+				}
+			}
+
+			Console.WriteLine("OK!");
+		}
+
+		public void Test07()
+		{
+			for (int testcnt = 0; testcnt < 10000; testcnt++)
+			{
+				byte[][] src = Enumerable.Range(0, SCommon.CRandom.GetInt(100))
+					.Select(dummy => SCommon.CRandom.GetBytes(SCommon.CRandom.GetInt(100)))
+					.ToArray();
+
+				byte[] enc = SCommon.SplittableJoin(src);
+				byte[][] dec = SCommon.Split(enc);
+
+				if (SCommon.Comp(src, dec, SCommon.Comp) != 0) // ? 不一致
+					throw null; // 想定外
+			}
+
+			Console.WriteLine("OK!");
 		}
 	}
 }

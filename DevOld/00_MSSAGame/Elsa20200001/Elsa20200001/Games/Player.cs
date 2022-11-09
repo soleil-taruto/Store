@@ -89,6 +89,7 @@ namespace Charlotte.Games
 			// 攻撃中 >
 
 			if (1 <= this.AttackFrame)
+			//if (1 <= this.AttackFrame && this.UwamukiFrame == 0) // for Pochimetto
 			{
 				picture = Ground.I.Picture.PlayerAttack;
 
@@ -150,6 +151,8 @@ namespace Charlotte.Games
 
 			switch (this.武器)
 			{
+				#region テスト用
+
 				case ShotCatalog.武器_e.B_NORMAL:
 					if (this.AttackFrame % 6 == 1)
 					{
@@ -218,7 +221,7 @@ namespace Charlotte.Games
 					}
 					break;
 
-				// ここまでテスト用
+				#endregion
 
 				case ShotCatalog.武器_e.NORMAL:
 					if (this.AttackFrame % 6 == 1)
@@ -226,14 +229,21 @@ namespace Charlotte.Games
 						double x = this.X;
 						double y = this.Y;
 
+#if true
 						x += 30.0 * (this.FacingLeft ? -1 : 1);
+#else // for Pochimetto
+						if (1 <= this.UwamukiFrame)
+							y -= 35.0;
+						else
+							x += 30.0 * (this.FacingLeft ? -1 : 1);
+#endif
 
 						if (1 <= this.ShagamiFrame)
 							y += Y_ADD_SHAGAMI;
 						else
 							y += Y_ADD_STAND;
 
-						Game.I.Shots.Add(new Shot_Normal(x, y, this.FacingLeft));
+						Game.I.Shots.Add(new Shot_Normal(x, y, this.FacingLeft, 1 <= this.UwamukiFrame));
 					}
 					break;
 

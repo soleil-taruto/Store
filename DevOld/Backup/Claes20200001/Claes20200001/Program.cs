@@ -27,16 +27,16 @@ namespace Charlotte
 			}
 			else
 			{
-				Main4();
+				Main4(ar);
 			}
-			//Common.OpenOutputDirIfCreated();
+			Common.OpenOutputDirIfCreated();
 		}
 
 		private void Main3()
 		{
 			// -- choose one --
 
-			Main4();
+			Main4(new ArgsReader(new string[] { }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -46,14 +46,29 @@ namespace Charlotte
 			//Common.Pause();
 		}
 
-		private void Main4()
+		private void Main4(ArgsReader ar)
+		{
+			try
+			{
+				Main5(ar);
+			}
+			catch (Exception e)
+			{
+				ProcMain.WriteLog(e);
+
+				Console.WriteLine("Press ENTER key. (エラーによりバックアップ・プロセスを中断しました)");
+				Console.ReadLine();
+			}
+		}
+
+		private void Main5(ArgsReader ar)
 		{
 			using (WorkingDir wd = new WorkingDir())
 			{
 				ProcLogFile = wd.MakePath();
 				try
 				{
-					Main5();
+					Main6();
 				}
 				finally
 				{
@@ -64,7 +79,7 @@ namespace Charlotte
 
 		private string ProcLogFile;
 
-		private void Main5()
+		private void Main6()
 		{
 			File.WriteAllBytes(ProcLogFile, SCommon.EMPTY_BYTES);
 
@@ -100,10 +115,10 @@ namespace Charlotte
 			Array.Sort(wDirs, SCommon.Comp);
 
 			foreach (string dir in rDirs)
-				ProcMain.WriteLog("1< " + dir);
+				ProcMain.WriteLog("1 " + dir);
 
 			foreach (string dir in wDirs)
-				ProcMain.WriteLog("1> " + dir);
+				ProcMain.WriteLog("2 " + dir);
 
 			string[] rNames = rDirs.Select(dir => SCommon.ChangeRoot(dir, Consts.SRC_DIR)).ToArray();
 			string[] wNames = wDirs.Select(dir => SCommon.ChangeRoot(dir, Consts.DEST_DIR)).ToArray();
@@ -114,29 +129,37 @@ namespace Charlotte
 			List<string> rOnlyNames = new List<string>();
 			List<string> wOnlyNames = new List<string>();
 			List<string> beNames = new List<string>();
+			List<string> beNames_dummy = new List<string>();
 
-			Common.Merge(rNames, wNames, SCommon.Comp, rOnlyNames, wOnlyNames, beNames);
+			SCommon.Merge(rNames, wNames, SCommon.Comp, rOnlyNames, beNames, beNames_dummy, wOnlyNames);
 
-			foreach (string name in rOnlyNames)
-				ProcMain.WriteLog("2< " + name);
+			beNames_dummy = null;
 
-			foreach (string name in beNames)
-				ProcMain.WriteLog("BE " + name);
+			ProcMain.WriteLog("---- 新規 ----");
+			foreach (string name in rOnlyNames) ProcMain.WriteLog("< " + name);
+			ProcMain.WriteLog("---- 更新 ----");
+			foreach (string name in beNames) ProcMain.WriteLog("* " + name);
+			ProcMain.WriteLog("---- 削除 (特別なフォルダは一旦削除されます) ----");
+			foreach (string name in wOnlyNames) ProcMain.WriteLog("> " + name);
+			ProcMain.WriteLog("----");
 
-			foreach (string name in wOnlyNames)
-				ProcMain.WriteLog("2> " + name);
-
+			ProcMain.WriteLog("CONFIRM_OPEN");
 			if (MessageBox.Show(
-				"メーラーなど、動作中のアプリを閉じて下さい。",
-				"バックアップを開始します...",
+				"バックアップを開始します。\n" +
+				"以下のプログラムは終了させて下さい。\n" +
+				"・CrystalDiskInfo\n" +
+				"・Becky",
+				"バックアップ開始",
 				MessageBoxButtons.OKCancel,
 				MessageBoxIcon.Information
 				) != DialogResult.OK
 				)
 			{
 				ProcMain.WriteLog("BACKUP_CANCELLED");
+				DistributeLogFile();
 				return;
 			}
+			ProcMain.WriteLog("CONFIRM_CLOSED");
 
 			foreach (string name in wOnlyNames)
 			{
@@ -144,7 +167,7 @@ namespace Charlotte
 
 				ProcMain.WriteLog("RD " + dir);
 
-				Batch(string.Format(@"RD /S /Q ""{0}""", dir));
+				P_Batch(string.Format(@"RD /S /Q ""{0}""", dir));
 			}
 			foreach (string name in rOnlyNames)
 			{
@@ -156,22 +179,44 @@ namespace Charlotte
 			}
 			foreach (string name in beNames.Concat(rOnlyNames))
 			{
+				string title = name;
 				string rDir = Path.Combine(Consts.SRC_DIR, name);
 				string wDir = Path.Combine(Consts.DEST_DIR, name);
 
 				ProcMain.WriteLog("< " + rDir);
 				ProcMain.WriteLog("> " + wDir);
 
-				ProcMain.WriteLog("ROBOCOPY_ST " + name);
+				ProcMain.WriteLog("ROBOCOPY_ST " + title);
 
-				Batch(string.Format(@"ROBOCOPY.EXE ""{0}"" ""{1}"" /MIR", rDir, wDir));
+				P_Batch(string.Format(@"ROBOCOPY.EXE ""{0}"" ""{1}"" /MIR", rDir, wDir));
 
-				ProcMain.WriteLog("ROBOCOPY_ED " + name);
+				ProcMain.WriteLog("ROBOCOPY_ED " + title);
 			}
+
+			CopySpecialDir(
+				Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+				Path.Combine(Consts.DEST_DIR, "デスクトップ"),
+				"デスクトップ"
+				);
 
 			ProcMain.WriteLog("BACKUP_ED");
 
 			DistributeLogFile();
+		}
+
+		private void CopySpecialDir(string rDir, string wDir, string title)
+		{
+			ProcMain.WriteLog("< " + rDir);
+			ProcMain.WriteLog("> " + wDir);
+
+			ProcMain.WriteLog("MD " + wDir);
+			SCommon.CreateDir(wDir);
+
+			ProcMain.WriteLog("ROBOCOPY_ST " + title);
+
+			P_Batch(string.Format(@"ROBOCOPY.EXE ""{0}"" ""{1}"" /MIR", rDir, wDir));
+
+			ProcMain.WriteLog("ROBOCOPY_ED " + title);
 		}
 
 		private void DistributeLogFile()
@@ -183,7 +228,7 @@ namespace Charlotte
 			File.Copy(ProcLogFile, Consts.LOG_FILE_2);
 		}
 
-		private void Batch(string command)
+		private void P_Batch(string command)
 		{
 			using (WorkingDir wd = new WorkingDir())
 			{
@@ -194,7 +239,7 @@ namespace Charlotte
 				SCommon.Batch(new string[]
 				{
 					string.Format(@"{0} > ""{1}"" 2> ""{2}""", command, outFile, errFile),
-					string.Format(@">> ""{0}"" ECHO ERRORLEVEL=%ERRORLEVEL%", outFile2),
+					string.Format(@"> ""{0}"" ECHO ERRORLEVEL=%ERRORLEVEL%", outFile2),
 				});
 
 				using (FileStream writer = new FileStream(ProcLogFile, FileMode.Append, FileAccess.Write))

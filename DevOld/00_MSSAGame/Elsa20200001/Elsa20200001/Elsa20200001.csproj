@@ -73,14 +73,16 @@
     <Compile Include="Commons\CsvFileReader.cs" />
     <Compile Include="Commons\CsvFileWriter.cs" />
     <Compile Include="Consts.cs" />
+    <Compile Include="GameCommons\DDActionList.cs" />
     <Compile Include="GameCommons\DDHash.cs" />
     <Compile Include="GameCommons\DDHashedData.cs" />
     <Compile Include="GameCommons\DDHashedResource.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_BTrump.cs" />
     <Compile Include="GameTools\AppConfig.cs" />
     <Compile Include="GameTools\AppSaveDataUtils.cs" />
     <Compile Include="GameTools\TableMenu.cs" />
     <Compile Include="GameCommons\DDTouch.cs" />
-    <Compile Include="GameProgressMasters\GameProgressMaster.cs" />
+    <Compile Include="Games\GameProgressMaster.cs" />
     <Compile Include="Games\Confirm.cs" />
     <Compile Include="Games\Enemies\EnemyCommon.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_B1002.cs" />

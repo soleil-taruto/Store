@@ -10,10 +10,15 @@ using System.Security.Permissions;
 using Charlotte.Commons;
 using Charlotte.Games.Tiles;
 using Charlotte.Games.Enemies;
+using Charlotte.Games;
 using Charlotte.GameCommons;
 
 namespace Charlotte.LevelEditors
 {
+	// memo:
+	// xxxxxxxxxx // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+	// という行は xxxxxxxxxx の部分について難読化による単語の置き換えを行わない。(xxxxxxxxxx は任意の文字列)
+
 	public partial class LevelEditorDlg : Form
 	{
 		#region ALT_F4 抑止

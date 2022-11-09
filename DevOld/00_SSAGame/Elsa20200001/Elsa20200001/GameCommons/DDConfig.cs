@@ -22,7 +22,7 @@ namespace Charlotte.GameCommons
 		public static string ApplicationLogSaveDirectory = @"C:\temp";
 		public static bool DrawScreen_MosaicFlag = true;
 
-		// 新しい項目をここへ追加...
+		// Config_新しい項目をここへ追加...
 
 		// < 設定項目
 
@@ -51,7 +51,7 @@ namespace Charlotte.GameCommons
 			ApplicationLogSaveDirectory = lines[c++];
 			DrawScreen_MosaicFlag = int.Parse(lines[c++]) != 0;
 
-			// 新しい項目をここへ追加...
+			// Config_新しい項目をここへ追加...
 
 			// < 設定項目
 		}

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Charlotte.GameCommons;
+using Charlotte.GameTools;
 using Charlotte.Novels;
 
 namespace Charlotte.Games
 {
 	public class SettingMenu : IDisposable
 	{
-		public DDSimpleMenu SimpleMenu;
+		public SimpleMenu SimpleMenu;
 
 		// <---- prm
 
@@ -47,7 +48,7 @@ namespace Charlotte.Games
 					"戻る",
 				};
 
-				selectIndex = this.SimpleMenu.Perform(40, 40, 40, 24, "設定", items, selectIndex);
+				selectIndex = this.SimpleMenu.Perform(selectIndex, 40, 40, 40, 24, "設定", items);
 
 				switch (selectIndex)
 				{
@@ -109,6 +110,7 @@ namespace Charlotte.Games
 					default:
 						throw new DDError();
 				}
+				//DDEngine.EachFrame(); // 不要
 			}
 		endMenu:
 			DDEngine.FreezeInput();

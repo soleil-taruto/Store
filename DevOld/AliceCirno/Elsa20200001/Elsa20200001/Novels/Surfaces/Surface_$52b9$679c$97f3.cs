@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Charlotte.Commons;
 using Charlotte.GameCommons;
 
 namespace Charlotte.Novels.Surfaces
@@ -33,11 +34,11 @@ namespace Charlotte.Novels.Surfaces
 					DDCCResource.GetSE(arguments[c++]).Play();
 					return false;
 				});
+
+				return;
 			}
-			else
-			{
-				throw new DDError();
-			}
+			ProcMain.WriteLog(command);
+			throw new DDError(); // Bad command
 		}
 	}
 }

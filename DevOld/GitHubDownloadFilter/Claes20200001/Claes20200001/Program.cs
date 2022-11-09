@@ -95,7 +95,7 @@ namespace Charlotte
 			{
 				byte[] fileData = File.ReadAllBytes(file);
 
-				if (IsEncodingUTF8WithBOM(fileData))
+				if (IsEncodingUTF8WithBOM(fileData) || Common.ExtIs(file, ".js"))
 				{
 					fileData = NewLineToCRLF(fileData).ToArray();
 

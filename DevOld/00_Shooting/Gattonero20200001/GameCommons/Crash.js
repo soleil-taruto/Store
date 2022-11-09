@@ -7,7 +7,7 @@
 /// Crash_t
 {
 	// 当たり判定の種類
-	// 1 == 円形
+	// 1 == 円形(点)
 	// 2 == 矩形
 	//
 	<int> Kind
@@ -15,6 +15,13 @@
 
 @(ASTR)/
 
+// 当たり判定を生成 -- 点
+function <Crash_t> CreateCrash_Point(<double> x, <double> y)
+{
+	return CreateCrash_Circle(x, y, MICRO);
+}
+
+// 当たり判定を生成 -- 円形
 function <Crash_t> CreateCrash_Circle(<double> x, <double> y, <double> r)
 {
 	var ret =
@@ -31,6 +38,7 @@ function <Crash_t> CreateCrash_Circle(<double> x, <double> y, <double> r)
 	return ret;
 }
 
+// 当たり判定を生成 -- 矩形
 function <Crash_t> CreateCrash_Rect(<D4Rect_t> rect)
 {
 	var ret =

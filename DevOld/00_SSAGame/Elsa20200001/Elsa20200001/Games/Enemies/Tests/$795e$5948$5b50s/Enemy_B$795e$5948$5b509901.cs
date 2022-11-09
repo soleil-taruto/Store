@@ -29,8 +29,8 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 
 			foreach (DDScene scene in DDSceneUtils.Create(120))
 			{
-				double xBuru = DDUtils.Random.Single() * 30.0;
-				double yBuru = DDUtils.Random.Single() * 30.0;
+				double xBuru = DDUtils.Random.GetReal1() * 30.0;
+				double yBuru = DDUtils.Random.GetReal1() * 30.0;
 
 				DDUtils.Approach(ref this.X, targ_x, 0.99);
 				DDUtils.Approach(ref this.Y, targ_y, 0.99);
@@ -47,7 +47,7 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 				yield return true;
 			}
 
-			this.P_Killed();
+			this.Kill(true);
 			Game.I.Enemies.Add(new Enemy_B神奈子9902());
 		}
 	}

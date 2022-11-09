@@ -46,6 +46,15 @@ namespace Charlotte
 			if (urlPath == "/AccessCounter-barnatsutobi")
 				return channel => Action_AccessCounter.Perform(channel, "barnatsutobi");
 
+			if (urlPath == "/AccessCounter-ornithopter")
+				return channel => Action_AccessCounter.Perform(channel, "ornithopter");
+
+			if (urlPath == "/AccessCounter-anemoscope")
+				return channel => Action_AccessCounter.Perform(channel, "anemoscope");
+
+			if (urlPath == "/API-RemoteEndPoint")
+				return channel => Action_RemoteEndPoint.Perform(channel);
+
 			return null;
 		}
 	}

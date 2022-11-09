@@ -20,7 +20,7 @@ function* <generatorForTask> Effect_Dummy(<double> x, <double> y)
 	}
 }
 
-function <void> AddEffect_Explode(<double> x, <double> y)
+function <void> AddEffect_Explode(<double> x, <double> y) // ”Ä—p”š”­
 {
 	for (var<int> c = 0; c < 30; c++)
 	{

@@ -42,6 +42,7 @@
 			this.Label桁数 = new System.Windows.Forms.Label();
 			this.Btn行数_5 = new System.Windows.Forms.Button();
 			this.Btn行数_32 = new System.Windows.Forms.Button();
+			this.BtnSave = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.Numb行数)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -82,7 +83,7 @@
 			this.BtnGenRand.Location = new System.Drawing.Point(636, 639);
 			this.BtnGenRand.Name = "BtnGenRand";
 			this.BtnGenRand.Size = new System.Drawing.Size(120, 60);
-			this.BtnGenRand.TabIndex = 9;
+			this.BtnGenRand.TabIndex = 10;
 			this.BtnGenRand.Text = "生成";
 			this.BtnGenRand.UseVisualStyleBackColor = true;
 			this.BtnGenRand.Click += new System.EventHandler(this.BtnGenRand_Click);
@@ -93,7 +94,7 @@
 			this.BtnClear.Location = new System.Drawing.Point(762, 639);
 			this.BtnClear.Name = "BtnClear";
 			this.BtnClear.Size = new System.Drawing.Size(120, 60);
-			this.BtnClear.TabIndex = 10;
+			this.BtnClear.TabIndex = 11;
 			this.BtnClear.Text = "クリア";
 			this.BtnClear.UseVisualStyleBackColor = true;
 			this.BtnClear.Click += new System.EventHandler(this.BtnClear_Click);
@@ -173,6 +174,7 @@
 			// 
 			// Btn行数_5
 			// 
+			this.Btn行数_5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.Btn行数_5.Location = new System.Drawing.Point(402, 639);
 			this.Btn行数_5.Name = "Btn行数_5";
 			this.Btn行数_5.Size = new System.Drawing.Size(28, 28);
@@ -183,6 +185,7 @@
 			// 
 			// Btn行数_32
 			// 
+			this.Btn行数_32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.Btn行数_32.Location = new System.Drawing.Point(436, 639);
 			this.Btn行数_32.Name = "Btn行数_32";
 			this.Btn行数_32.Size = new System.Drawing.Size(38, 28);
@@ -191,11 +194,23 @@
 			this.Btn行数_32.UseVisualStyleBackColor = true;
 			this.Btn行数_32.Click += new System.EventHandler(this.Btn行数_32_Click);
 			// 
+			// BtnSave
+			// 
+			this.BtnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.BtnSave.Location = new System.Drawing.Point(510, 639);
+			this.BtnSave.Name = "BtnSave";
+			this.BtnSave.Size = new System.Drawing.Size(120, 60);
+			this.BtnSave.TabIndex = 9;
+			this.BtnSave.Text = "保存";
+			this.BtnSave.UseVisualStyleBackColor = true;
+			this.BtnSave.Click += new System.EventHandler(this.BtnSave_Click);
+			// 
 			// MainWin
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(894, 711);
+			this.Controls.Add(this.BtnSave);
 			this.Controls.Add(this.Btn行数_32);
 			this.Controls.Add(this.Btn行数_5);
 			this.Controls.Add(this.Label桁数);
@@ -240,6 +255,7 @@
 		private System.Windows.Forms.Label Label桁数;
 		private System.Windows.Forms.Button Btn行数_5;
 		private System.Windows.Forms.Button Btn行数_32;
+		private System.Windows.Forms.Button BtnSave;
 	}
 }
 

@@ -13,7 +13,7 @@ namespace Charlotte
 {
 	public partial class LiteStatusDlg : Form
 	{
-		#region ALT_F4 抑止
+		#region WndProc
 
 		[SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 		protected override void WndProc(ref Message m)
@@ -45,21 +45,7 @@ namespace Charlotte
 
 		public static void EndDisplayDelay()
 		{
-#if true
 			DDGround.SystemTasks.Delay(DDConfig.LOG_ENABLED ? 3 : 30, EndDisplay);
-#else // old same
-			int DELAY_FRAME = DDConfig.LOG_ENABLED ? 3 : 30;
-			int endFrame = DDEngine.ProcFrame + DELAY_FRAME;
-
-			DDGround.SystemTasks.Add(() =>
-			{
-				if (DDEngine.ProcFrame < endFrame)
-					return true;
-
-				EndDisplay();
-				return false;
-			});
-#endif
 		}
 
 		public static void EndDisplay()
@@ -91,20 +77,15 @@ namespace Charlotte
 			else
 				fontSize = 48f;
 
-			this.BackColor = Color.FromArgb(64, 0, 0); // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-			this.FormBorderStyle = FormBorderStyle.None; // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-			this.StatusMessage
-				.Font = new Font( // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-					"メイリオ",
-					fontSize
-					);
-			this.StatusMessage
-				.ForeColor = Color.White; // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+			this.BackColor = Color.FromArgb(0, 64, 64);
+			this.FormBorderStyle = FormBorderStyle.None;
+			this.StatusMessage.Font = new Font("メイリオ", fontSize);
+			this.StatusMessage.ForeColor = Color.FromArgb(255, 255, 255);
 		}
 
 		private void LiteStatusDlg_Load(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void LiteStatusDlg_Shown(object sender, EventArgs e)
@@ -113,34 +94,42 @@ namespace Charlotte
 
 			const int MARGIN = 30;
 
-			this.Width = // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-				DDGround.MonitorRect.W;
-			this.Height = // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-				MARGIN + this.StatusMessage
-				.Height + // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-				MARGIN;
-			this.Left = // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-				DDGround.MonitorRect.L;
-			this.Top = // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-				(DDGround.MonitorRect.H -
-				this.Height) / 2; // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-			this.StatusMessage
-				.Left = (this.Width - this // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-				.StatusMessage
-				.Width) / 2; // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-			this.StatusMessage
-				.Top = // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-					MARGIN;
+			this.
+				Width // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				= DDGround.MonitorRect.W;
+			this.
+				Height // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				= MARGIN + this.StatusMessage.
+				Height // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				+ MARGIN;
+			this.
+				Left // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				= DDGround.MonitorRect.L;
+			this.
+				Top // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				= (DDGround.MonitorRect.H - this.
+				Height // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				) / 2;
+			this.StatusMessage.
+				Left // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				= (this.
+				Width // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				- this.StatusMessage.
+				Width // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				) / 2;
+			this.StatusMessage.
+				Top // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
+				= MARGIN;
 		}
 
 		private void LiteStatusDlg_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void LiteStatusDlg_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			// nop
+			// noop
 		}
 	}
 }

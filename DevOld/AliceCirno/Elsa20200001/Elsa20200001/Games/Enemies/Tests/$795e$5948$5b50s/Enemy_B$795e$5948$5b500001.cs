@@ -14,7 +14,7 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 			: base(x, y, 100, 1, false)
 		{ }
 
-		private Func<bool> _hitBack = () => false;
+		private Func<bool> SpecialDraw = () => false;
 
 		protected override IEnumerable<bool> E_Draw()
 		{
@@ -29,7 +29,7 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 
 			for (int frame = 0; ; frame++)
 			{
-				if (!_hitBack())
+				if (!this.SpecialDraw())
 				{
 					double x = Math.Cos(boss_rot / 100.0);
 					double y = Math.Sin(boss_rot / 100.0);
@@ -70,7 +70,7 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 
 		protected override void P_Damaged(Shot shot, int damagePoint)
 		{
-			_hitBack = SCommon.Supplier(this.E_HitBack());
+			this.SpecialDraw = SCommon.Supplier(this.E_HitBack());
 			EnemyCommon.Damaged(this, shot, damagePoint);
 			Game.I.Enemies.Add(new Enemy_B神奈子_Tama(this.X, this.Y)); // 撃ち返し
 		}

@@ -54,37 +54,15 @@ namespace Charlotte.GameCommons
 			Clear(PictureCache, DDPictureUtils.Pictures, picture => picture.Unload());
 		}
 
-#if true
 		public static void ClearMusic()
 		{
 			Clear(MusicCache, DDMusicUtils.Musics, music => music.Sound.Unload(), music => !music.Sound.IsPlaying());
 		}
-#else // old
-		/// <summary>
-		/// クリア対象の音楽は停止していること。
-		/// -- 再生中に Unload したらマズいのかどうかは不明。多分マズいだろう。
-		/// </summary>
-		public static void ClearMusic()
-		{
-			Clear(MusicCache, DDMusicUtils.Musics, music => music.Sound.Unload());
-		}
-#endif
 
-#if true
 		public static void ClearSE()
 		{
 			Clear(SECache, DDSEUtils.SEList, se => se.Sound.Unload(), se => !se.Sound.IsPlaying());
 		}
-#else // old
-		/// <summary>
-		/// クリア対象の効果音は停止していること。
-		/// -- 再生中に Unload したらマズいのかどうかは不明。多分マズいだろう。
-		/// </summary>
-		public static void ClearSE()
-		{
-			Clear(SECache, DDSEUtils.SEList, se => se.Sound.Unload());
-		}
-#endif
 
 		public static void Clear<K, T>(Dictionary<K, T> cache, List<T> store, Action<T> a_unload)
 		{
@@ -93,10 +71,7 @@ namespace Charlotte.GameCommons
 
 		public static void Clear<K, T>(Dictionary<K, T> cache, List<T> store, Action<T> a_unload, Predicate<T> match)
 		{
-			HashSet<T> handles = new HashSet<T>(cache
-				.Values // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-				.Where(handle => match(handle))
-				);
+			HashSet<T> handles = new HashSet<T>(cache.Values.Where(handle => match(handle)));
 
 			foreach (T handle in handles)
 				a_unload(handle);
@@ -114,10 +89,7 @@ namespace Charlotte.GameCommons
 
 		private static void P_Remove<K, T>(Dictionary<K, T> map, K key)
 		{
-			map
-				.Remove( // KeepComment:@^_ConfuserForElsa // NoRename:@^_ConfuserForElsa
-					key
-					);
+			map.Remove(key);
 		}
 	}
 }

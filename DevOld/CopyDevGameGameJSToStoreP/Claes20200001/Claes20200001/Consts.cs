@@ -18,27 +18,14 @@ namespace Charlotte
 		public const string W_ROOT_DIR = @"C:\home\GitHub\StoreP\Dev";
 
 		/// <summary>
-		/// ソースDIR ローカル名
-		/// Game
+		/// ソースDIRのローカル名
 		/// </summary>
-		public const string SRC_LOCAL_DIR_01 = "Elsa20200001";
-
-		/// <summary>
-		/// ソースDIR ローカル名
-		/// GameJS
-		/// </summary>
-		public const string SRC_LOCAL_DIR_02 = "Program";
-
-		/// <summary>
-		/// ソースDIR ローカル名
-		/// その他 CUI
-		/// </summary>
-		public const string SRC_LOCAL_DIR_03 = "Claes20200001";
-
-		/// <summary>
-		/// ソースDIR ローカル名
-		/// その他 GUI
-		/// </summary>
-		public const string SRC_LOCAL_DIR_04 = "Silvia20200001";
+		public static readonly string[] SRC_LOCAL_DIRS = new string[]
+		{
+			"Elsa20200001", // Game
+			"Claes20200001", // CUI
+			"Silvia20200001", // GUI
+			"Gattonero20200001", // GameJS
+		};
 	}
 }

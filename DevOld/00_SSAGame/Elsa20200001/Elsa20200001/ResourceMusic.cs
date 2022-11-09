@@ -8,7 +8,7 @@ namespace Charlotte
 {
 	public class ResourceMusic
 	{
-		public DDMusic Dummy = new DDMusic(@"dat\General\muon.wav"); // ★サンプルとしてキープ
+		public DDMusic Muon = new DDMusic(@"dat\General\muon.wav"); // ★サンプルとしてキープ
 
 		// 例：ループ有り
 		//public DDMusic AAA = new DDMusic(@"dat\AAA.mp3").SetLoopByStLength(123456, 789123); // ★サンプルとしてキープ
@@ -21,7 +21,7 @@ namespace Charlotte
 
 		public ResourceMusic()
 		{
-			//this.Dummy.Volume = 0.1; // 非推奨 // ★サンプルとしてキープ
+			// none
 		}
 	}
 }

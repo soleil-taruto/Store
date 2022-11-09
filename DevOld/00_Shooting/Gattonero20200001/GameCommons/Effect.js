@@ -32,3 +32,28 @@ function <void> @(UNQN)_EACH()
 	}
 	RemoveFalse(@@_Effects);
 }
+
+// –¢Žg—p
+/*
+function <generatorForTask[]> GetEffects()
+{
+	return @@_Effects;
+}
+*/
+
+function <void> ClearAllEffect()
+{
+	@@_Effects = [];
+}
+
+function <generatorForTask[]> EjectEffects()
+{
+	var ret = @@_Effects;
+	@@_Effects = [];
+	return ret;
+}
+
+function <void> SetEffects(<generatorForTask[]> effects)
+{
+	@@_Effects = effects;
+}

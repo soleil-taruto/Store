@@ -37,11 +37,16 @@ function <void> ClearScreen()
 */
 function <void> Draw(<Picture_t> picture, <double> x, <double> y, <double> a, <double> r, <double> z)
 {
+	Draw2(picture, x, y, a, r, z, z);
+}
+
+function <void> Draw2(<Picture_t> picture, <double> x, <double> y, <double> a, <double> r, <double> zw, <double> zh)
+{
 	var<int> w = GetPicture_W(picture);
 	var<int> h = GetPicture_H(picture);
 
-	w *= z;
-	h *= z;
+	w *= zw;
+	h *= zh;
 
 	var<double> l = x - w / 2;
 	var<double> t = y - h / 2;

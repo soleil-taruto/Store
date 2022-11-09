@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Charlotte.Commons;
 
 namespace Charlotte
 {
@@ -46,6 +47,13 @@ namespace Charlotte
 		public static IEnumerable<T> DistinctOrderBy<T>(this IEnumerable<T> src, Comparison<T> comp)
 		{
 			return src.OrderBy(comp).OrderedDistinct((a, b) => comp(a, b) == 0);
+		}
+
+		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> src)
+		{
+			List<T> list = src.ToList();
+			SCommon.CRandom.Shuffle(list);
+			return list;
 		}
 	}
 }

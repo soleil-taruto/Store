@@ -77,46 +77,49 @@ namespace Charlotte
 			SCommon.DeletePath(Consts.W_ROOT_DIR);
 			SCommon.CreateDir(Consts.W_ROOT_DIR);
 
-			string[] categories = Directory.GetDirectories(Consts.R_ROOT_DIR)
-				.Select(dir => Path.GetFileName(dir))
-				.OrderBy(SCommon.Comp)
-				.ToArray();
+			Queue<string[]> q = new Queue<string[]>();
 
-			foreach (string category in categories)
+			q.Enqueue(new string[] { Consts.R_ROOT_DIR });
+
+			while (1 <= q.Count)
 			{
-				string[] projects = Directory.GetDirectories(Path.Combine(Consts.R_ROOT_DIR, category))
-					.Select(dir => Path.GetFileName(dir))
-					.OrderBy(SCommon.Comp)
-					.ToArray();
-
-				foreach (string project in projects)
+				foreach (string dir in q.Dequeue())
 				{
-					TryCopySourceDir(category, project, Consts.SRC_LOCAL_DIR_01);
-					TryCopySourceDir(category, project, Consts.SRC_LOCAL_DIR_02);
-					TryCopySourceDir(category, project, Consts.SRC_LOCAL_DIR_03);
-					TryCopySourceDir(category, project, Consts.SRC_LOCAL_DIR_04);
+					if (IsProjectDir(dir))
+					{
+						CopySourceDir(dir);
+					}
+					else
+					{
+						q.Enqueue(Directory.GetDirectories(dir));
+					}
 				}
 			}
 			Console.WriteLine("done!");
 		}
 
-		private void TryCopySourceDir(string category, string project, string srcLocalDir)
+		private bool IsProjectDir(string dir)
 		{
-			string rDir = Path.Combine(Consts.R_ROOT_DIR, category, project, srcLocalDir);
-			string wDir = Path.Combine(Consts.W_ROOT_DIR, category, project, srcLocalDir);
+			return Consts.SRC_LOCAL_DIRS.Any(v => Directory.Exists(Path.Combine(dir, v)));
+		}
 
-			if (Directory.Exists(rDir))
+		private void CopySourceDir(string projectDir)
+		{
+			foreach (string srcLocalDir in Consts.SRC_LOCAL_DIRS)
 			{
-				ProcMain.WriteLog("< " + rDir);
-				ProcMain.WriteLog("> " + wDir);
+				string rDir = Path.Combine(projectDir, srcLocalDir);
 
-				SCommon.CopyDir(rDir, wDir);
+				if (Directory.Exists(rDir))
+				{
+					string wDir = SCommon.ChangeRoot(rDir, Consts.R_ROOT_DIR, Consts.W_ROOT_DIR);
 
-				ProcMain.WriteLog("done");
-			}
-			else
-			{
-				ProcMain.WriteLog("no rDir: " + rDir);
+					ProcMain.WriteLog("< " + rDir);
+					ProcMain.WriteLog("> " + wDir);
+
+					SCommon.CopyDir(rDir, wDir);
+
+					ProcMain.WriteLog("done");
+				}
 			}
 		}
 	}

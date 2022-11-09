@@ -63,7 +63,7 @@ function <void> DrawPlayer()
 			GetShots().push(CreateShot_BDummy(PlayerX, PlayerY, 0.0, -10.0));
 		}
 
-		PlayerCrash = CreateCrash_Circle(PlayerX, PlayerY, MICRO);
+		PlayerCrash = CreateCrash_Point(PlayerX, PlayerY);
 
 		Draw(P_Dummy, PlayerX, PlayerY, 1.0, Math.PI / 4, 1.0);
 	}

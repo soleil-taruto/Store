@@ -158,30 +158,10 @@ namespace Charlotte.JSConfusers
 					string str = buff.ToString();
 					dest.Append('"');
 
-					if (str.Length < 300) // ? 短い文字列 -- rough limit
+					foreach (char chr in str)
 					{
-						foreach (char chr in str)
-						{
-							dest.Append("\\u");
-							dest.Append(((int)chr).ToString("x4"));
-						}
-					}
-					else // ? 長い文字列
-					{
-						string NO_ESCAPE_CHRS = SCommon.ALPHA + SCommon.alpha + SCommon.DECIMAL + "+/"; // エスケープしない文字の集合
-
-						foreach (char chr in str)
-						{
-							if (NO_ESCAPE_CHRS.Contains(chr))
-							{
-								dest.Append(chr);
-							}
-							else
-							{
-								dest.Append("\\u");
-								dest.Append(((int)chr).ToString("x4"));
-							}
-						}
+						dest.Append("\\u");
+						dest.Append(((int)chr).ToString("x4"));
 					}
 					dest.Append('"');
 					index++;
@@ -242,7 +222,13 @@ namespace Charlotte.JSConfusers
 					}
 					string word = text.Substring(index, end - index);
 
-					if (SCommon.DECIMAL.Contains(word[0])) // 数字で始まる場合は単語ではなく定数 -> 置き換えしない。
+					// 数字で始まる場合は単語ではなく定数 -> 置き換えしない。
+					if (SCommon.DECIMAL.Contains(word[0]))
+					{
+						index = end;
+					}
+					// ? 小文字で始まるメソッド名 -> 置き換えしない。
+					else if (SCommon.alpha.Contains(word[0]) && 1 <= index && text[index - 1] == '.')
 					{
 						index = end;
 					}
@@ -253,14 +239,19 @@ namespace Charlotte.JSConfusers
 						if (word == destWord) // ? 予約語である。
 						{
 							// (予約語).(後続のワード).(後続のワード).(後続のワード) ... の「後続のワード」も置き換え禁止とする。
+							// Math.PI など
+							// 但し this は除外する。
 
-							for (; ; )
+							if (word != "this")
 							{
-								// ? 連続する後続のワードの終了
-								if (text[end] != '.' && !JSCommon.IsJSWordChar(text[end]))
-									break;
+								for (; ; )
+								{
+									// ? 連続する後続のワードの終了
+									if (text[end] != '.' && !JSCommon.IsJSWordChar(text[end]))
+										break;
 
-								end++;
+									end++;
+								}
 							}
 							index = end;
 						}

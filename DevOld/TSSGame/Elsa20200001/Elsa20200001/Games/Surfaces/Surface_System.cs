@@ -20,7 +20,7 @@ namespace Charlotte.Games.Surfaces
 		{
 			for (; ; )
 			{
-				// nop
+				// noop
 
 				yield return true;
 			}

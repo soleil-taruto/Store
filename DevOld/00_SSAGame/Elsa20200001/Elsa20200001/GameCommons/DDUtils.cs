@@ -148,7 +148,27 @@ namespace Charlotte.GameCommons
 
 		public static double GetDistance(D2Point pt, D2Point origin)
 		{
-			return GetDistance(pt.X - origin.X, pt.Y - origin.Y);
+			return GetDistance(pt - origin);
+		}
+
+		public static bool GetDistanceLessThan(double x, double y, double r)
+		{
+			// ざっくり処理時間を計測したら、自乗より平方根の方が速かった。@ 2022.7.24
+#if true
+			return GetDistance(x, y) < r;
+#else
+			return x * x + y * y < r * r;
+#endif
+		}
+
+		public static bool GetDistanceLessThan(D2Point pt, double r)
+		{
+			return GetDistanceLessThan(pt.X, pt.Y, r);
+		}
+
+		public static bool GetDistanceLessThan(D2Point pt, D2Point origin, double r)
+		{
+			return GetDistanceLessThan(pt - origin, r);
 		}
 
 		/// <summary>
@@ -234,7 +254,11 @@ namespace Charlotte.GameCommons
 		/// <returns>衝突しているか</returns>
 		public static bool IsCrashed_Circle_Circle(D2Point pt1, double r1, D2Point pt2, double r2)
 		{
+#if true
+			return GetDistanceLessThan(pt1 - pt2, r1 + r2);
+#else // old same
 			return GetDistance(pt1 - pt2) < r1 + r2;
+#endif
 		}
 
 		/// <summary>
@@ -246,7 +270,11 @@ namespace Charlotte.GameCommons
 		/// <returns>衝突しているか</returns>
 		public static bool IsCrashed_Circle_Point(D2Point pt1, double r1, D2Point pt2)
 		{
+#if true
+			return GetDistanceLessThan(pt1 - pt2, r1);
+#else // old same
 			return GetDistance(pt1 - pt2) < r1;
+#endif
 		}
 
 		/// <summary>
@@ -334,7 +362,7 @@ namespace Charlotte.GameCommons
 
 		public static bool IsOutOfCamera(D2Point pt, double margin = 0.0)
 		{
-			return IsOut(pt, new D4Rect(DDGround.ICamera.X, DDGround.ICamera.Y, DDConsts.Screen_W, DDConsts.Screen_H), margin);
+			return IsOut(pt, new D4Rect(DDGround.Camera.X, DDGround.Camera.Y, DDConsts.Screen_W, DDConsts.Screen_H), margin);
 		}
 
 		public static void UpdateInput(ref int counter, bool status)
@@ -384,12 +412,13 @@ namespace Charlotte.GameCommons
 		}
 
 		/// <summary>
+		/// S字曲線
 		/// (0, 0), (0.5, 0.5), (1, 1) を通る曲線
-		/// x &lt; 0.5 の区間は加速(等加速)する。
-		/// x &gt; 0.5 の区間は減速(等加速)する。
+		/// x == ～0.5 の区間は加速(等加速)する。
+		/// x == 0.5～ の区間は減速(等加速)する。
 		/// </summary>
-		/// <param name="x"></param>
-		/// <returns></returns>
+		/// <param name="x">X軸の値</param>
+		/// <returns>Y軸の値</returns>
 		public static double SCurve(double x)
 		{
 			if (x < 0.5)

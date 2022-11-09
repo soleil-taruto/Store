@@ -604,6 +604,22 @@ namespace Charlotte.Commons
 				File.Copy(file, Path.Combine(wDir, Path.GetFileName(file)));
 		}
 
+		public static void CopyPath(string rPath, string wPath)
+		{
+			if (Directory.Exists(rPath))
+			{
+				SCommon.CopyDir(rPath, wPath);
+			}
+			else if (File.Exists(rPath))
+			{
+				File.Copy(rPath, wPath);
+			}
+			else
+			{
+				throw new Exception("コピー元パスが存在しません。");
+			}
+		}
+
 		public static string EraseExt(string path)
 		{
 			return Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path));

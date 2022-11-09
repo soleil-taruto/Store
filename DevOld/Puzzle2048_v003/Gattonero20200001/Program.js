@@ -11,25 +11,49 @@ window.onload = function()
 
 function <void> Main()
 {
+	@@_Loading();
+}
+
+function <void> @@_Loading()
+{
+	if (1 <= Loading)
+	{
+		@@_PrintLoading();
+		setTimeout(@@_Loading, 100);
+	}
+	else
+	{
+		@@_PrintLoaded();
+		@@_Loaded();
+	}
+}
+
+var @@_LOADING_MAX = -1;
+
+function <void> @@_PrintLoading()
+{
+	if (@@_LOADING_MAX == -1)
+	{
+		@@_LOADING_MAX = Loading;
+	}
+
+	var<int> pbn = ToInt((@@_LOADING_MAX - Loading) * 108.0 / @@_LOADING_MAX);
+
+	document.body.innerHTML = "<div style='font-size: 108px;'>" + pbn + " PBN COMPLETE...</div>";
+}
+
+function <void> @@_PrintLoaded()
+{
+	document.body.innerHTML = "";
+}
+
+function <void> @@_Loaded()
+{
 	ProcMain(@@_Main());
 }
 
 function* <generatorForTask> @@_Main()
 {
-	// リソース読み込み中は待機
-	while (1 <= Loading)
-	{
-		SetColor("#ffffff");
-		PrintRect(0, 0, Screen_W, Screen_H);
-
-		SetColor("#000000");
-		SetPrint(10, 25, 50);
-		SetFSize(16);
-		PrintLine("リソースを読み込んでいます ...　残り " + Loading + " 個");
-
-		yield 1;
-	}
-
 	if (DEBUG)
 	{
 		// -- choose one --

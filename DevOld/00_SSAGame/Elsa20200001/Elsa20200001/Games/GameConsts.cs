@@ -36,13 +36,13 @@ namespace Charlotte.Games
 		public const int PLAYER_INVINCIBLE_FRAME_MAX = 60;
 
 		/// <summary>
-		/// ジャンプ回数の上限
+		/// プレイヤーキャラクタのジャンプ回数の上限
 		/// 1 == 通常
 		/// 2 == 2-段ジャンプまで可能
 		/// 3 == 3-段ジャンプまで可能
 		/// ...
 		/// </summary>
-		public const int JUMP_MAX = 2;
+		public const int PLAYER_JUMP_MAX = 2;
 
 		/// <summary>
 		/// プレイヤーキャラクタの重力加速度

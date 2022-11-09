@@ -9,7 +9,7 @@ namespace Charlotte.Novels.Surfaces
 {
 	public class Surface_キャラクタ : Surface
 	{
-		public double Draw_Rnd = DDUtils.Random.Single() * Math.PI * 2.0;
+		public double Draw_Rnd = DDUtils.Random.GetReal1() * Math.PI * 2.0;
 
 		public string ImageFile = @"dat\General\Dummy.png";
 		public double A = 1.0;

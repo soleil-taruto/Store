@@ -45,7 +45,7 @@ namespace Charlotte.Games.Enemies.Tests
 				double y = DDUtils.AToBRate(this.Y, this.DestY, DDUtils.SCurve(this.Frame * 1.0 / FRAME_MAX));
 
 				DDDraw.SetBright(1.0, 0.0, 0.0);
-				DDDraw.DrawBegin(Ground.I.Picture.Enemy_B0003, x - DDGround.ICamera.X, y - DDGround.ICamera.Y);
+				DDDraw.DrawBegin(Ground.I.Picture.Enemy_B0003, x - DDGround.Camera.X, y - DDGround.Camera.Y);
 				DDDraw.DrawRotate(this.Frame * 10.0 / FRAME_MAX);
 				DDDraw.DrawEnd();
 				DDDraw.Reset();

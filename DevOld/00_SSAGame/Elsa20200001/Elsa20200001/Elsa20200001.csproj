@@ -93,7 +93,9 @@
     <Compile Include="GameCommons\DDHash.cs" />
     <Compile Include="GameCommons\DDHashedData.cs" />
     <Compile Include="GameCommons\DDHashedResource.cs" />
-    <Compile Include="GameCommons\DDTableMenu.cs" />
+    <Compile Include="GameTools\AppConfig.cs" />
+    <Compile Include="GameTools\AppSaveDataUtils.cs" />
+    <Compile Include="GameTools\TableMenu.cs" />
     <Compile Include="GameCommons\DDTouch.cs" />
     <Compile Include="GameProgressMasters\GameProgressMaster.cs" />
     <Compile Include="Games\Attacks\Attack_Cirno_しゃがみ中攻撃.cs" />
@@ -112,12 +114,11 @@
     <Compile Include="Games\Attacks\Attack_Tewi_しゃがみ強攻撃.cs" />
     <Compile Include="Games\Attacks\Attack_Tewi_ジャンプ強攻撃.cs" />
     <Compile Include="Games\Attacks\Attack_Tewi_強攻撃.cs" />
+    <Compile Include="Games\Attacks\Tests\Attack_B0001.cs" />
     <Compile Include="Games\Confirm.cs" />
     <Compile Include="Games\Enemies\EnemyCommon.cs" />
-    <Compile Include="Games\Enemies\Tests\Enemy_BBird.cs" />
-    <Compile Include="Games\Enemies\Tests\Enemy_BBirdShit.cs" />
-    <Compile Include="Games\Enemies\Tests\Enemy_BDog.cs" />
-    <Compile Include="Games\Enemies\Tests\Enemy_BFrog.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_B1001.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_B1002.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_Bアイテム.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_Bイベント0001.cs" />
     <Compile Include="Games\Enemies\Tests\Enemy_Bセーブ地点.cs" />
@@ -166,7 +167,7 @@
     <Compile Include="GameCommons\DDSceneUtils.cs" />
     <Compile Include="GameCommons\DDSE.cs" />
     <Compile Include="GameCommons\DDSEUtils.cs" />
-    <Compile Include="GameCommons\DDSimpleMenu.cs" />
+    <Compile Include="GameTools\SimpleMenu.cs" />
     <Compile Include="GameCommons\DDSound.cs" />
     <Compile Include="GameCommons\DDSoundUtils.cs" />
     <Compile Include="GameCommons\DDSubScreen.cs" />
@@ -311,9 +312,7 @@
   <ItemGroup>
     <Content Include="game_app.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="★ここはゲームのテンプレートです！\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>

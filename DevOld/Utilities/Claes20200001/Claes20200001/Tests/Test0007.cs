@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Charlotte.Commons;
 using Charlotte.Utilities;
 
 namespace Charlotte.Tests
@@ -15,19 +16,19 @@ namespace Charlotte.Tests
 		{
 			BitList bits = new BitList();
 
-			Common.ToThrowPrint(() =>
+			SCommon.ToThrowPrint(() =>
 			{
 				bits[-1L].ToString();
 			});
 
 			bits[long.MaxValue].ToString(); // 未定義領域は false を返す。
 
-			Common.ToThrowPrint(() =>
+			SCommon.ToThrowPrint(() =>
 			{
 				bits[-1L] = true;
 			});
 
-			Common.ToThrowPrint(() =>
+			SCommon.ToThrowPrint(() =>
 			{
 				bits[long.MaxValue] = true;
 			});

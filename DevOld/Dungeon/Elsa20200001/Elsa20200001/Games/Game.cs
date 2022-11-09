@@ -6,6 +6,7 @@ using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.GameCommons;
 using Charlotte.Games.Scripts;
+using Charlotte.Games.Battles;
 
 namespace Charlotte.Games
 {
@@ -45,17 +46,43 @@ namespace Charlotte.Games
 			int lastY = -1;
 			int lastDirection = -1;
 
+			// ループ初回でイベント・敵とエンカウントしても良いようにダンジョンを描画しておく
+			Dungeon.Draw(this.GetWall, this.Map);
+
 			for (; ; )
 			{
-				// ? 移動した。|| 方向転換した。
+				// ? ループ初回 || 移動した || 方向転換した
 				if (
 					lastX != this.X ||
 					lastY != this.Y ||
 					lastDirection != this.Direction
 					)
 				{
-					if (this.Map[this.X, this.Y].GetWall(this.Direction).Script != null)
-						this.Map[this.X, this.Y].GetWall(this.Direction).Script.Perform(); // イベント実行
+					Script script = this.Map[this.X, this.Y].GetWall(this.Direction).Script;
+
+					if (script != null)
+					{
+						script.Perform(); // イベント実行
+					}
+					else
+					{
+						// ? 移動した。
+						if (
+							lastX != this.X ||
+							lastY != this.Y
+							)
+						{
+							if (SCommon.CRandom.GetInt(20) == 0) // ? 敵とエンカウント -- 暫定
+							{
+#if false // 未実装なので、抑止
+								using (new Battle())
+								{
+									Battle.I.Perform();
+								}
+#endif
+							}
+						}
+					}
 
 					lastX = this.X;
 					lastY = this.Y;
@@ -68,6 +95,7 @@ namespace Charlotte.Games
 						break;
 				}
 
+				//startMoveOnMap:
 				if (1 <= DDInput.DIR_8.GetInput())
 				{
 					foreach (DDScene scene in DDSceneUtils.Create(5))
@@ -99,6 +127,7 @@ namespace Charlotte.Games
 						this.Draw();
 						DDEngine.EachFrame();
 					}
+					goto endMoveOnMap;
 				}
 				if (1 <= DDInput.DIR_4.GetInput())
 				{
@@ -116,6 +145,7 @@ namespace Charlotte.Games
 						this.Draw(scene.Rate - 1.0);
 						DDEngine.EachFrame();
 					}
+					goto endMoveOnMap;
 				}
 				if (1 <= DDInput.DIR_6.GetInput())
 				{
@@ -133,6 +163,7 @@ namespace Charlotte.Games
 						this.Draw(1.0 - scene.Rate);
 						DDEngine.EachFrame();
 					}
+					goto endMoveOnMap;
 				}
 				if (1 <= DDInput.DIR_2.GetInput())
 				{
@@ -158,7 +189,9 @@ namespace Charlotte.Games
 						this.Draw(1.0 - scene.Rate);
 						DDEngine.EachFrame();
 					}
+					goto endMoveOnMap;
 				}
+			endMoveOnMap:
 
 				Dungeon.Draw(this.GetWall, this.Map);
 				this.Draw();
@@ -200,6 +233,9 @@ namespace Charlotte.Games
 		{
 			DDDraw.DrawCenter(Dungeon.GetScreen().ToPicture(), DDConsts.Screen_W / 2 + xSlideRate * 90.0, DDConsts.Screen_H / 2 - 150);
 
+#if true
+			DDDraw.DrawSimple(Ground.I.Picture.ダンジョン枠, 0, 0);
+#else
 			// 仮枠線
 			{
 				DDDraw.SetBright(0, 0, 0);
@@ -209,6 +245,7 @@ namespace Charlotte.Games
 				DDDraw.DrawRect(Ground.I.Picture.WhiteBox, 0, 385, DDConsts.Screen_W, DDConsts.Screen_H - 385);
 				DDDraw.Reset();
 			}
+#endif
 		}
 	}
 }

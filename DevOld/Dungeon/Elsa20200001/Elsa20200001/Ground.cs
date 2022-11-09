@@ -71,6 +71,6 @@ namespace Charlotte
 			#endregion
 		}
 
-		public P_SaveDataSlot[] SaveDataSlots = Enumerable.Range(0, Consts.SAVE_DATA_SLOT_NUM).Select(v => new P_SaveDataSlot()).ToArray();
+		public P_SaveDataSlot[] SaveDataSlots = Enumerable.Range(0, GameConsts.SAVE_DATA_SLOT_NUM).Select(v => new P_SaveDataSlot()).ToArray();
 	}
 }

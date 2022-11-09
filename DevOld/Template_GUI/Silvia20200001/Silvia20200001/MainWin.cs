@@ -47,14 +47,17 @@ namespace Charlotte
 
 		private void MainWin_Shown(object sender, EventArgs e)
 		{
-			this.EM.StartTimer();
+			this.Idling = true;
 		}
 
 		private void MainWin_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			this.EM.EndTimer(); // 念のため
+			this.Idling = false; // 念のため -- this.CloseWindow()
 		}
 
+		/// <summary>
+		/// フォームを閉じる。
+		/// </summary>
 		private void CloseWindow()
 		{
 			// ここからダミーなので消して下さい。-- ★要削除
@@ -70,43 +73,54 @@ namespace Charlotte
 			}
 			// ここまでダミーなので消して下さい。-- ★要削除
 
-			this.EM.EndTimer();
+			this.Idling = false;
 			this.Close();
 		}
 
-		private EventManager EM = new EventManager();
+		/// <summary>
+		/// タイマーイベントを発火して良いか
+		/// -- 初期値：false
+		/// -- フォームを表示し終えてから、フォームを閉る前まで true にする。
+		/// -- その間、タイマーイベントを抑止したい時だけ false にする。
+		/// </summary>
+		private bool Idling = false;
 
 		private void MainTimer_Tick(object sender, EventArgs e)
 		{
-			this.EM.FireOnTimerOrBackground(() =>
+			if (!this.Idling)
+				return;
+
+			this.Idling = false;
+			try
 			{
 				// none
-			});
+			}
+			finally
+			{
+				this.Idling = true;
+			}
 		}
 
 		/// <summary>
-		/// ダミーなので消して下さい。
+		/// ダミーなので消して下さい。-- ★メソッド要削除
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void DummyButton_Click(object sender, EventArgs e)
 		{
-			this.EM.FireOnForeground(() =>
+			if (MessageBox.Show(
+				"アプリケーションを終了しますか？",
+				"質問",
+				MessageBoxButtons.YesNo,
+				MessageBoxIcon.Question
+				) == DialogResult.Yes
+				)
 			{
-				if (MessageBox.Show(
-					"アプリケーションを終了しますか？",
-					"質問",
-					MessageBoxButtons.YesNo,
-					MessageBoxIcon.Question
-					) == DialogResult.Yes
-					)
-				{
-					this.CloseWindow();
-					return;
-				}
+				this.CloseWindow();
+				return;
+			}
 
-				MessageBox.Show("イベントは続行しました。");
-			});
+			MessageBox.Show("イベントは続行しました。");
 		}
 	}
 }

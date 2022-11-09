@@ -24,7 +24,17 @@ namespace Charlotte.Games
 
 		public void Perform()
 		{
-			foreach (DDScene scene in DDSceneUtils.Create(30))
+			if (DDConfig.LOG_ENABLED) // 開発・デバッグ_モードであることを表示
+			{
+				DDGround.EL.Keep(300, () =>
+				{
+					DDPrint.SetDebug(30, DDConsts.Screen_H - 32);
+					DDPrint.Print("これはクローズドテスト版です。仮リソース・未実装・不完全な機能を含みます。(このメッセージは数秒で消えます)");
+				});
+			}
+
+			foreach (DDScene scene in DDSceneUtils.Create(60)) // LiteStatusDlg を閉じるまでの遅延の分(30フレーム)延長
+			//foreach (DDScene scene in DDSceneUtils.Create(30))
 			{
 				DDCurtain.DrawCurtain();
 				DDEngine.EachFrame();

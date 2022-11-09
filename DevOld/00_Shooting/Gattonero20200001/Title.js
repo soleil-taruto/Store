@@ -47,6 +47,9 @@ function* <generatorForTask> TitleMain()
 {
 	var<int> selectIndex = 0;
 
+	SetCurtain();
+	FreezeInput();
+
 	for (; ; )
 	{
 		SetColor("#a0b0c0");
@@ -62,7 +65,10 @@ function* <generatorForTask> TitleMain()
 		if (DSM_Desided)
 		{
 			FreezeInput();
+
 			yield* @@_Buttons[selectIndex].Pressed();
+
+			SetCurtain();
 			FreezeInput();
 		}
 		yield 1;

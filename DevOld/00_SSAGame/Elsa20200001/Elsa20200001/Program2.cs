@@ -62,6 +62,10 @@ namespace Charlotte
 						" ",
 						Game.I == null ? "-" : "" + Game.I.Player.HP,
 						Game.I == null ? "-" : "" + Game.I.Player.JumpCount,
+						Game.I == null ? "-" : "" + Game.I.Enemies.Count,
+						Game.I == null ? "-" : "" + Game.I.Shots.Count,
+						Game.I == null ? "-" : "" + Game.I.Tasks.Count,
+						Game.I == null ? "-" : "" + DDGround.EL.Count,
 
 						// デバッグ表示する情報をここへ追加..
 

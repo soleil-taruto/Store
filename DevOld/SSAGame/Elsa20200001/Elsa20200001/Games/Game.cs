@@ -279,7 +279,7 @@ namespace Charlotte.Games
 							}
 							else
 							{
-								// nop
+								// noop
 							}
 						}
 					}
@@ -445,7 +445,7 @@ namespace Charlotte.Games
 
 					// ---- Dead
 
-					// nop
+					// noop
 				}
 				//endDead:
 
@@ -489,7 +489,7 @@ namespace Charlotte.Games
 
 					// ---- Invincible
 
-					// nop
+					// noop
 				}
 			endInvincible:
 
@@ -544,7 +544,7 @@ namespace Charlotte.Games
 
 					if (touchSide_L && touchSide_R)
 					{
-						// nop
+						// noop
 					}
 					else if (touchSide_L)
 					{
@@ -971,7 +971,7 @@ namespace Charlotte.Games
 
 				if (cell.IsDefault)
 				{
-					// nop
+					// noop
 				}
 				else if (1 <= DDKey.GetInput(DX.KEY_INPUT_LSHIFT) && 1 <= DDKey.GetInput(DX.KEY_INPUT_LCONTROL)) // 左シフト・コントロール押下 -> 塗り潰し / none
 				{

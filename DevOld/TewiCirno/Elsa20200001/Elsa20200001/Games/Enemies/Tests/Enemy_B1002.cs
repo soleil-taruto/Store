@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Charlotte.GameCommons;
 using Charlotte.Commons;
+using Charlotte.GameCommons;
 
 namespace Charlotte.Games.Enemies.Tests
 {
@@ -49,7 +49,7 @@ namespace Charlotte.Games.Enemies.Tests
 
 					if (5 <= bouncedCount) // バウンド回数上限
 					{
-						//DDGround.EL.Add(SCommon.Supplier( Effects.B中爆発(this.X, this.Y)));
+						//DDGround.EL.Add(SCommon.Supplier(Effects.B中爆発(this.X, this.Y)));
 						this.Kill();
 						break;
 					}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Charlotte.GameCommons;
+using Charlotte.GameTools;
 using Charlotte.Commons;
 
 namespace Charlotte.Games
@@ -20,7 +21,7 @@ namespace Charlotte.Games
 		{
 			DDMain.KeepMainScreen();
 
-			DDSimpleMenu simpleMenu = new DDSimpleMenu()
+			SimpleMenu simpleMenu = new SimpleMenu()
 			{
 				BorderColor = this.BorderColor,
 				WallDrawer = () =>
@@ -34,7 +35,7 @@ namespace Charlotte.Games
 				},
 			};
 
-			return simpleMenu.Perform(Text_L, Text_T, 40, 24, prompt, options, 0);
+			return simpleMenu.Perform(0, Text_L, Text_T, 40, 24, prompt, options);
 		}
 	}
 }

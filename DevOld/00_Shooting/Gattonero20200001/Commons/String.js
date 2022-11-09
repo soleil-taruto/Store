@@ -32,5 +32,20 @@ function <string> ToHex(<int> value)
 	{
 		ret = "0";
 	}
+	else
+	{
+		ret = RevStr(ret);
+	}
+	return ret;
+}
+
+function <string> RevStr(<string> str)
+{
+	var ret = "";
+
+	for (var<int> index = str.length - 1; 0 <= index; index--)
+	{
+		ret += str.substring(index, index + 1);
+	}
 	return ret;
 }

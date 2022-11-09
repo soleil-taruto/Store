@@ -447,5 +447,60 @@ namespace Charlotte.SubCommons
 			}
 			return dest;
 		}
+
+		/// <summary>
+		/// ぼかし
+		/// 透過は考慮しない。
+		/// </summary>
+		/// <param name="level">ぼかしレベル</param>
+		public void ぼかし(int level)
+		{
+			for (int c = 0; c < level; c++)
+			{
+				ProcMain.WriteLog("Canvas-ぼかし " + (c + 1) + " / " + level);
+
+				I4Color[,] dest = new I4Color[this.W, this.H];
+
+				for (int x = 0; x < this.W; x++)
+				{
+					for (int y = 0; y < this.H; y++)
+					{
+						int r = 0;
+						int g = 0;
+						int b = 0;
+						int d = 0;
+
+						for (int xc = -1; xc <= 1; xc++)
+						{
+							for (int yc = -1; yc <= 1; yc++)
+							{
+								int sx = x + xc;
+								int sy = y + yc;
+
+								if (
+									0 <= sx && sx < this.W &&
+									0 <= sy && sy < this.H
+									)
+								{
+									r += this.Dots[sx, sy].R;
+									g += this.Dots[sx, sy].G;
+									b += this.Dots[sx, sy].B;
+									d++;
+								}
+							}
+						}
+						dest[x, y] = new I4Color(
+							SCommon.ToInt((double)r / d),
+							SCommon.ToInt((double)g / d),
+							SCommon.ToInt((double)b / d),
+							255
+							);
+					}
+				}
+				this.Dots = dest;
+			}
+
+			ProcMain.WriteLog("Canvas-ぼかし done");
+		}
 	}
 }

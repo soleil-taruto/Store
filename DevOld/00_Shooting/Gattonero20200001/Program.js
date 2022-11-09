@@ -30,14 +30,21 @@ function* <generatorForTask> @@_Main()
 		yield 1;
 	}
 
-	// -- choose one --
+	if (DEBUG)
+	{
+		// -- choose one --
 
-	yield* @@_Main2();
-//	yield* Test01();
-//	yield* Test02();
-//	yield* Test03();
+//		yield* Test01();
+//		yield* Test02();
+//		yield* Test03();
+		yield* @@_Main2();
 
-	// --
+		// --
+	}
+	else
+	{
+		yield* @@_Main2();
+	}
 }
 
 // –{”Ô—pƒƒCƒ“

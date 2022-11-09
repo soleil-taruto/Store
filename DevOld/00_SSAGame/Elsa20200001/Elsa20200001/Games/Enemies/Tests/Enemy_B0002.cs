@@ -19,82 +19,91 @@ namespace Charlotte.Games.Enemies.Tests
 
 		private const int HIT_BACK_FRAME_MAX = 10;
 
-		private int Frame = 0;
 		private int HitBackFrame = 0; // 0 == 無効, 1～ ヒットバック中
 
 		protected override IEnumerable<bool> E_Draw()
 		{
-			for (; ; )
+			Game.I.Tasks.Add(SCommon.Supplier(this.E_DummyTask()));
+
+			for (int frame = 0; ; frame++)
 			{
-				this.P_Draw();
+				//while (DDUtils.IsOutOfCamera(new D2Point(this.X, this.Y), 100.0)) // カメラ外では行動しない。
+				//    yield return true;
+
+				DDPicture picture = Ground.I.Picture.Enemy_B0002_01;
+				double SPEED = 2.0;
+				double xBuru = 0.0;
+				double yBuru = 0.0;
+
+				if (1 <= this.HitBackFrame)
+				{
+					if (HIT_BACK_FRAME_MAX < ++this.HitBackFrame)
+					{
+						this.HitBackFrame = 0;
+						goto endHitBack;
+					}
+
+					double rate = (double)this.HitBackFrame / HIT_BACK_FRAME_MAX;
+
+					picture = Ground.I.Picture.Enemy_B0002_02;
+					SPEED = 0.0;
+					xBuru = (1.0 - rate) * 30.0 * DDUtils.Random.GetReal1();
+					yBuru = (1.0 - rate) * 30.0 * DDUtils.Random.GetReal1();
+				}
+			endHitBack:
+
+				switch (frame / 60 % 4)
+				{
+					case 0: this.X += SPEED; break;
+					case 1: this.Y += SPEED; break;
+					case 2: this.X -= SPEED; break;
+					case 3: this.Y -= SPEED; break;
+
+					default:
+						throw null; // never
+				}
+
+				if (!DDUtils.IsOutOfCamera(new D2Point(this.X, this.Y), 100.0)) // カメラ外では描画しない。
+				{
+					double xZoom = this.X < Game.I.Player.X ? -1.0 : 1.0;
+
+					DDDraw.DrawBegin(
+						picture,
+						this.X - DDGround.Camera.X + xBuru,
+						this.Y - DDGround.Camera.Y + yBuru
+						);
+					DDDraw.DrawSetSize(100.0, 100.0);
+					DDDraw.DrawZoom_X(xZoom);
+					DDDraw.DrawEnd();
+					DDDraw.Reset();
+
+					//this.Crash = DDCrashUtils.Circle(new D2Point(this.X, this.Y), 50.0);
+					this.Crash = DDCrashUtils.Rect(D4Rect.XYWH(this.X, this.Y, 100.0, 100.0));
+				}
 				yield return true;
 			}
 		}
 
-		private void P_Draw()
+		private IEnumerable<bool> E_DummyTask()
 		{
-			DDPicture picture = Ground.I.Picture.Enemy_B0002_01;
-			double SPEED = 2.0;
-			double xBuru = 0.0;
-			double yBuru = 0.0;
-
-			if (1 <= this.HitBackFrame)
+			for (; ; )
 			{
-				int frame = this.HitBackFrame - 1;
-
-				if (HIT_BACK_FRAME_MAX < frame)
+				if (this.DeadFlag)
 				{
-					this.HitBackFrame = 0;
-					goto endHitBack;
+					break;
 				}
-				this.HitBackFrame++;
 
-				// ----
+				// noop
 
-				double rate = (double)frame / HIT_BACK_FRAME_MAX;
-
-				picture = Ground.I.Picture.Enemy_B0002_02;
-				SPEED = 0.0;
-				xBuru = (1.0 - rate) * 25.0 * DDUtils.Random.Double();
-				yBuru = (1.0 - rate) * 25.0 * DDUtils.Random.Double();
+				yield return true;
 			}
-		endHitBack:
-
-			switch (this.Frame / 60 % 4)
-			{
-				case 0: this.X += SPEED; break;
-				case 1: this.Y += SPEED; break;
-				case 2: this.X -= SPEED; break;
-				case 3: this.Y -= SPEED; break;
-
-				default:
-					throw null; // never
-			}
-
-			if (!DDUtils.IsOutOfCamera(new D2Point(this.X, this.Y), 100.0))
-			{
-				double xZoom = this.X < Game.I.Player.X ? -1.0 : 1.0;
-
-				DDDraw.DrawBegin(
-					picture,
-					this.X - DDGround.ICamera.X + xBuru,
-					this.Y - DDGround.ICamera.Y + yBuru
-					);
-				DDDraw.DrawSetSize(100.0, 100.0);
-				DDDraw.DrawZoom_X(xZoom);
-				DDDraw.DrawEnd();
-				DDDraw.Reset();
-
-				this.Crash = DDCrashUtils.Rect_CenterSize(new D2Point(this.X, this.Y), new D2Size(100.0, 100.0));
-			}
-			this.Frame++;
 		}
 
-		protected override void P_Damaged(Shot shot)
+		protected override void P_Damaged(Shot shot, int damagePoint)
 		{
 			//this.X += 10.0 * (shot.FacingLeft ? -1 : 1); // ヒットバック
 			this.HitBackFrame = 1;
-			EnemyCommon.Damaged(this, shot);
+			EnemyCommon.Damaged(this, shot, damagePoint);
 		}
 	}
 }

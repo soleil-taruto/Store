@@ -121,16 +121,32 @@ namespace Charlotte.CSSolutions
 				.Select(v => new CSFile(v))
 				.ToArray();
 
+			string beforeWarpableMemberLine = CSCommon.CreateNewIdent() + " -- beforeWarpableMemberLine";
+
 			foreach (CSFile csFile in csFiles)
 			{
-				Console.WriteLine("file: " + csFile.GetFile());
+				Console.WriteLine("file.1: " + csFile.GetFile());
 
 				csFile.SolveNamespace();
 				csFile.RemoveComments();
 				csFile.RemovePreprocessorDirectives();
 				csFile.SolveAccessModifiers();
-				csFile.SolveLiteralStrings();
-				csFile.OpenClosedEmptyClass();
+				csFile.FormatCloseOrEmptyClass();
+				csFile.SolveLiteralStrings(beforeWarpableMemberLine);
+			}
+			foreach (CSFile csFile in csFiles.Shuffle())
+			{
+				Console.WriteLine("file.2: " + csFile.GetFile());
+
+				csFile.WarpLiteralStrings(
+					beforeWarpableMemberLine,
+					csFiles.Where(v => v != csFile && !v.GetClassOrStructName().Contains('<')).ToArray() // 自分自身とジェネリック型を除外
+					);
+			}
+			foreach (CSFile csFile in csFiles)
+			{
+				Console.WriteLine("file.3: " + csFile.GetFile());
+
 				csFile.AddDummyMember();
 				csFile.RenameEx(rvf.Filter, rvf.Is予約語クラス名);
 				csFile.ShuffleMemberOrder();
@@ -148,7 +164,7 @@ namespace Charlotte.CSSolutions
 
 			foreach (CSFile csFile in csFiles)
 			{
-				Console.WriteLine("file.2: " + csFile.GetFile());
+				Console.WriteLine("file.4: " + csFile.GetFile());
 
 				csFile.RemoveUnnecessaryInformations();
 			}

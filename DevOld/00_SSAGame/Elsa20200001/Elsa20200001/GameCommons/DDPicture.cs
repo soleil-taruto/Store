@@ -8,8 +8,8 @@ namespace Charlotte.GameCommons
 {
 	public class DDPicture
 	{
-		public bool Globally = false;
-		public bool Locally { get { return !this.Globally; } }
+		public bool Globally = false; // 廃止予定
+		public bool Locally { get { return !this.Globally; } } // 廃止予定
 
 		public class PictureInfo
 		{
@@ -28,18 +28,6 @@ namespace Charlotte.GameCommons
 			this.Unloader = unloader;
 
 			adder(this);
-		}
-
-		/// <summary>
-		/// グローバル化する。
-		/// 初期化時に呼び出すこと。
-		/// -- 例：DDPicture xxx = new DDPicture("xxx.png").SetGlobally();
-		/// </summary>
-		/// <returns>このインスタンス</returns>
-		public DDPicture SetGlobally()
-		{
-			this.Globally = true;
-			return this;
 		}
 
 		public void Unload()

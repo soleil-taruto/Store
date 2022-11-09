@@ -59,10 +59,30 @@ namespace Charlotte.GameCommons
 		}
 
 		/// <summary>
+		/// 指定範囲の乱数を返す。
+		/// </summary>
+		/// <param name="minval">最小値</param>
+		/// <param name="maxval">最大値</param>
+		/// <returns>指定範囲の乱数</returns>
+		public int GetRange(int minval, int maxval)
+		{
+			return this.GetInt(maxval - minval + 1) + minval;
+		}
+
+		/// <summary>
+		/// -1または1を返す。
+		/// </summary>
+		/// <returns>乱数</returns>
+		public int GetSign()
+		{
+			return this.GetInt(2) * 2 - 1;
+		}
+
+		/// <summary>
 		/// 0以上1以下の乱数を返す。
 		/// </summary>
 		/// <returns>乱数</returns>
-		public double Single()
+		public double GetReal1()
 		{
 			return (double)this.GetUInt() / uint.MaxValue;
 		}
@@ -71,14 +91,20 @@ namespace Charlotte.GameCommons
 		/// -1以上1以下の乱数を返す。
 		/// </summary>
 		/// <returns>乱数</returns>
-		public double Double()
+		public double GetReal2()
 		{
-			return this.Single() * 2.0 - 1.0;
+			return this.GetReal1() * 2.0 - 1.0;
 		}
 
-		public int GetRange(int minval, int maxval)
+		/// <summary>
+		/// 指定範囲の乱数を返す。
+		/// </summary>
+		/// <param name="minval">最小値</param>
+		/// <param name="maxval">最大値</param>
+		/// <returns>指定範囲の乱数</returns>
+		public double GetReal3(double minval, double maxval)
 		{
-			return this.GetInt(maxval - minval + 1) + minval;
+			return this.GetReal1() * (maxval - minval) + minval;
 		}
 
 		public void Shuffle<T>(IList<T> list)

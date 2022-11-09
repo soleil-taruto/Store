@@ -13,6 +13,7 @@ function* <generatorForTask> GameMain()
 	var<Func boolean> f_scenarioTask   = Supplier(ScenarioTask());
 	var<Func boolean> f_backgroundTask = Supplier(BackgroundTask());
 
+gameLoop:
 	for (; ; )
 	{
 		if (!f_scenarioTask())
@@ -34,6 +35,8 @@ function* <generatorForTask> GameMain()
 
 		@@_DrawWall();
 
+		// ”wŒi‚Ì•`‰æ
+		//
 		if (!f_backgroundTask())
 		{
 			error();
@@ -130,6 +133,10 @@ function* <generatorForTask> GameMain()
 				var<Shot_t> shot = @@_Shots[shotIndex];
 
 				if (shot.AttackPoint == -1) // ? Šù‚É€–S
+				{
+					continue;
+				}
+				if (enemy.HP == 0) // ? –³“G -> ©’e‚Æ‚ÍÕ“Ë‚µ‚È‚¢B
 				{
 					continue;
 				}

@@ -55,7 +55,7 @@ namespace Charlotte.GameCommons
 
 		public static void Noop(params object[] dummyPrms)
 		{
-			// nop
+			// noop
 		}
 
 		public static T FastDesertElement<T>(List<T> list, Predicate<T> match, T defval = default(T))
@@ -123,6 +123,17 @@ namespace Charlotte.GameCommons
 			w = x * Math.Cos(rot) - y * Math.Sin(rot);
 			y = x * Math.Sin(rot) + y * Math.Cos(rot);
 			x = w;
+		}
+
+		public static void Rotate(ref double x, ref double y, D2Point origin, double rot)
+		{
+			x -= origin.X;
+			y -= origin.Y;
+
+			Rotate(ref x, ref y, rot);
+
+			x += origin.X;
+			y += origin.Y;
 		}
 
 		public static double GetDistance(double x, double y)
@@ -365,8 +376,8 @@ namespace Charlotte.GameCommons
 		/// <summary>
 		/// (0, 0), (0.5, 1), (1, 0) を通る放物線
 		/// </summary>
-		/// <param name="x">x軸の値</param>
-		/// <returns>y軸の値</returns>
+		/// <param name="x">X軸の値</param>
+		/// <returns>Y軸の値</returns>
 		public static double Parabola(double x)
 		{
 			return (x - x * x) * 4.0;
@@ -394,7 +405,7 @@ namespace Charlotte.GameCommons
 		/// <param name="rect">矩形領域</param>
 		/// <param name="interior">矩形領域の内側に張り付く場合の出力先</param>
 		/// <param name="exterior">矩形領域の外側に張り付く場合の出力先</param>
-		public static void AdjustRect(D2Size size, D4Rect rect, out D4Rect interior, out D4Rect exterior, double slideRate = 0.5)
+		public static void AdjustRect(D2Size size, D4Rect rect, out D4Rect interior, out D4Rect exterior)
 		{
 			double w_h = (rect.H * size.W) / size.H; // 高さを基準にした幅
 			double h_w = (rect.W * size.H) / size.W; // 幅を基準にした高さ
@@ -402,13 +413,13 @@ namespace Charlotte.GameCommons
 			D4Rect rect1;
 			D4Rect rect2;
 
-			rect1.L = rect.L + (rect.W - w_h) * slideRate;
+			rect1.L = rect.L + (rect.W - w_h) / 2.0;
 			rect1.T = rect.T;
 			rect1.W = w_h;
 			rect1.H = rect.H;
 
 			rect2.L = rect.L;
-			rect2.T = rect.T + (rect.H - h_w) * slideRate;
+			rect2.T = rect.T + (rect.H - h_w) / 2.0;
 			rect2.W = rect.W;
 			rect2.H = h_w;
 
@@ -424,22 +435,52 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		public static D4Rect AdjustRectInterior(D2Size size, D4Rect rect, double slideRate = 0.5)
+		public static D4Rect AdjustRectInterior(D2Size size, D4Rect rect)
 		{
 			D4Rect interior;
 			D4Rect exterior;
 
-			AdjustRect(size, rect, out interior, out exterior, slideRate);
+			AdjustRect(size, rect, out interior, out exterior);
 
 			return interior;
 		}
 
-		public static D4Rect AdjustRectExterior(D2Size size, D4Rect rect, double slideRate = 0.5)
+		private static D4Rect Prv_AdjustRectExterior(D2Size size, D4Rect rect)
 		{
 			D4Rect interior;
 			D4Rect exterior;
 
-			AdjustRect(size, rect, out interior, out exterior, slideRate);
+			AdjustRect(size, rect, out interior, out exterior);
+
+			return exterior;
+		}
+
+		/// <summary>
+		/// サイズを(アスペクト比を維持して)矩形領域(入力)の外側に張り付く矩形領域(出力)を生成する。
+		/// スライドレート：
+		/// -- 0.0 ～ 1.0
+		/// -- 0.0 == 矩形領域(出力)を最も左・上側に寄せる == 矩形領域(出力)の右・下側と矩形領域(入力)の右・下側が重なる
+		/// -- 0.5 == 中央
+		/// -- 1.0 == 矩形領域(出力)を最も右・下側に寄せる == 矩形領域(出力)の左・上側と矩形領域(入力)の左・上側が重なる
+		/// </summary>
+		/// <param name="size">サイズ</param>
+		/// <param name="rect">矩形領域(入力)</param>
+		/// <param name="xRate">スライドレート(X_方向)</param>
+		/// <param name="yRate">スライドレート(Y_方向)</param>
+		/// <param name="extraZoom">倍率(外側に張り付くサイズからの倍率)</param>
+		/// <returns>矩形領域(出力)</returns>
+		public static D4Rect AdjustRectExterior(D2Size size, D4Rect rect, double xRate = 0.5, double yRate = 0.5, double extraZoom = 1.0)
+		{
+			D4Rect exterior = Prv_AdjustRectExterior(size, rect);
+
+			exterior.W *= extraZoom;
+			exterior.H *= extraZoom;
+
+			double rangeX = exterior.W - rect.W;
+			double rangeY = exterior.H - rect.H;
+
+			exterior.L = rect.L + rangeX * (xRate - 1.0);
+			exterior.T = rect.T + rangeY * (yRate - 1.0);
 
 			return exterior;
 		}

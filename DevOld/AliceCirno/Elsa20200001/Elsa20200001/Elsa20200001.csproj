@@ -92,11 +92,12 @@
     <Compile Include="GameCommons\DDHash.cs" />
     <Compile Include="GameCommons\DDHashedData.cs" />
     <Compile Include="GameCommons\DDHashedResource.cs" />
+    <Compile Include="Games\Enemies\Tests\Enemy_BTrump.cs" />
     <Compile Include="GameTools\AppConfig.cs" />
     <Compile Include="GameTools\AppSaveDataUtils.cs" />
     <Compile Include="GameTools\TableMenu.cs" />
     <Compile Include="GameCommons\DDTouch.cs" />
-    <Compile Include="GameProgressMasters\GameProgressMaster.cs" />
+    <Compile Include="Games\GameProgressMaster.cs" />
     <Compile Include="Games\Attacks\Attack.cs" />
     <Compile Include="Games\Attacks\AttackCommon.cs" />
     <Compile Include="Games\Attacks\Tests\Attack_B0001.cs" />
@@ -260,6 +261,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Program2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GameCommons\DDActionList.cs" />
     <Compile Include="ResourceMusic.cs" />
     <Compile Include="ResourcePicture.cs" />
     <Compile Include="ResourcePicture2.cs" />

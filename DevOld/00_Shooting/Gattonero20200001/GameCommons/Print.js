@@ -18,7 +18,7 @@ function <void> SetColor(<string> color)
 */
 function <void> PrintRect(<double> l, <double> t, <double> w, <double> h)
 {
-	if (w < MICRO || h < MICRO) // ? •`‰æ•s—v
+	if (w < MICRO || h < MICRO) // ? ¬‚³‚·‚¬‚é‚Ì‚Å•`‰æ•s—v
 	{
 		return;
 	}
@@ -50,7 +50,7 @@ function <void> PrintRect_XYWH(<double> x, <double> y, <double> w, <double> h)
 */
 function <void> PrintCircle(<double> x, <double> y, <double> r)
 {
-	if (r < MICRO) // ? •`‰æ•s—v
+	if (r < MICRO) // ? ¬‚³‚·‚¬‚é‚Ì‚Å•`‰æ•s—v
 	{
 		return;
 	}

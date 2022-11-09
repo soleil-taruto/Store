@@ -134,7 +134,7 @@ namespace Charlotte.Games
 
 					if (s5 == "  ")
 					{
-						// nop
+						// noop
 					}
 					else
 					{

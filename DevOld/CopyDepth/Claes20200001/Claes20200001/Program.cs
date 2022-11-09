@@ -36,7 +36,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\home\HPGame", "2" }));
+			//Main4(new ArgsReader(new string[] { @"C:\home\HPGame", "2" }));
+			Main4(new ArgsReader(new string[] { @"C:\home\HPGame\Sword", "-", @"C:\home\HPGame\Sword\Storehouse" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -63,11 +64,23 @@ namespace Charlotte
 			}
 		}
 
+		private string[] NoCopyDirs;
+
 		private void Main5(ArgsReader ar)
 		{
 			string rDir = SCommon.MakeFullPath(ar.NextArg());
-			int depth = int.Parse(ar.NextArg());
+			int depth;
 
+			if (ar.ArgIs("-"))
+			{
+				depth = SCommon.IMAX;
+				NoCopyDirs = ar.TrailArgs().Select(v => SCommon.MakeFullPath(v)).ToArray();
+			}
+			else
+			{
+				depth = int.Parse(ar.NextArg());
+				NoCopyDirs = new string[0];
+			}
 			ar.End();
 
 			if (!Directory.Exists(rDir))
@@ -75,6 +88,10 @@ namespace Charlotte
 
 			if (depth < 0 || SCommon.IMAX < depth)
 				throw new Exception("Bad depth");
+
+			foreach (string noCopyDir in NoCopyDirs)
+				if (!Directory.Exists(noCopyDir))
+					throw new Exception("no noCopyDir: " + noCopyDir);
 
 			string wLocalName = Path.GetFileName(rDir);
 
@@ -85,17 +102,24 @@ namespace Charlotte
 
 			Console.WriteLine("< " + rDir);
 			Console.WriteLine("> " + wDir);
+			Console.WriteLine("D " + depth);
+			Console.WriteLine("N " + NoCopyDirs.Length);
 
 			CopyDepth(rDir, wDir, depth);
 
 			Console.WriteLine("done");
 		}
 
+		private bool IsNoCopyDir(string dir)
+		{
+			return NoCopyDirs.Any(v => SCommon.EqualsIgnoreCase(v, dir));
+		}
+
 		private void CopyDepth(string rDir, string wDir, int depth)
 		{
 			SCommon.CreateDir(wDir);
 
-			if (1 <= depth) // ? コピーする深さ -> コピーする。
+			if (1 <= depth && !IsNoCopyDir(rDir)) // ? コピーする深さ && コピーしないディレクトリではない。-> コピーする。
 			{
 				foreach (string dir in Directory.GetDirectories(rDir))
 					CopyDepth(dir, Path.Combine(wDir, Path.GetFileName(dir)), depth - 1);
@@ -103,7 +127,7 @@ namespace Charlotte
 				foreach (string file in Directory.GetFiles(rDir))
 					File.Copy(file, Path.Combine(wDir, Path.GetFileName(file)));
 			}
-			else // ? コピーしない深さ -> ツリー情報ファイルを作成する。
+			else // ? コピーしない深さ || コピーしないディレクトリ -> ツリー情報ファイルを作成する。
 			{
 				string treeFile = Path.Combine(wDir, "_Tree.txt");
 				string[] treeFileData = MakeTreeFileData(rDir);

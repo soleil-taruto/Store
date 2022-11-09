@@ -148,6 +148,7 @@
     <Compile Include="GameCommons\DDWin32.cs" />
     <Compile Include="GameCommons\MaskGZDataUtils\MaskGZDataEng.cs" />
     <Compile Include="GameProgressMasters\GameProgressMaster.cs" />
+    <Compile Include="Games\Battles\Battle.cs" />
     <Compile Include="Games\Confirm.cs" />
     <Compile Include="Games\Dungeon.cs" />
     <Compile Include="Games\Effects.cs" />

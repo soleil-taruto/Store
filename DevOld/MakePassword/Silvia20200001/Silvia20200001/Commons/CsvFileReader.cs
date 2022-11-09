@@ -12,7 +12,6 @@ namespace Charlotte.Commons
 		public const char DELIMITER_TAB = '\t';
 
 		private char Delimiter = DELIMITER_COMMA;
-
 		private StreamReader Reader;
 
 		public CsvFileReader(string file)

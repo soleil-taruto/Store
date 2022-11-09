@@ -280,6 +280,10 @@ namespace Charlotte.Utilities
 				{
 					if (applyAlpha) // 透過率を考慮する。
 					{
+						// ? 描画するドットが透明 -> 何も描画しないし、描画先ドットも透明だと 0-Divide になるので、何もせず次のドットへ
+						if (src[x, y].A == 0)
+							continue; // 次のドットへ
+
 						D4Color dCol = this[l + x, t + y].ToD4Color();
 						D4Color sCol = src[x, y].ToD4Color();
 

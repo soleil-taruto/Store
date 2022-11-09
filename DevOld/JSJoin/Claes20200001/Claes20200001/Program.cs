@@ -94,8 +94,8 @@ namespace Charlotte
 			if (!Directory.Exists(this.ResourceDir))
 				throw new Exception("no ResourceDir");
 
-			if (!Directory.Exists(this.OutputDir))
-				throw new Exception("no OutputDir");
+			SCommon.DeletePath(this.OutputDir);
+			SCommon.CreateDir(this.OutputDir);
 
 			foreach (string file in Directory.GetFiles(this.SourceDir, "*", SearchOption.AllDirectories))
 				if (!file.Contains("\\_")) // ? アンダースコアで始まるローカル名を含まない。
@@ -147,6 +147,8 @@ namespace Charlotte
 			this.JSLines.Add("var Resources =");
 			this.JSLines.Add("{");
 
+			int resIndex = 0;
+
 			foreach (string file in this.ResourceFiles)
 			{
 				string name = file;
@@ -155,15 +157,17 @@ namespace Charlotte
 
 				string url;
 
-				if (releaseMode) // ? リリース・モード -> 埋め込み
+				if (releaseMode) // ? リリース・モード -> リリースフォルダへ展開
 				{
-					string ext = Path.GetExtension(file);
-					string mediaType = GetMediaTypeByExt(ext);
-					byte[] fileData = File.ReadAllBytes(file);
-					string b64FileData = SCommon.Base64.I.Encode(fileData);
-					string dataUrl = string.Format("data:{0};base64,{1}", mediaType, b64FileData);
+					string resDir = Path.Combine(this.OutputDir, "res");
+					string resFile = Path.Combine(resDir, resIndex.ToString("D8") + ".bin");
 
-					url = dataUrl;
+					SCommon.CreateDir(resDir);
+					File.Copy(file, resFile);
+
+					url = "res/" + Path.GetFileName(resFile);
+
+					resIndex++;
 				}
 				else // ? デバッグ・モード -> ローカルファイルへのリンク
 				{
@@ -402,26 +406,6 @@ namespace Charlotte
 			yield return "<body>";
 			yield return "</body>";
 			yield return "</html>";
-		}
-
-		private static string GetMediaTypeByExt(string ext)
-		{
-			string[] EXT_MEDIA_TYPE_PAIRS = new string[]
-			{
-				".bmp", "image/bmp",
-				".gif", "image/gif",
-				".jpeg", "image/jpeg",
-				".jpg", "image/jpeg",
-				".png", "image/png",
-				".mp3", "audio/mp3",
-				".wav", "audio/wav",
-			};
-
-			for (int index = 0; index < EXT_MEDIA_TYPE_PAIRS.Length; index += 2)
-				if (SCommon.EqualsIgnoreCase(EXT_MEDIA_TYPE_PAIRS[index], ext.ToLower()))
-					return EXT_MEDIA_TYPE_PAIRS[index + 1];
-
-			return "application/octet-stream";
 		}
 	}
 }

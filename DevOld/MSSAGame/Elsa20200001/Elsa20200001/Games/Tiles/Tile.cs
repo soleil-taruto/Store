@@ -23,8 +23,8 @@ namespace Charlotte.Games.Tiles
 		/// 座標はタイルの中心座標 且つ 画面の座標(画面左上を0,0とする)
 		/// -- マップセルを埋めるには LTWH (x - Consts.TILE_W / 2, y - Consts.TILE_H / 2, Consts.TILE_W, Consts.TILE_H) の領域に描画すれば良い。
 		/// </summary>
-		/// <param name="x">タイルの中心座標(X軸)</param>
-		/// <param name="y">タイルの中心座標(Y軸)</param>
+		/// <param name="x">タイルの中心座標(X-軸)</param>
+		/// <param name="y">タイルの中心座標(Y-軸)</param>
 		public abstract void Draw(double x, double y);
 	}
 }

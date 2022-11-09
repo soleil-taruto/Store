@@ -24,6 +24,8 @@ namespace Charlotte.Games
 		public string WallName;
 		public string MusicName;
 
+		// MAPPRM_新しい項目をここへ追加..
+
 		public void Load()
 		{
 			string[] lines = SCommon.TextToLines(SCommon.ENCODING_SJIS.GetString(DDResource.Load(this.MapFile)));
@@ -55,8 +57,6 @@ namespace Charlotte.Games
 						cell.TileName = SCommon.GetElement(tokens, d++, GameConsts.TILE_NONE);
 						cell.Tile = TileCatalog.Create(cell.TileName);
 						cell.EnemyName = SCommon.GetElement(tokens, d++, GameConsts.ENEMY_NONE);
-
-						// 新しい項目をここへ追加..
 
 						this.Table[x, y] = cell;
 					}
@@ -103,6 +103,8 @@ namespace Charlotte.Games
 			lines.Add("");
 			lines.Add("; MusicName");
 			lines.Add(this.MusicName);
+
+			// MAPPRM_新しい項目をここへ追加..
 
 			DDResource.Save(this.MapFile, SCommon.ENCODING_SJIS.GetBytes(SCommon.LinesToText(lines.ToArray())));
 		}

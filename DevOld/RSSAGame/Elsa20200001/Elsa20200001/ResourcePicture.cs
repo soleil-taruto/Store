@@ -14,6 +14,8 @@ namespace Charlotte
 		public DDPicture WhiteCircle = DDPictureLoaders.Standard(@"dat\General\WhiteCircle.png");
 		public DDPicture DummyScreen = DDPictureLoaders.Standard(@"dat\General\DummyScreen.png");
 
+		// ★ここまで固定 -- 持ち回り_共通 -- サンプルとしてキープ
+
 		public DDPicture Copyright = DDPictureLoaders.Standard(@"dat\Logo\Copyright.png");
 
 		//public DDPicture Title = DDPictureLoaders.Standard(@"dat\Title.png");

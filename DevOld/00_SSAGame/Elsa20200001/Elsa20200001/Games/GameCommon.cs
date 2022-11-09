@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Charlotte.Commons;
-using Charlotte.Games.Tiles;
 using Charlotte.GameCommons;
+using Charlotte.GameTools;
+using Charlotte.Games.Tiles;
 
 namespace Charlotte.Games
 {
@@ -197,7 +198,7 @@ namespace Charlotte.Games
 			DDCurtain.SetCurtain();
 			DDEngine.FreezeInput();
 
-			DDSimpleMenu simpleMenu = new DDSimpleMenu()
+			SimpleMenu simpleMenu = new SimpleMenu()
 			{
 				BorderColor = new I3Color(0, 128, 0),
 				WallDrawer = () =>
@@ -217,7 +218,7 @@ namespace Charlotte.Games
 					"----" :
 					"[" + v.TimeStamp + "]　" + v.Description).Concat(new string[] { "戻る" }).ToArray();
 
-				selectIndex = simpleMenu.Perform(18, 18, 32, 24, "セーブ", items, selectIndex);
+				selectIndex = simpleMenu.Perform(selectIndex, 18, 18, 32, 24, "セーブ", items);
 
 				if (selectIndex < GameConsts.SAVE_DATA_SLOT_NUM)
 				{

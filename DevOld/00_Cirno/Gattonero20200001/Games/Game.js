@@ -18,10 +18,10 @@ var<D2Point_t> Camera = CreateD2Point(0.0, 0.0);
 var<TaskManager_t> GameTasks = CreateTaskManager();
 
 // 前面タスク
-var<TaskManager_t> FrontTasks = CreateTaskManager();
+var<TaskManager_t> FrontTasks = CreateTaskManager_CEFM(true);
 
 // プレイヤー描画タスク
-var<TaskManager_t> PlayerDrawTasks = CreateTaskManager();
+var<TaskManager_t> PlayerDrawTasks = CreateTaskManager_CEFM(true);
 
 // 当たり判定を表示するフラグ (デバッグ・テスト用)
 var<boolean> @@_PrintAtariFlag = false;
@@ -187,6 +187,7 @@ gameLoop:
 		}
 
 		ExecuteAllTask(GameTasks);
+		ExecuteAllTask(FrontTasks);
 		@@_DrawFront();
 
 		if (DEBUG && GetKeyInput(17) == 1) // ? コントロール押下中 -> 当たり判定表示 (デバッグ用)
@@ -451,10 +452,6 @@ function <Shot_t[]> GetShots()
 */
 function <void> @@_DrawWall()
 {
-	ClearAllTask(FrontTasks);
-
-	// ----
-
 	DrawWall(@@_Wall);
 }
 
@@ -499,10 +496,6 @@ function <void> @@_DrawMap()
 */
 function <void> @@_DrawFront()
 {
-	ExecuteAllTask(FrontTasks);
-
-	// ----
-
 	var<int> HP_METER_L = 20;
 	var<int> HP_METER_T = 20;
 	var<int> HP_METER_W = 20;
@@ -588,13 +581,17 @@ function* <generatorForTask> @@_DeadAndRestartMotion(<boolean> restartRequested)
 
 	// 再スタートのための処理
 	{
+		// 敵をクリアする前にちゃんと殺しておく。
+		// -- 敵の死亡をモニタして終了(自滅)するタスクのため。
+		@@_Enemies.forEach(enemy => enemy.HP = -1);
+
 		@@_Enemies = [];
 		@@_Shots = [];
 		@@_RequestRestart = false;
 
 		ResetPlayer();
 
-		ClearAllTask(GameTasks);
+//		ClearAllTask(GameTasks); // dont
 		ClearAllTask(FrontTasks);
 		ClearAllTask(PlayerDrawTasks);
 

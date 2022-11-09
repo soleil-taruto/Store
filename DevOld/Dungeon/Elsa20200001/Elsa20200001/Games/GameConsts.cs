@@ -8,8 +8,13 @@ namespace Charlotte.Games
 	public static class GameConsts
 	{
 		/// <summary>
-		/// デフォルトの？の名前
+		/// 汎用・デフォルトの名前
 		/// </summary>
 		public const string NAME_DEFAULT = "Default";
+
+		/// <summary>
+		/// セーブデータ・スロット数
+		/// </summary>
+		public const int SAVE_DATA_SLOT_NUM = 14;
 	}
 }

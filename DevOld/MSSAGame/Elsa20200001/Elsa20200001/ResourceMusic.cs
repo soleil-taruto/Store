@@ -8,10 +8,10 @@ namespace Charlotte
 {
 	public class ResourceMusic
 	{
-		public DDMusic Dummy = new DDMusic(@"dat\General\muon.wav");
+		public DDMusic Dummy = new DDMusic(@"dat\General\muon.wav"); // ★サンプルとしてキープ
 
 		// 例：ループ有り
-		//public DDMusic AAA = new DDMusic(@"dat\AAA.mp3").SetLoopByStLength(123456, 789123);
+		//public DDMusic AAA = new DDMusic(@"dat\AAA.mp3").SetLoopByStLength(123456, 789123); // ★サンプルとしてキープ
 
 		public DDMusic Title = new DDMusic(@"dat\ユーフルカ\Crazy-Halloween-Night_loop\Crazy-Halloween-Night_loop.ogg").SetLoopByStLength(184074, 4141574);
 
@@ -22,7 +22,7 @@ namespace Charlotte
 
 		public ResourceMusic()
 		{
-			//this.Dummy.Volume = 0.1; // 非推奨
+			//this.Dummy.Volume = 0.1; // 非推奨 // ★サンプルとしてキープ
 		}
 	}
 }

@@ -52,6 +52,8 @@ namespace Charlotte
 
 		private void MainWin_Shown(object sender, EventArgs e)
 		{
+			Common.PostShown(this);
+
 			this.Idling = true;
 		}
 
@@ -205,6 +207,49 @@ namespace Charlotte
 		private void Btn行数_32_Click(object sender, EventArgs e)
 		{
 			this.Numb行数.Value = 32;
+		}
+
+		private void BtnSave_Click(object sender, EventArgs e)
+		{
+			if (this.RandText.Text == "") // ? 生成_未実行
+			{
+				MessageBox.Show("先に生成を実行して下さい。", "なんか無理", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				return;
+			}
+			string file = SaveCRandomFileDialog();
+
+			if (file != null)
+			{
+				File.WriteAllText(file, this.RandText.Text, Encoding.ASCII);
+
+				MessageBox.Show("ファイルを出力しました。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+		}
+
+		private static string SaveCRandomFileDialog()
+		{
+			string homeDir = Directory.GetCurrentDirectory();
+			try
+			{
+				using (FileDialog dlg = new SaveFileDialog())
+				{
+					dlg.Title = "保存先";
+					dlg.Filter = "テキストファイル(*.txt)|*.txt|すべてのファイル(*.*)|*.*";
+					dlg.FilterIndex = 1;
+					dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+					dlg.FileName = "Key_" + SCommon.SimpleDateTime.Now().ToTimeStamp() + ".txt";
+
+					if (dlg.ShowDialog() == DialogResult.OK)
+					{
+						return dlg.FileName;
+					}
+				}
+			}
+			finally
+			{
+				Directory.SetCurrentDirectory(homeDir);
+			}
+			return null;
 		}
 	}
 }

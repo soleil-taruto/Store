@@ -38,7 +38,7 @@ function <Audio> @@_Load(<string> url)
 
 /// SE_t
 {
-	<Audio[]> Handles // ハンドルのリスト(3つ)
+	<Audio[]> Handles // ハンドルのリスト(5つ)
 	<int> Index // 次に再生するハンドルの位置
 }
 
@@ -52,12 +52,14 @@ function <SE_t> @@_LoadSE(<string> url)
 {
 	var<SE_t> ret =
 	{
-		// ハンドルのリスト(3つ)
+		// ハンドルのリスト(5つ)
 		Handles:
 		[
-			@@_Load(url),
-			@@_Load(url),
-			@@_Load(url),
+			@@_Load(url), // 1
+			@@_Load(url), // 2
+			@@_Load(url), // 3
+			@@_Load(url), // 4
+			@@_Load(url), // 5
 		],
 
 		// 次に再生するハンドルの位置

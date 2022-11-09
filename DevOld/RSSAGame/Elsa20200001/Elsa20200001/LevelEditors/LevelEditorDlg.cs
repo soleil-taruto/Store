@@ -50,7 +50,7 @@ namespace Charlotte.LevelEditors
 
 		private void LevelEditorDlg_Load(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void LevelEditorDlg_Shown(object sender, EventArgs e)
@@ -235,7 +235,7 @@ namespace Charlotte.LevelEditors
 
 		private void GroupTile_Enter(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void TileGroup_L_SelectedIndexChanged(object sender, EventArgs e)
@@ -250,7 +250,7 @@ namespace Charlotte.LevelEditors
 
 		private void TileMember_L_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void TileGroup_R_SelectedIndexChanged(object sender, EventArgs e)
@@ -265,12 +265,12 @@ namespace Charlotte.LevelEditors
 
 		private void TileMember_R_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void GroupEnemy_Enter(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void EnemyGroup_SelectedIndexChanged(object sender, EventArgs e)
@@ -285,17 +285,17 @@ namespace Charlotte.LevelEditors
 
 		private void EnemyMember_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void ShowTile_CheckedChanged(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void ShowEnemy_CheckedChanged(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 	}
 }

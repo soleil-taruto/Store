@@ -19,7 +19,7 @@ namespace Charlotte
 		public DDPicture Copyright = DDPictureLoaders.Standard(@"dat\Logo\Copyright.png");
 
 		public DDPicture TitleWall = DDPictureLoaders.Standard(@"dat\k-after\BG23a_80.jpg");
-		public DDPicture Title = DDPictureLoaders.Standard(@"dat\Actor83_1.png");
+		public DDPicture Title = DDPictureLoaders.Standard(@"dat\Picture\Actor83_1.png");
 		public DDPicture[] TitleMenuItems = new DDPicture[]
 		{
 			DDPictureLoaders.Standard(@"dat\Title\ゲームスタート.png"),
@@ -91,7 +91,12 @@ namespace Charlotte
 		public DDPicture Tile_E = DDPictureLoaders.Standard(@"dat\FSM\TileE.png");
 		public DDPicture Tile_Dummy = DDPictureLoaders.Standard(@"dat\Tile\DummyTile.png");
 
-		public DDPicture Enemy_神奈子 = DDPictureLoaders.Standard(@"dat\きつね仮\yukkuri-kanako.png");
+		public DDPicture Enemy_TrumpBack = DDPictureLoaders.Standard(@"dat\Picture\TrumpBack.png");
+		public DDPicture Enemy_TrumpFrame = DDPictureLoaders.Standard(@"dat\Picture\TrumpFrame.png");
+		public DDPicture Enemy_TrumpS01 = DDPictureLoaders.Standard(@"dat\Picture\TrumpS01.png");
+
+		//public DDPicture Enemy_神奈子 = DDPictureLoaders.Reduct(@"dat\きつね仮\yukkuri-kanako.png", 4); // resize 4000x4000 -> 1000x1000
+		public DDPicture Enemy_神奈子 = DDPictureLoaders.Standard(@"dat\きつね仮\yukkuri-kanako.png"); // use 1000x1000 resized png
 
 		// ノベルパート用システム画像
 		public DDPicture MessageFrame_Message = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\空想曲線\Messageframe_29\material\01 message\message.png");

@@ -40,7 +40,6 @@ namespace Charlotte
 					)
 				{
 					SCommon.CreateDir(dir);
-					//SCommon.Batch(new string[] { "START " + dir });
 					return dir;
 				}
 			}
@@ -69,9 +68,9 @@ namespace Charlotte
 
 		#endregion
 
-		public static double GetDistance(D2Point pt)
+		public static void HelloWorld()
 		{
-			return Math.Sqrt(pt.X * pt.X + pt.Y * pt.Y);
+			Console.WriteLine("Hello, world!");
 		}
 	}
 }

@@ -17,7 +17,7 @@ namespace Charlotte.Games.Tiles
 
 		public override void Draw(double draw_x, double draw_y, int map_x, int map_y)
 		{
-			// nop
+			// noop
 		}
 	}
 }

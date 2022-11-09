@@ -22,6 +22,55 @@ namespace Charlotte.CSSolutions
 			return _file;
 		}
 
+		public long GetFileSize()
+		{
+			return new FileInfo(_file).Length;
+		}
+
+		/// <summary>
+		/// クラス名または構造体名を取得する。
+		/// １ファイル１クラス(構造体)を想定する。
+		/// ジェネリック型の場合、型名が付いたままであることに注意すること。
+		/// </summary>
+		/// <returns>クラス名または構造体名</returns>
+		public string GetClassOrStructName()
+		{
+			string[] lines = File.ReadAllLines(_file, Encoding.UTF8);
+
+			string[] START_PTNS = new string[]
+			{
+				// フォーム系
+				"\tpublic partial class ",
+				"\tpartial class ",
+
+				// その他 Elsa-系の開発で使っているクラスと構造体
+				"\tpublic abstract class ",
+				"\tpublic static class ",
+				"\tpublic struct ",
+				"\tpublic class ",
+			};
+
+			foreach (string line in lines)
+			{
+				foreach (string startPtn in START_PTNS)
+				{
+					if (line.StartsWith(startPtn))
+					{
+						string name = line.Substring(startPtn.Length);
+
+						// 名前の後に空白・コメント・継承元がある場合は除去
+						name = SCommon.Tokenize(name, "\t /:", false, false)[0];
+
+						if (name == "")
+							throw new Exception("Bad name");
+
+						return name;
+					}
+				}
+			}
+			throw new Exception("クラス名または構造体名を見つけられませんでした。");
+		}
+
 		public void SolveNamespace()
 		{
 			// クラス配置の平滑化
@@ -347,7 +396,7 @@ namespace Charlotte.CSSolutions
 			text = SAM_Replace(text, "public static class", "public class");
 			text = SAM_Replace(text, "static class Program", "public class Program"); // Program.cs 専用
 
-			// public const -> public static 追加_v1122
+			// public const -> public static
 			{
 				text = SAM_PublicConstVarToPublicStaticVar(text);
 				text = SAM_Replace(text, "const", ""); // SAM_PublicConstVarToPublicStaticVar による変換により、必要になった。
@@ -556,10 +605,45 @@ namespace Charlotte.CSSolutions
 				"_z";
 		}
 
-		public void SolveLiteralStrings()
+		public void FormatCloseOrEmptyClass()
+		{
+			string[] lines = File.ReadAllLines(_file, Encoding.UTF8);
+
+			{
+				int bracketPairPos = SCommon.IndexOf(lines, v => v == "\t{ }");
+
+				if (bracketPairPos != -1) // ? 空のクラス(閉じているクラス)
+				{
+					lines = lines
+						.Take(bracketPairPos)
+						.Concat(new string[] { "\t{", "\t}" })
+						.Concat(lines.Skip(bracketPairPos + 1))
+						.ToArray();
+				}
+			}
+
+			int classInsideTopPos = SCommon.IndexOf(lines, v => v.StartsWith("\t\t"));
+
+			if (classInsideTopPos == -1) // ? 空のクラス(中身無し)
+			{
+				int openBracketPos = SCommon.IndexOf(lines, v => v.StartsWith("\t{"));
+
+				if (openBracketPos == -1)
+					throw new Exception("クラスの先頭を見つけられませんでした。");
+
+				lines = lines
+					.Take(openBracketPos + 1)
+					.Concat(new string[] { "\t\t// 00_CSFile_01_dummyClassInsideTopLine" })
+					.Concat(lines.Skip(openBracketPos + 1))
+					.ToArray();
+			}
+			File.WriteAllLines(_file, lines, Encoding.UTF8);
+		}
+
+		public void SolveLiteralStrings(string beforeWarpableMemberLine)
 		{
 			this.SolveLiteralStrings_01();
-			this.SolveLiteralStrings_02();
+			this.SolveLiteralStrings_02(beforeWarpableMemberLine);
 		}
 
 		private void SolveLiteralStrings_01()
@@ -709,10 +793,12 @@ namespace Charlotte.CSSolutions
 			File.WriteAllText(_file, dest.ToString(), Encoding.UTF8);
 		}
 
-		private void SolveLiteralStrings_02()
+		private void SolveLiteralStrings_02(string beforeWarpableMemberLine)
 		{
 			string[] lines = File.ReadAllLines(_file, Encoding.UTF8);
 			List<string> varLines = new List<string>();
+
+			varLines.Add("\t\t// 00_CSFile_02_dummyClassInsideTopLine");
 
 			for (int index = 0; index < lines.Length; index++)
 			{
@@ -752,18 +838,21 @@ namespace Charlotte.CSSolutions
 						c2++;
 						string varName = SLS2_CreateVarName();
 
-						// リテラル文字列難読化_v1112 >
-
+						AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_String");
 						varLines.Add("\t\tpublic static string " +
 							varName + "_String;"
 							);
+
+						AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_01");
 						varLines.Add("\t\tpublic static string " +
-							varName + "() { if(" +
+							varName + "_01() { if (" +
 							varName + "_String == null) { " +
 							varName + "_String = " +
 							varName + "_GetString(); } return " +
 							varName + "_String; }"
 							);
+
+						AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_GetString");
 						varLines.Add("\t\tpublic static string " +
 							varName + "_GetString() { return new string(" +
 							varName + "_E_GetString().Where(" +
@@ -772,29 +861,25 @@ namespace Charlotte.CSSolutions
 							varName + "_Var2 => (char)(" +
 							varName + "_Var2 % 65537 - 1)).ToArray()); }"
 							);
+
+						AddWarpableMemberMark(varLines, beforeWarpableMemberLine, varName + "_E_GetString");
 						varLines.Add("\t\tpublic static IEnumerable<int> " +
 							varName + "_E_GetString() { " +
 							string.Join(" ", SLS2_ToYR(line.Substring(c, c2 - c))) + " }"
 							);
 
-						// < リテラル文字列難読化_v1112
-
-						line = line.Substring(0, c) + varName + "()" + line.Substring(c2);
+						line = line.Substring(0, c) + varName + "_01()" + line.Substring(c2);
 					}
 					lines[index] = line;
 				}
 			}
 			File.WriteAllLines(_file, this.SLS2_クラスの先頭に挿入(lines, varLines), Encoding.UTF8);
 
-			// リテラル文字列難読化_v1112 >
-
 			// IEnumerable<T>, Where(), Select() を使用するための、追加 using
 			{
 				this.SLS2_AddUsingLineIfNotExist("using System.Collections.Generic;");
 				this.SLS2_AddUsingLineIfNotExist("using System.Linq;");
 			}
-
-			// < リテラル文字列難読化_v1112
 		}
 
 		private static string SLS2_CreateVarName()
@@ -831,7 +916,7 @@ namespace Charlotte.CSSolutions
 					yield return SLS2_MakeYR(-1);
 			}
 
-			int divFuncPermil = 100;
+			int divFuncPermil = 100; // 廃止 @ 2022.2.23
 
 			for (int index = 0; index < code.Length; index += 6)
 			{
@@ -854,8 +939,7 @@ namespace Charlotte.CSSolutions
 						yield return "foreach (int " +
 							name + "_Char in " +
 							name + "_Next()) { yield return " +
-							name + "_Char; }}" +
-							CSConsts.CRLF + "\t\tpublic static IEnumerable<int> " + // メンバーの並びシャッフルのために改行が要る。
+							name + "_Char; }} public static IEnumerable<int> " + // HACK: メンバーの並びシャッフルのために改行が要る。<- WLSのため不可となった。
 							name + "_Next() {";
 
 						divFuncPermil = 1;
@@ -909,23 +993,92 @@ namespace Charlotte.CSSolutions
 			}
 		}
 
-		public void OpenClosedEmptyClass()
+		private void AddWarpableMemberMark(List<string> dest, string beforeWarpableMemberLine, string identifier)
+		{
+			dest.Add(beforeWarpableMemberLine);
+			dest.Add(identifier);
+		}
+
+		private class WLS_MemberInfo
+		{
+			public int LineIndex;
+			public CSFile DestCSFile;
+		}
+
+		public void WarpLiteralStrings(string beforeWarpableMemberLine, CSFile[] otherCSFiles)
+		{
+			if (otherCSFiles.Length == 0)
+				throw new Exception("no otherCSFiles");
+
+			string[] lines = File.ReadAllLines(_file, Encoding.UTF8);
+			List<WLS_MemberInfo> members = new List<WLS_MemberInfo>();
+
+			for (int index = 0; index < lines.Length; index++)
+			{
+				if (lines[index] == beforeWarpableMemberLine)
+				{
+					CSFile otherCSFile_01 = SCommon.CRandom.ChooseOne(otherCSFiles);
+					CSFile otherCSFile_02 = SCommon.CRandom.ChooseOne(otherCSFiles);
+					CSFile otherCSFile;
+
+					// ファイルサイズが小さい方を選択
+					if (otherCSFile_01.GetFileSize() < otherCSFile_02.GetFileSize())
+						otherCSFile = otherCSFile_01;
+					else
+						otherCSFile = otherCSFile_02;
+
+					lines[index++] = "// 00_warped_01"; // beforeWarpableMemberLine だった行
+
+					string identifier = lines[index];
+					string identifierNew = otherCSFile.GetClassOrStructName() + "." + identifier;
+
+					lines[index++] = "// 00_warped_02"; // identifier だった行
+					//lines[index++] = "// 00_warped_03"; // 後で移動することになるメンバー行
+
+					// for で index++ していることに注意
+
+					members.Add(new WLS_MemberInfo()
+					{
+						LineIndex = index,
+						DestCSFile = otherCSFile,
+					});
+
+					for (int ndx = 0; ndx < lines.Length; ndx++)
+					{
+						// メンバー行は自分自身の宣言部分を含むため、置き換えを行わない。
+
+						if (ndx != index) // ? メンバー行ではない。
+						{
+							lines[ndx] = lines[ndx].Replace(identifier, identifierNew);
+						}
+					}
+				}
+			}
+			foreach (WLS_MemberInfo member in members)
+			{
+				member.DestCSFile.WLS_クラスの先頭に挿入(lines[member.LineIndex]);
+
+				lines[member.LineIndex] = "// 00_warped_03:" + lines[member.LineIndex]; // メンバーだった行
+			}
+			File.WriteAllLines(_file, lines, Encoding.UTF8);
+		}
+
+		private void WLS_クラスの先頭に挿入(string line)
 		{
 			string[] lines = File.ReadAllLines(_file, Encoding.UTF8);
-			int bracketPos = SCommon.IndexOf(lines, v => v == "\t{ }");
+			int index = SCommon.IndexOf(lines, v => v.StartsWith("\t\t"));
 
-			if (bracketPos != -1)
+			if (index == -1)
+				throw new Exception("クラスの先頭を見つけられませんでした。" + _file);
+
+			string[] insertingLines = new string[]
 			{
-				// このメソッドが処理した痕跡を残したいのでブロックの間にコメントを差し込んでおく
-				// 単語の置換に引っかからないよう、数字で始まる「単語」にする。
-				// --> // 00_ocec
+				"\t\t// 00_CSFile_03_dummyClassInsideTopLine",
+				line,
+			};
 
-				File.WriteAllLines(
-					_file,
-					lines.Take(bracketPos).Concat(new string[] { "\t{", "\t\t// 00_ocec", "\t}" }).Concat(lines.Skip(bracketPos + 1)), // ucc エラー回避のため --> // not_uuid
-					Encoding.UTF8
-					);
-			}
+			lines = lines.Take(index).Concat(insertingLines).Concat(lines.Skip(index)).ToArray();
+			File.WriteAllLines(_file, lines, Encoding.UTF8);
 		}
 
 		public void AddDummyMember()
@@ -1445,9 +1598,15 @@ namespace Charlotte.CSSolutions
 			}
 		}
 
+#if true // シンプル ver
+		private static string RUI_F_P3_GOL_DateTime = null;
+
 		private static IEnumerable<string> RUI_F_P3_GetOutputLines(IEnumerable<string> lines)
 		{
-			string commentMessage = "Confused by ConfuserElsa";
+			if (RUI_F_P3_GOL_DateTime == null)
+				RUI_F_P3_GOL_DateTime = SCommon.SimpleDateTime.Now().ToString("{0}/{1:D2}/{2:D2} {4:D2}:{5:D2}:{6:D2}");
+
+			string commentMessage = "Confused by ConfuserForElsa @ " + RUI_F_P3_GOL_DateTime;
 
 			foreach (string line in lines)
 			{
@@ -1461,6 +1620,32 @@ namespace Charlotte.CSSolutions
 				{
 					yield return "\t\t/// <summary>";
 					yield return "\t\t/// " + commentMessage;
+					yield return "\t\t/// </summary>";
+				}
+				yield return line;
+			}
+		}
+#else // エセ英語コメント ver
+		private static IEnumerable<string> RUI_F_P3_GetOutputLines(IEnumerable<string> lines)
+		{
+			foreach (string line in lines)
+			{
+				if (line.StartsWith("\tpublic ")) // ? クラス || 構造体
+				{
+					yield return "\t/// <summary>";
+
+					for (int c = SCommon.CRandom.GetRange(3, 7); 0 < c; c--)
+						yield return "\t/// " + RUI_F_P3_GOL_MakeCommentLine();
+
+					yield return "\t/// </summary>";
+				}
+				else if (line.StartsWith("\t\tpublic ")) // ? メソッド || フィールド || プロパティ || サブクラス
+				{
+					yield return "\t\t/// <summary>";
+
+					for (int c = SCommon.CRandom.GetRange(1, 5); 0 < c; c--)
+						yield return "\t\t/// " + RUI_F_P3_GOL_MakeCommentLine();
+
 					yield return "\t\t/// </summary>";
 				}
 				yield return line;
@@ -1484,5 +1669,6 @@ namespace Charlotte.CSSolutions
 			line = new string(line.ToCharArray().Where(chr => chr != ',' || SCommon.CRandom.GetInt(10) == 0).ToArray());
 			return line.Substring(0, 1).ToUpper() + line.Substring(1).ToLower() + ".";
 		}
+#endif
 	}
 }

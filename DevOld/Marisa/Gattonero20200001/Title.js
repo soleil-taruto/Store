@@ -9,7 +9,7 @@ var @@_Buttons =
 		Pressed : function* ()
 		{
 			LOGPOS();
-			yield* MapSelectMenu();
+			yield* GameProgressMaster();
 			LOGPOS();
 		},
 	},
@@ -36,7 +36,8 @@ var @@_Buttons =
 		Pressed : function* ()
 		{
 			LOGPOS();
-			window.location.href = "..";
+			window.location.href = "/";
+//			window.location.href = "..";
 //			window.location.href = "https://www.google.com/";
 			LOGPOS();
 		},
@@ -59,11 +60,11 @@ function* <generatorForTask> TitleMain()
 		PrintRect(0, 0, Screen_W, Screen_H);
 
 		SetColor("#000000");
-		SetPrint(30, 220, 0);
-		SetFSize(200);
+		SetPrint(50, 150, 0);
+		SetFSize(100);
 		PrintLine("Marisa");
 
-		selectIndex = DrawSimpleMenu(selectIndex, 100, Screen_H - 300, 70, @@_Buttons.map(v => v.Text));
+		selectIndex = DrawSimpleMenu(selectIndex, 70, 280, 600, 30, @@_Buttons.map(v => v.Text));
 
 		if (DSM_Desided)
 		{

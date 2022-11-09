@@ -9,7 +9,7 @@ namespace Charlotte.Games.Scripts
 	{
 		public override void Perform()
 		{
-			// nop
+			// noop
 		}
 	}
 }

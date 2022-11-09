@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Charlotte.Commons;
 using Charlotte.GameCommons;
 
 namespace Charlotte.Novels.Surfaces
@@ -35,19 +36,21 @@ namespace Charlotte.Novels.Surfaces
 					this.MusicFile = arguments[c++];
 					this.MusicFileChanged();
 				});
+
+				return;
 			}
-			else if (command == "停止")
+			if (command == "停止")
 			{
 				this.Act.AddOnce(() =>
 				{
 					this.MusicFile = null;
 					this.MusicFileChanged();
 				});
+
+				return;
 			}
-			else
-			{
-				throw new DDError();
-			}
+			ProcMain.WriteLog(command);
+			throw new DDError(); // Bad command
 		}
 
 		private void MusicFileChanged()

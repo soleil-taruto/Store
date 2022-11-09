@@ -194,6 +194,7 @@ function <MapCell_t> @@_CharToMapCell(<string> chr)
 	// タイル系
 	//
 	if (chr == "壁") return @@_CreateMapCell_T(CreateTile_BDummy()); // ★サンプル
+	if (chr == "UC") return @@_CreateMapCell_T(CreateTile_BUnderConstruction());
 	if (chr == "　") return @@_CreateMapCell_T(CreateTile_Grass());
 	if (chr == "■") return @@_CreateMapCell_T(CreateTile_Tree(ix, iy));
 	if (chr == "水") return @@_CreateMapCell_T(CreateTile_Water(ix, iy));

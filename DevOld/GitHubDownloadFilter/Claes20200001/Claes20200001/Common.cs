@@ -72,5 +72,10 @@ namespace Charlotte
 		{
 			Console.WriteLine("Hello, world!");
 		}
+
+		public static bool ExtIs(string file, string ext)
+		{
+			return SCommon.EqualsIgnoreCase(Path.GetExtension(file), ext);
+		}
 	}
 }

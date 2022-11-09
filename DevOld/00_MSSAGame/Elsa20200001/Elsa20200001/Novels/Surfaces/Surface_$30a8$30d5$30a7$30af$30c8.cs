@@ -37,20 +37,18 @@ namespace Charlotte.Novels.Surfaces
 				string[] effArgs = arguments.Skip(c).ToArray();
 
 				this.EL.Add(SCommon.Supplier(this.GetEffect(name, effArgs)));
+				return;
 			}
-			else
-			{
-				throw new DDError();
-			}
+			ProcMain.WriteLog(command);
+			throw new DDError(); // Bad command
 		}
 
 		private IEnumerable<bool> GetEffect(string name, string[] arguments)
 		{
 			switch (name)
 			{
-				//case "XXX": return XXX();
-				//case "XXX": return XXX();
-				//case "XXX": return XXX();
+				// 形式：
+				//case "effect-name": return E_EffectTask();
 
 				default:
 					throw null; // never

@@ -10,6 +10,6 @@ namespace Charlotte
 {
 	public class ResourcePicture2
 	{
-		//public DDPicture[,] Dummy = DDDerivations.GetAnimation(Ground.I.Picture.Dummy, 0, 0, 25, 25, 2, 2);
+		public DDPicture[,] Dummy = DDDerivations.GetAnimation(Ground.I.Picture.Dummy, 0, 0, 25, 25, 2, 2); // ★サンプルとしてキープ
 	}
 }

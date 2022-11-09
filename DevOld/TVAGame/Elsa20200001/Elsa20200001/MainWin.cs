@@ -38,7 +38,7 @@ namespace Charlotte
 
 		private void MainWin_Load(object sender, EventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		public static MainWin I = null;
@@ -92,12 +92,12 @@ namespace Charlotte
 
 		private void MainWin_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			// nop
+			// noop
 		}
 
 		private void MainWin_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			// nop
+			// noop
 		}
 	}
 }

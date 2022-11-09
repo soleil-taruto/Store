@@ -10,8 +10,6 @@ namespace Charlotte.Games.Scripts
 	{
 		public override void Perform()
 		{
-			DDMain.KeepMainScreen();
-
 			DDEngine.FreezeInput();
 
 			for (; ; )
@@ -19,7 +17,7 @@ namespace Charlotte.Games.Scripts
 				if (DDInput.A.GetInput() == 1)
 					break;
 
-				DDDraw.DrawSimple(DDGround.KeptMainScreen.ToPicture(), 0, 0);
+				Game.I.Draw();
 
 				DDPrint.SetPrint(30, 400, 30);
 				DDPrint.PrintLine("B0001 -- event test");
@@ -27,6 +25,8 @@ namespace Charlotte.Games.Scripts
 
 				DDEngine.EachFrame();
 			}
+			//DDEngine.FreezeInput();
+			DDInput.A.FreezeInputUntilRelease = true;
 		}
 	}
 }

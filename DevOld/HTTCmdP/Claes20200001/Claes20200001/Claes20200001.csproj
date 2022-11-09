@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="ActionServer.cs" />
     <Compile Include="Actions\Action_AccessCounter.cs" />
+    <Compile Include="Actions\Action_RemoteEndPoint.cs" />
     <Compile Include="Camellias\Camellia.cs" />
     <Compile Include="Camellias\CtrCipher.cs" />
     <Compile Include="Camellias\FileCipher.cs" />

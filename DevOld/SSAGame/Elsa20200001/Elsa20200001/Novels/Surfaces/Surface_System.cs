@@ -20,7 +20,7 @@ namespace Charlotte.Novels.Surfaces
 		{
 			for (; ; )
 			{
-				// nop
+				// noop
 
 				yield return true;
 			}

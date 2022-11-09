@@ -231,19 +231,40 @@ namespace Charlotte
 
 			string docRoot = this.DocRoot;
 			string host = GetHeaderValue(channel, "Host");
-			if (host != null && this.Host2DocRoot != null)
+			if (host != null)
 			{
-				string hostName = host;
+				string hostName;
+				int hostPortNo;
 
-				// ポート番号除去
+				// host -> hostName, hostPortNo
 				{
-					int colon = hostName.IndexOf(':');
+					int colon = host.IndexOf(':');
 
 					if (colon != -1)
-						hostName = hostName.Substring(0, colon);
+					{
+						hostName = host.Substring(0, colon);
+						hostPortNo = int.Parse(host.Substring(colon + 1));
+					}
+					else
+					{
+						hostName = host;
+						hostPortNo = 80;
+					}
 				}
 
-				if (this.Host2DocRoot.ContainsKey(hostName))
+				if (hostPortNo != 80) // ポート番号80以外は80へ飛ばす。★自宅サーバー特有の処理
+				{
+					channel.ResStatus = 301;
+					channel.ResHeaderPairs.Add(new string[] { "Location", "http://" + hostName + channel.PathQuery });
+					//channel.ResBody = null;
+
+					goto endFunc;
+				}
+
+				if (
+					this.Host2DocRoot != null &&
+					this.Host2DocRoot.ContainsKey(hostName)
+					)
 					docRoot = this.Host2DocRoot[hostName];
 			}
 
@@ -307,10 +328,6 @@ namespace Charlotte
 					channel.ResBody = E_ReadFile(this.Page404File);
 				}
 			}
-
-		endFunc:
-			channel.ResHeaderPairs.Add(new string[] { "Server", "HTTCmd-P" });
-
 			if (head && channel.ResBody != null)
 			{
 				FileInfo fileInfo = new FileInfo(path);
@@ -320,6 +337,9 @@ namespace Charlotte
 
 				channel.ResBody = null;
 			}
+
+		endFunc:
+			channel.ResHeaderPairs.Add(new string[] { "Server", "HTTCmd-P" });
 
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "RES-STATUS " + channel.ResStatus);
 

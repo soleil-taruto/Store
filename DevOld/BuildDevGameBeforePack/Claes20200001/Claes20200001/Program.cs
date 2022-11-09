@@ -111,8 +111,11 @@ namespace Charlotte
 					lines.Length < 2 ||
 					string.IsNullOrEmpty(lines[0]) || // ? 空行
 					string.IsNullOrEmpty(lines[1]) || // ? 空行
-					!lines[1].StartsWith("http") // ? URLではない
-					)
+					(
+						!lines[1].StartsWith("http://") && // ? URL(http)ではない
+						!lines[1].StartsWith("https://") && // ? URL(https)でもない
+						lines[1] != "(No URL)" // ? URL-無し指定でもない
+					))
 					throw new Exception("不正な出処ファイル");
 
 				pairs.Add(new string[]
@@ -126,6 +129,21 @@ namespace Charlotte
 				SCommon.ENCODING_SJIS.GetBytes(a[0]),
 				SCommon.ENCODING_SJIS.GetBytes(b[0])
 				));
+
+			for (int index = 1; index < pairs.Count; index++) // 同じ作者が複数居た場合、同じURLなら統合、異なるURLならエラー
+			{
+				string[] a = pairs[index - 1];
+				string[] b = pairs[index - 0];
+
+				if (a[0] == b[0]) // ? 同じ作者
+				{
+					if (a[1] != b[1]) // ? 異なるURL
+						throw new Exception("同じ作者で異なるURLを検出しました。" + a[0]);
+
+					pairs.RemoveAt(index);
+					index--;
+				}
+			}
 
 			List<string> dest = new List<string>();
 

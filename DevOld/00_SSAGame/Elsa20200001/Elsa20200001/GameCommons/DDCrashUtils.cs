@@ -17,12 +17,21 @@ namespace Charlotte.GameCommons
 			MULTI,
 		}
 
+		private static DDCrash _none = new DDCrash()
+		{
+			Kind = Kind_e.NONE,
+		};
+
 		public static DDCrash None()
 		{
+#if true
+			return _none;
+#else // old same
 			return new DDCrash()
 			{
 				Kind = Kind_e.NONE,
 			};
+#endif
 		}
 
 		public static DDCrash Point(D2Point pt)
@@ -42,11 +51,6 @@ namespace Charlotte.GameCommons
 				Pt = pt,
 				R = r,
 			};
-		}
-
-		public static DDCrash Rect_CenterSize(D2Point centerPt, D2Size size)
-		{
-			return Rect(new D4Rect(centerPt.X - size.W / 2.0, centerPt.Y - size.H / 2.0, size.W, size.H));
 		}
 
 		public static DDCrash Rect(D4Rect rect)

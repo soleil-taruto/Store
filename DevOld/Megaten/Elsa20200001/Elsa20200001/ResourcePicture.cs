@@ -28,6 +28,8 @@ namespace Charlotte
 			DDPictureLoaders.Standard(@"dat\Title\終了.png"),
 		};
 
+		public DDPicture ダンジョン枠 = DDPictureLoaders.Standard(@"dat\run\ダンジョン枠.png");
+
 		// ノベルパート用システム画像
 		public DDPicture MessageFrame_Message = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\空想曲線\Messageframe_29\material\01 message\message.png");
 		public DDPicture MessageFrame_Button = DDPictureLoaders.Standard(@"dat\Novel\フリー素材\空想曲線\Messageframe_29\material\02 button\button.png");

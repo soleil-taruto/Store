@@ -23,11 +23,13 @@ namespace Charlotte.Games
 
 		/// <summary>
 		/// プレイヤーの最大HP
+		/// 1～
 		/// </summary>
 		public int MaxHP = 10;
 
 		/// <summary>
 		/// プレイヤーのHP
+		/// 1～
 		/// </summary>
 		public int StartHP = 10;
 

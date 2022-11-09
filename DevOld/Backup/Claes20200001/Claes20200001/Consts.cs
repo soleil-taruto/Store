@@ -19,6 +19,28 @@ namespace Charlotte
 		/// </summary>
 		public const string DEST_DIR = @"P:\";
 
+		private static string SRC_IGNORE_NAMES_FILE
+		{
+			get
+			{
+				if (ProcMain.DEBUG)
+					return @"..\..\..\..\doc\Ignore-Src.txt";
+				else
+					return Path.Combine(ProcMain.SelfDir, "Ignore-Src.txt");
+			}
+		}
+
+		private static string DEST_IGNORE_NAMES_FILE
+		{
+			get
+			{
+				if (ProcMain.DEBUG)
+					return @"..\..\..\..\doc\Ignore-Dest.txt";
+				else
+					return Path.Combine(ProcMain.SelfDir, "Ignore-Dest.txt");
+			}
+		}
+
 		private static string[] _srcIgnoreNames = null;
 
 		/// <summary>
@@ -29,7 +51,7 @@ namespace Charlotte
 			get
 			{
 				if (_srcIgnoreNames == null)
-					_srcIgnoreNames = File.ReadAllLines(Path.Combine(ProcMain.SelfDir, "Ignore-Src.txt"), Encoding.UTF8)
+					_srcIgnoreNames = File.ReadAllLines(SRC_IGNORE_NAMES_FILE, Encoding.UTF8)
 						.Select(v => v.Trim())
 						.Where(v => v != "")
 						.ToArray();
@@ -48,7 +70,7 @@ namespace Charlotte
 			get
 			{
 				if (_destIgnoreNames == null)
-					_destIgnoreNames = File.ReadAllLines(Path.Combine(ProcMain.SelfDir, "Ignore-Dest.txt"), Encoding.UTF8)
+					_destIgnoreNames = File.ReadAllLines(DEST_IGNORE_NAMES_FILE, Encoding.UTF8)
 						.Select(v => v.Trim())
 						.Where(v => v != "")
 						.ToArray();

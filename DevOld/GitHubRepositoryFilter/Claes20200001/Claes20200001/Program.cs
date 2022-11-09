@@ -110,6 +110,21 @@ namespace Charlotte
 
 			foreach (string path in paths)
 			{
+				if (IsEmptyDir(path))
+				{
+					// HACK: 元からこのファイルがあったのか判別できない。
+					// -- そもそも無いと思う。-- そんな名前のファイルを置かない。
+					// -- 本プログラムをコミット前に複数回実行しても良いようにしたいので、エスケープするなどができない。
+					// --> というわけで看過する。
+
+					File.WriteAllBytes(Path.Combine(path, "$$GHRF_Empty"), SCommon.EMPTY_BYTES);
+				}
+			}
+
+			// 注意：以下パス名変更を行うので、パスに対する処理(ファイル更新など)はここまでに行っておくこと。
+
+			foreach (string path in paths)
+			{
 				string dir = Path.GetDirectoryName(path);
 				string localName = Path.GetFileName(path);
 				string localNameNew = ChangeLocalName(localName);
@@ -128,12 +143,25 @@ namespace Charlotte
 			}
 		}
 
+		private bool IsEmptyDir(string path)
+		{
+			return
+				Directory.Exists(path) &&
+				Directory.GetDirectories(path).Length == 0 &&
+				Directory.GetFiles(path).Length == 0;
+		}
+
 		private string ChangeLocalName(string localName)
 		{
 			StringBuilder buff = new StringBuilder();
 
 			foreach (char chr in localName)
 			{
+				// HACK: 元の名前に $xxxx を含む場合を想定していない。
+				// -- そもそも無いと思う。-- そんな名前付けない。
+				// -- 本プログラムをコミット前に複数回実行しても良いようにしたいので、エスケープするなどができない。
+				// --> というわけで看過する。
+
 				if (SCommon.HALF.Contains(chr))
 				{
 					buff.Append(chr);

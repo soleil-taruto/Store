@@ -99,16 +99,20 @@ namespace Charlotte
 		public DDPicture Wall_B0005 = DDPictureLoaders.Standard(@"dat\素材Good\Wall_B0005.png");
 		public DDPicture Wall_B0006 = DDPictureLoaders.Standard(@"dat\素材Good\Wall_B0006.png");
 
-		public DDPicture Enemy_B0001_01 = DDPictureLoaders.Standard(@"dat\Enemy_B0001_01.png");
-		public DDPicture Enemy_B0001_02 = DDPictureLoaders.Standard(@"dat\Enemy_B0001_02.png");
-		public DDPicture Enemy_B0001_03 = DDPictureLoaders.Standard(@"dat\Enemy_B0001_03.png");
-		public DDPicture Enemy_B0001_04 = DDPictureLoaders.Standard(@"dat\Enemy_B0001_04.png");
+		public DDPicture Enemy_B0001_01 = DDPictureLoaders.Standard(@"dat\Picture\Enemy_B0001_01.png");
+		public DDPicture Enemy_B0001_02 = DDPictureLoaders.Standard(@"dat\Picture\Enemy_B0001_02.png");
+		public DDPicture Enemy_B0001_03 = DDPictureLoaders.Standard(@"dat\Picture\Enemy_B0001_03.png");
+		public DDPicture Enemy_B0001_04 = DDPictureLoaders.Standard(@"dat\Picture\Enemy_B0001_04.png");
 
-		public DDPicture Enemy_B0002_01 = DDPictureLoaders.Standard(@"dat\Enemy_B0002_01.png");
-		public DDPicture Enemy_B0002_02 = DDPictureLoaders.Standard(@"dat\Enemy_B0002_02.png");
+		public DDPicture Enemy_B0002_01 = DDPictureLoaders.Standard(@"dat\Picture\Enemy_B0002_01.png");
+		public DDPicture Enemy_B0002_02 = DDPictureLoaders.Standard(@"dat\Picture\Enemy_B0002_02.png");
 
-		//public DDPicture Enemy_神奈子 = DDPictureLoaders.Reduct(@"dat\きつね仮\yukkuri-kanako.png", 4); // 4000x4000 -> 1000x1000
-		public DDPicture Enemy_神奈子 = DDPictureLoaders.Standard(@"dat\きつね仮\yukkuri-kanako.png"); // 1000x1000 resized png
+		public DDPicture Enemy_TrumpBack = DDPictureLoaders.Standard(@"dat\Picture\TrumpBack.png");
+		public DDPicture Enemy_TrumpFrame = DDPictureLoaders.Standard(@"dat\Picture\TrumpFrame.png");
+		public DDPicture Enemy_TrumpS01 = DDPictureLoaders.Standard(@"dat\Picture\TrumpS01.png");
+
+		//public DDPicture Enemy_神奈子 = DDPictureLoaders.Reduct(@"dat\きつね仮\yukkuri-kanako.png", 4); // resize 4000x4000 -> 1000x1000
+		public DDPicture Enemy_神奈子 = DDPictureLoaders.Standard(@"dat\きつね仮\yukkuri-kanako.png"); // use 1000x1000 resized png
 
 		public DDPicture Title = DDPictureLoaders.Standard(@"dat\素材Good\Title.png");
 		public DDPicture EnemyKilled = DDPictureLoaders.Standard(@"dat\ぴぽや倉庫\pipo-btleffect048.png");

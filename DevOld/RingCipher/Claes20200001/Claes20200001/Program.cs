@@ -8,8 +8,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using Charlotte.Commons;
-using Charlotte.Tests;
 using Charlotte.Utilities;
+using Charlotte.Tests;
 
 namespace Charlotte
 {
@@ -209,7 +209,7 @@ namespace Charlotte
 				}
 				else
 				{
-					using (FileCipher transformer = new FileCipher(rawKey))
+					using (RingCipherFile transformer = new RingCipherFile(rawKey))
 					{
 						if (encryptMode)
 							transformer.Encrypt(procTargFile);
@@ -229,7 +229,11 @@ namespace Charlotte
 
 		private byte[] ReadRawKeyFile(string file)
 		{
-			string[] lines = File.ReadAllLines(file, Encoding.ASCII);
+			string[] lines = File.ReadAllLines(file, Encoding.ASCII)
+				.Select(line => line.Trim()) // 行頭・行末の空白を除去
+				.Where(line => line != "") // 空行を除去
+				.Where(line => line[0] != ';') // コメント行を除去
+				.ToArray();
 
 			foreach (string line in lines)
 				if (!Regex.IsMatch(line, "^[0-9A-Fa-f]*$") || line.Length % 2 != 0)
