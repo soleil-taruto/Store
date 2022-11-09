@@ -38,8 +38,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			//Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\GameSample\Program", @"C:\Dev\GameJS\GameSample\res", @"C:\temp" }));
-			Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\GameSample\Program", @"C:\Dev\GameJS\GameSample\res", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\Shooting\Program", @"C:\Dev\GameJS\Shooting\res", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\Shooting\Program", @"C:\Dev\GameJS\Shooting\res", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -89,11 +89,7 @@ namespace Charlotte
 			this.ResourceDir = SCommon.MakeFullPath(ar.NextArg());
 			this.OutputDir = SCommon.MakeFullPath(ar.NextArg());
 
-			// コマンド引数の個数チェック
-			// -- コマンド引数の間違い対策
-			// ---- 例えば、間違った任意オプションを指定すれば、残りの引数がズレて個数が狂うはず。
-			if (ar.HasArgs())
-				throw new Exception("Bad command line option-num");
+			ar.End();
 
 			if (!Directory.Exists(this.SourceDir))
 				throw new Exception("no SourceDir");
@@ -105,7 +101,6 @@ namespace Charlotte
 				throw new Exception("no OutputDir");
 
 			// 出力先をクリア
-			// -- コマンド引数の指定順を間違えた場合を考えるとちょっと怖い。-> コマンド引数の個数チェックを入れてみた。
 			SCommon.DeletePath(this.OutputDir);
 			SCommon.CreateDir(this.OutputDir);
 
@@ -141,6 +136,8 @@ namespace Charlotte
 				this.JSLines.AddRange(lines);
 				this.JSLines.Add("// ここまで " + file);
 			}
+
+			this.EraseRedundancyCode(this.JSLines);
 
 			this.JSFunctions = this.CollectFunctions(this.JSLines).Select(v => v.Name).ToList();
 			this.JSVariables = this.CollectVariables(this.JSLines).Select(v => v.Name).ToList();
@@ -228,7 +225,7 @@ namespace Charlotte
 			IEnumerable<string> htmlLines = this.CreateHtmlLines(releaseMode);
 
 			File.WriteAllLines(
-				Path.Combine(this.OutputDir, releaseMode ? "index.html" : "index_Debug.html"),
+				Path.Combine(this.OutputDir, "index.html"),
 				htmlLines,
 				SCommon.ENCODING_SJIS
 				);
@@ -316,6 +313,7 @@ namespace Charlotte
 
 			string text = SCommon.LinesToText(lines.Concat(extendLines).ToArray());
 
+			text = Common.Replace(text, "@(ASTR)", () => "*");
 			text = Common.Replace(text, "@(AUTO)", () => "" + (AutoCounter++));
 			text = Common.Replace(text, "@(UNQN)", () => Common.CreateRandIdent());
 			text = Common.Replace(text, "@(UUID)", () => Guid.NewGuid().ToString("B"));
@@ -348,6 +346,12 @@ namespace Charlotte
 			{
 				string[] lines = File.ReadAllLines(file, SCommon.ENCODING_SJIS);
 
+				this.EraseRedundancyCode(lines);
+
+				foreach (IdentifierInfo identifier in this.CollectDefines(lines))
+				{
+					this.Tags.Add(file + "(" + (identifier.Index + 1) + ") : " + identifier.Name + " // 定義");
+				}
 				foreach (IdentifierInfo identifier in this.CollectFunctions(lines))
 				{
 					this.Tags.Add(file + "(" + (identifier.Index + 1) + ") : " + identifier.Name + " // 関数");
@@ -356,6 +360,35 @@ namespace Charlotte
 				{
 					this.Tags.Add(file + "(" + (identifier.Index + 1) + ") : " + identifier.Name + " // 変数");
 				}
+			}
+		}
+
+		private IEnumerable<IdentifierInfo> CollectDefines(IList<string> lines)
+		{
+			for (int index = 0; index < lines.Count; index++)
+			{
+				string line = lines[index];
+
+				if (line == "") // ? 空行
+					continue;
+
+				// デリミタ：空白系文字
+				//
+				string[] tokens = SCommon.Tokenize(line, "\t ", false, true);
+
+				if (tokens.Length < 2)
+					continue;
+
+				if (tokens[0] != "///")
+					continue;
+
+				string name = tokens[1];
+
+				yield return new IdentifierInfo()
+				{
+					Name = name,
+					Index = index,
+				};
 			}
 		}
 
@@ -446,6 +479,97 @@ namespace Charlotte
 				{
 					yield return srcHtmlLine;
 				}
+			}
+		}
+
+		/// <summary>
+		/// 補助コードを除去する。
+		/// 指定された行リスト自体を変更する。
+		/// </summary>
+		/// <param name="lines">行リスト</param>
+		private void EraseRedundancyCode(IList<string> lines)
+		{
+			for (int index = 0; index < lines.Count; index++)
+			{
+				string line = lines[index];
+
+				for (int p = 0; p + 1 < line.Length; p++)
+				{
+					// HACK: C系コメントは考慮していない。
+
+					if (line[p] == '/' && line[p + 1] == '/') // C++系コメントのスキップ
+					{
+						break;
+					}
+
+					if (line[p] == '"' || line[p] == '\'') // リテラル文字列のスキップ
+					{
+						char bracket = line[p];
+
+						for (; ; )
+						{
+							p++;
+
+							if (line[p] == bracket)
+								break;
+
+							if (line[p] == '\\')
+							{
+								p++;
+
+								if (line[p] == 'x')
+									p += 2;
+								else if (line[p] == 'u')
+									p += 4;
+							}
+						}
+						continue;
+					}
+
+					if (
+						line[p] == '<' &&
+						line[p + 1] > ' ' &&
+						line[p + 1] != '<' &&
+						line[p + 1] != '='
+						)
+					{
+						int q = line.IndexOf('>', p + 1);
+
+						if (q == -1)
+							throw new Exception("補助コードが閉じていません。\n行：" + line);
+
+						{
+							int r = line.IndexOf('<', p + 1);
+
+							if (r != -1 && r < q)
+								throw new Exception("補助コードは入れ子にできません。\n行：" + line);
+						}
+
+						q++;
+
+						while (q < line.Length && line[q] == ' ')
+							q++;
+
+						while (0 < p && line[p - 1] == ' ')
+							p--;
+
+						bool needPadding = true;
+
+						if (0 < p && line[p - 1] == '(') // 関数の第1引数を想定 -- 他にもあるかも...
+							needPadding = false;
+
+						// 補助コードを除去
+						line = line.Substring(0, p) + (needPadding ? " " : "") + line.Substring(q);
+
+						// ループでインクリメントしているので、ここでデクリメントする。
+						p--;
+					}
+				}
+
+				line = line.Replace("(double)", "");
+				//line = line.Replace("(int)", ""); // ToFix を使用しなければならない。
+
+				lines[index] = line;
 			}
 		}
 	}

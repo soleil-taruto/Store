@@ -13,14 +13,10 @@ namespace Charlotte.Tests
 		{
 			// -- choose one --
 
-			Test01_a(@"C:\Dev\Game\Megaten\Elsa20200001\Elsa20200001.sln");
-			//Test01_a(@"C:\Dev\Game\MSSAGame\Elsa20200001\Elsa20200001.sln");
-			//Test01_a(@"C:\Dev\Game\NetBattle\Elsa20200001\Elsa20200001.sln");
+			Test01_a(@"C:\Dev\Game\MSSAGame\Elsa20200001\Elsa20200001.sln");
 			//Test01_a(@"C:\Dev\Game\RSSAGame\Elsa20200001\Elsa20200001.sln");
-			//Test01_a(@"C:\Dev\Game\Shooting\Elsa20200001\Elsa20200001.sln");
 			//Test01_a(@"C:\Dev\Game\SSAGame\Elsa20200001\Elsa20200001.sln");
 			//Test01_a(@"C:\Dev\Game\TSSGame\Elsa20200001\Elsa20200001.sln");
-			//Test01_a(@"C:\Dev\Game\TVAGame\Elsa20200001\Elsa20200001.sln");
 
 			// --
 		}

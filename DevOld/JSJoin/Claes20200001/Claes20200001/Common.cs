@@ -40,7 +40,6 @@ namespace Charlotte
 					)
 				{
 					SCommon.CreateDir(dir);
-					//SCommon.Batch(new string[] { "START " + dir });
 					return dir;
 				}
 			}
@@ -69,9 +68,9 @@ namespace Charlotte
 
 		#endregion
 
-		public static double GetDistance(D2Point pt)
+		public static void HelloWorld()
 		{
-			return Math.Sqrt(pt.X * pt.X + pt.Y * pt.Y);
+			Console.WriteLine("Hello, world!");
 		}
 
 		/// <summary>
@@ -147,6 +146,23 @@ namespace Charlotte
 			}
 			dest.Add(text);
 			return string.Join("", dest);
+		}
+
+		public static char HexCharsToUnicodeChar(params char[] hexChrs)
+		{
+			int value = 0;
+
+			foreach (char hexChr in hexChrs)
+			{
+				int hexVal = SCommon.hexadecimal.IndexOf(char.ToLower(hexChr));
+
+				if (hexVal == -1)
+					throw new Exception("Bad hex-char: " + (int)hexChr);
+
+				value <<= 4;
+				value |= hexVal;
+			}
+			return (char)value;
 		}
 	}
 }

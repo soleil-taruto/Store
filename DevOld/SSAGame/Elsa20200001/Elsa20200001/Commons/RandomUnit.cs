@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
-using Charlotte.GameCommons;
 
 namespace Charlotte.Commons
 {
@@ -83,7 +82,7 @@ namespace Charlotte.Commons
 				((uint)r[3] << 24);
 		}
 
-		public ulong GetUInt64()
+		public ulong GetULong()
 		{
 			byte[] r = GetBytes(8);
 
@@ -98,17 +97,17 @@ namespace Charlotte.Commons
 				((ulong)r[7] << 56);
 		}
 
-		public ulong GetUInt64_M(ulong modulo)
+		public ulong GetULong_M(ulong modulo)
 		{
 			if (modulo == 0ul)
-				throw new DDError("modulo is zero"); // 難読化のために ArgumentOutOfRangeException を使用しない。
+				throw new Exception("Bad modulo");
 
 			ulong m = (ulong.MaxValue % modulo + 1ul) % modulo;
 			ulong r;
 
 			do
 			{
-				r = this.GetUInt64();
+				r = this.GetULong();
 			}
 			while (r < m);
 
@@ -119,12 +118,12 @@ namespace Charlotte.Commons
 
 		public uint GetUInt_M(uint modulo)
 		{
-			return (uint)this.GetUInt64_M((ulong)modulo);
+			return (uint)this.GetULong_M((ulong)modulo);
 		}
 
 		public long GetLong(long modulo)
 		{
-			return (long)this.GetUInt64_M((ulong)modulo);
+			return (long)this.GetULong_M((ulong)modulo);
 		}
 
 		public int GetInt(int modulo)

@@ -146,7 +146,7 @@ namespace Charlotte.Games.Enemies.Tests
 #endif
 
 			this.HitBackFrame = 1;
-			base.P_Damaged(shot);
+			EnemyCommon.Damaged(this, shot);
 		}
 	}
 }

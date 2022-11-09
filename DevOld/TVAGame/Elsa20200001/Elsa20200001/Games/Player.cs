@@ -15,16 +15,6 @@ namespace Charlotte.Games
 	/// </summary>
 	public class Player
 	{
-		public enum 武器_e
-		{
-			NORMAL,
-			WAVE,
-			SPREAD,
-			BOUNCE,
-		}
-
-		public static int 武器_e_Length = Enum.GetValues(typeof(武器_e)).Length;
-
 		public double X;
 		public double Y;
 		public int FaceDirection; // プレイヤーが向いている方向 { 2, 4, 6, 8 } == { 下, 左, 右, 上 }
@@ -34,7 +24,7 @@ namespace Charlotte.Games
 		public int DamageFrame = 0; // 0 == 無効, 1～ == ダメージ中
 		public int InvincibleFrame = 0; // 0 == 無効, 1～ == 無敵時間中
 		public int HP = 1; // -1 == 死亡, 1～ == 生存
-		public 武器_e 選択武器 = 武器_e.NORMAL;
+		public ShotCatalog.武器_e 選択武器 = ShotCatalog.武器_e.NORMAL;
 
 		public void Draw()
 		{
@@ -85,14 +75,14 @@ namespace Charlotte.Games
 
 			switch (this.選択武器)
 			{
-				case 武器_e.NORMAL:
+				case ShotCatalog.武器_e.NORMAL:
 					if (this.AttackFrame % 10 == 1)
 					{
 						Game.I.Shots.Add(new Shot_Normal(this.X, this.Y, this.FaceDirection));
 					}
 					break;
 
-				case 武器_e.WAVE:
+				case ShotCatalog.武器_e.WAVE:
 					if (this.AttackFrame % 20 == 1)
 					{
 						Game.I.Shots.Add(new Shot_Wave(this.X, this.Y, this.FaceDirection, this.Attack_Wave_左回転Sw));
@@ -100,7 +90,7 @@ namespace Charlotte.Games
 					}
 					break;
 
-				case 武器_e.SPREAD:
+				case ShotCatalog.武器_e.SPREAD:
 					if (this.AttackFrame % 10 == 1)
 					{
 						for (int c = -2; c <= 2; c++)
@@ -110,7 +100,7 @@ namespace Charlotte.Games
 					}
 					break;
 
-				case 武器_e.BOUNCE:
+				case ShotCatalog.武器_e.BOUNCE:
 					if (this.AttackFrame % 25 == 1)
 					{
 						for (int c = -1; c <= 1; c++)

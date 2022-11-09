@@ -71,8 +71,8 @@ namespace Charlotte.Games.Enemies.Tests.神奈子s
 		protected override void P_Damaged(Shot shot)
 		{
 			_hitBack = SCommon.Supplier(this.E_HitBack());
-			base.P_Damaged(shot);
-			Game.I.Enemies.Add(new Enemy_B神奈子_Tama(this.X, this.Y));
+			EnemyCommon.Damaged(this, shot);
+			Game.I.Enemies.Add(new Enemy_B神奈子_Tama(this.X, this.Y)); // 撃ち返し
 		}
 
 		private IEnumerable<bool> E_HitBack()

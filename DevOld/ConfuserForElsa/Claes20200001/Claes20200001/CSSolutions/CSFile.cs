@@ -1036,6 +1036,9 @@ namespace Charlotte.CSSolutions
 			int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(15259, 32766); // 10桁
 			//int value = (chr + 1) + 65537 * SCommon.CRandom.GetRange(0, 32766); // 1～10桁
 
+			//string valueName = CSCommon.CreateNewIdent();
+
+			//return "yield return new[] { new { " + valueName + " = " + value + " } }[0]." + valueName + ";";
 			return "yield return " + value + ";";
 		}
 
@@ -1739,7 +1742,7 @@ namespace Charlotte.CSSolutions
 		private static IEnumerable<string> RUI_FS_P5(IEnumerable<string> lines)
 		{
 			if (RUI_FS_CommentMessage == null)
-				RUI_FS_CommentMessage = "Confused by ConfuserForElsa REV " + new FileInfo(ProcMain.SelfFile).LastWriteTime + ", BLT " + DateTime.Now;
+				RUI_FS_CommentMessage = "Confused by ConfuserForElsa " + Guid.NewGuid().ToString("B");
 
 			foreach (string line in lines)
 			{

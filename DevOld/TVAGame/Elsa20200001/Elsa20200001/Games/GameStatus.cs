@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Charlotte.Commons;
+using Charlotte.Games.Shots;
 
 namespace Charlotte.Games
 {
@@ -57,7 +58,7 @@ namespace Charlotte.Games
 		/// </summary>
 		public int ExitDirection = 5;
 
-		public Player.武器_e Start選択武器 = Player.武器_e.NORMAL;
+		public ShotCatalog.武器_e Start選択武器 = ShotCatalog.武器_e.NORMAL;
 		public ResourcePicture2.Player_e Chara = ResourcePicture2.Player_e.Alice;
 
 		/// <summary>
@@ -142,7 +143,7 @@ namespace Charlotte.Games
 			this.StartPointDirection = int.Parse(lines[c++]);
 			this.StartFaceDirection = int.Parse(lines[c++]);
 			this.ExitDirection = int.Parse(lines[c++]);
-			this.Start選択武器 = (Player.武器_e)int.Parse(lines[c++]);
+			this.Start選択武器 = (ShotCatalog.武器_e)int.Parse(lines[c++]);
 			this.Chara = (ResourcePicture2.Player_e)int.Parse(lines[c++]);
 			this.InventoryFlags.Deserialize(lines[c++]);
 

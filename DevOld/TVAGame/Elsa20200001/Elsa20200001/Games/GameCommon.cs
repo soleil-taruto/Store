@@ -157,7 +157,7 @@ namespace Charlotte.Games
 		{
 			GameStatus gameStatus = Game.I.Status.GetClone();
 
-			// ★★★★★
+			// ★★★★★ *****PSH (<-このパターンで検索できるようにしておく)
 			// プレイヤー・ステータス反映(セーブ時)
 			// その他の反映箇所：
 			// -- マップ入場時

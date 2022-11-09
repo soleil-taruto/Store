@@ -353,6 +353,10 @@ namespace Charlotte.Commons
 			return new HashSet<string>(new IECompStringIgnoreCase());
 		}
 
+		/// <summary>
+		/// とても小さい正数として慣習的に決めた値
+		/// ・doubleの許容誤差として
+		/// </summary>
 		public const double MICRO = 1.0 / IMAX;
 
 		private static void CheckNaN(double value)
@@ -649,7 +653,7 @@ namespace Charlotte.Commons
 			return path.Substring(oldRoot.Length);
 		}
 
-		public static string PutYen(string path)
+		private static string PutYen(string path)
 		{
 			return Put_INE(path, "\\");
 		}
@@ -892,7 +896,7 @@ namespace Charlotte.Commons
 		{
 			if (reader.Read(buff, offset, count) != count)
 			{
-				throw new Exception("データの途中でファイルの終端に到達しました。");
+				throw new Exception("データの途中でストリームの終端に到達しました。");
 			}
 		}
 
@@ -1235,8 +1239,13 @@ namespace Charlotte.Commons
 			}
 		}
 
+		// memo: SJIS(CP-932)の中にサロゲートペアは無い。
+		// -- なので以下は保証される。
+		// ---- SCommon.GetJChars().Length == SCommon.GetJCharCodes().Count()
+
 		/// <summary>
 		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：Unicode
 		/// </summary>
 		/// <returns>SJIS(CP-932)の2バイト文字の文字列</returns>
 		public static string GetJChars()
@@ -1246,6 +1255,7 @@ namespace Charlotte.Commons
 
 		/// <summary>
 		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：SJIS
 		/// </summary>
 		/// <returns>SJIS(CP-932)の2バイト文字のバイト列</returns>
 		public static IEnumerable<byte> GetJCharBytes()
@@ -1259,6 +1269,7 @@ namespace Charlotte.Commons
 
 		/// <summary>
 		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：SJIS
 		/// </summary>
 		/// <returns>SJIS(CP-932)の2バイト文字の列挙</returns>
 		public static IEnumerable<UInt16> GetJCharCodes()
@@ -1895,6 +1906,10 @@ namespace Charlotte.Commons
 			};
 		}
 
+		// memo: GetLimitedReader は総読み込みサイズの下限を制限しない。
+		// -- 総読み込みサイズ上限・下限ともに length としたい場合は以下のようにする。
+		// ---- SCommon.GetLimitedReader(SCommon.GetReader(reader), length)
+
 		public static Read_d GetLimitedReader(Read_d reader, long remaining)
 		{
 			return (buff, offset, count) =>
@@ -1904,7 +1919,24 @@ namespace Charlotte.Commons
 
 				count = (int)Math.Min((long)count, remaining);
 				count = reader(buff, offset, count);
-				remaining -= (long)count;
+
+				if (count <= 0) // ? これ以上読み込めない
+					remaining = 0L;
+				else
+					remaining -= (long)count;
+
+				return count;
+			};
+		}
+
+		public static Read_d GetReader(Read_d reader)
+		{
+			return (buff, offset, count) =>
+			{
+				if (reader(buff, offset, count) != count)
+				{
+					throw new Exception("データの途中でストリームの終端に到達しました。");
+				}
 				return count;
 			};
 		}
@@ -2441,9 +2473,9 @@ namespace Charlotte.Commons
 				return a.GetValueForCompare() != b.GetValueForCompare();
 			}
 
-			public override bool Equals(object other)
+			public override bool Equals(object another)
 			{
-				return other is SimpleDateTime && this == (SimpleDateTime)other;
+				return another is SimpleDateTime && this == (SimpleDateTime)another;
 			}
 
 			public override int GetHashCode()
@@ -2537,6 +2569,25 @@ namespace Charlotte.Commons
 			{
 				throw null; // never
 			}
+		}
+
+		public static Exception ToThrow(Action routine)
+		{
+			try
+			{
+				routine();
+			}
+			catch (Exception ex)
+			{
+				return ex;
+			}
+			throw new Exception("例外を投げませんでした。");
+		}
+
+		public static void ToThrowPrint(Action routine)
+		{
+			Console.WriteLine(ToThrow(routine));
+			Console.WriteLine("★★★想定された例外のため処理を続行します。");
 		}
 	}
 }

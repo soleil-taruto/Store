@@ -462,6 +462,46 @@ namespace Charlotte.Commons
 			return ret;
 		}
 
+		public static T GetElement<T>(IList<T> list, int index, T defval)
+		{
+			if (index < list.Count)
+			{
+				return list[index];
+			}
+			else
+			{
+				return defval;
+			}
+		}
+
+		public static IEnumerable<T> InsertRange<T>(IEnumerable<T> list, int index, IEnumerable<T> listForInsert)
+		{
+			int listCount = list.Count();
+
+			if (
+				list == null ||
+				listForInsert == null ||
+				index < 0 || listCount < index
+				)
+				throw new ArgumentException();
+
+			return list.Take(index).Concat(listForInsert).Concat(list.Skip(index));
+		}
+
+		public static IEnumerable<T> RemoveRange<T>(IEnumerable<T> list, int index, int count)
+		{
+			int listCount = list.Count();
+
+			if (
+				list == null ||
+				index < 0 || listCount < index ||
+				count < 0 || listCount - index < count
+				)
+				throw new ArgumentException();
+
+			return list.Take(index).Concat(list.Skip(index + count));
+		}
+
 		private const int IO_TRY_MAX = 10;
 
 		public static void DeletePath(string path)
@@ -2474,6 +2514,64 @@ namespace Charlotte.Commons
 		{
 			Console.WriteLine(ToThrow(routine));
 			Console.WriteLine("★★★想定された例外のため処理を続行します。");
+		}
+
+		#region GetOutputDir
+
+		private static string GOD_Dir;
+
+		public static string GetOutputDir()
+		{
+			if (GOD_Dir == null)
+				GOD_Dir = GetOutputDir_Main();
+
+			return GOD_Dir;
+		}
+
+		private static string GetOutputDir_Main()
+		{
+			for (int c = 1; c <= 999; c++)
+			{
+				string dir = "C:\\" + c;
+
+				if (
+					!Directory.Exists(dir) &&
+					!File.Exists(dir)
+					)
+				{
+					SCommon.CreateDir(dir);
+					return dir;
+				}
+			}
+			throw new Exception("C:\\1 ～ 999 は使用できません。");
+		}
+
+		public static void OpenOutputDir()
+		{
+			SCommon.Batch(new string[] { "START " + GetOutputDir() });
+		}
+
+		public static void OpenOutputDirIfCreated()
+		{
+			if (GOD_Dir != null)
+			{
+				OpenOutputDir();
+			}
+		}
+
+		private static int NOP_Count = 0;
+
+		public static string NextOutputPath()
+		{
+			return Path.Combine(GetOutputDir(), (++NOP_Count).ToString("D4"));
+		}
+
+		#endregion
+
+		public static void Pause()
+		{
+			Console.WriteLine("Press ENTER key.");
+			Console.ReadLine();
 		}
 	}
 }

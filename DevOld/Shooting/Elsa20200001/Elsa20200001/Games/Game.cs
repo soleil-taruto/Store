@@ -59,7 +59,7 @@ namespace Charlotte.Games
 			this.Player.X = GameConsts.FIELD_W / 4;
 			this.Player.Y = GameConsts.FIELD_H / 2;
 
-			// ★★★★★
+			// ★★★★★ *****PSH (<-このパターンで検索できるようにしておく)
 			// プレイヤー・ステータス反映(ステージ開始時)
 			{
 				// none
@@ -405,7 +405,7 @@ namespace Charlotte.Games
 				DDEngine.EachFrame();
 			}
 
-			// ★★★★★
+			// ★★★★★ *****PSH (<-このパターンで検索できるようにしておく)
 			// プレイヤー・ステータス反映(ステージ終了時)
 			{
 				// none

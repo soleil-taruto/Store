@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Charlotte.Commons;
 using Charlotte.GameCommons;
+using Charlotte.Games.Shots;
 
 namespace Charlotte.Games.Enemies
 {
@@ -14,7 +15,7 @@ namespace Charlotte.Games.Enemies
 		/// </summary>
 		/// <param name="enemy">被弾した敵</param>
 		/// <param name="shot">「被弾した敵」に当たった自弾</param>
-		public static void Damaged(Enemy enemy, Shots.Shot shot)
+		public static void Damaged(Enemy enemy, Shot shot)
 		{
 			// noop ???
 		}

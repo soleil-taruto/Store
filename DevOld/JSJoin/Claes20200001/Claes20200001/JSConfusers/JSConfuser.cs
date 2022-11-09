@@ -144,11 +144,25 @@ namespace Charlotte.JSConfusers
 							}
 							else if (chr == 'x')
 							{
-								throw new Exception("非対応：2桁の16進数が表すLatin-1文字");
+								index++;
+								char chr_01 = text[index];
+								index++;
+								char chr_02 = text[index];
+
+								chr = Common.HexCharsToUnicodeChar(chr_01, chr_02);
 							}
 							else if (chr == 'u')
 							{
-								throw new Exception("非対応：4桁の16進数が表すUnicode文字");
+								index++;
+								char chr_01 = text[index];
+								index++;
+								char chr_02 = text[index];
+								index++;
+								char chr_03 = text[index];
+								index++;
+								char chr_04 = text[index];
+
+								chr = Common.HexCharsToUnicodeChar(chr_01, chr_02, chr_03, chr_04);
 							}
 							else
 							{

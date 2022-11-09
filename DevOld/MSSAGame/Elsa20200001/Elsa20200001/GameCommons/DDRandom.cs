@@ -22,22 +22,40 @@ namespace Charlotte.GameCommons
 			this.X = (ulong)seed;
 		}
 
-		/// <summary>
-		/// 0以上2^32未満の乱数を返す。
-		/// </summary>
-		/// <returns>乱数</returns>
-		public uint Next()
-		{
-			ulong uu1 = this.P_Next();
-
-			uint u1 = (uint)(uu1 % 4294967311ul); // 2^32 より大きい最小の素数
-
-			return u1;
-		}
-
-		private ulong P_Next()
+		private ulong Next()
 		{
 			return this.X = 1103515245 * (ulong)(uint)this.X + 12345;
+		}
+
+		/// <summary>
+		/// 32ビットの乱数を返す。
+		/// </summary>
+		/// <returns>乱数</returns>
+		public uint GetUInt()
+		{
+			ulong uu = this.Next();
+			uint ret = (uint)(uu % 4294967311ul); // 2^32 より大きい最小の素数
+			return ret;
+		}
+
+		/// <summary>
+		/// 0以上modulo未満の乱数を返す。
+		/// </summary>
+		/// <param name="modulo">上限値(1～)</param>
+		/// <returns>乱数</returns>
+		public uint GetUInt_M(uint modulo)
+		{
+			return this.GetUInt() % modulo;
+		}
+
+		/// <summary>
+		/// 0以上modulo未満の乱数を返す。
+		/// </summary>
+		/// <param name="modulo">上限値(1～)</param>
+		/// <returns>乱数</returns>
+		public int GetInt(int modulo)
+		{
+			return (int)this.GetUInt_M((uint)modulo);
 		}
 
 		/// <summary>
@@ -46,7 +64,7 @@ namespace Charlotte.GameCommons
 		/// <returns>乱数</returns>
 		public double Single()
 		{
-			return this.Next() / (double)uint.MaxValue;
+			return (double)this.GetUInt() / uint.MaxValue;
 		}
 
 		/// <summary>
@@ -56,21 +74,6 @@ namespace Charlotte.GameCommons
 		public double Double()
 		{
 			return this.Single() * 2.0 - 1.0;
-		}
-
-		/// <summary>
-		/// 0以上"上限値"未満の乱数を返す。
-		/// </summary>
-		/// <param name="modulo">上限値(1～)</param>
-		/// <returns>乱数</returns>
-		public int GetInt(int modulo)
-		{
-			return (int)this.P_GetUInt((uint)modulo);
-		}
-
-		private uint P_GetUInt(uint modulo)
-		{
-			return this.Next() % modulo;
 		}
 
 		public int GetRange(int minval, int maxval)

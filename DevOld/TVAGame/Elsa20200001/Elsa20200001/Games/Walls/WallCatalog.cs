@@ -6,7 +6,7 @@ using Charlotte.GameCommons;
 
 namespace Charlotte.Games.Walls
 {
-	public static class WallCreator
+	public static class WallCatalog
 	{
 		public static Wall Create(string name)
 		{
