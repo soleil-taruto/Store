@@ -2,53 +2,90 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
 using Charlotte.Commons;
-using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
 	public class Test0005
 	{
-		private const string TARGET_DIR = @"C:\temp"; // ★★★ 注意：このフォルダ配下のファイルを変更する！
+		private const int PLAYER_NUM = 8;
 
-		public void Test01()
+		private class GameInfo
 		{
-			string[] pngFiles = Directory.GetFiles(TARGET_DIR, "*.png", SearchOption.AllDirectories);
+			public PlayerInfo[] Players = new PlayerInfo[PLAYER_NUM];
+			public PlayerInfo[] RankOrder;
+		}
 
-			foreach (string pngFile in pngFiles)
+		private class PlayerInfo
+		{
+			public int SelfIndex; // 0～
+			public int[] Points = new int[PLAYER_NUM];
+			public int Rank; // 1～
+
+			public int Point
 			{
-				Canvas canvas = Canvas.LoadFromFile(pngFile);
-
-				int w = canvas.W;
-				int h = canvas.H;
-
-				if (w < 20 || h < 20)
+				get
 				{
-					canvas.Fill(MakeFillColor());
+					return this.Points.Sum();
 				}
-				else
-				{
-					int halfW = w / 2;
-					int halfH = h / 2;
-
-					canvas.FillRect(MakeFillColor(), I4Rect.LTRB(0, 0, halfW, halfH)); // 左上
-					canvas.FillRect(MakeFillColor(), I4Rect.LTRB(halfW, 0, w, halfH)); // 右上
-					canvas.FillRect(MakeFillColor(), I4Rect.LTRB(halfW, halfH, w, h)); // 右下
-					canvas.FillRect(MakeFillColor(), I4Rect.LTRB(0, halfH, halfW, h)); // 左下
-				}
-				canvas.Save(pngFile);
 			}
 		}
 
-		private I4Color MakeFillColor()
+		private GameInfo CreateGame()
 		{
-			return new I4Color(
-				SCommon.CRandom.GetRange(0, 255),
-				SCommon.CRandom.GetRange(0, 255),
-				SCommon.CRandom.GetRange(0, 255),
-				128 // 半透明
-				);
+			GameInfo game = new GameInfo();
+
+			for (int index = 0; index < PLAYER_NUM; index++)
+			{
+				game.Players[index] = new PlayerInfo();
+				game.Players[index].SelfIndex = index;
+			}
+			for (int b = 1; b < PLAYER_NUM; b++)
+			{
+				for (int a = 0; a < b; a++)
+				{
+					int aPoint = Math.Max(
+						SCommon.CRandom.GetInt(3) * 5,
+						SCommon.CRandom.GetInt(3) * 5
+						);
+					int bPoint = 10 - aPoint;
+
+					game.Players[a].Points[b] = aPoint;
+					game.Players[b].Points[a] = bPoint;
+				}
+			}
+
+			for (int index = 0; index < PLAYER_NUM; index++)
+				game.Players[index].Rank = game.Players.Where(v => game.Players[index].Point < v.Point).Count() + 1;
+
+			game.RankOrder = game.Players.ToArray(); // Cloning
+
+			Array.Sort(game.RankOrder, (a, b) => a.Rank - b.Rank);
+
+			return game;
+		}
+
+		public void Test01()
+		{
+			for (int c = 0; c < 10; )
+			{
+				GameInfo game = CreateGame();
+
+				if (SCommon.HasSame(game.Players, (a, b) => a.Point == b.Point))
+					continue;
+
+				if (
+					game.RankOrder[1].Point !=
+					game.RankOrder[4].Point +
+					game.RankOrder[5].Point +
+					game.RankOrder[6].Point +
+					game.RankOrder[7].Point
+					)
+					continue;
+
+				Console.WriteLine(game.RankOrder[2].Points[game.RankOrder[6].SelfIndex]);
+				c++;
+			}
 		}
 	}
 }

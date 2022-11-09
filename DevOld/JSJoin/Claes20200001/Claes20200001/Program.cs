@@ -59,8 +59,10 @@ namespace Charlotte
 			{
 				ProcMain.WriteLog(e);
 
-				Console.WriteLine("変換エラー(エンターキーを押して下さい)");
-				Console.ReadLine();
+				MessageBox.Show("" + e, "JSJoin - 変換エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+				//Console.WriteLine("変換エラー(エンターキーを押して下さい)");
+				//Console.ReadLine();
 			}
 		}
 
