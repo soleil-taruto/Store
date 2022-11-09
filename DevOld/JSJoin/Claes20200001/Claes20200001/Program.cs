@@ -38,8 +38,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
-			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -160,7 +160,7 @@ namespace Charlotte
 			this.JSLines.Add("var Resources =");
 			this.JSLines.Add("{");
 
-			string resDir = Path.Combine(this.OutputDir, "res");
+			string resDir = Path.Combine(this.OutputDir, Consts.OUTPUT_RES_DIR_NAME);
 
 			if (releaseMode)
 			{
@@ -200,11 +200,14 @@ namespace Charlotte
 
 				if (releaseMode) // ? リリース・モード -> リリースフォルダへ展開
 				{
-					string resFile = Path.Combine(resDir, resFileNameGen.Next() + ".bin");
+					//string resFileExt = ".bin";
+					string resFileExt = Path.GetExtension(file);
+
+					string resFile = Path.Combine(resDir, resFileNameGen.Next() + resFileExt);
 
 					File.Copy(file, resFile);
 
-					url = "res/" + Path.GetFileName(resFile);
+					url = Consts.OUTPUT_RES_DIR_NAME + "/" + Path.GetFileName(resFile);
 				}
 				else // ? デバッグ・モード -> ローカルファイルへのリンク
 				{

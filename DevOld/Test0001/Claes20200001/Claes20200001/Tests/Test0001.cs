@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using Charlotte.Commons;
+using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
@@ -11,167 +12,137 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			Test01_a(uint.MaxValue - 3, (ulong)(uint.MaxValue - 3) * (uint.MaxValue - 3), (ulong)(uint.MaxValue - 2) * (uint.MaxValue - 2) - 1);
-			Test01_a(uint.MaxValue - 2, (ulong)(uint.MaxValue - 2) * (uint.MaxValue - 2), (ulong)(uint.MaxValue - 1) * (uint.MaxValue - 1) - 1);
-			Test01_a(uint.MaxValue - 1, (ulong)(uint.MaxValue - 1) * (uint.MaxValue - 1), (ulong)(uint.MaxValue - 0) * (uint.MaxValue - 0) - 1);
-			Test01_a(uint.MaxValue - 0, (ulong)(uint.MaxValue - 0) * (uint.MaxValue - 0), ulong.MaxValue);
+			//const int RANGE_SCALE = 100;
+			//const int RANGE_SCALE = 10000;
+			const int RANGE_SCALE = 1000000;
+			//const int RANGE_SCALE = 100000000;
 
-			Test01_b(10000, 100);
-			Test01_b(10000, 10000);
-			Test01_b(10000, 1000000);
-			Test01_b(10000, 100000000);
-			Test01_b(10000, 10000000000);
-			Test01_b(10000, 1000000000000);
-			Test01_b(10000, 100000000000000);
-			Test01_b(10000, 10000000000000000);
-			Test01_b(10000, 1000000000000000000);
-			Test01_b(10000, 18440000000000000000);
+			List<GapInfo> gaps = new List<GapInfo>();
+			int lp = 2;
 
-			Test01_c(int.MaxValue - 3, (long)(int.MaxValue - 3) * (int.MaxValue - 3), (long)(int.MaxValue - 2) * (int.MaxValue - 2) - 1);
-			Test01_c(int.MaxValue - 2, (long)(int.MaxValue - 2) * (int.MaxValue - 2), (long)(int.MaxValue - 1) * (int.MaxValue - 1) - 1);
-			Test01_c(int.MaxValue - 1, (long)(int.MaxValue - 1) * (int.MaxValue - 1), (long)(int.MaxValue - 0) * (int.MaxValue - 0) - 1);
-			Test01_c(int.MaxValue - 0, (long)(int.MaxValue - 0) * (int.MaxValue - 0), ((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) - 1);
-
-			SCommon.ToThrowPrint(() => IntSqrt(((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) + 0));
-			SCommon.ToThrowPrint(() => IntSqrt(((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) + 1));
-			SCommon.ToThrowPrint(() => IntSqrt(((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) + 2));
-			SCommon.ToThrowPrint(() => IntSqrt(((long)int.MaxValue + 1) * ((long)int.MaxValue + 1) + 3));
-			SCommon.ToThrowPrint(() => IntSqrt(long.MaxValue - 0));
-			SCommon.ToThrowPrint(() => IntSqrt(long.MaxValue - 1));
-			SCommon.ToThrowPrint(() => IntSqrt(long.MaxValue - 2));
-			SCommon.ToThrowPrint(() => IntSqrt(long.MaxValue - 3));
-
-			Test01_d(10000, 100);
-			Test01_d(10000, 10000);
-			Test01_d(10000, 1000000);
-			Test01_d(10000, 100000000);
-			Test01_d(10000, 10000000000);
-			Test01_d(10000, 1000000000000);
-			Test01_d(10000, 100000000000000);
-			Test01_d(10000, 10000000000000000);
-			Test01_d(10000, 1000000000000000000);
-			Test01_d(10000, 4610000000000000000);
-
-			Console.WriteLine("OK!");
-		}
-
-		private void Test01_a(uint expectRet, ulong minPrm, ulong maxPrm)
-		{
-			for (ulong prm = minPrm; ; prm++)
+			foreach (int p in Enumerable.Range(3, RANGE_SCALE).Where(v => MillerRabin.IsPrime((ulong)v)))
 			{
-				uint ret = UIntSqrt(prm);
-
-				if (ret != expectRet)
-					throw null; // BUG !!!
-
-				// ----
-
-				if (maxPrm <= prm)
-					break;
-
-				if (minPrm + 3000000 < maxPrm) // 多い -> 中スキップ
-					if (minPrm + 1000000 < prm && prm < maxPrm - 1000000)
-						prm += 500000;
+				gaps.Add(new GapInfo() { PrimeLw = lp, PrimeHi = p });
+				lp = p;
 			}
-			Console.WriteLine("OK");
-		}
 
-		private void Test01_b(int testCount, ulong prmScale)
-		{
-			for (int testcnt = 0; testcnt < testCount; testcnt++)
 			{
-				ulong prm = SCommon.CRandom.GetULong_M(prmScale);
-				uint ret = UIntSqrt(prm);
+				int maxGap = gaps.Select(v => v.Gap).Max();
 
-				if ((ulong)ret * ret > prm)
-					throw null; // BUG !!!
-
-				if ((ulong)(ret + 1) * (ret + 1) <= prm)
-					throw null; // BUG !!!
+				foreach (GapInfo gap in gaps)
+					if (maxGap == gap.Gap)
+						Console.WriteLine("maxGap : " + gap);
 			}
-			Console.WriteLine("OK");
-		}
 
-		private void Test01_c(int expectRet, long minPrm, long maxPrm)
-		{
-			for (long prm = minPrm; ; prm++)
+			List<GapInfo[]> twoGaps = new List<GapInfo[]>();
+
 			{
-				int ret = IntSqrt(prm);
+				GapInfo lGap = gaps[0];
 
-				if (ret != expectRet)
-					throw null; // BUG !!!
-
-				// ----
-
-				if (maxPrm <= prm)
-					break;
-
-				if (minPrm + 3000000 < maxPrm) // 多い -> 中スキップ
-					if (minPrm + 1000000 < prm && prm < maxPrm - 1000000)
-						prm += 500000;
+				foreach (GapInfo gap in gaps.Skip(1))
+				{
+					twoGaps.Add(new GapInfo[] { lGap, gap });
+					lGap = gap;
+				}
 			}
-			Console.WriteLine("OK");
-		}
 
-		private void Test01_d(int testCount, long prmScale)
-		{
-			for (int testcnt = 0; testcnt < testCount; testcnt++)
 			{
-				long prm = SCommon.CRandom.GetLong(prmScale);
-				int ret = IntSqrt(prm);
+				int maxTwoGap = twoGaps.Select(v => v[0].Gap + v[1].Gap).Max();
 
-				if ((long)ret * ret > prm)
-					throw null; // BUG !!!
-
-				if ((long)(ret + 1) * (ret + 1) <= prm)
-					throw null; // BUG !!!
+				foreach (GapInfo[] twoGap in twoGaps)
+					if (maxTwoGap == twoGap[0].Gap + twoGap[1].Gap)
+						Console.WriteLine("maxTwoGap : " + twoGap[0] + " , " + twoGap[1]);
 			}
-			Console.WriteLine("OK");
-		}
 
-		// ====
-		// ====
-		// ====
+			List<GapInfo[]> threeGaps = new List<GapInfo[]>();
 
-		public static int IntSqrt(long value)
-		{
-			if (value < 0 || (1L << 62) <= value)
-				throw new ArgumentException();
-
-			return (int)UIntSqrt((ulong)value);
-		}
-
-#if true
-		public static uint UIntSqrt(ulong value)
-		{
-			uint ret = 0;
-
-			for (uint bit = 1u << 31; bit != 0; bit >>= 1)
 			{
-				uint m = ret | bit;
+				GapInfo kGap = gaps[0];
+				GapInfo lGap = gaps[1];
 
-				if ((ulong)m * m <= value)
-					ret = m;
+				foreach (GapInfo gap in gaps.Skip(2))
+				{
+					threeGaps.Add(new GapInfo[] { kGap, lGap, gap });
+					kGap = lGap;
+					lGap = gap;
+				}
 			}
-			return ret;
-		}
-#else
-		public static uint UIntSqrt(ulong value)
-		{
-			ulong l = 0;
-			ulong r = (ulong)uint.MaxValue + 1;
 
-			while (l + 1 < r)
 			{
-				ulong m = (l + r) / 2;
+				int maxThreeGap = threeGaps.Select(v => v[0].Gap + v[1].Gap + v[2].Gap).Max();
 
-				if (m * m <= value)
-					l = m;
-				else
-					r = m;
+				foreach (GapInfo[] threeGap in threeGaps)
+					if (maxThreeGap == threeGap[0].Gap + threeGap[1].Gap + threeGap[2].Gap)
+						Console.WriteLine("maxThreeGap : " + threeGap[0] + " , " + threeGap[1] + " , " + threeGap[2]);
 			}
-			return (uint)l;
 		}
-#endif
+
+		private class GapInfo
+		{
+			public int PrimeLw;
+			public int PrimeHi;
+
+			public int Gap
+			{
+				get
+				{
+					return (this.PrimeHi - this.PrimeLw) - 1;
+				}
+			}
+
+			public override string ToString()
+			{
+				return string.Format("{0} ..({1}).. {2}", this.PrimeLw, this.Gap, this.PrimeHi);
+			}
+		}
+
+		// ----
+
+		public void Test02()
+		{
+			//const int RANGE_SCALE = 100;
+			//const int RANGE_SCALE = 10000;
+			const int RANGE_SCALE = 1000000;
+			//const int RANGE_SCALE = 100000000;
+
+			int[] ps = Enumerable.Range(3, RANGE_SCALE).Where(v => MillerRabin.IsPrime((ulong)v)).ToArray();
+			int maxGap_01 = -1;
+			int maxGap_02 = -1;
+			int maxGap_03 = -1;
+			int maxGap_04 = -1;
+			int maxGap_05 = -1;
+			int maxGap_06 = -1;
+
+			for (int i = 0; i + 1 < ps.Length; i++) maxGap_01 = Math.Max(maxGap_01, ps[i + 1] - ps[i]);
+			for (int i = 0; i + 2 < ps.Length; i++) maxGap_02 = Math.Max(maxGap_02, ps[i + 2] - ps[i]);
+			for (int i = 0; i + 3 < ps.Length; i++) maxGap_03 = Math.Max(maxGap_03, ps[i + 3] - ps[i]);
+			for (int i = 0; i + 4 < ps.Length; i++) maxGap_04 = Math.Max(maxGap_04, ps[i + 4] - ps[i]);
+			for (int i = 0; i + 5 < ps.Length; i++) maxGap_05 = Math.Max(maxGap_05, ps[i + 5] - ps[i]);
+			for (int i = 0; i + 6 < ps.Length; i++) maxGap_06 = Math.Max(maxGap_06, ps[i + 6] - ps[i]);
+
+			for (int i = 0; i + 1 < ps.Length; i++)
+				if (maxGap_01 == ps[i + 1] - ps[i])
+					Console.WriteLine("maxGap_01 : " + ps[i] + " ..(" + (ps[i + 1] - ps[i]) + ").. " + ps[i + 1]);
+
+			for (int i = 0; i + 2 < ps.Length; i++)
+				if (maxGap_02 == ps[i + 2] - ps[i])
+					Console.WriteLine("maxGap_02 : " + ps[i] + " ..(" + (ps[i + 2] - ps[i]) + ").. " + ps[i + 2]);
+
+			for (int i = 0; i + 3 < ps.Length; i++)
+				if (maxGap_03 == ps[i + 3] - ps[i])
+					Console.WriteLine("maxGap_03 : " + ps[i] + " ..(" + (ps[i + 3] - ps[i]) + ").. " + ps[i + 3]);
+
+			for (int i = 0; i + 4 < ps.Length; i++)
+				if (maxGap_04 == ps[i + 4] - ps[i])
+					Console.WriteLine("maxGap_04 : " + ps[i] + " ..(" + (ps[i + 4] - ps[i]) + ").. " + ps[i + 4]);
+
+			for (int i = 0; i + 5 < ps.Length; i++)
+				if (maxGap_05 == ps[i + 5] - ps[i])
+					Console.WriteLine("maxGap_05 : " + ps[i] + " ..(" + (ps[i + 5] - ps[i]) + ").. " + ps[i + 5]);
+
+			for (int i = 0; i + 6 < ps.Length; i++)
+				if (maxGap_06 == ps[i + 6] - ps[i])
+					Console.WriteLine("maxGap_06 : " + ps[i] + " ..(" + (ps[i + 6] - ps[i]) + ").. " + ps[i + 6]);
+		}
 	}
 }

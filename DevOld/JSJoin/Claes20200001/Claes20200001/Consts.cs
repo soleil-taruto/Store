@@ -7,6 +7,6 @@ namespace Charlotte
 {
 	public static class Consts
 	{
-		// none
+		public const string OUTPUT_RES_DIR_NAME = "_res";
 	}
 }

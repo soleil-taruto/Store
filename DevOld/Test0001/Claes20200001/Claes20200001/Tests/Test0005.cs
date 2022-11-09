@@ -2,38 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using Charlotte.Commons;
+using Charlotte.Utilities;
 
 namespace Charlotte.Tests
 {
 	public class Test0005
 	{
+		//private const int RANGE_SCALE = 10000;
+		//private const int RANGE_SCALE = 100000;
+		//private const int RANGE_SCALE = 1000000;
+		private const int RANGE_SCALE = 10000000;
+		//private const int RANGE_SCALE = 100000000;
+		//private const int RANGE_SCALE = 1000000000;
+
+		private static int[] Primes =
+			Enumerable.Range(0, RANGE_SCALE).Where(n => IsPrime((ulong)n))
+			.Concat(new int[] {
+			Enumerable.Range(RANGE_SCALE, int.MaxValue - RANGE_SCALE).First(n => IsPrime((ulong)n)) })
+			.ToArray();
+
 		public void Test01()
 		{
-			if (LiteFormat("123456789") != "9") throw null;
-			if (LiteFormat("2022/10/26") != "9/9/9") throw null;
-			if (LiteFormat("T-1000") != "A-9") throw null;
-			if (LiteFormat("いろはにほへと") != "J") throw null;
+			for (int k = 1; k <= 100; k++)
+				PrintPrimeVoid(k);
 
-			Console.WriteLine("OK!");
 		}
 
-		private string LiteFormat(string str)
+		private static void PrintPrimeVoid(int k)
 		{
-			SCommon.DECIMAL.Substring(0, 9).ForEach(chr => str = str.Replace(chr, '9'));
-			SCommon.ALPHA.Substring(1).ForEach(chr => str = str.Replace(chr, 'A'));
-			SCommon.alpha.Substring(1).ForEach(chr => str = str.Replace(chr, 'a'));
-			SCommon.GetJChars().ForEach(chr => str = str.Replace(chr, 'J'));
+			Console.WriteLine(string.Format("2 以上 {0} 以下の異なる 2 つの素数についてその間にある素数の個数が {1} 未満のもののうち差が最大となるものは：", Primes[Primes.Length - 1], k));
 
-			for (int c = 0; c < 20; c++)
-			{
-				str = str.Replace("99", "9");
-				str = str.Replace("AA", "A");
-				str = str.Replace("aa", "a");
-				str = str.Replace("JJ", "J");
-			}
-			return str;
+			int maxDiff = Enumerable.Range(0, Primes.Length - k).Select(i => Primes[i + k] - Primes[i]).Max();
+
+			foreach (int i in Enumerable.Range(0, Primes.Length - k))
+				if (maxDiff == Primes[i + k] - Primes[i])
+					Console.WriteLine(string.Format("{0} と {1} その差は {2}", Primes[i], Primes[i + k], Primes[i + k] - Primes[i]));
+
+			Console.WriteLine("");
+		}
+
+		public static bool IsPrime(ulong n)
+		{
+			return MillerRabin.IsPrime(n);
 		}
 	}
 }
