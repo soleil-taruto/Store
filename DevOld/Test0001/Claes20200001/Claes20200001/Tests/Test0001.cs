@@ -5,144 +5,193 @@ using System.Text;
 using System.Drawing;
 using Charlotte.Commons;
 using Charlotte.Utilities;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Charlotte.Tests
 {
 	public class Test0001
 	{
+		private string[] INPUT_ROOT_DIRS = new string[]
+		{
+			@"C:\Chest\20220919_DevBin",
+			@"C:\DevBin",
+		};
+
+		private string OUTPUT_ROOT_DIR = @"C:\home\GitHub\Store\DevOld";
+
+		/// <summary>
+		/// ソースDIR の ローカル名
+		/// </summary>
+		public static readonly string[] SRC_LOCAL_DIRS = new string[]
+		{
+			"Elsa20200001", // Game
+			"Claes20200001", // CUI
+			"Silvia20200001", // GUI
+			"Silvia20210001", // GUI -- 特例
+			"Gattonero20200001", // GameJS
+			"Petra20200001", // C-Lang
+		};
+
+		private class ProjectInfo
+		{
+			public int Date;
+			public string Title;
+			public string SourceDir;
+
+			public ProjectInfo(string dir)
+			{
+				string[] pTkns = dir.Split('\\');
+				int p = pTkns.Length;
+
+				p--;
+				if (
+					!pTkns[p].EndsWith("20200001") &&
+					!pTkns[p].EndsWith("20210001") // 特例
+					)
+					throw null;
+
+				string title = pTkns[--p];
+				int date;
+
+				if (IsDatedLocalName(title))
+				{
+					date = int.Parse(title.Substring(0, 8));
+					title = title.Substring(9);
+				}
+				else
+				{
+					while (!IsDatedLocalName(pTkns[--p])) ;
+					date = int.Parse(pTkns[p].Substring(0, 8));
+				}
+
+				{
+					int i = title.IndexOf('(');
+
+					if (i != -1)
+						title = title.Substring(0, i);
+				}
+
+				if (title == "") throw null; // 2bs
+
+				this.Date = date;
+				this.Title = title;
+				this.SourceDir = dir;
+			}
+		}
+
+		private static bool IsDatedLocalName(string title)
+		{
+			return Regex.IsMatch(title, "^[0-9]{8}_.+$");
+		}
+
+		private List<ProjectInfo> Projects = new List<ProjectInfo>();
+
 		public void Test01()
 		{
-			//const int RANGE_SCALE = 100;
-			//const int RANGE_SCALE = 10000;
-			const int RANGE_SCALE = 1000000;
-			//const int RANGE_SCALE = 100000000;
+			foreach (string rootDir in INPUT_ROOT_DIRS)
+				if (!Directory.Exists(rootDir))
+					throw null;
 
-			List<GapInfo> gaps = new List<GapInfo>();
-			int lp = 2;
+			if (!Directory.Exists(OUTPUT_ROOT_DIR))
+				throw null;
 
-			foreach (int p in Enumerable.Range(3, RANGE_SCALE).Where(v => MillerRabin.IsPrime((ulong)v)))
+			// ---- check ここまで
+
+			Queue<string> q = new Queue<string>();
+
+			foreach (string rootDir in INPUT_ROOT_DIRS)
+				foreach (string dir in Directory.GetDirectories(rootDir))
+					q.Enqueue(dir);
+
+			while (1 <= q.Count)
 			{
-				gaps.Add(new GapInfo() { PrimeLw = lp, PrimeHi = p });
-				lp = p;
-			}
+				string dir = q.Dequeue();
 
-			{
-				int maxGap = gaps.Select(v => v.Gap).Max();
-
-				foreach (GapInfo gap in gaps)
-					if (maxGap == gap.Gap)
-						Console.WriteLine("maxGap : " + gap);
-			}
-
-			List<GapInfo[]> twoGaps = new List<GapInfo[]>();
-
-			{
-				GapInfo lGap = gaps[0];
-
-				foreach (GapInfo gap in gaps.Skip(1))
+				// ゲームのプロジェクトの dat, ret は配下が深いので回避
 				{
-					twoGaps.Add(new GapInfo[] { lGap, gap });
-					lGap = gap;
+					string localName = Path.GetFileName(dir);
+
+					if (
+						SCommon.EqualsIgnoreCase(localName, "dat") ||
+						SCommon.EqualsIgnoreCase(localName, "ret")
+						)
+						continue;
+				}
+
+				if (SCommon.IndexOfIgnoreCase(SRC_LOCAL_DIRS, Path.GetFileName(dir)) != -1)
+				{
+					Projects.Add(new ProjectInfo(dir));
+				}
+				else
+				{
+					foreach (string subDir in Directory.GetDirectories(dir))
+						q.Enqueue(subDir);
 				}
 			}
 
-			{
-				int maxTwoGap = twoGaps.Select(v => v[0].Gap + v[1].Gap).Max();
+			// ---- cout+
 
-				foreach (GapInfo[] twoGap in twoGaps)
-					if (maxTwoGap == twoGap[0].Gap + twoGap[1].Gap)
-						Console.WriteLine("maxTwoGap : " + twoGap[0] + " , " + twoGap[1]);
+			string[] titles = Projects.Select(v => v.Title).DistinctOrderBy(SCommon.CompIgnoreCase).ToArray();
+
+			foreach (string title in titles)
+			{
+				Console.WriteLine(title + " ==> " + Projects.Where(v => SCommon.EqualsIgnoreCase(v.Title, title)).Count());
 			}
 
-			List<GapInfo[]> threeGaps = new List<GapInfo[]>();
+			int maxHistCount = titles.Select(v => Projects.Where(w => SCommon.EqualsIgnoreCase(w.Title, v)).Count()).Max();
 
+			Console.WriteLine("maxHistCount: " + maxHistCount);
+
+			// ----
+
+			Console.WriteLine("COPY-ST");
+			//SCommon.Pause();
+
+			for (int histIndex = 0; histIndex < maxHistCount; histIndex++)
 			{
-				GapInfo kGap = gaps[0];
-				GapInfo lGap = gaps[1];
+				SCommon.DeletePath(OUTPUT_ROOT_DIR);
+				SCommon.CreateDir(OUTPUT_ROOT_DIR);
 
-				foreach (GapInfo gap in gaps.Skip(2))
+				List<string> logs = new List<string>();
+
+				foreach (string title in titles)
 				{
-					threeGaps.Add(new GapInfo[] { kGap, lGap, gap });
-					kGap = lGap;
-					lGap = gap;
+					ProjectInfo[] titleProjects = Projects.Where(v => SCommon.EqualsIgnoreCase(v.Title, title)).ToArray();
+
+					Array.Sort(titleProjects, (a, b) => a.Date - b.Date);
+
+					ProjectInfo currProject = titleProjects[Math.Min(histIndex, titleProjects.Length - 1)];
+
+					string rDir = currProject.SourceDir;
+					string wDir = Path.Combine(OUTPUT_ROOT_DIR, currProject.Title, Path.GetFileName(currProject.SourceDir));
+
+					Console.WriteLine("< " + rDir);
+					Console.WriteLine("> " + wDir);
+
+					logs.Add("< " + rDir);
+					logs.Add("> " + wDir);
+
+					SCommon.DeletePath(wDir);
+					SCommon.CopyDir(rDir, wDir);
 				}
+
+				File.WriteAllLines(Path.Combine(OUTPUT_ROOT_DIR, "Copy.log"), logs, Encoding.UTF8);
+
+				Console.WriteLine("histIndex: " + histIndex);
+				//SCommon.Pause();
+
+				SCommon.Batch(
+					new string[]
+					{
+						@"CALL C:\home\GitHub\GitHubコミット前に実行してね.bat",
+						@"C:\apps\GitCommit\GitCommit.exe h" + histIndex.ToString("D2") + @" C:\home\GitHub\Store",
+					},
+					"",
+					SCommon.StartProcessWindowStyle_e.MINIMIZED
+					);
 			}
-
-			{
-				int maxThreeGap = threeGaps.Select(v => v[0].Gap + v[1].Gap + v[2].Gap).Max();
-
-				foreach (GapInfo[] threeGap in threeGaps)
-					if (maxThreeGap == threeGap[0].Gap + threeGap[1].Gap + threeGap[2].Gap)
-						Console.WriteLine("maxThreeGap : " + threeGap[0] + " , " + threeGap[1] + " , " + threeGap[2]);
-			}
-		}
-
-		private class GapInfo
-		{
-			public int PrimeLw;
-			public int PrimeHi;
-
-			public int Gap
-			{
-				get
-				{
-					return (this.PrimeHi - this.PrimeLw) - 1;
-				}
-			}
-
-			public override string ToString()
-			{
-				return string.Format("{0} ..({1}).. {2}", this.PrimeLw, this.Gap, this.PrimeHi);
-			}
-		}
-
-		// ----
-
-		public void Test02()
-		{
-			//const int RANGE_SCALE = 100;
-			//const int RANGE_SCALE = 10000;
-			const int RANGE_SCALE = 1000000;
-			//const int RANGE_SCALE = 100000000;
-
-			int[] ps = Enumerable.Range(3, RANGE_SCALE).Where(v => MillerRabin.IsPrime((ulong)v)).ToArray();
-			int maxGap_01 = -1;
-			int maxGap_02 = -1;
-			int maxGap_03 = -1;
-			int maxGap_04 = -1;
-			int maxGap_05 = -1;
-			int maxGap_06 = -1;
-
-			for (int i = 0; i + 1 < ps.Length; i++) maxGap_01 = Math.Max(maxGap_01, ps[i + 1] - ps[i]);
-			for (int i = 0; i + 2 < ps.Length; i++) maxGap_02 = Math.Max(maxGap_02, ps[i + 2] - ps[i]);
-			for (int i = 0; i + 3 < ps.Length; i++) maxGap_03 = Math.Max(maxGap_03, ps[i + 3] - ps[i]);
-			for (int i = 0; i + 4 < ps.Length; i++) maxGap_04 = Math.Max(maxGap_04, ps[i + 4] - ps[i]);
-			for (int i = 0; i + 5 < ps.Length; i++) maxGap_05 = Math.Max(maxGap_05, ps[i + 5] - ps[i]);
-			for (int i = 0; i + 6 < ps.Length; i++) maxGap_06 = Math.Max(maxGap_06, ps[i + 6] - ps[i]);
-
-			for (int i = 0; i + 1 < ps.Length; i++)
-				if (maxGap_01 == ps[i + 1] - ps[i])
-					Console.WriteLine("maxGap_01 : " + ps[i] + " ..(" + (ps[i + 1] - ps[i]) + ").. " + ps[i + 1]);
-
-			for (int i = 0; i + 2 < ps.Length; i++)
-				if (maxGap_02 == ps[i + 2] - ps[i])
-					Console.WriteLine("maxGap_02 : " + ps[i] + " ..(" + (ps[i + 2] - ps[i]) + ").. " + ps[i + 2]);
-
-			for (int i = 0; i + 3 < ps.Length; i++)
-				if (maxGap_03 == ps[i + 3] - ps[i])
-					Console.WriteLine("maxGap_03 : " + ps[i] + " ..(" + (ps[i + 3] - ps[i]) + ").. " + ps[i + 3]);
-
-			for (int i = 0; i + 4 < ps.Length; i++)
-				if (maxGap_04 == ps[i + 4] - ps[i])
-					Console.WriteLine("maxGap_04 : " + ps[i] + " ..(" + (ps[i + 4] - ps[i]) + ").. " + ps[i + 4]);
-
-			for (int i = 0; i + 5 < ps.Length; i++)
-				if (maxGap_05 == ps[i + 5] - ps[i])
-					Console.WriteLine("maxGap_05 : " + ps[i] + " ..(" + (ps[i + 5] - ps[i]) + ").. " + ps[i + 5]);
-
-			for (int i = 0; i + 6 < ps.Length; i++)
-				if (maxGap_06 == ps[i + 6] - ps[i])
-					Console.WriteLine("maxGap_06 : " + ps[i] + " ..(" + (ps[i + 6] - ps[i]) + ").. " + ps[i + 6]);
+			Console.WriteLine("COPY-ED");
 		}
 	}
 }

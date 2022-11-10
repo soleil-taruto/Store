@@ -11,35 +11,42 @@ namespace Charlotte.Tests
 	{
 		public void Test01()
 		{
-			Console.WriteLine(SCommon.EraseExt("Test02"));
-			Console.WriteLine(SCommon.EraseExt("Test02.txt"));
-			Console.WriteLine(SCommon.EraseExt(@".\Test02"));
-			Console.WriteLine(SCommon.EraseExt(@".\Test02.txt"));
-			Console.WriteLine(SCommon.EraseExt(@"SubDir\Test02"));
-			Console.WriteLine(SCommon.EraseExt(@"SubDir\Test02.txt"));
-			Console.WriteLine(SCommon.EraseExt(@"\TopDir\Test02"));
-			Console.WriteLine(SCommon.EraseExt(@"\TopDir\Test02.txt"));
-			Console.WriteLine(SCommon.EraseExt(@"C:\TopDir\Test02"));
-			Console.WriteLine(SCommon.EraseExt(@"C:\TopDir\Test02.txt"));
-			Console.WriteLine(SCommon.EraseExt(@"\TopDir\SubDir\Test02"));
-			Console.WriteLine(SCommon.EraseExt(@"\TopDir\SubDir\Test02.txt"));
-			Console.WriteLine(SCommon.EraseExt(@"C:\TopDir\SubDir\Test02"));
-			Console.WriteLine(SCommon.EraseExt(@"C:\TopDir\SubDir\Test02.txt"));
+			string RES_TARGET_EXTS = @"
 
-			Console.WriteLine(Path.GetExtension("Test02"));
-			Console.WriteLine(Path.GetExtension("Test02.txt"));
-			Console.WriteLine(Path.GetExtension(@".\Test02"));
-			Console.WriteLine(Path.GetExtension(@".\Test02.txt"));
-			Console.WriteLine(Path.GetExtension(@"SubDir\Test02"));
-			Console.WriteLine(Path.GetExtension(@"SubDir\Test02.txt"));
-			Console.WriteLine(Path.GetExtension(@"\TopDir\Test02"));
-			Console.WriteLine(Path.GetExtension(@"\TopDir\Test02.txt"));
-			Console.WriteLine(Path.GetExtension(@"C:\TopDir\Test02"));
-			Console.WriteLine(Path.GetExtension(@"C:\TopDir\Test02.txt"));
-			Console.WriteLine(Path.GetExtension(@"\TopDir\SubDir\Test02"));
-			Console.WriteLine(Path.GetExtension(@"\TopDir\SubDir\Test02.txt"));
-			Console.WriteLine(Path.GetExtension(@"C:\TopDir\SubDir\Test02"));
-			Console.WriteLine(Path.GetExtension(@"C:\TopDir\SubDir\Test02.txt"));
+.html
+.c
+.bat
+.conf
+.txt
+.js
+.cs
+
+";
+
+			string[] TARGET_EXTS = SCommon.TextToLines(RES_TARGET_EXTS).Select(v => v.Trim()).Where(v => v != "").ToArray();
+
+			List<string> tokens = new List<string>();
+
+			foreach (string file in Directory.GetFiles(@"C:\home\GitHub\Store\DevOld", "*", SearchOption.AllDirectories))
+			{
+				string ext = Path.GetExtension(file).ToLower();
+
+				if (TARGET_EXTS.Contains(ext))
+				{
+					Console.WriteLine("< " + file); // cout
+
+					Encoding encoding = ext == ".cs" ?
+						Encoding.UTF8 :
+						SCommon.ENCODING_SJIS;
+
+					string text = File.ReadAllText(file, encoding);
+
+					tokens.AddRange(SCommon.Tokenize(text, "\r\n\t 　", false, true));
+				}
+			}
+
+			File.WriteAllLines(@"C:\temp\1.txt", tokens, Encoding.UTF8);
+			File.WriteAllLines(@"C:\temp\2.txt", tokens.DistinctOrderBy(SCommon.Comp), Encoding.UTF8);
 		}
 	}
 }
