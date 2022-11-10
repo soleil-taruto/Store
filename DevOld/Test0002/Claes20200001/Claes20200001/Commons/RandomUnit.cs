@@ -136,6 +136,51 @@ namespace Charlotte.Commons
 			return this.GetInt(maxval - minval + 1) + minval;
 		}
 
+		/// <summary>
+		/// 真偽値をランダムに返す。
+		/// </summary>
+		/// <returns>真偽値</returns>
+		public bool GetBoolean()
+		{
+			return this.GetInt(2) == 1;
+		}
+
+		/// <summary>
+		/// -1 または 1 をランダムに返す。
+		/// </summary>
+		/// <returns>-1 または 1</returns>
+		public int GetSign()
+		{
+			return this.GetInt(2) * 2 - 1;
+		}
+
+		/// <summary>
+		/// 0.0 ～ 1.0 の乱数を返す。
+		/// </summary>
+		/// <returns>乱数</returns>
+		public double GetReal1()
+		{
+			return (double)this.GetUInt() / uint.MaxValue;
+		}
+
+		/// <summary>
+		/// -1.0 ～ 1.0 の乱数を返す。
+		/// </summary>
+		/// <returns>乱数</returns>
+		public double GetReal2()
+		{
+			return GetReal1() * 2.0 - 1.0;
+		}
+
+		/// <summary>
+		/// minval ～ maxval の乱数を返す。
+		/// </summary>
+		/// <returns>乱数</returns>
+		public double GetReal3(double minval, double maxval)
+		{
+			return GetReal1() * (maxval - minval) + minval;
+		}
+
 		public T ChooseOne<T>(IList<T> list)
 		{
 			return list[this.GetInt(list.Count)];

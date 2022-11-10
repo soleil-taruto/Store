@@ -821,6 +821,22 @@ namespace Charlotte.Commons
 			return ToFairRelPath(path, dirSize) == path;
 		}
 
+		public static string ToCreatablePath(string path)
+		{
+			string newPath = path;
+			int n = 1;
+
+			while (File.Exists(newPath) || Directory.Exists(newPath))
+			{
+				if (n % 100 == 0)
+					ProcMain.WriteLog("パス名の衝突回避に時間が掛かっています。" + n);
+
+				newPath = SCommon.EraseExt(path) + "_" + n + Path.GetExtension(path);
+				n++;
+			}
+			return newPath;
+		}
+
 		#region ReadPart, WritePart
 
 		public static int ReadPartInt(Stream reader)
@@ -1758,7 +1774,10 @@ namespace Charlotte.Commons
 			return false;
 		}
 
-		public static bool HasSame<T>(IList<T> list, Comparison<T> comp)
+		// memo: @ 2022.10.31
+		// HasSame_Comp, HasSame を同じ名前にすると Comparision<T>, Func<T, T, bool> の型推論の失敗を誘発する。
+
+		public static bool HasSame_Comp<T>(IList<T> list, Comparison<T> comp)
 		{
 			return HasSame(list, (a, b) => comp(a, b) == 0);
 		}
@@ -2209,8 +2228,9 @@ namespace Charlotte.Commons
 					ret += m * 31;
 				}
 				else
+				{
 					ret += (m - 1) * 31;
-
+				}
 				ret += d - 1;
 				ret *= 24;
 				ret += h;
