@@ -30,6 +30,11 @@ namespace Charlotte.Commons
 			return new I4Rect(l, t, r - l, b - t);
 		}
 
+		public static I4Rect XYWH(int x, int y, int w, int h)
+		{
+			return new I4Rect(x - w / 2, y - h / 2, w, h);
+		}
+
 		public int R
 		{
 			get

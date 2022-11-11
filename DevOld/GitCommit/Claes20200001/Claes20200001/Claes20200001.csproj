@@ -72,6 +72,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Test0001.cs" />
     <Compile Include="Utilities\GitCommandUtils.cs" />
+    <Compile Include="Utilities\HTTPClient.cs" />
+    <Compile Include="Utilities\VoyagerStatus.cs" />
+    <Compile Include="Utilities\VoyagerVelocity.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

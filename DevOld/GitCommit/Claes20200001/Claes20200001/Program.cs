@@ -30,21 +30,21 @@ namespace Charlotte
 			{
 				Main4(ar);
 			}
-			Common.OpenOutputDirIfCreated();
+			SCommon.OpenOutputDirIfCreated();
 		}
 
 		private void Main3()
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { "ss", @"C:\home\GitHub\StoreP" }));
+			Main4(new ArgsReader(new string[] { "v1s", @"C:\home\GitHub\StoreC" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
 
 			// --
 
-			Common.Pause();
+			SCommon.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -57,10 +57,10 @@ namespace Charlotte
 			{
 				ProcMain.WriteLog(ex);
 
-				//MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("" + ex, Path.GetFileNameWithoutExtension(ProcMain.SelfFile) + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-				Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
-				Console.ReadLine();
+				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
+				//Console.ReadLine();
 			}
 		}
 
@@ -70,6 +70,9 @@ namespace Charlotte
 			string dir = ar.NextArg();
 
 			ar.End();
+
+			if (commitComment.ToLower() == "v1s")
+				commitComment = string.Format("Voyager 1 is {0:F3} kilometers away from the Sun.", GetVoyager1SunDistance());
 
 			Commit(dir, commitComment);
 		}
@@ -104,6 +107,21 @@ namespace Charlotte
 				},
 				dir
 				);
+		}
+
+		// ====
+
+		private string VOYAGER_DATA_FILE
+		{
+			get
+			{
+				return Path.Combine(ProcMain.SelfDir, "Voyager.dat");
+			}
+		}
+
+		private double GetVoyager1SunDistance()
+		{
+			return new VoyagerStatus(VOYAGER_DATA_FILE).V1S_Kilometer;
 		}
 	}
 }
