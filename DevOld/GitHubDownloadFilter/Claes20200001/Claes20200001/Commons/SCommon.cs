@@ -1774,7 +1774,10 @@ namespace Charlotte.Commons
 			return false;
 		}
 
-		public static bool HasSame<T>(IList<T> list, Comparison<T> comp)
+		// memo: @ 2022.10.31
+		// HasSame_Comp, HasSame を同じ名前にすると Comparision<T>, Func<T, T, bool> の型推論の失敗を誘発する。
+
+		public static bool HasSame_Comp<T>(IList<T> list, Comparison<T> comp)
 		{
 			return HasSame(list, (a, b) => comp(a, b) == 0);
 		}

@@ -36,7 +36,7 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\temp\StoreC-main" }));
+			Main4(new ArgsReader(new string[] { @"C:\temp\Store-main" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -232,7 +232,10 @@ namespace Charlotte
 				{
 					chr = (char)Convert.ToUInt16(str.Substring(index + 1, 4), 16);
 
-					if (!Common.IsUnicodeJChar(chr))
+					if (
+						!Common.IsUnicodeJChar(chr) &&
+						chr != ' '
+						)
 						throw new Exception("エスケープされた不正な文字コードを検出しました。ローカル名：" + str);
 
 					index += 4;
