@@ -60,7 +60,7 @@ namespace Charlotte.Utilities
 
 		private void LoadFile(string saveDataFile)
 		{
-			// 既知の値 @ 2022.11.11
+			// Init -- 既知の値 @ 2022.11.11
 			{
 				TimeStamp = 20221111220136;
 				V1S_Kilometer = 23657707853.6549;
