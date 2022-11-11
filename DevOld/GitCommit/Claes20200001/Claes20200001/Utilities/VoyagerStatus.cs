@@ -23,15 +23,17 @@ namespace Charlotte.Utilities
 
 			LoadFile(saveDataFile);
 
-			VoyagerVelocity vv = null;
-
+			VoyagerVelocity vv;
 			try
 			{
 				vv = new VoyagerVelocity();
 			}
 			catch (Exception ex)
 			{
-				ProcMain.WriteLog("取得失敗：" + ex);
+				vv = null;
+
+				ProcMain.WriteLog("**** v1-2st取得失敗：" + ex);
+				ProcMain.WriteLog("**** v1-2st取得失敗しましたが処理は継続します。");
 			}
 
 			DateTime now = DateTime.Now;
