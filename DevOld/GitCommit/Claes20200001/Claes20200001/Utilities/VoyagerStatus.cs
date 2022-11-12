@@ -23,24 +23,37 @@ namespace Charlotte.Utilities
 
 			LoadFile(saveDataFile);
 
-			VoyagerVelocity vv;
-			try
-			{
-				vv = new VoyagerVelocity();
-			}
-			catch (Exception ex)
-			{
-				vv = null;
-
-				ProcMain.WriteLog("**** v1-2st取得失敗：" + ex);
-				ProcMain.WriteLog("**** v1-2st取得失敗しましたが処理は継続します。");
-			}
-
+			VoyagerVelocity vv = null;
 			DateTime now = DateTime.Now;
+			long timeDiff = SCommon.TimeStampToSec.ToSec(now) - SCommon.TimeStampToSec.ToSec(TimeStamp);
+
+			if (timeDiff < 3600)
+			{
+				ProcMain.WriteLog("**** v1-2st取得中止：前回の取得から1時間以内");
+			}
+			else
+			{
+				try
+				{
+					vv = new VoyagerVelocity();
+				}
+				catch (Exception ex)
+				{
+					vv = null; // 2bs
+
+					ProcMain.WriteLog("**** v1-2st取得失敗：" + ex);
+					ProcMain.WriteLog("**** v1-2st取得失敗しましたが処理は継続します。");
+				}
+
+				// 再設定 -- 通信に数秒～数十秒掛かったかもしれない。
+				now = DateTime.Now;
+				timeDiff = SCommon.TimeStampToSec.ToSec(now) - SCommon.TimeStampToSec.ToSec(TimeStamp);
+			}
+
+			TimeStamp = SCommon.TimeStampToSec.ToTimeStamp(now);
 
 			if (vv != null)
 			{
-				TimeStamp = SCommon.TimeStampToSec.ToTimeStamp(now);
 				V1S_Kilometer = vv.DistanceVoyager1Sun.GetKilometer(now);
 				V2S_Kilometer = vv.DistanceVoyager2Sun.GetKilometer(now);
 				V1S_KilometerPerSecond = vv.DistanceVoyager1Sun.GetKilometerPerSecond();
@@ -50,9 +63,6 @@ namespace Charlotte.Utilities
 			}
 			else
 			{
-				long timeDiff = SCommon.TimeStampToSec.ToSec(now) - SCommon.TimeStampToSec.ToSec(TimeStamp);
-
-				TimeStamp = SCommon.TimeStampToSec.ToTimeStamp(now);
 				V1S_Kilometer += V1S_KilometerPerSecond * timeDiff;
 				V2S_Kilometer += V2S_KilometerPerSecond * timeDiff;
 			}
