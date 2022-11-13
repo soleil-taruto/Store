@@ -1,0 +1,13 @@
+----
+
+*.html に埋め込まれている data-URL 形式の script を展開したもの。
+
+元のコード：
+https://github.com/stackprobe/Post2/tree/master/Conv/Rose/src
+
+
+----
+
+旧リポジトリの当該ファイル：
+https://github.com/stackprobe/Post2/tree/master/ornithopter/home/coffee/hatena/a20200904_PosixTime
+
