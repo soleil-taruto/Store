@@ -3,17 +3,19 @@
 #include <stdio.h>
 #include <time.h>
 
+#define SEC_DIV 2
+
 static long TryGetIncrementPerSec(void)
 {
     static long checkPeriod = 1;
     long c;
     long stClock = clock();
 
-    for (c = 0; c % checkPeriod || clock() - stClock < CLOCKS_PER_SEC / 2; c++);
+    for (c = 0; c % checkPeriod || clock() - stClock < CLOCKS_PER_SEC / SEC_DIV; c++);
 
     checkPeriod = c / 100;
 
-    return c * 2;
+    return c * SEC_DIV;
 }
 
 int main(void)
