@@ -91,6 +91,61 @@ namespace Charlotte.Utilities
 				this.DistanceVoyager2Sun.Pair[0] = new DistanceInfo(epoch_0, double.Parse(values["dist_0_v2s"]));
 				this.DistanceVoyager2Sun.Pair[1] = new DistanceInfo(epoch_1, double.Parse(values["dist_1_v2s"]));
 			}
+
+			// 取得した値の簡単なチェック
+			{
+				DateTime now = DateTime.Now;
+
+				// --
+
+				// 太陽からは常に遠ざかるはず。
+
+				if (this.DistanceVoyager1Sun.GetKilometerPerSecond() < 0.0) // v1
+					throw new Exception("v1s Bad Velocity");
+
+				if (this.DistanceVoyager2Sun.GetKilometerPerSecond() < 0.0) // v2
+					throw new Exception("v2s Bad Velocity");
+
+				// --
+
+				// 太陽との相対速度と地球との相対速度の差が地球の公転速度を超えることはないはず。
+				// 地球の公転速度 == 時速10.7万キロメートル
+
+				const double VELOCITY_DIFF_MAX = 120000.0; // == 地球の公転速度 + マージン
+
+				// memo: 両探査機共に地球の公転速度より遅いので、地球との相対速度がマイナスになる(地球に近づいてくる)ことがある。
+
+				if (VELOCITY_DIFF_MAX < Math.Abs(this.DistanceVoyager1Sun.GetKilometerPerSecond() - this.DistanceVoyager1Earth.GetKilometerPerSecond())) // v1
+					throw new Exception("v1e Bad Velocity");
+
+				if (VELOCITY_DIFF_MAX < Math.Abs(this.DistanceVoyager2Sun.GetKilometerPerSecond() - this.DistanceVoyager2Earth.GetKilometerPerSecond())) // v2
+					throw new Exception("v2e Bad Velocity");
+
+				// --
+
+				// 2022年8月28日の時点で v1s == 235.22億km , v2s == 195.27億km に達しているので今はそれよりも遠いはず。
+
+				if (this.DistanceVoyager1Sun.GetKilometer(now) < 23522000000.0) // v1
+					throw new Exception("v1s Bad Distance");
+
+				if (this.DistanceVoyager2Sun.GetKilometer(now) < 19527000000.0) // v2
+					throw new Exception("v2s Bad Distance");
+
+				// --
+
+				// 太陽との相対距離と地球との相対距離の差が地球の公転半径を超えることはないはず。
+				// 地球の公転半径 == 1.495978707億キロメートル
+
+				const double DISTANCE_DIFF_MAX = 160000000.0; // == 地球の公転半径 + マージン
+
+				if (DISTANCE_DIFF_MAX < Math.Abs(this.DistanceVoyager1Sun.GetKilometer(now) - this.DistanceVoyager1Earth.GetKilometer(now))) // v1
+					throw new Exception("v1e Bad Distance");
+
+				if (DISTANCE_DIFF_MAX < Math.Abs(this.DistanceVoyager2Sun.GetKilometer(now) - this.DistanceVoyager2Earth.GetKilometer(now))) // v2
+					throw new Exception("v2e Bad Distance");
+
+				// --
+			}
 		}
 	}
 }

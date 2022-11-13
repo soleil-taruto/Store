@@ -29,7 +29,7 @@ namespace Charlotte.Utilities
 
 			if (timeDiff < 3600)
 			{
-				ProcMain.WriteLog("**** v1-2st取得中止：前回の取得から1時間以内");
+				ProcMain.WriteLog("**** v1-2st取得中止：前回の取得から1時間以内 " + timeDiff);
 			}
 			else
 			{
