@@ -1,4 +1,30 @@
 ----
+
+#include <stdio.h>
+#include <time.h>
+
+static long TryGetIncrementPerSec(void)
+{
+    static long checkPeriod = 1;
+    long c;
+    long stClock = clock();
+
+    for (c = 0; c % checkPeriod || clock() - stClock < CLOCKS_PER_SEC / 2; c++);
+
+    checkPeriod = c / 100;
+
+    return c * 2;
+}
+
+int main(void)
+{
+    TryGetIncrementPerSec();
+    TryGetIncrementPerSec();
+
+    printf("This environment is capable of increment %lld times per second in simple loop.\n", TryGetIncrementPerSec());
+}
+
+----
 1以上65535以下の整数においてそれを初期値としたコラッツ数列が最初に1に達するまでに「割る2」を行う回数が唯一のもの
 
 using System;

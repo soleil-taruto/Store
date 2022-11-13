@@ -16,11 +16,6 @@ static void error(void)
 	printf("ERROR\n");
 	exit(1);
 }
-static void errorCase(int status)
-{
-	if (status)
-		error();
-}
 
 #define zeroclear(var) \
 	(memset(&(var), 0x00, sizeof((var))))

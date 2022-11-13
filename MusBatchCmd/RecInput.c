@@ -23,11 +23,9 @@ static void error(void)
 	printf("ERROR\n");
 	exit(1);
 }
-static void errorCase(int status)
-{
-	if (status)
-		error();
-}
+
+#define errorCase(status) \
+	{ if ((status)) error(); }
 
 #define REC_MAX 360000
 #define REC_MARGIN 10
