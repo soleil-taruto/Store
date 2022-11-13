@@ -1583,10 +1583,10 @@ namespace Charlotte.Commons
 			S_GetString_SJISHalfCodeRange(0x5b, 0x60) +
 			S_GetString_SJISHalfCodeRange(0x7b, 0x7e);
 
-		public static string ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == GetString_SJISHalfCodeRange(0x21, 0x7e)
+		public static string ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == GetString_SJISHalfCodeRange(0x21, 0x7e) // 空白(0x20)を含まないことに注意
 		public static string KANA = S_GetString_SJISHalfCodeRange(0xa1, 0xdf);
 
-		public static string HALF = ASCII + KANA;
+		public static string HALF = ASCII + KANA; // 空白(0x20)を含まないことに注意
 
 		private static string S_GetString_SJISHalfCodeRange(int codeMin, int codeMax)
 		{
@@ -1774,7 +1774,10 @@ namespace Charlotte.Commons
 			return false;
 		}
 
-		public static bool HasSame<T>(IList<T> list, Comparison<T> comp)
+		// memo: @ 2022.10.31
+		// HasSame_Comp, HasSame を同じ名前にすると Comparision<T>, Func<T, T, bool> の型推論の失敗を誘発する。
+
+		public static bool HasSame_Comp<T>(IList<T> list, Comparison<T> comp)
 		{
 			return HasSame(list, (a, b) => comp(a, b) == 0);
 		}

@@ -169,7 +169,7 @@ namespace Charlotte
 				// -- 本プログラムをコミット前に複数回実行しても良いようにしたいので、エスケープするなどができない。
 				// --> というわけで看過する。
 
-				if (SCommon.HALF.Contains(chr))
+				if (SCommon.HALF.Contains(chr) || chr == ' ')
 				{
 					buff.Append(chr);
 				}

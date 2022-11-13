@@ -232,10 +232,7 @@ namespace Charlotte
 				{
 					chr = (char)Convert.ToUInt16(str.Substring(index + 1, 4), 16);
 
-					if (
-						!Common.IsUnicodeJChar(chr) &&
-						chr != ' '
-						)
+					if (!Common.IsUnicodeJChar(chr))
 						throw new Exception("エスケープされた不正な文字コードを検出しました。ローカル名：" + str);
 
 					index += 4;

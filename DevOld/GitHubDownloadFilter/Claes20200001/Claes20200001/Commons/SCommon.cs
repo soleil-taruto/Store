@@ -1583,10 +1583,10 @@ namespace Charlotte.Commons
 			S_GetString_SJISHalfCodeRange(0x5b, 0x60) +
 			S_GetString_SJISHalfCodeRange(0x7b, 0x7e);
 
-		public static string ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == GetString_SJISHalfCodeRange(0x21, 0x7e)
+		public static string ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == GetString_SJISHalfCodeRange(0x21, 0x7e) // 空白(0x20)を含まないことに注意
 		public static string KANA = S_GetString_SJISHalfCodeRange(0xa1, 0xdf);
 
-		public static string HALF = ASCII + KANA;
+		public static string HALF = ASCII + KANA; // 空白(0x20)を含まないことに注意
 
 		private static string S_GetString_SJISHalfCodeRange(int codeMin, int codeMax)
 		{
