@@ -43,8 +43,7 @@ namespace Charlotte
 			// -- choose one --
 
 			//Main4(new ArgsReader(new string[] { @"C:\Dev" }));
-			//Main4(new ArgsReader(new string[] { @"C:\Dev", "/D", @"C:\temp" }));
-			Main4(new ArgsReader(new string[] { @"C:\temp\1", "/B", @"C:\temp\2", "/D", @"C:\temp\3" }));
+			Main4(new ArgsReader(new string[] { @"C:\Dev", "/D", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -73,7 +72,6 @@ namespace Charlotte
 
 		private string OutputDir;
 		private string[] DistributeDirs;
-		private string BackupDir;
 
 		private void Main5(ArgsReader ar)
 		{
@@ -82,13 +80,6 @@ namespace Charlotte
 			if (!Directory.Exists(rDir))
 				throw new Exception("no rDir");
 
-			if (ar.ArgIs("/B"))
-			{
-				this.BackupDir = SCommon.MakeFullPath(ar.NextArg());
-
-				if (!Directory.Exists(this.BackupDir))
-					throw new Exception("no BackupDir");
-			}
 			if (ar.ArgIs("/D"))
 			{
 				this.DistributeDirs = ar.TrailArgs().Select(v => SCommon.MakeFullPath(v)).ToArray();
@@ -106,7 +97,6 @@ namespace Charlotte
 
 			Console.WriteLine("< " + rDir);
 			Console.WriteLine("> " + this.OutputDir);
-			Console.WriteLine("B " + (this.BackupDir == null ? "<NONE>" : this.BackupDir));
 
 			SearchOut(rDir);
 
@@ -251,9 +241,6 @@ namespace Charlotte
 				Console.WriteLine("W " + wPath);
 				Console.WriteLine("> " + destPath);
 
-				if (this.BackupDir != null && File.Exists(wPath))
-					this.BackupOldVersion(wPath);
-
 				SCommon.DeletePath(wPath);
 				SCommon.CopyPath(rPath, destPath);
 
@@ -289,108 +276,6 @@ namespace Charlotte
 			}
 
 			return name;
-		}
-
-		private void BackupOldVersion(string rFile)
-		{
-			string wFile = Path.Combine(this.BackupDir, Path.GetFileName(rFile));
-
-			Console.WriteLine("B< " + rFile);
-			Console.WriteLine("B> " + wFile);
-
-			SCommon.DeletePath(wFile); // 2bs
-			File.Copy(rFile, wFile);
-
-			this.BOV_ToSlim(1);
-			this.BOV_ToSlim(2);
-		}
-
-		private class BOV_FileInfo
-		{
-			public string FilePath;
-			public string Title;
-			public long TimeStamp;
-			public bool OutOfRule;
-
-			public BOV_FileInfo(string file)
-			{
-				this.FilePath = file;
-
-				string name = Path.GetFileName(file);
-				string fmt = name;
-				SCommon.DECIMAL.ForEach(chr => fmt = fmt.Replace(chr, '9'));
-
-				if (SCommon.EndsWithIgnoreCase(fmt, "_v9999-999-99999.zip"))
-				{
-					this.Title = name.Substring(0, name.Length - 20);
-					this.TimeStamp = long.Parse(new string(name.Substring(name.Length - 20)
-						.Where(chr => SCommon.DECIMAL.Contains(chr))
-						.ToArray()));
-					this.OutOfRule = false;
-				}
-				else
-				{
-					this.Title = name;
-					this.TimeStamp = 0L;
-					this.OutOfRule = true;
-				}
-			}
-		}
-
-		private void BOV_ToSlim(int mode)
-		{
-			BOV_FileInfo[] fileInfos = Directory.GetFiles(this.BackupDir)
-				.Select(v => new BOV_FileInfo(v))
-				.Where(v => !v.OutOfRule)
-				.ToArray();
-
-			string[] titles = fileInfos
-				.Select(v => v.Title)
-				.DistinctOrderBy(SCommon.CompIgnoreCase)
-				.ToArray();
-
-			foreach (string title in titles)
-			{
-				BOV_FileInfo[] titleFileInfos = fileInfos
-					.Where(v => SCommon.EqualsIgnoreCase(v.Title, title))
-					.OrderBy((a, b) => SCommon.Comp(a.TimeStamp, b.TimeStamp))
-					.ToArray();
-
-				switch (mode)
-				{
-					case 1:
-						if (2 <= titleFileInfos.Count())
-						{
-							BOV_FileInfo a = titleFileInfos[titleFileInfos.Length - 1];
-							BOV_FileInfo b = titleFileInfos[titleFileInfos.Length - 2];
-							long timeStampDiff = a.TimeStamp - b.TimeStamp;
-
-							//Console.WriteLine("timeStampDiff: " + timeStampDiff);
-
-							if (timeStampDiff < 200000) // ? 推定2日未満
-							{
-								Console.WriteLine("B1 " + a.FilePath);
-
-								SCommon.DeletePath(a.FilePath);
-							}
-						}
-						break;
-
-					case 2:
-						if (3 < titleFileInfos.Length) // ? 古いバージョンが多すぎる。
-						{
-							BOV_FileInfo a = titleFileInfos[0];
-
-							Console.WriteLine("B2 " + a.FilePath);
-
-							SCommon.DeletePath(a.FilePath);
-						}
-						break;
-
-					default:
-						throw null; // never
-				}
-			}
 		}
 	}
 }
