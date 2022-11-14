@@ -1,4 +1,177 @@
 ----
+Brainfuck Interpreter
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef unsigned int uint; // 32-bit uint
+
+#define errorCase(status) \
+    { if ((status)) { printf("ERROR %d\n", __LINE__); exit(1); }}
+
+#define MEMORY_SIZE 1000000
+
+static uint Memory[MEMORY_SIZE];
+static uint Ptr;
+
+static uint Increment_Ptr(void)
+{
+	Ptr++;
+	errorCase(Ptr == MEMORY_SIZE);
+	return 0;
+}
+static uint Decrement_Ptr(void)
+{
+	errorCase(!Ptr);
+	Ptr--;
+	return 0;
+}
+static uint Increment(void)
+{
+	errorCase(Memory[Ptr] == ~(uint)0);
+	Memory[Ptr]++;
+	return 0;
+}
+static uint Decrement(void)
+{
+	errorCase(!Memory[Ptr]);
+	Memory[Ptr]--;
+	return 0;
+}
+static uint PrintChar(void)
+{
+	uint chr = Memory[Ptr];
+
+	if (chr == 0x09) // ? Tab
+	{
+		printf("\t");
+	}
+	else if (chr == 0x0d) // ? CR
+	{
+	    // ignore CR
+	}
+	else if (chr == 0x0a) // ? LF
+	{
+		printf("\n");
+	}
+	else if (0x20 <= chr && chr <= 0x7e) // ? ASCII
+	{
+		printf("%c", (int)chr);
+	}
+	else
+	{
+		printf("[%02x]\n", chr);
+	}
+	return 0;
+}
+static uint InputChar(void)
+{
+	int chr = fgetc(stdin);
+
+	if (0x00 <= chr && chr <= 0xff)
+	{
+		Memory[Ptr] = (uint)chr;
+	}
+	else
+	{
+		printf("INPUT ERROR\n");
+	}
+	return 0;
+}
+static uint EnterLoop(void)
+{
+	return Memory[Ptr] ? 1 : 0;
+}
+static uint End(void)
+{
+    exit(0);
+    return 0; // dummy
+}
+
+typedef struct Command_st
+{
+	uint (*Method)(void);
+	struct Command_st *Next[2];
+	struct Command_st *StackNext;
+}
+Command_t;
+
+static Command_t *MakeCommand(Command_t *p, uint (*method)(void))
+{
+	Command_t *i = malloc(sizeof(Command_t));
+
+    errorCase(!i);
+
+	i->Method = method;
+	i->Next[0] = NULL;
+	i->Next[1] = NULL;
+
+	p->Next[0] = i;
+
+	return i;
+}
+static Command_t *LoadProgram(char *source)
+{
+	Command_t *stack = NULL;
+	Command_t *command;
+	Command_t entry;
+
+	command = &entry;
+
+	for (char *p = source; *p; p++)
+	{
+		switch(*p)
+		{
+		case '>': command = MakeCommand(command, Increment_Ptr); break;
+		case '<': command = MakeCommand(command, Decrement_Ptr); break;
+		case '+': command = MakeCommand(command, Increment); break;
+		case '-': command = MakeCommand(command, Decrement); break;
+		case '.': command = MakeCommand(command, PrintChar); break;
+		case ',': command = MakeCommand(command, InputChar); break;
+		case '[':
+			command = MakeCommand(command, EnterLoop);
+			command->StackNext = stack;
+			stack = command;
+			break;
+
+		case ']':
+		    errorCase(!stack);
+			command->Next[0] = stack;
+			stack = stack->StackNext;
+			command = command->Next[0];
+			command->Next[1] = command->Next[0];
+			break;
+
+		default:
+			break;
+		}
+	}
+	MakeCommand(command, End);
+	return entry.Next[0];
+}
+static void ExecuteProgram(char *source)
+{
+	Command_t *i = LoadProgram(source); // HACK: free
+
+    //memset(Memory, 0x00, sizeof(Memory));
+    //Ptr = 0;
+
+	for (; ; )
+	{
+		i = i->Next[i->Method()];
+	}
+}
+
+// ====
+// ====
+// ====
+
+int main(int argc, char **argv)
+{
+    ExecuteProgram("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
+}
+
+----
 
 #include <stdio.h>
 #include <time.h>
