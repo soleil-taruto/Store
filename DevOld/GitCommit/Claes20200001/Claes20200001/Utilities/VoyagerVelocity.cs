@@ -109,9 +109,9 @@ namespace Charlotte.Utilities
 				// --
 
 				// 太陽との相対速度と地球との相対速度の差が地球の公転速度を超えることはないはず。
-				// 地球の公転速度 == 時速10.7万キロメートル
+				// 地球の公転速度 == 秒速29.78キロメートル
 
-				const double VELOCITY_DIFF_MAX = 120000.0; // == 地球の公転速度 + マージン
+				const double VELOCITY_DIFF_MAX = 40.0; // == 地球の公転速度 + マージン // 誤差がどの程度あるか判然としなかったのでマージン多め(約1/3) // 注意：キロメートル毎秒
 
 				// memo: 両探査機共に地球の公転速度より遅いので、地球との相対速度がマイナスになる(地球に近づいてくる)ことがある。
 
@@ -136,7 +136,7 @@ namespace Charlotte.Utilities
 				// 太陽との相対距離と地球との相対距離の差が地球の公転半径を超えることはないはず。
 				// 地球の公転半径 == 1.495978707億キロメートル
 
-				const double DISTANCE_DIFF_MAX = 160000000.0; // == 地球の公転半径 + マージン
+				const double DISTANCE_DIFF_MAX = 200000000.0; // == 地球の公転半径 + マージン // 誤差がどの程度あるか判然としなかったのでマージン多め(約1/3)
 
 				if (DISTANCE_DIFF_MAX < Math.Abs(this.DistanceVoyager1Sun.GetKilometer(now) - this.DistanceVoyager1Earth.GetKilometer(now))) // v1
 					throw new Exception("v1e Bad Distance");
