@@ -43,7 +43,8 @@ namespace Charlotte
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/BC", "255", "255", "255" }));
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/ACM", "0", "0", "0" }));
 			//Main4(new ArgsReader(new string[] { @"C:\temp", "/ACM", "0", "0", "10" }));
-			Main4(new ArgsReader(new string[] { @"C:\temp", "/S", "280", "400" }));
+			//Main4(new ArgsReader(new string[] { @"C:\temp", "/S", "280", "400" }));
+			Main4(new ArgsReader(new string[] { @"C:\temp", "/S4", "280", "400", "1", "1" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -63,7 +64,7 @@ namespace Charlotte
 			{
 				ProcMain.WriteLog(ex);
 
-				MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("" + ex, Path.GetFileNameWithoutExtension(ProcMain.SelfFile) + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
 				//Console.ReadLine();
@@ -197,6 +198,23 @@ namespace Charlotte
 						throw new Exception("不正なパラメータ");
 
 					canvas = canvas.Expand(w, h);
+				}
+				else if (ar.ArgIs("/S4"))
+				{
+					int w = int.Parse(ar.NextArg());
+					int h = int.Parse(ar.NextArg());
+					int xSampling = int.Parse(ar.NextArg());
+					int ySampling = int.Parse(ar.NextArg());
+
+					if (
+						w < 1 || SCommon.IMAX < w ||
+						h < 1 || SCommon.IMAX < h ||
+						xSampling < 1 || SCommon.IMAX < xSampling ||
+						ySampling < 1 || SCommon.IMAX < ySampling
+						)
+						throw new Exception("不正なパラメータ");
+
+					canvas = canvas.Expand(w, h, xSampling, ySampling);
 				}
 				else
 				{
