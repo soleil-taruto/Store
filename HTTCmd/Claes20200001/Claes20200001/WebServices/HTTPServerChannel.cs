@@ -196,9 +196,10 @@ namespace Charlotte.WebServices
 				if (HEADERS_LEN_MAX < roughHeaderLength)
 					throw new OverflowException("Received header is too long");
 
-				if (line[0] <= ' ') // HACK: ライン・フォルディング対応 -- フォルディングは廃止されたっぽい？
+				if (line[0] <= ' ') // HACK: 行折り畳み(line folding)対応 -- 行折り畳みは廃止されたっぽいけど念のため対応しておく。
 				{
-					this.HeaderPairs[this.HeaderPairs.Count - 1][1] += line.Trim();
+					this.HeaderPairs[this.HeaderPairs.Count - 1][1] += line.Trim(); // BUG
+					//this.HeaderPairs[this.HeaderPairs.Count - 1][1] += " " + line.Trim();
 				}
 				else
 				{
