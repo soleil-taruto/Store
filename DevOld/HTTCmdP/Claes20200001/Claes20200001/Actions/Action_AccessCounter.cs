@@ -132,7 +132,7 @@ namespace Charlotte.Actions
 				resText = ex.ToString();
 			}
 
-			//channel.ResStatus = 200;
+			channel.ResStatus = 200;
 			channel.ResHeaderPairs.Add(new string[] { "Content-Type", "text/plain; charset=UTF-8" });
 			channel.ResBody = new byte[][] { Encoding.UTF8.GetBytes(resText) };
 		}

@@ -45,7 +45,7 @@ namespace Charlotte.Actions
 				ProcMain.WriteLog("BatchService-Error: " + ex);
 			}
 
-			//channel.ResStatus = 200;
+			channel.ResStatus = 200;
 			channel.ResHeaderPairs.Add(new string[] { "Content-Type", "text/plain; charset=US-ASCII" });
 			channel.ResBody = new byte[][] { Encoding.ASCII.GetBytes("BatchService-OK") };
 		}

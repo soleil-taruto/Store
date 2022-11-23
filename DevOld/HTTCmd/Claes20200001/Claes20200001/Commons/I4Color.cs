@@ -9,11 +9,10 @@ namespace Charlotte.Commons
 	/// <summary>
 	/// アルファ値を含む色を表す。
 	/// 各色は 0 ～ 255 を想定する。
-	/// R を -1 にすることによって無効な色を示す。
 	/// </summary>
 	public struct I4Color
 	{
-		public int R; // -1 == 無効
+		public int R;
 		public int G;
 		public int B;
 		public int A;

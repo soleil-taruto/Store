@@ -71,10 +71,10 @@ namespace Charlotte
 			{
 				ProcMain.WriteLog(ex);
 
-				//MessageBox.Show("" + ex, ProcMain.APP_TITLE + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("" + ex, Path.GetFileNameWithoutExtension(ProcMain.SelfFile) + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-				Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
-				Console.ReadLine();
+				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
+				//Console.ReadLine();
 			}
 		}
 
@@ -265,7 +265,7 @@ namespace Charlotte
 
 					channel.ResStatus = 301;
 					channel.ResHeaderPairs.Add(new string[] { "Location", "http://" + hostName + channel.PathQuery });
-					//channel.ResBody = null;
+					channel.ResBody = null;
 
 					goto endFunc;
 				}
@@ -321,7 +321,7 @@ namespace Charlotte
 
 				channel.ResStatus = 301;
 				channel.ResHeaderPairs.Add(new string[] { "Location", "http://" + host + "/" + string.Join("", relPath.Split('\\').Select(v => EncodeUrl(v) + "/")) });
-				//channel.ResBody = null;
+				channel.ResBody = null;
 
 				goto endFunc;
 			}
@@ -331,7 +331,7 @@ namespace Charlotte
 			}
 			else if (File.Exists(path))
 			{
-				//channel.ResStatus = 200;
+				channel.ResStatus = 200;
 				channel.ResHeaderPairs.Add(new string[] { "Content-Type", ContentTypeCollection.I.GetContentType(Path.GetExtension(path)) });
 				channel.ResBody = E_ReadFile(path);
 			}
@@ -339,7 +339,7 @@ namespace Charlotte
 			{
 				channel.ResStatus = 404;
 				//channel.ResHeaderPairs.Add();
-				//channel.ResBody = null;
+				channel.ResBody = null;
 
 				if (!head && this.Page404File != null)
 				{

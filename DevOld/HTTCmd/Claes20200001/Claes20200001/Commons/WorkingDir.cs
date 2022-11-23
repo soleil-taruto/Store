@@ -58,7 +58,7 @@ namespace Charlotte.Commons
 			return new RootInfo(Path.Combine(Environment.GetEnvironmentVariable("TMP"), ProcMain.APP_IDENT + "_" + Process.GetCurrentProcess().Id));
 		}
 
-		private static long CtorCounter = 0L;
+		private static ulong CtorCounter = 0UL;
 
 		private string Dir = null;
 
@@ -69,7 +69,7 @@ namespace Charlotte.Commons
 				if (Root == null)
 					throw new Exception("Root is null");
 
-				this.Dir = Path.Combine(Root.GetDir(), "$" + CtorCounter++);
+				this.Dir = Path.Combine(Root.GetDir(), (CtorCounter++).ToString("x16"));
 
 				SCommon.CreateDir(this.Dir);
 			}
@@ -81,11 +81,11 @@ namespace Charlotte.Commons
 			return Path.Combine(this.GetDir(), localName);
 		}
 
-		private long PathCounter = 0L;
+		private ulong PathCounter = 0UL;
 
 		public string MakePath()
 		{
-			return this.GetPath("$" + this.PathCounter++);
+			return this.GetPath((this.PathCounter++).ToString("x16"));
 		}
 
 		public void Dispose()

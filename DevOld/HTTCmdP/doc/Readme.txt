@@ -35,3 +35,15 @@ OPTIONS
 
 	BatchService-の実行者の信用証明用文字列を設定します。
 
+
+----
+BatchService
+
+実行するバッチファイル
+
+	C:\temp\HTTCmd-P_BatchService_Batch.bat
+
+実行時のカレントディレクトリ
+
+	C:\temp
+

@@ -31,7 +31,7 @@ namespace Charlotte
 			{
 				Main4(ar);
 			}
-			//Common.OpenOutputDirIfCreated();
+			//SCommon.OpenOutputDirIfCreated();
 		}
 
 		private void Main3()
@@ -58,7 +58,7 @@ namespace Charlotte
 
 			// --
 
-			Common.Pause();
+			SCommon.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -84,26 +84,26 @@ namespace Charlotte
 			{
 				HTTPServer hs = new HTTPServer()
 				{
-					//PortNo = 80,
-					//Backlog = 300,
-					//ConnectMax = 100,
+					PortNo = 80,
+					Backlog = 300,
+					ConnectMax = 100,
 					Interlude = () => !evStop.WaitOne(0),
 					HTTPConnected = P_Connected,
 				};
 
-				//SockChannel.ThreadTimeoutMillis = 100;
+				SockChannel.ThreadTimeoutMillis = 100;
 
-				//HTTPServer.KeepAliveTimeoutMillis = 5000;
+				HTTPServer.KeepAliveTimeoutMillis = 5000;
 
 				HTTPServerChannel.RequestTimeoutMillis = 10000; // 10 sec
-				//HTTPServerChannel.ResponseTimeoutMillis = -1;
-				//HTTPServerChannel.FirstLineTimeoutMillis = 2000;
+				HTTPServerChannel.ResponseTimeoutMillis = -1;
+				HTTPServerChannel.FirstLineTimeoutMillis = 2000;
 				HTTPServerChannel.IdleTimeoutMillis = 600000; // 10 min
 				HTTPServerChannel.BodySizeMax = 0;
 
-				//SockCommon.TimeWaitMonitor.CTR_ROT_SEC = 60;
-				//SockCommon.TimeWaitMonitor.COUNTER_NUM = 5;
-				//SockCommon.TimeWaitMonitor.COUNT_LIMIT = 10000;
+				SockCommon.TimeWaitMonitor.CTR_ROT_SEC = 60;
+				SockCommon.TimeWaitMonitor.COUNTER_NUM = 5;
+				SockCommon.TimeWaitMonitor.COUNT_LIMIT = 10000;
 
 				// サーバーの設定ここまで
 
@@ -289,13 +289,13 @@ namespace Charlotte
 
 				channel.ResStatus = 301;
 				channel.ResHeaderPairs.Add(new string[] { "Location", "http://" + host + "/" + string.Join("", relPath.Split('\\').Select(v => EncodeUrl(v) + "/")) });
-				//channel.ResBody = null;
+				channel.ResBody = null;
 
 				goto endFunc;
 			}
 			if (File.Exists(path))
 			{
-				//channel.ResStatus = 200;
+				channel.ResStatus = 200;
 				channel.ResHeaderPairs.Add(new string[] { "Content-Type", ContentTypeCollection.I.GetContentType(Path.GetExtension(path)) });
 				channel.ResBody = E_ReadFile(path);
 			}
@@ -303,7 +303,7 @@ namespace Charlotte
 			{
 				channel.ResStatus = 404;
 				//channel.ResHeaderPairs.Add();
-				//channel.ResBody = null;
+				channel.ResBody = null;
 
 				if (!head && this.Page404File != null)
 				{
