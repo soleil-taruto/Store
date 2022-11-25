@@ -11,7 +11,7 @@ public class Hello
 {
     public static void Main()
     {
-		for (int testcnt = 1; testcnt < 100; testcnt++)
+		for (int testcnt = 0; testcnt < 100; testcnt++)
 		{
 			var arr = GetRandIntList(60)
 				.ToArray().Skip(0); // リストを確定する。
