@@ -36,9 +36,17 @@ public class Hello
 	private static void MakeTen(params int[] ns)
     {
         Console.WriteLine(string.Join(", ", ns) + " ==>");
+        OpStrs = new List<string>();
         MakeTen(ns.Select(v => new Operand() { Numer = v, Denom = 1, Str = "" + v }).ToArray());
+
+        foreach (string str in OpStrs.Distinct())
+            Console.WriteLine("\t" + str);
+
+        OpStrs = null;
         Console.WriteLine("");
     }
+
+    private static List<string> OpStrs;
 
     private static void MakeTen(Operand[] os)
     {
@@ -50,7 +58,7 @@ public class Hello
 				o.IsInt() &&
 				o.GetIntValue() == 10
 				)
-				Console.WriteLine("\t" + o.Str);
+				OpStrs.Add(o.Str);
 
 			return;
 		}
