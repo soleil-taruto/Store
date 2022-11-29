@@ -38,8 +38,9 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
+			//Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
 			//Main4(new ArgsReader(new string[] { "/R", @"C:\Dev\GameJS\Hako\Gattonero20200001", @"C:\Dev\GameJS\Hako\res", @"C:\temp" }));
+			Main4(new ArgsReader(new string[] { @"C:\Dev\GameJS\BlackJack_v2\Gattonero20200001", @"C:\Dev\GameJS\BlackJack_v2\res", @"C:\temp" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -140,6 +141,8 @@ namespace Charlotte
 			}
 
 			this.EraseRedundancyCode(this.JSLines);
+
+			this.SyntaxCheck(this.JSLines);
 
 			this.JSFunctions = this.CollectFunctions(this.JSLines).Select(v => v.Name).ToList();
 			this.JSVariables = this.CollectVariables(this.JSLines).Select(v => v.Name).ToList();
@@ -670,6 +673,30 @@ namespace Charlotte
 			return SCommon.Concat(credits)
 				.Select(line => "\"" + string.Join("", line.Select(chr => "\\u" + ((int)chr).ToString("x4"))) + "\"")
 				.ToArray();
+		}
+
+		/// <summary>
+		/// 簡単な文法チェック
+		/// </summary>
+		/// <param name="lines">連結されたソースコード</param>
+		private void SyntaxCheck(List<string> lines)
+		{
+			foreach (string line in lines)
+			{
+				string trLine = line.Trim();
+
+				// 以下みたいなのを予防する。
+				// return
+				//   ret;
+				if (
+					trLine == "return" ||
+					trLine.StartsWith("return /*") ||
+					trLine.StartsWith("return //")
+					)
+				{
+					throw new Exception("変な return があります。return; または return ret; として下さい。");
+				}
+			}
 		}
 	}
 }
