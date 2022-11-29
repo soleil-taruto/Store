@@ -40,7 +40,7 @@ public class Hello
         MakeTen(ns.Select(v => new Operand() { Numer = v, Denom = 1, Str = "" + v }).ToArray());
 
         foreach (string str in OpStrs.Distinct())
-            Console.WriteLine("\t" + str);
+            Console.WriteLine("\t" + str + " = 10");
 
         OpStrs = null;
         Console.WriteLine("");
