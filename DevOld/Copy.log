@@ -348,6 +348,10 @@ T C:\home\GitHub\Store\DevOld\RemoteCmdServer\dat
 T C:\home\GitHub\Store\DevOld\RSSAGame\dat
 < C:\Chest\20220919_DevBin\20220623_GameBase\RSSAGame\doc
 > C:\home\GitHub\Store\DevOld\RSSAGame\doc
+< C:\DevBin\20221131_Program\RunAll\Petra20200001
+> C:\home\GitHub\Store\DevOld\RunAll\Petra20200001
+< C:\DevBin\20221131_Program\RunAll\doc
+> C:\home\GitHub\Store\DevOld\RunAll\doc
 < C:\Chest\20220919_DevBin\20220409_Dev\Tools\SecretCipher\Claes20200001
 > C:\home\GitHub\Store\DevOld\SecretCipher\Claes20200001
 < C:\Chest\20220919_DevBin\20220409_Dev\Tools\SecretCipher\doc
@@ -452,6 +456,10 @@ T C:\home\GitHub\Store\DevOld\UdongeCirno\dat
 > C:\home\GitHub\Store\DevOld\Utilities\doc
 < C:\Chest\20220919_DevBin\20220409_Dev\DebugMode\VectorDLCount\Claes20200001
 > C:\home\GitHub\Store\DevOld\VectorDLCount\Claes20200001
+< C:\DevBin\20221131_Program\Wait\Petra20200001
+> C:\home\GitHub\Store\DevOld\Wait\Petra20200001
+< C:\DevBin\20221131_Program\Wait\doc
+> C:\home\GitHub\Store\DevOld\Wait\doc
 < C:\Chest\20220919_DevBin\20220409_Dev\Template\SubCommons\WebService_HCF\Claes20200001
 > C:\home\GitHub\Store\DevOld\WebService_HCF\Claes20200001
 < C:\Chest\20220919_DevBin\20220409_Dev\Template\SubCommons\WebService_HCM\Claes20200001
