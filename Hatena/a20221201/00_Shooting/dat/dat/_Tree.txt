@@ -1,0 +1,222 @@
+﻿Font
+	-> Directory
+Font\K Gothic
+	-> Directory
+Font\K Gothic\K Gothic.ttf
+	-> File 2022/09/26 (月) 00:08:32 / 2020/05/17 (日) 21:13:19 / 9,673,584
+Font\K Gothic\_source.txt
+	-> File 2022/09/26 (月) 00:08:32 / 2021/02/27 (土) 06:01:47 / 45
+Font\K Gothic\はじめにお読みください.txt
+	-> File 2022/09/26 (月) 00:08:32 / 2020/05/17 (日) 21:13:19 / 2,483
+Font\木漏れ日ゴシック
+	-> Directory
+Font\木漏れ日ゴシック\_source.txt
+	-> File 2022/09/26 (月) 00:08:32 / 2021/02/23 (火) 06:17:14 / 56
+Font\木漏れ日ゴシック\komorebi-gothic-P.ttf
+	-> File 2022/09/26 (月) 00:08:32 / 2021/02/23 (火) 06:16:29 / 4,346,028
+Font\木漏れ日ゴシック\komorebi-gothic.ttf
+	-> File 2022/09/26 (月) 00:08:32 / 2021/02/23 (火) 06:16:29 / 4,309,524
+Font\木漏れ日ゴシック\readme.txt
+	-> File 2022/09/26 (月) 00:08:32 / 2021/02/23 (火) 06:16:29 / 1,242
+Game
+	-> Directory
+Game\Boss0001.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/16 (月) 05:02:16 / 4,521
+Game\Boss0002.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/16 (月) 05:02:16 / 3,888
+Game\Boss0003.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/16 (月) 05:02:16 / 4,521
+Game\Enemy0001.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/16 (月) 05:02:16 / 1,351
+Game\Enemy0002.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/16 (月) 05:02:16 / 3,564
+Game\Player.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/16 (月) 05:02:16 / 1,162
+Game\Shot0001.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/16 (月) 05:02:16 / 688
+Game\Tama0001.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/16 (月) 05:02:16 / 455
+General
+	-> Directory
+General\Dummy.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/21 (土) 13:03:55 / 188
+General\DummyScreen.png
+	-> File 2022/09/26 (月) 00:08:32 / 2021/02/18 (木) 13:54:30 / 440,596
+General\WhiteBox.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/21 (土) 13:03:55 / 124
+General\WhiteCircle.png
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/21 (土) 13:03:55 / 1,448
+General\game_app.ico
+	-> File 2022/09/26 (月) 00:08:32 / 2019/09/21 (土) 13:03:55 / 2,734
+General\muon.wav
+	-> File 2022/09/26 (月) 00:08:32 / 2022/07/19 (火) 20:49:13 / 529,244
+Logo
+	-> Directory
+Logo\Copyright.png
+	-> File 2022/09/26 (月) 00:08:32 / 2020/04/21 (火) 21:50:34 / 5,134
+Novel
+	-> Directory
+Novel\Instagram
+	-> Directory
+Novel\Instagram\IMG_20160000_000040.jpg
+	-> File 2022/11/07 (月) 15:32:58 / 2020/12/03 (木) 20:46:55 / 195,532
+Novel\Instagram\IMG_20160000_000106.jpg
+	-> File 2022/11/07 (月) 15:32:58 / 2021/01/11 (月) 13:46:34 / 100,697
+Novel\からい
+	-> Directory
+Novel\からい\_source.txt
+	-> File 2022/11/07 (月) 15:32:58 / 2021/02/27 (土) 06:03:11 / 189
+Novel\からい\maki01.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/12 (土) 04:59:55 / 403,485
+Novel\からい\maki02.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/12 (土) 04:59:55 / 418,071
+Novel\からい\yukari02.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/12 (土) 04:59:56 / 373,774
+Novel\からい\yukari03.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/12 (土) 04:59:56 / 415,767
+Novel\空想曲線
+	-> Directory
+Novel\空想曲線\Messageframe_29
+	-> Directory
+Novel\空想曲線\Messageframe_29\material
+	-> Directory
+Novel\空想曲線\Messageframe_29\material\01 message
+	-> Directory
+Novel\空想曲線\Messageframe_29\material\01 message\message.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:08 / 18,086
+Novel\空想曲線\Messageframe_29\material\02 button
+	-> Directory
+Novel\空想曲線\Messageframe_29\material\02 button\button.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:08 / 6,158
+Novel\空想曲線\Messageframe_29\material\02 button\button2.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:08 / 8,657
+Novel\空想曲線\Messageframe_29\material\02 button\button3.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:08 / 8,734
+Novel\空想曲線\Messageframe_29\material\03 system_button
+	-> Directory
+Novel\空想曲線\Messageframe_29\material\03 system_button\auto.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:08 / 970
+Novel\空想曲線\Messageframe_29\material\03 system_button\auto2.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 869
+Novel\空想曲線\Messageframe_29\material\03 system_button\load.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 949
+Novel\空想曲線\Messageframe_29\material\03 system_button\load2.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 851
+Novel\空想曲線\Messageframe_29\material\03 system_button\log.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 1,384
+Novel\空想曲線\Messageframe_29\material\03 system_button\log2.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 1,271
+Novel\空想曲線\Messageframe_29\material\03 system_button\menu.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 1,068
+Novel\空想曲線\Messageframe_29\material\03 system_button\menu2.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 960
+Novel\空想曲線\Messageframe_29\material\03 system_button\save.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 995
+Novel\空想曲線\Messageframe_29\material\03 system_button\save2.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 902
+Novel\空想曲線\Messageframe_29\material\03 system_button\skip.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 998
+Novel\空想曲線\Messageframe_29\material\03 system_button\skip2.png
+	-> File 2022/11/07 (月) 15:32:58 / 2020/09/10 (木) 03:56:09 / 916
+Novel\空想曲線\_source.txt
+	-> File 2022/11/07 (月) 15:32:58 / 2021/02/27 (土) 06:06:08 / 251
+Novel\魔王魂
+	-> Directory
+Novel\魔王魂\_source.txt
+	-> File 2022/11/07 (月) 15:32:58 / 2021/02/27 (土) 06:07:26 / 104
+Novel\魔王魂\bgm_maoudamashii_piano07.mp3
+	-> File 2022/11/07 (月) 15:32:58 / 2020/10/02 (金) 12:49:17 / 976,770
+Novel\魔王魂\bgm_maoudamashii_piano39.mp3
+	-> File 2022/11/07 (月) 15:32:58 / 2021/02/18 (木) 15:07:03 / 3,114,774
+Picture
+	-> Directory
+Picture\Wall0001.png
+	-> File 2022/09/26 (月) 00:08:33 / 2019/09/15 (日) 02:43:45 / 5,898
+Picture\Wall0002.png
+	-> File 2022/09/26 (月) 00:08:33 / 2019/09/15 (日) 02:43:45 / 2,875
+Picture\Wall0003.png
+	-> File 2022/09/26 (月) 00:08:33 / 2019/09/15 (日) 02:43:45 / 2,168
+hmix
+	-> Directory
+hmix\_source.txt
+	-> File 2022/09/26 (月) 00:08:32 / 2020/10/23 (金) 14:25:38 / 29
+hmix\n118.mp3
+	-> File 2022/09/26 (月) 00:08:32 / 2020/10/23 (金) 13:38:25 / 2,649,026
+hmix\n13.mp3
+	-> File 2022/09/26 (月) 00:08:32 / 2020/10/23 (金) 14:39:33 / 2,013,402
+hmix\n138.mp3
+	-> File 2022/09/26 (月) 00:08:32 / 2020/10/23 (金) 13:40:06 / 3,936,314
+hmix\n70.mp3
+	-> File 2022/09/26 (月) 00:08:32 / 2020/10/23 (金) 14:26:45 / 2,135,128
+ユーフルカ
+	-> Directory
+ユーフルカ\Battle-Conflict_loop
+	-> Directory
+ユーフルカ\Battle-Conflict_loop\Assets_for_Unity
+	-> Directory
+ユーフルカ\Battle-Conflict_loop\Assets_for_Unity\Battle-Conflict_intrto.ogg
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:07 / 283,446
+ユーフルカ\Battle-Conflict_loop\Assets_for_Unity\Battle-Conflict_loop.ogg
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:07 / 3,726,348
+ユーフルカ\Battle-Conflict_loop\Assets_for_Unity\Read Me.txt
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:07 / 392
+ユーフルカ\Battle-Conflict_loop\Battle-Conflict_loop.m4a
+	-> File 2022/09/26 (月) 00:08:33 / 2020/10/23 (金) 14:49:07 / 1,827,232
+ユーフルカ\Battle-Conflict_loop\Battle-Conflict_loop.ogg
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:07 / 2,271,105
+ユーフルカ\Battle-Conflict_loop\Battle-Conflict_loop.txt
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:07 / 708
+ユーフルカ\Battle-Vampire_loop
+	-> Directory
+ユーフルカ\Battle-Vampire_loop\Assets_for_Unity
+	-> Directory
+ユーフルカ\Battle-Vampire_loop\Assets_for_Unity\Battle-Vampire_intro.ogg
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:39:54 / 247,969
+ユーフルカ\Battle-Vampire_loop\Assets_for_Unity\Battle-Vampire_loop.ogg
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:39:54 / 4,178,561
+ユーフルカ\Battle-Vampire_loop\Assets_for_Unity\Read Me.txt
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:39:54 / 392
+ユーフルカ\Battle-Vampire_loop\Battle-Vampire_loop.m4a
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:39:54 / 2,038,269
+ユーフルカ\Battle-Vampire_loop\Battle-Vampire_loop.ogg
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:39:54 / 2,667,629
+ユーフルカ\Battle-Vampire_loop\Battle-Vampire_loop.txt
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:39:54 / 720
+ユーフルカ\Battle-rapier_loop
+	-> Directory
+ユーフルカ\Battle-rapier_loop\Assets_for_Unity
+	-> Directory
+ユーフルカ\Battle-rapier_loop\Assets_for_Unity\Battle-rapier_intro.ogg
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:35 / 431,637
+ユーフルカ\Battle-rapier_loop\Assets_for_Unity\Battle-rapier_loop.ogg
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:35 / 2,808,920
+ユーフルカ\Battle-rapier_loop\Assets_for_Unity\Read Me.txt
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:35 / 392
+ユーフルカ\Battle-rapier_loop\Battle-rapier_loop.m4a
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:35 / 1,462,914
+ユーフルカ\Battle-rapier_loop\Battle-rapier_loop.ogg
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:35 / 1,467,886
+ユーフルカ\Battle-rapier_loop\Battle-rapier_loop.txt
+	-> File 2022/09/26 (月) 00:08:34 / 2020/10/23 (金) 14:49:35 / 725
+ユーフルカ\_source.txt
+	-> File 2022/09/26 (月) 00:08:33 / 2020/10/23 (金) 14:42:12 / 42
+出処不明
+	-> Directory
+出処不明\EnemyDamaged.mp3
+	-> File 2022/09/26 (月) 22:32:58 / 2022/07/13 (水) 02:22:27 / 1,045
+出処不明\PlayerShoot.mp3
+	-> File 2022/09/26 (月) 22:32:58 / 2022/07/13 (水) 02:22:27 / 2,612
+小森平
+	-> Directory
+小森平\_source.txt
+	-> File 2022/09/26 (月) 22:32:58 / 2022/06/17 (金) 00:00:33 / 39
+小森平\coin01.mp3
+	-> File 2022/09/27 (火) 05:28:06 / 2021/01/13 (水) 13:32:43 / 11,984
+小森平\coin02.mp3
+	-> File 2022/09/27 (火) 05:28:06 / 2021/01/13 (水) 13:32:43 / 11,984
+小森平\coin04.mp3
+	-> File 2022/09/27 (火) 05:28:06 / 2021/01/13 (水) 13:32:43 / 10,417
+小森平\explosion01.mp3
+	-> File 2022/09/26 (月) 22:32:58 / 2022/07/13 (水) 02:22:10 / 17,763
+小森平\powerup03.mp3
+	-> File 2022/09/26 (月) 22:32:58 / 2020/09/09 (水) 21:19:34 / 8,327

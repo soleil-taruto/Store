@@ -1,0 +1,176 @@
+30
+60
+;;REPEAT;;
+61
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+57
+0	None	None
+0	None	下から入場
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+59
+0	None	None
+1	ブロック01	None
+;;REPEAT;;
+59
+0	None	None
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+2
+1	ブロック01	None
+;;REPEAT;;
+58
+0	None	None
+;;REPEAT;;
+61
+1	ブロック01	None
+
+; WallName
+Default
+
+; MusicName
+Default

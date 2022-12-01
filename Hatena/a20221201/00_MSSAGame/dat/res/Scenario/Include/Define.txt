@@ -1,0 +1,19 @@
+^@(左端)   140 280
+^@(左)     200 280
+^@(中央)   480 280
+^@(右)     760 280
+^@(右端)   820 280
+^@(BU左)   200 400
+^@(BU中央) 480 400
+^@(BU右)   760 400
+
+^@(背景01) dat\Novel\Instagram\IMG_20160000_000040.jpg
+^@(背景02) dat\Novel\Instagram\IMG_20160000_000106.jpg
+
+^@(結月ゆかり_普) dat\Novel\からい\yukari02.png
+^@(結月ゆかり_喜) dat\Novel\からい\yukari03.png
+^@(弦巻マキ_普)   dat\Novel\からい\maki01.png
+^@(弦巻マキ_怒)   dat\Novel\からい\maki02.png
+
+^@(BGM_日常)  dat\Novel\魔王魂\bgm_maoudamashii_piano07.mp3
+^@(BGM_日常2) dat\Novel\魔王魂\bgm_maoudamashii_piano39.mp3

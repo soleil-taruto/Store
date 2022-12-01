@@ -1,0 +1,16 @@
+;;REPEAT;;
+2
+70
+;;REPEAT;;
+2518
+1	é≈	None
+1	é≈	â∫Ç©ÇÁì¸èÍ
+;;REPEAT;;
+2381
+1	é≈	None
+
+; WallName
+Default
+
+; MusicName
+Default

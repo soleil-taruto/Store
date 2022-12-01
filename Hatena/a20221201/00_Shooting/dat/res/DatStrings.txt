@@ -1,0 +1,3 @@
+Title=Shooting
+Author=cerulean.charlotte
+Copyright=(C) 202x cerulean.charlotte

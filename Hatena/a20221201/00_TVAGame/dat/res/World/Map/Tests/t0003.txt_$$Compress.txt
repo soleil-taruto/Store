@@ -1,0 +1,179 @@
+30
+17
+;;REPEAT;;
+18
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+16
+1	é≈	None
+1	êXó—	None
+;;REPEAT;;
+3
+1	é≈	None
+1	é≈	ê_ìﬁéq
+;;REPEAT;;
+10
+1	é≈	None
+1	é≈	â∫Ç©ÇÁì¸èÍ
+1	é≈	None
+1	êXó—	None
+;;REPEAT;;
+16
+1	é≈	None
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+18
+1	êXó—	None
+
+; WallName
+Default
+
+; MusicName
+Default

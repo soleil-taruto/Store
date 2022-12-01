@@ -1,0 +1,178 @@
+30
+17
+;;REPEAT;;
+22
+1	ブロック04	None
+;;REPEAT;;
+4
+0	None	None
+;;REPEAT;;
+11
+1	ブロック04	None
+;;REPEAT;;
+8
+0	None	None
+;;REPEAT;;
+8
+1	ブロック04	None
+;;REPEAT;;
+11
+0	None	None
+;;REPEAT;;
+5
+1	ブロック04	None
+;;REPEAT;;
+16
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+16
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+16
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+14
+0	None	None
+0	None	下から入場
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+15
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+14
+0	None	None
+;;REPEAT;;
+3
+1	ブロック04	None
+;;REPEAT;;
+8
+0	None	None
+0	None	神奈子
+;;REPEAT;;
+4
+0	None	None
+;;REPEAT;;
+4
+1	ブロック04	None
+;;REPEAT;;
+13
+0	None	None
+;;REPEAT;;
+4
+1	ブロック04	None
+;;REPEAT;;
+13
+0	None	None
+;;REPEAT;;
+4
+1	ブロック04	None
+;;REPEAT;;
+13
+0	None	None
+;;REPEAT;;
+4
+1	ブロック04	None
+;;REPEAT;;
+13
+0	None	None
+;;REPEAT;;
+4
+1	ブロック04	None
+;;REPEAT;;
+12
+0	None	None
+;;REPEAT;;
+5
+1	ブロック04	None
+;;REPEAT;;
+12
+0	None	None
+;;REPEAT;;
+5
+1	ブロック04	None
+;;REPEAT;;
+12
+0	None	None
+;;REPEAT;;
+7
+1	ブロック04	None
+;;REPEAT;;
+10
+0	None	None
+;;REPEAT;;
+21
+1	ブロック04	None
+
+; WallName
+B0003
+
+; MusicName
+Default

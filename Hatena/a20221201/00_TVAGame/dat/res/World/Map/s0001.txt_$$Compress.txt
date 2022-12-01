@@ -1,0 +1,16 @@
+;;REPEAT;;
+2
+70
+;;REPEAT;;
+4794
+1	Å	None
+1	Å	‰E‚©‚ç“üê
+;;REPEAT;;
+105
+1	Å	None
+
+; WallName
+Default
+
+; MusicName
+Default

@@ -1,0 +1,576 @@
+;;REPEAT;;
+2
+70
+;;REPEAT;;
+33
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+1	é≈	None
+1	é≈	ç∂Ç©ÇÁì¸èÍ
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+2
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+66
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+2
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+1	é≈	None
+1	é≈	âEÇ©ÇÁì¸èÍ
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+65
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+32
+1	é≈	None
+
+; WallName
+Default
+
+; MusicName
+Default

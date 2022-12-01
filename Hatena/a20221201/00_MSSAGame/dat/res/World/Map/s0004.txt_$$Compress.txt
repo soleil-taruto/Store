@@ -1,0 +1,474 @@
+60
+30
+;;REPEAT;;
+31
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+19
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+8
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+19
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+8
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+10
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+10
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+;;REPEAT;;
+7
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+7
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+11
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+4
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+11
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+2
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+17
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+4
+0	None	None
+0	None	上から入場
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+17
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+5
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+23
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+4
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+23
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+4
+0	None	None
+1	ブロック04	None
+;;REPEAT;;
+23
+0	None	None
+;;REPEAT;;
+7
+1	ブロック04	None
+;;REPEAT;;
+23
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+2
+1	ブロック04	None
+;;REPEAT;;
+28
+0	None	None
+;;REPEAT;;
+31
+1	ブロック04	None
+
+; WallName
+Default
+
+; MusicName
+Default

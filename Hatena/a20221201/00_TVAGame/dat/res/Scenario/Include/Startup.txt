@@ -1,0 +1,21 @@
+!_ifndef MessageWindow
+
+!MessageWindow = MessageWindow
+!SystemButtons = SystemButtons
+!System = System
+!音楽 = 音楽
+!効果音 = 効果音
+
+!背景 = スクリーン
+
+!イベント絵 = スクリーン
+!イベント絵 Z 40000
+
+!エフェクト = エフェクト
+
+!画面全体エフェクト = エフェクト
+!画面全体エフェクト Z 70000
+
+!_endif
+
+#Include/Define

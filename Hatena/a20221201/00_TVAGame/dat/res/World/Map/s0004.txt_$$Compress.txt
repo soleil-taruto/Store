@@ -1,0 +1,106 @@
+;;REPEAT;;
+2
+70
+;;REPEAT;;
+3640
+1	О≈	None
+;;REPEAT;;
+2
+1	СеРXЧ—	None
+;;REPEAT;;
+68
+1	О≈	None
+;;REPEAT;;
+2
+1	СеРXЧ—	None
+;;REPEAT;;
+68
+1	О≈	None
+;;REPEAT;;
+4
+1	СеРXЧ—	None
+;;REPEAT;;
+66
+1	О≈	None
+;;REPEAT;;
+4
+1	СеРXЧ—	None
+;;REPEAT;;
+66
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+64
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+64
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+64
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+64
+1	О≈	None
+1	О≈	ПгВ©ВзУьПк
+;;REPEAT;;
+69
+1	О≈	None
+;;REPEAT;;
+8
+1	СеРXЧ—	None
+;;REPEAT;;
+62
+1	О≈	None
+;;REPEAT;;
+8
+1	СеРXЧ—	None
+;;REPEAT;;
+62
+1	О≈	None
+;;REPEAT;;
+8
+1	СеРXЧ—	None
+;;REPEAT;;
+62
+1	О≈	None
+;;REPEAT;;
+8
+1	СеРXЧ—	None
+;;REPEAT;;
+62
+1	О≈	None
+;;REPEAT;;
+8
+1	СеРXЧ—	None
+;;REPEAT;;
+62
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+64
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+204
+1	О≈	None
+
+; WallName
+Default
+
+; MusicName
+Default

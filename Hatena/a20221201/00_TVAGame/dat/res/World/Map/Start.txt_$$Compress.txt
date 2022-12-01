@@ -1,0 +1,497 @@
+;;REPEAT;;
+2
+50
+;;REPEAT;;
+13
+1	СеРXЧ—	None
+;;REPEAT;;
+3
+1	О≈	None
+;;REPEAT;;
+47
+1	СеРXЧ—	None
+1	О≈	None
+1	О≈	НґВ©ВзУьПк
+1	О≈	None
+;;REPEAT;;
+47
+1	СеРXЧ—	None
+;;REPEAT;;
+3
+1	О≈	None
+;;REPEAT;;
+47
+1	СеРXЧ—	None
+;;REPEAT;;
+3
+1	О≈	None
+;;REPEAT;;
+47
+1	СеРXЧ—	None
+;;REPEAT;;
+3
+1	О≈	None
+;;REPEAT;;
+47
+1	СеРXЧ—	None
+;;REPEAT;;
+6
+1	О≈	None
+;;REPEAT;;
+44
+1	СеРXЧ—	None
+;;REPEAT;;
+8
+1	О≈	None
+;;REPEAT;;
+17
+1	СеРXЧ—	None
+;;REPEAT;;
+3
+1	О≈	None
+;;REPEAT;;
+22
+1	СеРXЧ—	None
+;;REPEAT;;
+14
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+8
+1	О≈	None
+;;REPEAT;;
+17
+1	СеРXЧ—	None
+;;REPEAT;;
+34
+1	О≈	None
+;;REPEAT;;
+15
+1	СеРXЧ—	None
+;;REPEAT;;
+35
+1	О≈	None
+;;REPEAT;;
+15
+1	СеРXЧ—	None
+;;REPEAT;;
+36
+1	О≈	None
+;;REPEAT;;
+13
+1	СеРXЧ—	None
+;;REPEAT;;
+37
+1	О≈	None
+;;REPEAT;;
+12
+1	СеРXЧ—	None
+;;REPEAT;;
+38
+1	О≈	None
+;;REPEAT;;
+12
+1	СеРXЧ—	None
+;;REPEAT;;
+30
+1	О≈	None
+1	О≈	УG02
+;;REPEAT;;
+7
+1	О≈	None
+;;REPEAT;;
+11
+1	СеРXЧ—	None
+;;REPEAT;;
+38
+1	О≈	None
+;;REPEAT;;
+11
+1	СеРXЧ—	None
+;;REPEAT;;
+40
+1	О≈	None
+;;REPEAT;;
+8
+1	СеРXЧ—	None
+;;REPEAT;;
+42
+1	О≈	None
+;;REPEAT;;
+5
+1	СеРXЧ—	None
+;;REPEAT;;
+45
+1	О≈	None
+;;REPEAT;;
+5
+1	СеРXЧ—	None
+;;REPEAT;;
+44
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+23
+1	О≈	None
+;;REPEAT;;
+5
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+;;REPEAT;;
+5
+1	Ф†	None
+;;REPEAT;;
+19
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+4
+1	О≈	None
+;;REPEAT;;
+2
+1	Ф†	None
+;;REPEAT;;
+17
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+22
+1	О≈	None
+;;REPEAT;;
+7
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+22
+1	О≈	None
+;;REPEAT;;
+6
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+;;REPEAT;;
+2
+1	Ф†	None
+;;REPEAT;;
+21
+1	О≈	None
+;;REPEAT;;
+7
+1	СеРXЧ—	None
+1	О≈	None
+1	О≈	ПгВ©ВзУьПк
+;;REPEAT;;
+18
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+4
+1	О≈	None
+1	О≈	ГXГ^Б[ГgТnУ_
+;;REPEAT;;
+17
+1	О≈	None
+;;REPEAT;;
+7
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+9
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+11
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+18
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+8
+1	О≈	None
+;;REPEAT;;
+2
+1	Ф†	None
+;;REPEAT;;
+11
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+19
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+7
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+12
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+19
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+7
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+12
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+19
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+6
+1	О≈	None
+;;REPEAT;;
+2
+1	Ф†	None
+;;REPEAT;;
+12
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+19
+1	О≈	None
+;;REPEAT;;
+3
+1	Ф†	None
+;;REPEAT;;
+4
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+13
+1	О≈	None
+;;REPEAT;;
+11
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+;;REPEAT;;
+6
+1	Ф†	None
+;;REPEAT;;
+14
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+26
+1	О≈	None
+;;REPEAT;;
+4
+1	Ф†	None
+;;REPEAT;;
+10
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+25
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+3
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+10
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+25
+1	О≈	None
+1	Ф†	None
+1	О≈	None
+1	Ф†	None
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+11
+1	О≈	None
+;;REPEAT;;
+9
+1	СеРXЧ—	None
+;;REPEAT;;
+21
+1	О≈	None
+;;REPEAT;;
+5
+1	Ф†	None
+;;REPEAT;;
+3
+1	О≈	None
+1	Ф†	None
+;;REPEAT;;
+11
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+;;REPEAT;;
+3
+1	Ф†	None
+1	О≈	None
+;;REPEAT;;
+5
+1	Ф†	None
+;;REPEAT;;
+12
+1	О≈	None
+;;REPEAT;;
+9
+1	СеРXЧ—	None
+;;REPEAT;;
+20
+1	О≈	None
+;;REPEAT;;
+3
+1	Ф†	None
+;;REPEAT;;
+19
+1	О≈	None
+;;REPEAT;;
+8
+1	СеРXЧ—	None
+;;REPEAT;;
+43
+1	О≈	None
+;;REPEAT;;
+8
+1	СеРXЧ—	None
+;;REPEAT;;
+44
+1	О≈	None
+1	О≈	ЙЇВ©ВзУьПк
+;;REPEAT;;
+5
+1	СеРXЧ—	None
+;;REPEAT;;
+42
+1	О≈	None
+;;REPEAT;;
+8
+1	СеРXЧ—	None
+;;REPEAT;;
+41
+1	О≈	None
+;;REPEAT;;
+9
+1	СеРXЧ—	None
+;;REPEAT;;
+41
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+39
+1	О≈	None
+;;REPEAT;;
+14
+1	СеРXЧ—	None
+;;REPEAT;;
+34
+1	О≈	None
+;;REPEAT;;
+19
+1	СеРXЧ—	None
+;;REPEAT;;
+7
+1	О≈	None
+;;REPEAT;;
+10
+1	СеРXЧ—	None
+;;REPEAT;;
+13
+1	О≈	None
+;;REPEAT;;
+24
+1	СеРXЧ—	None
+;;REPEAT;;
+3
+1	О≈	None
+;;REPEAT;;
+13
+1	СеРXЧ—	None
+;;REPEAT;;
+8
+1	О≈	None
+;;REPEAT;;
+26
+1	СеРXЧ—	None
+1	О≈	None
+1	О≈	ЙEВ©ВзУьПк
+1	О≈	None
+;;REPEAT;;
+47
+1	СеРXЧ—	None
+;;REPEAT;;
+3
+1	О≈	None
+;;REPEAT;;
+31
+1	СеРXЧ—	None
+
+; #---------------------------------------------------------------------#
+; | ТНИ”БFВ±ВћГtГ@ГCГЛВ…ГRГБГУГgВрПСВҐВƒВаОЯВћГ}ГbГvХџСґОЮВ…ПЬЛОВ≥ВкВйБB|
+; #---------------------------------------------------------------------#
+
+; WallName
+Default
+
+; MusicName
+Default

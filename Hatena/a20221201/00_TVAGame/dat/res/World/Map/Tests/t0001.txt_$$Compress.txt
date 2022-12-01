@@ -1,0 +1,894 @@
+;;REPEAT;;
+2
+50
+;;REPEAT;;
+61
+1	êXó—	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+47
+1	êXó—	None
+;;REPEAT;;
+6
+1	é≈	None
+;;REPEAT;;
+14
+1	êXó—	None
+;;REPEAT;;
+6
+1	é≈	None
+;;REPEAT;;
+23
+1	êXó—	None
+;;REPEAT;;
+12
+1	é≈	None
+;;REPEAT;;
+4
+1	êXó—	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+17
+1	êXó—	None
+;;REPEAT;;
+33
+1	é≈	None
+;;REPEAT;;
+10
+1	êXó—	None
+1	êÖï”	None
+;;REPEAT;;
+7
+1	êXó—	None
+;;REPEAT;;
+34
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+5
+1	êXó—	None
+;;REPEAT;;
+14
+1	é≈	None
+1	é≈	Trump
+;;REPEAT;;
+19
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+3
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+5
+1	êXó—	None
+;;REPEAT;;
+20
+1	é≈	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+16
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+5
+1	êXó—	None
+;;REPEAT;;
+19
+1	é≈	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+14
+1	é≈	None
+;;REPEAT;;
+5
+1	êXó—	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+6
+1	êXó—	None
+;;REPEAT;;
+12
+1	é≈	None
+1	é≈	Trump
+;;REPEAT;;
+5
+1	é≈	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+7
+1	é≈	None
+1	é≈	ìG11
+;;REPEAT;;
+6
+1	é≈	None
+;;REPEAT;;
+5
+1	êXó—	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+6
+1	êXó—	None
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+34
+1	é≈	None
+;;REPEAT;;
+4
+1	êXó—	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+6
+1	êXó—	None
+;;REPEAT;;
+37
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+8
+1	êXó—	None
+;;REPEAT;;
+11
+1	é≈	None
+1	é≈	Trump
+;;REPEAT;;
+24
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+2
+1	êÖï”	None
+;;REPEAT;;
+9
+1	êXó—	None
+;;REPEAT;;
+36
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+2
+1	êÖï”	None
+;;REPEAT;;
+9
+1	êXó—	None
+;;REPEAT;;
+37
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+9
+1	êXó—	None
+;;REPEAT;;
+4
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+23
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+12
+1	êXó—	None
+;;REPEAT;;
+9
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+7
+1	é≈	None
+;;REPEAT;;
+8
+1	êXó—	None
+;;REPEAT;;
+8
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+12
+1	êXó—	None
+;;REPEAT;;
+10
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+5
+1	é≈	None
+;;REPEAT;;
+10
+1	êXó—	None
+;;REPEAT;;
+7
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+12
+1	êXó—	None
+;;REPEAT;;
+10
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+4
+1	é≈	None
+;;REPEAT;;
+11
+1	êXó—	None
+;;REPEAT;;
+7
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+12
+1	êXó—	None
+;;REPEAT;;
+6
+1	î†	None
+;;REPEAT;;
+4
+1	é≈	None
+1	î†	None
+1	é≈	None
+1	é≈	ÉXÉ^Å[Égínì_
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+10
+1	êXó—	None
+;;REPEAT;;
+9
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+11
+1	êXó—	None
+;;REPEAT;;
+5
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	é≈	None
+;;REPEAT;;
+2
+1	î†	None
+;;REPEAT;;
+5
+1	é≈	None
+;;REPEAT;;
+8
+1	êXó—	None
+;;REPEAT;;
+10
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+5
+1	êÖï”	None
+;;REPEAT;;
+10
+1	êXó—	None
+;;REPEAT;;
+5
+1	é≈	None
+;;REPEAT;;
+2
+1	î†	None
+;;REPEAT;;
+2
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+24
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+5
+1	êÖï”	None
+;;REPEAT;;
+10
+1	êXó—	None
+;;REPEAT;;
+7
+1	é≈	None
+;;REPEAT;;
+3
+1	î†	None
+;;REPEAT;;
+24
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+5
+1	êÖï”	None
+;;REPEAT;;
+10
+1	êXó—	None
+;;REPEAT;;
+34
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+6
+1	êÖï”	None
+;;REPEAT;;
+8
+1	êXó—	None
+;;REPEAT;;
+35
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+7
+1	êÖï”	None
+;;REPEAT;;
+6
+1	êXó—	None
+;;REPEAT;;
+36
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+8
+1	êÖï”	None
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+2
+1	é≈	None
+1	êXó—	None
+;;REPEAT;;
+34
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+8
+1	êÖï”	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+1	é≈	None
+1	êXó—	None
+;;REPEAT;;
+4
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+6
+1	é≈	None
+;;REPEAT;;
+2
+1	êÖï”	None
+;;REPEAT;;
+22
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+8
+1	êÖï”	None
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+1	é≈	None
+1	êXó—	None
+;;REPEAT;;
+4
+1	é≈	None
+1	êÖï”	None
+1	é≈	None
+;;REPEAT;;
+2
+1	êÖï”	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+21
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+7
+1	êÖï”	None
+;;REPEAT;;
+3
+1	é≈	None
+1	êXó—	None
+1	é≈	None
+1	êXó—	None
+1	é≈	None
+1	êXó—	None
+;;REPEAT;;
+3
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+2
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+6
+1	é≈	None
+1	é≈	ìG02
+;;REPEAT;;
+7
+1	é≈	None
+1	é≈	ìG02
+;;REPEAT;;
+6
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+7
+1	êÖï”	None
+;;REPEAT;;
+11
+1	é≈	None
+1	êÖï”	None
+1	é≈	None
+;;REPEAT;;
+2
+1	êÖï”	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+22
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+5
+1	êÖï”	None
+;;REPEAT;;
+13
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+2
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+22
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+6
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+7
+1	é≈	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+22
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+6
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+13
+1	é≈	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+22
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+4
+1	êXó—	None
+;;REPEAT;;
+20
+1	é≈	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+21
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+4
+1	êXó—	None
+;;REPEAT;;
+20
+1	é≈	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+21
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+4
+1	êXó—	None
+;;REPEAT;;
+21
+1	é≈	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+20
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+4
+1	êXó—	None
+;;REPEAT;;
+12
+1	é≈	None
+;;REPEAT;;
+6
+1	êÖï”	None
+;;REPEAT;;
+3
+1	é≈	None
+;;REPEAT;;
+5
+1	êÖï”	None
+;;REPEAT;;
+4
+1	é≈	None
+1	é≈	ìG02
+;;REPEAT;;
+7
+1	é≈	None
+1	é≈	ìG02
+;;REPEAT;;
+6
+1	é≈	None
+1	î†	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+13
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+4
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+4
+1	é≈	None
+;;REPEAT;;
+5
+1	êÖï”	None
+;;REPEAT;;
+18
+1	é≈	None
+;;REPEAT;;
+5
+1	î†	None
+;;REPEAT;;
+5
+1	é≈	None
+1	é≈	ìG11
+;;REPEAT;;
+6
+1	é≈	None
+1	î†	None
+1	é≈	None
+;;REPEAT;;
+2
+1	î†	None
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+4
+1	é≈	None
+;;REPEAT;;
+5
+1	êÖï”	None
+;;REPEAT;;
+18
+1	é≈	None
+;;REPEAT;;
+2
+1	î†	None
+;;REPEAT;;
+2
+0	None	None
+1	î†	None
+;;REPEAT;;
+14
+1	é≈	None
+;;REPEAT;;
+2
+1	î†	None
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+4
+1	é≈	None
+;;REPEAT;;
+5
+1	êÖï”	None
+;;REPEAT;;
+18
+1	é≈	None
+;;REPEAT;;
+2
+1	î†	None
+;;REPEAT;;
+2
+0	None	None
+1	î†	None
+;;REPEAT;;
+12
+1	é≈	None
+1	î†	None
+1	é≈	None
+;;REPEAT;;
+2
+1	î†	None
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+4
+1	é≈	None
+;;REPEAT;;
+4
+1	êÖï”	None
+;;REPEAT;;
+15
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+5
+1	î†	None
+;;REPEAT;;
+12
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+4
+1	é≈	None
+1	êÖï”	None
+;;REPEAT;;
+5
+1	é≈	None
+;;REPEAT;;
+3
+1	êÖï”	None
+;;REPEAT;;
+13
+1	é≈	None
+;;REPEAT;;
+4
+1	êXó—	None
+1	é≈	None
+1	êXó—	None
+1	î†	None
+;;REPEAT;;
+16
+1	é≈	None
+;;REPEAT;;
+6
+1	êÖï”	None
+;;REPEAT;;
+20
+1	é≈	None
+;;REPEAT;;
+4
+1	êXó—	None
+;;REPEAT;;
+2
+1	é≈	None
+1	êXó—	None
+1	î†	None
+1	é≈	è„Ç©ÇÁì¸èÍ
+;;REPEAT;;
+41
+1	é≈	None
+;;REPEAT;;
+4
+1	êXó—	None
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+1	î†	None
+;;REPEAT;;
+41
+1	é≈	None
+;;REPEAT;;
+4
+1	êXó—	None
+;;REPEAT;;
+2
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+5
+1	î†	None
+;;REPEAT;;
+37
+1	é≈	None
+;;REPEAT;;
+2
+1	êXó—	None
+;;REPEAT;;
+3
+1	é≈	None
+;;REPEAT;;
+3
+1	êXó—	None
+;;REPEAT;;
+2
+1	î†	None
+;;REPEAT;;
+2
+0	None	None
+1	î†	None
+;;REPEAT;;
+40
+1	é≈	None
+;;REPEAT;;
+5
+1	êXó—	None
+;;REPEAT;;
+2
+1	î†	None
+;;REPEAT;;
+2
+0	None	None
+1	î†	None
+;;REPEAT;;
+38
+1	é≈	None
+;;REPEAT;;
+7
+1	êXó—	None
+;;REPEAT;;
+51
+1	î†	None
+
+; #---------------------------------------------------------------------#
+; | íçà”ÅFÇ±ÇÃÉtÉ@ÉCÉãÇ…ÉRÉÅÉìÉgÇèëÇ¢ÇƒÇ‡éüÇÃÉ}ÉbÉvï€ë∂éûÇ…èúãéÇ≥ÇÍÇÈÅB|
+; #---------------------------------------------------------------------#
+
+; WallName
+Default
+
+; MusicName
+Field_01
