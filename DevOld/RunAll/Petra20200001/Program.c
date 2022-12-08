@@ -13,7 +13,7 @@ static void ShowErrorDialog(void)
 }
 
 #define error() \
-	{ printf("ERROR %d 0x%x\n", __LINE__, GetLastError()); ShowErrorDialog(); exit(2); }
+	{ printf("ERROR %d 0x%x\n", __LINE__, GetLastError()); ShowErrorDialog(); exit(1); }
 
 #define errorCase(status) \
 	{ if ((status)) error(); }
@@ -92,11 +92,11 @@ main()
 
 	errorCase(_chdir(targetDir));
 
-	system("DIR *.bat /B /ON > " TEMP_FILE " 2> NUL");
+	system("DIR *.bat /A-D /B /ON > " TEMP_FILE " 2> NUL");
 	RunAllFromFile(TEMP_FILE);
 	errorCase(remove(TEMP_FILE));
 
-	system("DIR *.exe /B /ON > " TEMP_FILE " 2> NUL");
+	system("DIR *.exe /A-D /B /ON > " TEMP_FILE " 2> NUL");
 	RunAllFromFile(TEMP_FILE);
 	errorCase(remove(TEMP_FILE));
 

@@ -11,7 +11,7 @@ static void ShowErrorDialog(void)
 }
 
 #define error() \
-	{ printf("ERROR %d 0x%x\n", __LINE__, GetLastError()); ShowErrorDialog(); exit(2); }
+	{ printf("ERROR %d 0x%x\n", __LINE__, GetLastError()); ShowErrorDialog(); exit(1); }
 
 #define errorCase(status) \
 	{ if ((status)) error(); }
@@ -19,7 +19,10 @@ static void ShowErrorDialog(void)
 #define GetMin(a, b) ((a) < (b) ? (a) : (b))
 #define GetMax(a, b) ((a) < (b) ? (b) : (a))
 
+#define WAIT_SEC_MIN 3
 #define WAIT_SEC_MAX 999999
+
+#define SLEEP_MILLIS 250
 
 main()
 {
@@ -73,16 +76,16 @@ main()
 			}
 
 			millis = GetMin(millis, WAIT_SEC_MAX * 1000);
-			millis = GetMax(millis, 3000);
+			millis = GetMax(millis, WAIT_SEC_MIN * 1000);
 		}
 
 		if (millis <= 0)
 		{
-			printf("\nタイムアウトしました。\n");
+			printf("\nタイムアウトにより続行します。\n");
 			exit(0);
 		}
 
-		Sleep(250);
-		millis -= 250;
+		Sleep(SLEEP_MILLIS);
+		millis -= SLEEP_MILLIS;
 	}
 }
