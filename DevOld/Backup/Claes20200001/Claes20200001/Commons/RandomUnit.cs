@@ -82,7 +82,7 @@ namespace Charlotte.Commons
 				((uint)r[3] << 24);
 		}
 
-		public ulong GetUInt64()
+		public ulong GetULong()
 		{
 			byte[] r = GetBytes(8);
 
@@ -97,17 +97,17 @@ namespace Charlotte.Commons
 				((ulong)r[7] << 56);
 		}
 
-		public ulong GetUInt64_M(ulong modulo)
+		public ulong GetULong_M(ulong modulo)
 		{
 			if (modulo == 0ul)
-				throw new ArgumentOutOfRangeException("modulo is zero");
+				throw new Exception("Bad modulo");
 
 			ulong m = (ulong.MaxValue % modulo + 1ul) % modulo;
 			ulong r;
 
 			do
 			{
-				r = this.GetUInt64();
+				r = this.GetULong();
 			}
 			while (r < m);
 
@@ -118,12 +118,12 @@ namespace Charlotte.Commons
 
 		public uint GetUInt_M(uint modulo)
 		{
-			return (uint)this.GetUInt64_M((ulong)modulo);
+			return (uint)this.GetULong_M((ulong)modulo);
 		}
 
 		public long GetLong(long modulo)
 		{
-			return (long)this.GetUInt64_M((ulong)modulo);
+			return (long)this.GetULong_M((ulong)modulo);
 		}
 
 		public int GetInt(int modulo)
@@ -134,6 +134,51 @@ namespace Charlotte.Commons
 		public int GetRange(int minval, int maxval)
 		{
 			return this.GetInt(maxval - minval + 1) + minval;
+		}
+
+		/// <summary>
+		/// 真偽値をランダムに返す。
+		/// </summary>
+		/// <returns>真偽値</returns>
+		public bool GetBoolean()
+		{
+			return this.GetInt(2) == 1;
+		}
+
+		/// <summary>
+		/// -1 または 1 をランダムに返す。
+		/// </summary>
+		/// <returns>-1 または 1</returns>
+		public int GetSign()
+		{
+			return this.GetInt(2) * 2 - 1;
+		}
+
+		/// <summary>
+		/// 0.0 ～ 1.0 の乱数を返す。
+		/// </summary>
+		/// <returns>乱数</returns>
+		public double GetReal1()
+		{
+			return (double)this.GetUInt() / uint.MaxValue;
+		}
+
+		/// <summary>
+		/// -1.0 ～ 1.0 の乱数を返す。
+		/// </summary>
+		/// <returns>乱数</returns>
+		public double GetReal2()
+		{
+			return GetReal1() * 2.0 - 1.0;
+		}
+
+		/// <summary>
+		/// minval ～ maxval の乱数を返す。
+		/// </summary>
+		/// <returns>乱数</returns>
+		public double GetReal3(double minval, double maxval)
+		{
+			return GetReal1() * (maxval - minval) + minval;
 		}
 
 		public T ChooseOne<T>(IList<T> list)

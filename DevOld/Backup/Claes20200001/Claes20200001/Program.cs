@@ -29,7 +29,7 @@ namespace Charlotte
 			{
 				Main4(ar);
 			}
-			Common.OpenOutputDirIfCreated();
+			SCommon.OpenOutputDirIfCreated();
 		}
 
 		private void Main3()
@@ -43,7 +43,7 @@ namespace Charlotte
 
 			// --
 
-			//Common.Pause();
+			//SCommon.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -52,12 +52,14 @@ namespace Charlotte
 			{
 				Main5(ar);
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				ProcMain.WriteLog(e);
+				ProcMain.WriteLog(ex);
 
-				Console.WriteLine("Press ENTER key. (エラーによりバックアップ・プロセスを中断しました)");
-				Console.ReadLine();
+				MessageBox.Show("" + ex, Path.GetFileNameWithoutExtension(ProcMain.SelfFile) + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
+				//Console.ReadLine();
 			}
 		}
 
@@ -221,11 +223,15 @@ namespace Charlotte
 
 		private void DistributeLogFile()
 		{
-			SCommon.DeletePath(Consts.LOG_FILE_1);
-			SCommon.DeletePath(Consts.LOG_FILE_2);
+			DistributeLogFile_File(Consts.LOG_FILE_1);
+			DistributeLogFile_File(Consts.LOG_FILE_2);
+		}
 
-			File.Copy(ProcLogFile, Consts.LOG_FILE_1);
-			File.Copy(ProcLogFile, Consts.LOG_FILE_2);
+		private void DistributeLogFile_File(string destFile)
+		{
+			SCommon.DeletePath(destFile);
+
+			File.Copy(ProcLogFile, destFile);
 		}
 
 		private void P_Batch(string command)

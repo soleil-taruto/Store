@@ -82,7 +82,12 @@ namespace Charlotte
 		/// <summary>
 		/// ログファイル出力先(1)
 		/// </summary>
-		public static string LOG_FILE_1
+		public static readonly string LOG_FILE_1 = Path.Combine(DEST_DIR, "Backup.log");
+
+		/// <summary>
+		/// ログファイル出力先(2)
+		/// </summary>
+		public static string LOG_FILE_2
 		{
 			get
 			{
@@ -97,10 +102,5 @@ namespace Charlotte
 				return Path.Combine(dir, "Backup_" + ProcMain.APP_IDENT + ".log");
 			}
 		}
-
-		/// <summary>
-		/// ログファイル出力先(2)
-		/// </summary>
-		public const string LOG_FILE_2 = @"P:\Backup.log";
 	}
 }
