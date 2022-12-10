@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Charlotte.Commons;
 using Charlotte.Tests;
 using Charlotte.WebServices;
+using Charlotte.Utilities;
 
 namespace Charlotte
 {

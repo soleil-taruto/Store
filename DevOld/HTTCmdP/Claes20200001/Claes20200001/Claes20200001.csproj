@@ -49,12 +49,11 @@
   <ItemGroup>
     <Compile Include="ActionServer.cs" />
     <Compile Include="Actions\Action_AccessCounter.cs" />
+    <Compile Include="Actions\Action_Download.cs" />
     <Compile Include="Actions\Action_RemoteEndPoint.cs" />
     <Compile Include="Actions\Action_BatchService.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Commons\ArgsReader.cs" />
-    <Compile Include="Commons\CsvFileReader.cs" />
-    <Compile Include="Commons\CsvFileWriter.cs" />
     <Compile Include="Commons\D2Point.cs" />
     <Compile Include="Commons\D2Size.cs" />
     <Compile Include="Commons\D3Color.cs" />
@@ -65,7 +64,6 @@
     <Compile Include="Commons\I3Color.cs" />
     <Compile Include="Commons\I4Color.cs" />
     <Compile Include="Commons\I4Rect.cs" />
-    <Compile Include="Commons\P4Poly.cs" />
     <Compile Include="Commons\ProcMain.cs" />
     <Compile Include="Commons\RandomUnit.cs" />
     <Compile Include="Commons\SCommon.cs" />
@@ -78,6 +76,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Test0001.cs" />
     <Compile Include="Utilities\AESCipher.cs" />
+    <Compile Include="Utilities\CsvFileReader.cs" />
     <Compile Include="Utilities\CtrCipher.cs" />
     <Compile Include="WebServices\HTTPBodyOutputStream.cs" />
     <Compile Include="WebServices\HTTPServer.cs" />

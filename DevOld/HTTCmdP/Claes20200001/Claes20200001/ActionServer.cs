@@ -58,6 +58,9 @@ namespace Charlotte
 			if (urlPath == "/BatchService/" + Common.BatchServiceCredentials)
 				return channel => Action_BatchService.Perform(channel);
 
+			if (urlPath.StartsWith("/API-Download/"))
+				return channel => Action_Download.Perform(channel);
+
 			return null;
 		}
 	}

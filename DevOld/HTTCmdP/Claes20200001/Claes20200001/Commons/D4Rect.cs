@@ -82,14 +82,6 @@ namespace Charlotte.Commons
 			}
 		}
 
-		public P4Poly Poly
-		{
-			get
-			{
-				return new P4Poly(this.LT, this.RT, this.RB, this.LB);
-			}
-		}
-
 		public D2Size Size
 		{
 			get
