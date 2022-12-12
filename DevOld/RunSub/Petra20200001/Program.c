@@ -18,8 +18,9 @@ static void ShowErrorDialog(void)
 #define errorCase(status) \
 	{ if ((status)) error(); }
 
-#define TEMP_FILE "RunAll_{91f9b5c9-261f-4534-bb18-202b24c223e1}.tmp"
+#define TEMP_FILE "RunSub_{639ec312-0240-4736-8f30-3745d1ed29fc}.tmp"
 #define LINE_BUFF_SIZE 1024
+#define TARGET_FILE_NAME_BUFF_SIZE 1024
 
 static char *ReadLine(FILE *fp)
 {
@@ -51,7 +52,38 @@ static char *ReadLine(FILE *fp)
 	return line;
 }
 
-static void RunAllFromFile(char *file)
+static int ExistFile(char *file)
+{
+	FILE *fp = fopen(file, "rb");
+
+	if (fp)
+	{
+		errorCase(fclose(fp));
+		return 1;
+	}
+	return 0;
+}
+
+static char *TargetNode;
+
+static void TryRun(char *extension, char *currDir4Prn)
+{
+	static char line[TARGET_FILE_NAME_BUFF_SIZE];
+
+	errorCase(TARGET_FILE_NAME_BUFF_SIZE < strlen(TargetNode) + strlen(extension) + 1);
+
+	strcpy(line, TargetNode);
+	strcat(line, extension);
+
+	if (ExistFile(line))
+	{
+		printf("Run: %s -> %s\n", currDir4Prn, line);
+		system(line);
+		printf("done\n");
+	}
+}
+
+static void RunSubFromFile(char *file)
 {
 	FILE *fp = fopen(file, "rt");
 
@@ -66,9 +98,18 @@ static void RunAllFromFile(char *file)
 
 		errorCase(strchr(line, '?')); // ? ユニコードが含まれている。
 
-		printf("Run: %s\n", line);
-		system(line);
-		printf("done\n");
+		// ローカルディスク上のルートディレクトリではない絶対パスであるはず。
+		{
+			errorCase(!line[0]);
+			errorCase(line[1] != ':');
+			errorCase(line[2] != '\\');
+			errorCase(!line[3]);
+		}
+
+		errorCase(_chdir(line));
+
+		TryRun(".bat", line);
+		TryRun(".exe", line);
 	}
 	errorCase(fclose(fp));
 }
@@ -78,13 +119,18 @@ main()
 	char *targetDir;
 	char *returnDir;
 
-	errorCase(__argc != 2);
+	errorCase(__argc != 3);
 
 	targetDir = __argv[1];
 
 	errorCase(!targetDir);
 	errorCase(!*targetDir);
 	errorCase(_access(targetDir, 0));
+
+	TargetNode = __argv[2];
+
+	errorCase(!TargetNode);
+	errorCase(!*TargetNode);
 
 	returnDir = _getcwd(NULL, 0);
 
@@ -94,12 +140,9 @@ main()
 
 	errorCase(_chdir(targetDir));
 
-	system("DIR *.bat /A-D /B /ON > " TEMP_FILE " 2> NUL");
-	RunAllFromFile(TEMP_FILE);
-	errorCase(remove(TEMP_FILE));
-
-	system("DIR *.exe /A-D /B /ON > " TEMP_FILE " 2> NUL");
-	RunAllFromFile(TEMP_FILE);
+	system("DIR /AD /B /ON /S > " TEMP_FILE " 2> NUL");
+	RunSubFromFile(TEMP_FILE);
+	errorCase(_chdir(targetDir)); // RunSubFromFile() 内であちこち移動するので、ここで帰ってくるようにする。
 	errorCase(remove(TEMP_FILE));
 
 	errorCase(_chdir(returnDir));
