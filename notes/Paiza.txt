@@ -8,15 +8,15 @@ using System.Text;
 
 public class Hello
 {
-    public static void Main()
-    {
-        MakeTen(1, 1, 5, 8);
-        MakeTen(4, 4, 6, 6);
-        MakeTen(3, 4, 7, 8);
-        MakeTen(5, 6, 7, 8);
-    }
+	public static void Main()
+	{
+		MakeTen(1, 1, 5, 8);
+		MakeTen(4, 4, 6, 6);
+		MakeTen(3, 4, 7, 8);
+		MakeTen(5, 6, 7, 8);
+	}
 
-    private class Operand
+	private class Operand
 	{
 		public int Numer;
 		public int Denom;
@@ -34,23 +34,23 @@ public class Hello
 	}
 
 	private static void MakeTen(params int[] ns)
-    {
-        Console.WriteLine(string.Join(", ", ns) + " ==>");
-        OpStrs = new List<string>();
-        MakeTen(ns.Select(v => new Operand() { Numer = v, Denom = 1, Str = "" + v }).ToArray());
+	{
+		Console.WriteLine(string.Join(", ", ns) + " ==>");
+		OpStrs = new List<string>();
+		MakeTen(ns.Select(v => new Operand() { Numer = v, Denom = 1, Str = "" + v }).ToArray());
 
-        foreach (string str in OpStrs.Distinct())
-            Console.WriteLine("\t" + str + " = 10");
+		foreach (string str in OpStrs.Distinct())
+			Console.WriteLine("\t" + str + " = 10");
 
-        OpStrs = null;
-        Console.WriteLine("");
-    }
+		OpStrs = null;
+		Console.WriteLine("");
+	}
 
-    private static List<string> OpStrs;
+	private static List<string> OpStrs;
 
-    private static void MakeTen(Operand[] os)
-    {
-        if (os.Length == 1)
+	private static void MakeTen(Operand[] os)
+	{
+		if (os.Length == 1)
 		{
 			Operand o = os[0];
 
@@ -114,7 +114,7 @@ public class Hello
 				MakeTen(next);
 			}
 		}
-    }
+	}
 }
 
 ----
@@ -128,8 +128,8 @@ using System.Security.Cryptography;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		for (int testcnt = 0; testcnt < 100; testcnt++)
 		{
 			var arr = GetRandIntList(60)
@@ -231,8 +231,8 @@ using System.Security.Cryptography;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		for (int testcnt = 0; testcnt < 30; testcnt++)
 		{
 			int[] arr1 = GetRandIntList(10000).ToArray();
@@ -337,7 +337,7 @@ Brainfuck Interpreter
 typedef unsigned int uint; // 32-bit uint
 
 #define errorCase(status) \
-    { if ((status)) { printf("ERROR %d\n", __LINE__); exit(1); }}
+	{ if ((status)) { printf("ERROR %d\n", __LINE__); exit(1); }}
 
 #define MEMORY_SIZE 1000000
 
@@ -414,8 +414,8 @@ static uint EnterLoop(void)
 }
 static uint End(void)
 {
-    exit(0);
-    return 0; // dummy
+	exit(0);
+	return 0; // dummy
 }
 
 typedef struct Command_st
@@ -430,7 +430,7 @@ static Command_t *MakeCommand(Command_t *p, uint (*method)(void))
 {
 	Command_t *i = malloc(sizeof(Command_t));
 
-    errorCase(!i);
+	errorCase(!i);
 
 	i->Method = method;
 	i->Next[0] = NULL;
@@ -483,8 +483,8 @@ static void ExecuteProgram(char *source)
 {
 	Command_t *i = LoadProgram(source); // HACK: free
 
-    //memset(Memory, 0x00, sizeof(Memory));
-    //Ptr = 0;
+	//memset(Memory, 0x00, sizeof(Memory));
+	//Ptr = 0;
 
 	for (; ; )
 	{
@@ -498,7 +498,7 @@ static void ExecuteProgram(char *source)
 
 int main(int argc, char **argv)
 {
-    ExecuteProgram("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
+	ExecuteProgram("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
 }
 
 ----
@@ -510,23 +510,23 @@ int main(int argc, char **argv)
 
 static long TryGetIncrementPerSec(void)
 {
-    static long checkPeriod = 1;
-    long c;
-    long stClock = clock();
+	static long checkPeriod = 1;
+	long c;
+	long stClock = clock();
 
-    for (c = 0; c % checkPeriod || clock() - stClock < CLOCKS_PER_SEC / SEC_DIV; c++);
+	for (c = 0; c % checkPeriod || clock() - stClock < CLOCKS_PER_SEC / SEC_DIV; c++);
 
-    checkPeriod = c / 100;
+	checkPeriod = c / 100;
 
-    return c * SEC_DIV;
+	return c * SEC_DIV;
 }
 
 int main(void)
 {
-    TryGetIncrementPerSec();
-    TryGetIncrementPerSec();
+	TryGetIncrementPerSec();
+	TryGetIncrementPerSec();
 
-    printf("This environment is capable of increment %lld times per second in simple loop.\n", TryGetIncrementPerSec());
+	printf("This environment is capable of increment %lld times per second in simple loop.\n", TryGetIncrementPerSec());
 }
 
 ----
@@ -543,8 +543,8 @@ public class Hello
 	private const int N_MAX = 65535;
 	//private const int N_MAX = 16777215;
 
-    public static void Main()
-    {
+	public static void Main()
+	{
 		Dictionary<int, int> dc2n = new Dictionary<int, int>();
 		Dictionary<int, int> n2dc = new Dictionary<int, int>();
 
@@ -628,14 +628,14 @@ void GetPrimes(int *p)
 	memset(t, 0x00, N_P13);
 
 //	printf("2\n");
-    *p++ = 2;
+	*p++ = 2;
 
 	for (c = 3; c <= 13; c += 2)
 	{
 		if (c != 9)
 		{
 //			printf("%llu\n", c);
-            *p++ = (int)c;
+			*p++ = (int)c;
 
 			for (d = c; d / 16 < N_P13; d += c * 2)
 			{
@@ -656,7 +656,7 @@ void GetPrimes(int *p)
 		if (!(t[c / 16] & (1 << c / 2 % 8)))
 		{
 //			printf("%llu\n", c);
-            *p++ = (int)c;
+			*p++ = (int)c;
 
 			if (c < 0x100000000) // If c < 2^32
 			{
@@ -676,38 +676,38 @@ void GetPrimes(int *p)
 
 static void PrintPrimeVoid(int *primes, int primeCount, int k)
 {
-    printf("2 以上 %d 以下の異なる 2 つの素数についてその間にある素数の個数が %d 未満のもののうち差が最大となるものは：\n", primes[primeCount - 1], k);
+	printf("2 以上 %d 以下の異なる 2 つの素数についてその間にある素数の個数が %d 未満のもののうち差が最大となるものは：\n", primes[primeCount - 1], k);
 
-    int maxDiff = 0;
+	int maxDiff = 0;
 
-    for (int c = 0; c + k < primeCount; c++)
-        if (maxDiff < primes[c + k] - primes[c])
-            maxDiff = primes[c + k] - primes[c];
+	for (int c = 0; c + k < primeCount; c++)
+		if (maxDiff < primes[c + k] - primes[c])
+			maxDiff = primes[c + k] - primes[c];
 
-    for (int c = 0; c + k < primeCount; c++)
-        if (maxDiff == primes[c + k] - primes[c])
-            printf("%d と %d その差は %d\n", primes[c], primes[c + k], primes[c + k] - primes[c]);
+	for (int c = 0; c + k < primeCount; c++)
+		if (maxDiff == primes[c + k] - primes[c])
+			printf("%d と %d その差は %d\n", primes[c], primes[c + k], primes[c + k] - primes[c]);
 
-    printf("\n");
+	printf("\n");
 }
 
 int main()
 {
-    int *primes = (int *)malloc(10000000 * sizeof(int)); // HACK: rough size
-    int primeCount;
-    int c;
+	int *primes = (int *)malloc(10000000 * sizeof(int)); // HACK: rough size
+	int primeCount;
+	int c;
 
-    if (!primes)
-        exit(1); // fatal
+	if (!primes)
+		exit(1); // fatal
 
-    GetPrimes(primes);
-    for (c = 0; primes[c]; c++);
-    primeCount = c;
+	GetPrimes(primes);
+	for (c = 0; primes[c]; c++);
+	primeCount = c;
 
-    for (int k = 1; k <= 100; k++)
-    {
-        PrintPrimeVoid(primes, primeCount, k);
-    }
+	for (int k = 1; k <= 100; k++)
+	{
+		PrintPrimeVoid(primes, primeCount, k);
+	}
 }
 
 ----
@@ -734,11 +734,11 @@ public class Hello
 		Enumerable.Range(RANGE_SCALE, int.MaxValue - RANGE_SCALE).First(n => IsPrime((ulong)n)) })
 		.ToArray();
 
-    public static void Main()
-    {
+	public static void Main()
+	{
 		for (int k = 1; k <= 100; k++)
 			PrintPrimeVoid(k);
-    }
+	}
 
 	private static void PrintPrimeVoid(int k)
 	{
@@ -889,8 +889,8 @@ using System.Text;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		RndCtr = (ulong)DateTime.Now.Ticks;
 
 		for (int c = 0; c < 100; c++)
@@ -926,8 +926,8 @@ using System.Text;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		D2Point[] Points = Enumerable.Range(0, 91).Select(dummy => new D2Point(0.0, 1.0)).ToArray();
 
 		Points[0].X = 1.0;
@@ -998,8 +998,8 @@ using System.Security.Cryptography;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		Test01_a(uint.MaxValue - 3, (ulong)(uint.MaxValue - 3) * (uint.MaxValue - 3), (ulong)(uint.MaxValue - 2) * (uint.MaxValue - 2) - 1);
 		Test01_a(uint.MaxValue - 2, (ulong)(uint.MaxValue - 2) * (uint.MaxValue - 2), (ulong)(uint.MaxValue - 1) * (uint.MaxValue - 1) - 1);
 		Test01_a(uint.MaxValue - 1, (ulong)(uint.MaxValue - 1) * (uint.MaxValue - 1), (ulong)(uint.MaxValue - 0) * (uint.MaxValue - 0) - 1);
@@ -1211,8 +1211,8 @@ using System.Text;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		Queue<AngleInfo> angles = new Queue<AngleInfo>(new AngleInfo[]
 		{
 			new AngleInfo() { Degree =  0.0, Point = new D2Point(1.0, 0.0) },
@@ -1261,7 +1261,7 @@ public class Hello
 		}
 	}
 
-    /*
+	/*
 	private static double M_Sqrt(double value)
 	{
 		if (value < 0.0)
@@ -1282,7 +1282,7 @@ public class Hello
 		}
 		return l;
 	}
-    /*/
+	/*/
 	private static double M_Sqrt(double value)
 	{
 		if (value < 0.0)
@@ -1316,7 +1316,7 @@ public class Hello
 		public D2Point Point;
 	}
 
-    public struct D2Point
+	public struct D2Point
 	{
 		public double X;
 		public double Y;
@@ -1353,8 +1353,8 @@ public class Hello
 
 public class Hello
 {
-    public static void Main()
-    { }
+	public static void Main()
+	{ }
 }
 
 ----
@@ -1367,8 +1367,8 @@ using System.Text;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		IEnumerable<AngleInfo> angles = new AngleInfo[]
 		{
 			new AngleInfo() { Degree =  0.0, Point = new D2Point(1.0, 0.0) },
@@ -1411,7 +1411,7 @@ public class Hello
 		yield return last;
 	}
 
-    /*
+	/*
 	private static double M_Sqrt(double value)
 	{
 		if (value < 0.0)
@@ -1432,7 +1432,7 @@ public class Hello
 		}
 		return l;
 	}
-    /*/
+	/*/
 	private static double M_Sqrt(double value)
 	{
 		if (value < 0.0)
@@ -1508,11 +1508,11 @@ using System.Text;
 
 public class Hello
 {
-    public static void Main()
-    {
-        Test01();
-        //Test02();
-    }
+	public static void Main()
+	{
+		Test01();
+		//Test02();
+	}
 
 	private static void Test01()
 	{
@@ -1828,14 +1828,14 @@ using System.Text;
 
 public class Hello
 {
-    public static void Main()
-    {
-        string version = typeof(System.String).Assembly.GetName().Version.ToString();
+	public static void Main()
+	{
+		string version = typeof(System.String).Assembly.GetName().Version.ToString();
 
-        //string version = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+		//string version = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
 
-        Console.WriteLine(version);
-    }
+		Console.WriteLine(version);
+	}
 }
 
 ----
@@ -1849,8 +1849,8 @@ using System.Security.Cryptography;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		Test02_a(2);
 		Test02_a(3);
 		Test02_a(5);
@@ -1980,8 +1980,8 @@ using System.Security.Cryptography;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		Test01_a(10);
 		Test01_a(100);
 		Test01_a(1000);
@@ -2087,21 +2087,21 @@ using System.Text;
 
 public class Hello
 {
-    public static void Main()
-    {
-        //Test01(5, 3);
-        Test01(10, 4);
-    }
+	public static void Main()
+	{
+		//Test01(5, 3);
+		Test01(10, 4);
+	}
 
-    private static void Test01(int n, int r)
-    {
-        Console.WriteLine($"{n} 個 (0 .. {n - 1}) の中から {r} 個選ぶ {Combination(n, r).Count()} 通りの組合せは以下のとおり。");
+	private static void Test01(int n, int r)
+	{
+		Console.WriteLine($"{n} 個 (0 .. {n - 1}) の中から {r} 個選ぶ {Combination(n, r).Count()} 通りの組合せは以下のとおり。");
 
-        foreach (int[] indexes in Combination(n, r))
-            Console.WriteLine($"({string.Join(", ", indexes)})");
-    }
+		foreach (int[] indexes in Combination(n, r))
+			Console.WriteLine($"({string.Join(", ", indexes)})");
+	}
 
-    // ----
+	// ----
 
 	public static IEnumerable<int[]> Combination(int n, int r)
 	{
@@ -2151,7 +2151,7 @@ using System.Security.Cryptography;
 
 public class Hello
 {
-    public static void Main()
+	public static void Main()
 	{
 		for (int testcnt = 0; testcnt < 100; testcnt++)
 		{
@@ -2248,7 +2248,7 @@ public class Hello
 
 int DateToDay(int y, int m, int d)
 {
-    int day;
+	int day;
 
 	if (m <= 2)
 	{
@@ -2282,31 +2282,31 @@ int DateToDay(int y, int m, int d)
 
 char *DateToWeekday(int y, int m, int d)
 {
-    static char *weekdays[] =
-    {
-        "月", "火", "水", "木", "金", "土", "日"
-    };
+	static char *weekdays[] =
+	{
+		"月", "火", "水", "木", "金", "土", "日"
+	};
 
-    return weekdays[DateToDay(y, m, d) % 7];
+	return weekdays[DateToDay(y, m, d) % 7];
 }
 
 // ----
 
 static void Test01(int y, int m, int d)
 {
-    printf("西暦%04d年%02d月%02d日は%s曜日です。\n", y, m, d, DateToWeekday(y, m, d));
+	printf("西暦%04d年%02d月%02d日は%s曜日です。\n", y, m, d, DateToWeekday(y, m, d));
 }
 
 int main(void)
 {
-    Test01(1970,  1,  1);
-    Test01(1999, 12, 31);
-    Test01(2000,  1,  1);
-    Test01(2000, 12, 31);
-    Test01(2001,  1,  1);
-    Test01(2013,  4, 15);
-    Test01(2022, 10, 18);
-    Test01(2222,  2,  2);
+	Test01(1970,  1,  1);
+	Test01(1999, 12, 31);
+	Test01(2000,  1,  1);
+	Test01(2000, 12, 31);
+	Test01(2001,  1,  1);
+	Test01(2013,  4, 15);
+	Test01(2022, 10, 18);
+	Test01(2222,  2,  2);
 }
 
 ----
@@ -2318,8 +2318,8 @@ int main(void)
 
 typedef struct EraInfo_st
 {
-    int FirstYMD;
-    char *Name;
+	int FirstYMD;
+	char *Name;
 }
 EraInfo_t;
 
@@ -2328,89 +2328,89 @@ extern size_t EraInfosLen;
 
 void DateToJapaneseDate(int y, int m, int d, char **pName, char **pNen)
 {
-    int l = 0;
-    int r = EraInfosLen;
-    EraInfo_t *i;
+	int l = 0;
+	int r = EraInfosLen;
+	EraInfo_t *i;
 
-    while (l + 1 < r)
-    {
-        int mid = (l + r) / 2;
+	while (l + 1 < r)
+	{
+		int mid = (l + r) / 2;
 
-        if (EraInfos[mid].FirstYMD <= y * 10000 + m * 100 + d)
-            l = mid;
-        else
-            r = mid;
-    }
+		if (EraInfos[mid].FirstYMD <= y * 10000 + m * 100 + d)
+			l = mid;
+		else
+			r = mid;
+	}
 
-    i = EraInfos + l;
+	i = EraInfos + l;
 
-    if (i->Name)
-    {
-        *pName = i->Name;
-        y -= i->FirstYMD / 10000 - 1;
-    }
-    else
-    {
-        *pName = "西暦";
-    }
+	if (i->Name)
+	{
+		*pName = i->Name;
+		y -= i->FirstYMD / 10000 - 1;
+	}
+	else
+	{
+		*pName = "西暦";
+	}
 
-    if (2 <= y)
-    {
-        static char nenBuff[11];
+	if (2 <= y)
+	{
+		static char nenBuff[11];
 
-        *pNen = nenBuff;
-        sprintf(nenBuff, "%d", y);
-    }
-    else
-    {
-        *pNen = "元";
-    }
+		*pNen = nenBuff;
+		sprintf(nenBuff, "%d", y);
+	}
+	else
+	{
+		*pNen = "元";
+	}
 }
 
 // ----
 
 static void Test01(int y, int m, int d)
 {
-    char *name;
-    char *nen;
+	char *name;
+	char *nen;
 
-    DateToJapaneseDate(y, m, d, &name, &nen);
+	DateToJapaneseDate(y, m, d, &name, &nen);
 
-    printf("西暦%04d年%02d月%02d日は%s%s年%02d月%02d日です。\n", y, m, d, name, nen, m, d);
+	printf("西暦%04d年%02d月%02d日は%s%s年%02d月%02d日です。\n", y, m, d, name, nen, m, d);
 }
 
 static void Test02(void)
 {
-    int c;
+	int c;
 
-    srand(time(NULL));
+	srand(time(NULL));
 
-    for (c = 0; c < 1000; c++)
-    {
-        int y = rand() % 3000 + 1;
-        int m = rand() % 12 + 1;
-        int d = rand() % 28 + 1;
+	for (c = 0; c < 1000; c++)
+	{
+		int y = rand() % 3000 + 1;
+		int m = rand() % 12 + 1;
+		int d = rand() % 28 + 1;
 
-        Test01(y, m, d);
-    }
+		Test01(y, m, d);
+	}
 }
 
 int main(void)
 {
-    Test01(1865,  5,  1);
-    Test01(1867, 12, 31);
-    Test01(1868,  1,  1);
-    Test01(1912,  7, 29);
-    Test01(1912,  7, 30);
-    Test01(1926, 12, 24);
-    Test01(1926, 12, 25);
-    Test01(1989,  1,  7);
-    Test01(1989,  1,  8);
-    Test01(2019,  4, 30);
-    Test01(2019,  5,  1);
-    Test01(2022, 10, 18);
+	Test01(1865,  5,  1);
+	Test01(1867, 12, 31);
+	Test01(1868,  1,  1);
+	Test01(1912,  7, 29);
+	Test01(1912,  7, 30);
+	Test01(1926, 12, 24);
+	Test01(1926, 12, 25);
+	Test01(1989,  1,  7);
+	Test01(1989,  1,  8);
+	Test01(2019,  4, 30);
+	Test01(2019,  5,  1);
+	Test01(2022, 10, 18);
 
-    Test02();
+	Test02();
 }
 
 // ----
@@ -2687,12 +2687,12 @@ void DayToDate(int day, int *py, int *pm, int *pd)
 	y /= 146097;
 	y *= 400;
 	y += 1;
-    day %= 146097;
+	day %= 146097;
 	w = (day + 306) / 36524;
 	day += w < 3 ? w : 3;
 	y += (day / 1461) * 4;
 	day %= 1461;
-    w = (day + 306) / 365;
+	w = (day + 306) / 365;
 	day += w < 3 ? w : 3;
 	y += day / 366;
 	day %= 366;
@@ -2710,118 +2710,118 @@ void DayToDate(int day, int *py, int *pm, int *pd)
 	day %= 31;
 	d = day + 1;
 
-    *py = y;
-    *pm = m;
-    *pd = d;
+	*py = y;
+	*pm = m;
+	*pd = d;
 }
 
 // ----
 
 #define IsUrudoshi(y) \
-    (y % 400 == 0 || (y % 4 == 0 && y % 100 != 0))
+	(y % 400 == 0 || (y % 4 == 0 && y % 100 != 0))
 
 static void Error(void)
 {
-    printf("Error\n");
-    exit(1);
+	printf("Error\n");
+	exit(1);
 }
 
 static int GetDayOfMonth(int y, int m)
 {
-    switch (m)
-    {
-    case  1: return 31;
-    case  2: return IsUrudoshi(y) ? 29 : 28;
-    case  3: return 31;
-    case  4: return 30;
-    case  5: return 31;
-    case  6: return 30;
-    case  7: return 31;
-    case  8: return 31;
-    case  9: return 30;
-    case 10: return 31;
-    case 11: return 30;
-    case 12: return 31;
+	switch (m)
+	{
+	case  1: return 31;
+	case  2: return IsUrudoshi(y) ? 29 : 28;
+	case  3: return 31;
+	case  4: return 30;
+	case  5: return 31;
+	case  6: return 30;
+	case  7: return 31;
+	case  8: return 31;
+	case  9: return 30;
+	case 10: return 31;
+	case 11: return 30;
+	case 12: return 31;
 
-    default:
-        Error();
-    }
+	default:
+		Error();
+	}
 }
 
 static void Test02(void)
 {
-    int y = 1;
-    int m = 1;
-    int d = 1;
-    int day = 0;
+	int y = 1;
+	int m = 1;
+	int d = 1;
+	int day = 0;
 
-    while (y < 10000)
-    {
-        int ry;
-        int rm;
-        int rd;
+	while (y < 10000)
+	{
+		int ry;
+		int rm;
+		int rd;
 
-        DayToDate(day, &ry, &rm, &rd);
+		DayToDate(day, &ry, &rm, &rd);
 
-        //if (day % 10000 == 0) printf("%d/%d/%d (%d) -> %d/%d/%d\n", y, m, d, day, ry, rm, rd);
+		//if (day % 10000 == 0) printf("%d/%d/%d (%d) -> %d/%d/%d\n", y, m, d, day, ry, rm, rd);
 
-        if (ry != y)
-            Error();
+		if (ry != y)
+			Error();
 
-        if (rm != m)
-            Error();
+		if (rm != m)
+			Error();
 
-        if (rd != d)
-            Error();
+		if (rd != d)
+			Error();
 
-        #define DAY_STEP 13
+		#define DAY_STEP 13
 
-        d   += DAY_STEP;
-        day += DAY_STEP;
+		d   += DAY_STEP;
+		day += DAY_STEP;
 
-        #undef DAY_STEP
+		#undef DAY_STEP
 
-        {
-            int dom = GetDayOfMonth(y, m);
+		{
+			int dom = GetDayOfMonth(y, m);
 
-            if (dom < d)
-            {
-                d -= dom;
-                m++;
+			if (dom < d)
+			{
+				d -= dom;
+				m++;
 
-                if (12 < m)
-                {
-                    m = 1;
-                    y++;
-                }
-            }
-        }
-    }
+				if (12 < m)
+				{
+					m = 1;
+					y++;
+				}
+			}
+		}
+	}
 }
 
 static void Test01(int day)
 {
-    int y;
-    int m;
-    int d;
+	int y;
+	int m;
+	int d;
 
-    DayToDate(day, &y, &m, &d);
+	DayToDate(day, &y, &m, &d);
 
-    printf("(グレゴリオ暦換算で)西暦1年1月1日から数えて%d日後は西暦%04d年%02d月%02d日です。\n", day, y, m, d);
+	printf("(グレゴリオ暦換算で)西暦1年1月1日から数えて%d日後は西暦%04d年%02d月%02d日です。\n", day, y, m, d);
 }
 
 int main(void)
 {
-    //Test02();
+	//Test02();
 
-    Test01(0);
-    Test01(1000);
-    Test01(10000);
-    Test01(100000);
-    Test01(1000000);
-    Test01(1500000);
-    Test01(2000000);
-    Test01(2500000);
+	Test01(0);
+	Test01(1000);
+	Test01(10000);
+	Test01(100000);
+	Test01(1000000);
+	Test01(1500000);
+	Test01(2000000);
+	Test01(2500000);
 }
 
 ----
@@ -2831,7 +2831,7 @@ int main(void)
 
 int DateToDay(int y, int m, int d)
 {
-    int day;
+	int day;
 
 	if (m <= 2)
 	{
@@ -2866,94 +2866,94 @@ int DateToDay(int y, int m, int d)
 // ----
 
 #define IsUrudoshi(y) \
-    (y % 400 == 0 || (y % 4 == 0 && y % 100 != 0))
+	(y % 400 == 0 || (y % 4 == 0 && y % 100 != 0))
 
 static void Error(void)
 {
-    printf("Error\n");
-    exit(1);
+	printf("Error\n");
+	exit(1);
 }
 
 static int GetDayOfMonth(int y, int m)
 {
-    switch (m)
-    {
-    case  1: return 31;
-    case  2: return IsUrudoshi(y) ? 29 : 28;
-    case  3: return 31;
-    case  4: return 30;
-    case  5: return 31;
-    case  6: return 30;
-    case  7: return 31;
-    case  8: return 31;
-    case  9: return 30;
-    case 10: return 31;
-    case 11: return 30;
-    case 12: return 31;
+	switch (m)
+	{
+	case  1: return 31;
+	case  2: return IsUrudoshi(y) ? 29 : 28;
+	case  3: return 31;
+	case  4: return 30;
+	case  5: return 31;
+	case  6: return 30;
+	case  7: return 31;
+	case  8: return 31;
+	case  9: return 30;
+	case 10: return 31;
+	case 11: return 30;
+	case 12: return 31;
 
-    default:
-        Error();
-    }
+	default:
+		Error();
+	}
 }
 
 static void Test02(void)
 {
-    int y = 1;
-    int m = 1;
-    int d = 1;
-    int day = 0;
+	int y = 1;
+	int m = 1;
+	int d = 1;
+	int day = 0;
 
-    while (y < 10000)
-    {
-        int ret = DateToDay(y, m, d);
+	while (y < 10000)
+	{
+		int ret = DateToDay(y, m, d);
 
-        //if (ret % 10000 == 0) printf("%d/%d/%d (%d) -> %d\n", y, m, d, day, ret);
+		//if (ret % 10000 == 0) printf("%d/%d/%d (%d) -> %d\n", y, m, d, day, ret);
 
-        if (ret != day)
-            Error();
+		if (ret != day)
+			Error();
 
-        #define DAY_STEP 13
+		#define DAY_STEP 13
 
-        d   += DAY_STEP;
-        day += DAY_STEP;
+		d   += DAY_STEP;
+		day += DAY_STEP;
 
-        #undef DAY_STEP
+		#undef DAY_STEP
 
-        {
-            int dom = GetDayOfMonth(y, m);
+		{
+			int dom = GetDayOfMonth(y, m);
 
-            if (dom < d)
-            {
-                d -= dom;
-                m++;
+			if (dom < d)
+			{
+				d -= dom;
+				m++;
 
-                if (12 < m)
-                {
-                    m = 1;
-                    y++;
-                }
-            }
-        }
-    }
+				if (12 < m)
+				{
+					m = 1;
+					y++;
+				}
+			}
+		}
+	}
 }
 
 static void Test01(int y, int m, int d)
 {
-    printf("西暦%04d年%02d月%02d日は(グレゴリオ暦換算で)西暦1年1月1日から数えて%d日後です。\n", y, m, d, DateToDay(y, m, d));
+	printf("西暦%04d年%02d月%02d日は(グレゴリオ暦換算で)西暦1年1月1日から数えて%d日後です。\n", y, m, d, DateToDay(y, m, d));
 }
 
 int main(void)
 {
-    //Test02();
+	//Test02();
 
-    Test01(   1,  1,  1);
-    Test01(  10,  1,  1);
-    Test01( 100,  1,  1);
-    Test01(1000,  1,  1);
-    Test01(1970,  1,  1);
-    Test01(1999, 12, 31);
-    Test01(2013,  4, 15);
-    Test01(2022, 10, 18);
+	Test01(   1,  1,  1);
+	Test01(  10,  1,  1);
+	Test01( 100,  1,  1);
+	Test01(1000,  1,  1);
+	Test01(1970,  1,  1);
+	Test01(1999, 12, 31);
+	Test01(2013,  4, 15);
+	Test01(2022, 10, 18);
 }
 
 ----
@@ -2962,7 +2962,7 @@ int main(void)
 
 int main(void)
 {
-    printf("Hello, Happy World!\n");
+	printf("Hello, Happy World!\n");
 }
 
 ----
@@ -2975,8 +2975,8 @@ using System.Security.Cryptography;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		Comparison<int> comp = (a, b) => a - b;
 
 		for (int testcnt = 0; testcnt < 3000; testcnt++)
@@ -3000,13 +3000,13 @@ public class Hello
 			    throw null;
 		}
 		Console.WriteLine("OK!");
-    }
+	}
 
-    // ソート済みのリスト内で基準値にマッチする範囲を返す。
-    // list: リスト
-    // target: 基準値
-    // comp: 比較メソッド
-    // ret: { 基準値未満の最後の位置, 基準値を超える最初の位置 }
+	// ソート済みのリスト内で基準値にマッチする範囲を返す。
+	// list: リスト
+	// target: 基準値
+	// comp: 比較メソッド
+	// ret: { 基準値未満の最後の位置, 基準値を超える最初の位置 }
 	private static int[] GetOuterRange_v1<T>(IList<T> list, T target, Comparison<T> comp)
 	{
 		int l = -1;
@@ -3070,9 +3070,9 @@ public class Hello
 		return new int[] { l, r };
 	}
 
-    // ====
-    // Random
-    // ====
+	// ====
+	// Random
+	// ====
 
 	private static RandomNumberGenerator Csprng = new RNGCryptoServiceProvider();
 
@@ -3117,20 +3117,20 @@ using System.Text;
 
 public class Hello
 {
-    // Question:
-    // https://twitter.com/potetoichiro/status/1576887286691639296
+	// Question:
+	// https://twitter.com/potetoichiro/status/1576887286691639296
 
-    public static void Main()
-    {
-        double RATE_DEGREE_RAD = Math.PI / 180.0;
-        int angle = 0;
+	public static void Main()
+	{
+		double RATE_DEGREE_RAD = Math.PI / 180.0;
+		int angle = 0;
 
-        D2Point pA = new D2Point(0.0, 0.0);
+		D2Point pA = new D2Point(0.0, 0.0);
 		D2Point pB = new D2Point(1.0, 0.0);
 		D2Point pC = pB + AngleToPoint((angle += 180 - 140) * RATE_DEGREE_RAD, 1.0);
 		D2Point pD = pC + AngleToPoint((angle += 180 - 110) * RATE_DEGREE_RAD, 1.0);
 		D2Point pE = pD + AngleToPoint((angle +  180 - 130) * RATE_DEGREE_RAD, 1.0);
-        D2Point pF = pA + AngleToPoint(100 * RATE_DEGREE_RAD, 1.0);
+		D2Point pF = pA + AngleToPoint(100 * RATE_DEGREE_RAD, 1.0);
 
 		double ed = GetAngle(pD - pE);
 		double ef = GetAngle(pF - pE);
@@ -3140,7 +3140,7 @@ public class Hello
 		x /= RATE_DEGREE_RAD;
 
 		Console.WriteLine($"x is {x} degrees.");
-    }
+	}
 
 	public struct D2Point
 	{
@@ -3174,7 +3174,7 @@ public class Hello
 
 	public static double GetAngle(D2Point pt)
 	{
-        return GetAngle(pt.X, pt.Y);
+		return GetAngle(pt.X, pt.Y);
 	}
 
 	public static double GetAngle(double x, double y)
@@ -3214,8 +3214,8 @@ public class Hello
 
 public class Hello
 {
-    public static void Main()
-    { }
+	public static void Main()
+	{ }
 }
 
 ----
@@ -3232,58 +3232,58 @@ public class Hello
 	private const double SNOW_INIT = 1.0;
 	private const double SNOWPLOW_POWER = 1.0;
 
-    public static void Main()
-    {
-        double l = 0.0;
-        double r = SNOW_INIT;
+	public static void Main()
+	{
+		double l = 0.0;
+		double r = SNOW_INIT;
 
-        for (int c = 0; c < 50; c++)
-        {
-            double m = (l + r) / 2;
-            double rate = GetDistanceRate(m);
+		for (int c = 0; c < 50; c++)
+		{
+			double m = (l + r) / 2;
+			double rate = GetDistanceRate(m);
 
-            if (1.5 < rate)
-            {
-                l = m;
-            }
-            else
-            {
-                r = m;
-            }
-        }
+			if (1.5 < rate)
+			{
+				l = m;
+			}
+			else
+			{
+				r = m;
+			}
+		}
 
-        {
-            double m = (l + r) / 2;
-            double millis = SNOW_INIT / m;
+		{
+			double m = (l + r) / 2;
+			double millis = SNOW_INIT / m;
 
-            TimeSpan t = new TimeSpan(12, 0, 0);
-            t -= TimeSpan.FromMilliseconds(millis);
+			TimeSpan t = new TimeSpan(12, 0, 0);
+			t -= TimeSpan.FromMilliseconds(millis);
 
-            Console.WriteLine(t.ToString("hh\\:mm\\:ss\\.fff"));
-        }
-    }
+			Console.WriteLine(t.ToString("hh\\:mm\\:ss\\.fff"));
+		}
+	}
 
-    private static double GetDistanceRate(double snowPerMillis)
-    {
-        double snow = SNOW_INIT;
-        double d = 0.0;
+	private static double GetDistanceRate(double snowPerMillis)
+	{
+		double snow = SNOW_INIT;
+		double d = 0.0;
 
-        for (int t = 0; t < MILLIS_PER_HOUR; t++)
-        {
-            d += SNOWPLOW_POWER / snow;
-            snow += snowPerMillis;
-        }
-        double d1 = d;
+		for (int t = 0; t < MILLIS_PER_HOUR; t++)
+		{
+			d += SNOWPLOW_POWER / snow;
+			snow += snowPerMillis;
+		}
+		double d1 = d;
 
-        for (int t = 0; t < MILLIS_PER_HOUR; t++)
-        {
-            d += SNOWPLOW_POWER / snow;
-            snow += snowPerMillis;
-        }
-        double d2 = d;
+		for (int t = 0; t < MILLIS_PER_HOUR; t++)
+		{
+			d += SNOWPLOW_POWER / snow;
+			snow += snowPerMillis;
+		}
+		double d2 = d;
 
-        return d2 / d1;
-    }
+		return d2 / d1;
+	}
 }
 
 ----
@@ -3296,18 +3296,18 @@ using System.Text;
 
 public class Hello
 {
-    // ラングレーの問題 (整角四角形) Wiki:
-    // https://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%B3%E3%82%B0%E3%83%AC%E3%83%BC%E3%81%AE%E5%95%8F%E9%A1%8C#%E6%95%B4%E8%A7%92%E5%9B%9B%E8%A7%92%E5%BD%A2
+	// ラングレーの問題 (整角四角形) Wiki:
+	// https://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%B3%E3%82%B0%E3%83%AC%E3%83%BC%E3%81%AE%E5%95%8F%E9%A1%8C#%E6%95%B4%E8%A7%92%E5%9B%9B%E8%A7%92%E5%BD%A2
 
-    public static void Main()
-    {
-        LangleyTetragonTest(20, 60, 50, 30);
-        LangleyTetragonTest(20, 60, 40, 40);
-    }
+	public static void Main()
+	{
+		LangleyTetragonTest(20, 60, 50, 30);
+		LangleyTetragonTest(20, 60, 40, 40);
+	}
 
-    private static void LangleyTetragonTest(double a, double b, double c, double d)
-    {
-        Console.WriteLine($"(a, b, c, d) == ({a:F9}, {b:F9}, {c:F9}, {d:F9}) のとき ...");
+	private static void LangleyTetragonTest(double a, double b, double c, double d)
+	{
+		Console.WriteLine($"(a, b, c, d) == ({a:F9}, {b:F9}, {c:F9}, {d:F9}) のとき ...");
 
 		// degree -> rad
 		a *= Math.PI / 180.0;
@@ -3329,9 +3329,9 @@ public class Hello
 		e *= 180.0 / Math.PI;
 
 		Console.WriteLine($"... e == {e:F9} になります。");
-    }
+	}
 
-    // 平面座標
+	// 平面座標
 	public struct D2Point
 	{
 		public double X;
@@ -3354,7 +3354,7 @@ public class Hello
 		}
 	}
 
-    // p1-p2 を通る直線と q1-q2 を通る直線の交点を返す。
+	// p1-p2 を通る直線と q1-q2 を通る直線の交点を返す。
 	private static D2Point GetCrossPoint(D2Point p1, D2Point p2, D2Point q1, D2Point q2)
 	{
 		double pxd = p2.X - p1.X;
@@ -3383,7 +3383,7 @@ public class Hello
 
 	public static double GetAngle(D2Point pt)
 	{
-        return GetAngle(pt.X, pt.Y);
+		return GetAngle(pt.X, pt.Y);
 	}
 
 	public static double GetAngle(double x, double y)
@@ -3429,116 +3429,116 @@ using System.Text;
 
 public class Hello
 {
-    public static void Main()
-    {
-        double l = 0.0;
-        double r = 1.0;
+	public static void Main()
+	{
+		double l = 0.0;
+		double r = 1.0;
 
-        for (int c = 0; c < 50; c++)
-        {
-            double m = (l + r) / 2;
-            double rate = GetDistanceRate(m);
+		for (int c = 0; c < 50; c++)
+		{
+			double m = (l + r) / 2;
+			double rate = GetDistanceRate(m);
 
-            if (1.5 < rate)
-            {
-                l = m;
-            }
-            else
-            {
-                r = m;
-            }
-        }
+			if (1.5 < rate)
+			{
+				l = m;
+			}
+			else
+			{
+				r = m;
+			}
+		}
 
-        {
-            double m = (l + r) / 2;
-            double millis = 1.0 / m;
+		{
+			double m = (l + r) / 2;
+			double millis = 1.0 / m;
 
-            TimeSpan t = new TimeSpan(12, 0, 0);
-            t -= TimeSpan.FromMilliseconds(millis);
+			TimeSpan t = new TimeSpan(12, 0, 0);
+			t -= TimeSpan.FromMilliseconds(millis);
 
-            Console.WriteLine(t.ToString("hh\\:mm\\:ss\\.fff"));
-        }
-    }
+			Console.WriteLine(t.ToString("hh\\:mm\\:ss\\.fff"));
+		}
+	}
 
-    private static double GetDistanceRate(double snowPerMillis)
-    {
-        double snow = 1.0;
-        double d = 0.0;
+	private static double GetDistanceRate(double snowPerMillis)
+	{
+		double snow = 1.0;
+		double d = 0.0;
 
-        for (int t = 0; t < 3600000; t++)
-        {
-            d += 1.0 / snow;
-            snow += snowPerMillis;
-        }
-        double d1 = d;
+		for (int t = 0; t < 3600000; t++)
+		{
+			d += 1.0 / snow;
+			snow += snowPerMillis;
+		}
+		double d1 = d;
 
-        for (int t = 0; t < 3600000; t++)
-        {
-            d += 1.0 / snow;
-            snow += snowPerMillis;
-        }
-        double d2 = d;
+		for (int t = 0; t < 3600000; t++)
+		{
+			d += 1.0 / snow;
+			snow += snowPerMillis;
+		}
+		double d2 = d;
 
-        return d2 / d1;
-    }
+		return d2 / d1;
+	}
 }
 
 ----
 
 function* Endless(v) {
-    for (; ; ) {
-        yield v;
-    }
+	for (; ; ) {
+		yield v;
+	}
 }
 
 function* Repeat(v, n) {
-    for (var i = 0; i < n; i++) {
-        yield v;
-    }
+	for (var i = 0; i < n; i++) {
+		yield v;
+	}
 }
 
 function* Gaps(n) {
-    yield n * (n - 1) - 1;
-    yield* Endless(n - 1);
+	yield n * (n - 1) - 1;
+	yield* Endless(n - 1);
 }
 
 function* Sieve(gaps) {
-    for (; ; ) {
-        yield* Repeat(1, gaps());
-        yield 0;
-    }
+	for (; ; ) {
+		yield* Repeat(1, gaps());
+		yield 0;
+	}
 }
 
 function Supplier(e) {
-    return () => e.next().value;
+	return () => e.next().value;
 }
 
 function Both(a, b) {
-    return () => a() & b();
+	return () => a() & b();
 }
 
 function* Primes(max) {
-    var s = () => 1;
+	var s = () => 1;
 
-    for (var n = 2; n <= max; n++) {
-        if (s()) {
-            s = Both(s, Supplier(Sieve(Supplier(Gaps(n)))));
-            yield n;
-        }
-    }
+	for (var n = 2; n <= max; n++) {
+		if (s()) {
+			s = Both(s, Supplier(Sieve(Supplier(Gaps(n)))));
+			yield n;
+		}
+	}
 }
 
 for (var n of Primes(100)) {
-    console.log(n);
+	console.log(n);
 }
 
 ----
 
 #include <stdio.h>
 int main(void){
-    char p[] = "12345678HelloWorld";
-    *(char **)p = p;
-    printf("%s\n", ******************************(char *******************************)p + 8);
+	char p[] = "12345678HelloWorld";
+	*(char **)p = p;
+	printf("%s\n", ******************************(char *******************************)p + 8);
 }
 
 ----
@@ -3593,8 +3593,8 @@ using System.Security.Cryptography;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		for (int testcnt = 0; testcnt < 100; testcnt++)
 		{
 			ulong a = GetULongRand();
@@ -3733,8 +3733,8 @@ using System.Security.Cryptography;
 
 public class Hello
 {
-    public static void Main()
-    {
+	public static void Main()
+	{
 		for (int testcnt = 0; testcnt < 30; testcnt++)
 		{
 			int[] arr1 = GetRandIntList().ToArray();
@@ -3751,7 +3751,7 @@ public class Hello
 			//Console.WriteLine("OK");
 		}
 		Console.WriteLine("OK!");
-    }
+	}
 
 	private static void CombSort<T>(IList<T> list, Comparison<T> comp)
 	{
@@ -3793,9 +3793,9 @@ public class Hello
 		}
 	}
 
-    // ====
-    // Random
-    // ====
+	// ====
+	// Random
+	// ====
 
 	private static RandomNumberGenerator Csprng = new RNGCryptoServiceProvider();
 
@@ -3842,19 +3842,19 @@ main(){}
 ----
 
 function* Fibonacci() {
-    var a = 1;
-    var b = 0;
+	var a = 1;
+	var b = 0;
 
-    for (; ; ) {
-        yield a += b;
-        yield b += a;
-    }
+	for (; ; ) {
+		yield a += b;
+		yield b += a;
+	}
 }
 
 var g = Fibonacci();
 
 for (var c = 0; c < 50; c++) {
-    console.log(g.next().value);
+	console.log(g.next().value);
 }
 
 ----
@@ -3876,9 +3876,9 @@ typedef unsigned long uint64;
 typedef unsigned __int128 uint128;
 
 typedef struct B_st {
-    uint64 Vals[BLOCKSZ];
-    struct B_st *Prev;
-    struct B_st *Next;
+	uint64 Vals[BLOCKSZ];
+	struct B_st *Prev;
+	struct B_st *Next;
 }
 B_t;
 
@@ -3886,67 +3886,67 @@ static B_t Top;
 static B_t *Last;
 
 static void MulN(uint64 n) {
-    B_t *b = &Top;
-    B_t *bn;
-    int index;
-    uint128 v = 0;
+	B_t *b = &Top;
+	B_t *bn;
+	int index;
+	uint128 v = 0;
 
-    for(; ; ) {
-        for(index = 0; index < BLOCKSZ; index++) {
-            v += (uint128)b->Vals[index] * n;
-            b->Vals[index] = (uint64)(v % VALSZ);
-            v /= VALSZ;
-        }
-        bn = b->Next;
+	for(; ; ) {
+		for(index = 0; index < BLOCKSZ; index++) {
+			v += (uint128)b->Vals[index] * n;
+			b->Vals[index] = (uint64)(v % VALSZ);
+			v /= VALSZ;
+		}
+		bn = b->Next;
 
-        if(!bn) {
-            if(!v) {
-                break;
-            }
-            bn = (B_t *)calloc(1, sizeof(B_t));
+		if(!bn) {
+			if(!v) {
+				break;
+			}
+			bn = (B_t *)calloc(1, sizeof(B_t));
 
-            if(!bn)
-                exit(1);
+			if(!bn)
+				exit(1);
 
-            b->Next = bn;
-            bn->Prev = b;
-            Last = bn;
-        }
-        b = bn;
-    }
+			b->Next = bn;
+			bn->Prev = b;
+			Last = bn;
+		}
+		b = bn;
+	}
 }
 
 static void DoPrint(uint64 n, uint64 exp) {
-    B_t *b = Last;
-    int index;
+	B_t *b = Last;
+	int index;
 
-    printf("%lu^%lu=", n, exp);
+	printf("%lu^%lu=", n, exp);
 
-    for(index = BLOCKSZ - 1; !b->Vals[index]; index--);
+	for(index = BLOCKSZ - 1; !b->Vals[index]; index--);
 
-    printf("%lu", b->Vals[index]);
+	printf("%lu", b->Vals[index]);
 
-    while(0 <= --index) {
-        printf("%019lu", b->Vals[index]);
-    }
-    while(b = b->Prev) {
-        for(index = BLOCKSZ - 1; 0 <= index; index--) {
-            printf("%019lu", b->Vals[index]);
-        }
-    }
-    printf("\n");
+	while(0 <= --index) {
+		printf("%019lu", b->Vals[index]);
+	}
+	while(b = b->Prev) {
+		for(index = BLOCKSZ - 1; 0 <= index; index--) {
+			printf("%019lu", b->Vals[index]);
+		}
+	}
+	printf("\n");
 }
 
 int main(void) {
-    uint64 exp;
+	uint64 exp;
 
-    Top.Vals[0] = 1;
-    Last = &Top;
+	Top.Vals[0] = 1;
+	Last = &Top;
 
-    DoPrint(N, 0);
+	DoPrint(N, 0);
 
-    for(exp = 1; exp <= EXP_MAX; exp++) {
-        MulN(N);
-        DoPrint(N, exp);
-    }
+	for(exp = 1; exp <= EXP_MAX; exp++) {
+		MulN(N);
+		DoPrint(N, exp);
+	}
 }
