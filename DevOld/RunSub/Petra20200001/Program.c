@@ -106,6 +106,12 @@ static void RunSubFromFile(char *file)
 			errorCase(!line[3]);
 		}
 
+		// 実行したバッチやプログラムによって検出したディレクトリが削除されている場合も考えられる。
+		// その場合はスキップする。
+		//
+		if (_access(line, 0))
+			continue;
+
 		errorCase(_chdir(line));
 
 		TryRun(".bat", line);
