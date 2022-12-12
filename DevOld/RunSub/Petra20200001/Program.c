@@ -133,6 +133,12 @@ main()
 	errorCase(!*targetDir);
 	errorCase(_access(targetDir, 0));
 
+	targetDir = _fullpath(NULL, targetDir, 0); // RunSubFromFile() 内であちこち移動するので、フルパス化が必要。
+
+	errorCase(!targetDir);
+	errorCase(!*targetDir);
+	errorCase(_access(targetDir, 0));
+
 	TargetNode = __argv[2];
 
 	errorCase(!TargetNode);
@@ -153,5 +159,6 @@ main()
 
 	errorCase(_chdir(returnDir));
 
+	free(targetDir);
 	free(returnDir);
 }
