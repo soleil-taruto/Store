@@ -99,7 +99,7 @@ namespace Charlotte
 				if (!Directory.Exists(dir))
 					throw new Exception("no TMP");
 
-				return Path.Combine(dir, "Backup_" + ProcMain.APP_IDENT + ".log");
+				return Path.Combine(dir, "Backup_{929b33b1-1b3d-4115-98cd-81658694cd43}.log");
 			}
 		}
 	}

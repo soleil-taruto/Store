@@ -22,7 +22,7 @@ Backup.exe
 ログファイル
 
 	P:\Backup.log
-	%TMP%\Backup_{c9e92c41-52cf-44fe-8c46-b5139531e666}.log
+	%TMP%\Backup_{929b33b1-1b3d-4115-98cd-81658694cd43}.log
 
 
 ----
