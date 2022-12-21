@@ -17,22 +17,22 @@ namespace Charlotte
 
 		public DDPicture Copyright = DDPictureLoaders.Standard(@"dat\Logo\Copyright.png");
 
-		public DDPicture MessageFrame29_Message = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\01 message\message.png");
-		public DDPicture MessageFrame29_Button = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\02 button\button.png");
-		public DDPicture MessageFrame29_Button2 = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\02 button\button2.png");
-		public DDPicture MessageFrame29_Button3 = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\02 button\button3.png");
-		public DDPicture MessageFrame29_Auto = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\auto.png");
-		public DDPicture MessageFrame29_Auto2 = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\auto2.png");
-		public DDPicture MessageFrame29_Load = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\load.png");
-		public DDPicture MessageFrame29_Load2 = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\load2.png");
-		public DDPicture MessageFrame29_Log = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\log.png");
-		public DDPicture MessageFrame29_Log2 = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\log2.png");
-		public DDPicture MessageFrame29_Menu = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\menu.png");
-		public DDPicture MessageFrame29_Menu2 = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\menu2.png");
-		public DDPicture MessageFrame29_Save = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\save.png");
-		public DDPicture MessageFrame29_Save2 = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\save2.png");
-		public DDPicture MessageFrame29_Skip = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\skip.png");
-		public DDPicture MessageFrame29_Skip2 = DDPictureLoaders.Standard(@"dat\フリー素材\空想曲線\Messageframe_29\material\03 system_button\skip2.png");
+		public DDPicture MessageFrame29_Message = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\01 message\message.png");
+		public DDPicture MessageFrame29_Button = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\02 button\button.png");
+		public DDPicture MessageFrame29_Button2 = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\02 button\button2.png");
+		public DDPicture MessageFrame29_Button3 = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\02 button\button3.png");
+		public DDPicture MessageFrame29_Auto = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\auto.png");
+		public DDPicture MessageFrame29_Auto2 = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\auto2.png");
+		public DDPicture MessageFrame29_Load = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\load.png");
+		public DDPicture MessageFrame29_Load2 = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\load2.png");
+		public DDPicture MessageFrame29_Log = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\log.png");
+		public DDPicture MessageFrame29_Log2 = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\log2.png");
+		public DDPicture MessageFrame29_Menu = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\menu.png");
+		public DDPicture MessageFrame29_Menu2 = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\menu2.png");
+		public DDPicture MessageFrame29_Save = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\save.png");
+		public DDPicture MessageFrame29_Save2 = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\save2.png");
+		public DDPicture MessageFrame29_Skip = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\skip.png");
+		public DDPicture MessageFrame29_Skip2 = DDPictureLoaders.Standard(@"dat\空想曲線\Messageframe_29\material\03 system_button\skip2.png");
 
 		public DDPicture TitleMenuItem_はじめから = DDPictureLoaders.Standard(@"dat\タイトル設定ボタン\はじめから.png");
 		public DDPicture TitleMenuItem_つづきから = DDPictureLoaders.Standard(@"dat\タイトル設定ボタン\つづきから.png");
@@ -76,6 +76,6 @@ namespace Charlotte
 		public DDPicture TrackBar_つまみ = DDPictureLoaders.Standard(@"dat\タイトル設定枠\TrackBar_つまみ.png");
 		public DDPicture SaveDataSlot = DDPictureLoaders.Standard(@"dat\タイトル設定枠\SaveDataSlot.png");
 
-		public DDPicture Title = DDPictureLoaders.Standard(@"dat\フリー素材\かんなにらせ\nc78901.jpg");
+		public DDPicture Title = DDPictureLoaders.Standard(@"dat\かんなにらせ\nc78901.jpg");
 	}
 }

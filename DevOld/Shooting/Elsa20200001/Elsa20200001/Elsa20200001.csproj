@@ -71,8 +71,6 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="Commons\ArgsReader.cs" />
-    <Compile Include="Commons\CsvFileReader.cs" />
-    <Compile Include="Commons\CsvFileWriter.cs" />
     <Compile Include="Commons\D2Point.cs" />
     <Compile Include="Commons\D2Size.cs" />
     <Compile Include="Commons\D3Color.cs" />
@@ -144,7 +142,7 @@
     <Compile Include="GameCommons\DDTouch.cs" />
     <Compile Include="GameCommons\DDUtils.cs" />
     <Compile Include="GameCommons\DDWin32.cs" />
-    <Compile Include="GameCommons\MaskGZDataUtils\MaskGZDataEng.cs" />
+    <Compile Include="GameTools\MaskGZDataEng.cs" />
     <Compile Include="Games\Enemies\EnemyCatalog.cs" />
     <Compile Include="Games\Enemies\Tests\EnemyCommon_Tests.cs" />
     <Compile Include="Games\GameProgressMaster.cs" />

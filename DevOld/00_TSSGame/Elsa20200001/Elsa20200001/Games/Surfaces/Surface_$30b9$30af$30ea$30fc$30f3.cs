@@ -209,7 +209,6 @@ namespace Charlotte.Games.Surfaces
 			{
 				if (Act.IsFlush)
 				{
-					//this.FrontEndImage.A = 0.0; // 不要
 					this.Remove前面(); // フェードアウトした前面を除去
 					yield break;
 				}

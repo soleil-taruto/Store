@@ -73,5 +73,14 @@ namespace Charlotte.GameCommons
 				return DDEngine.ProcFrame < endFrame;
 			});
 		}
+
+		public void Once(Action routine)
+		{
+			this.Add(() =>
+			{
+				routine();
+				return false;
+			});
+		}
 	}
 }

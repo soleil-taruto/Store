@@ -50,8 +50,33 @@ namespace Charlotte.Novels.Surfaces
 				// 形式：
 				//case "effect-name": return E_EffectTask();
 
+				case "テキスト":
+					return this.E_テキスト(arguments);
+
 				default:
 					throw null; // never
+			}
+		}
+
+		private IEnumerable<bool> E_テキスト(string[] arguments)
+		{
+			int c = 0;
+
+			string text = arguments[c++];
+			int x = int.Parse(arguments[c++]);
+			int y = int.Parse(arguments[c++]);
+			int frameMax = int.Parse(arguments[c++]);
+
+			text = text.Replace("$(SP)", " ");
+
+			foreach (DDScene scene in DDSceneUtils.Create(frameMax))
+			{
+				DDPrint.SetBorder(new I3Color(0, 0, 0));
+				DDPrint.SetPrint(x, y, 0);
+				DDPrint.Print(text);
+				DDPrint.Reset();
+
+				yield return true;
 			}
 		}
 	}

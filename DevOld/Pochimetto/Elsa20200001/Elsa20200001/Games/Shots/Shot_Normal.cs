@@ -21,6 +21,14 @@ namespace Charlotte.Games.Shots
 
 		protected override IEnumerable<bool> E_Draw()
 		{
+			// 初期位置で壁に当たっていたら自滅する。
+			// -- 薄い壁にくっついて撃つと、壁の向こうに射出されてしまうのを防ぐ
+			if (Game.I.Map.GetCell(GameCommon.ToTablePoint(this.X, this.Y)).Tile.IsWall())
+			{
+				this.Kill();
+				yield break;
+			}
+
 			for (; ; )
 			{
 				if (this.UwamukiFlag)

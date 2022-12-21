@@ -71,8 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
-    <Compile Include="Commons\CsvFileReader.cs" />
-    <Compile Include="Commons\CsvFileWriter.cs" />
+    <Compile Include="Commons\P4Poly.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="GameCommons\DDActionList.cs" />
     <Compile Include="GameCommons\DDHash.cs" />
@@ -93,7 +92,6 @@
     <Compile Include="Commons\I3Color.cs" />
     <Compile Include="Commons\I4Color.cs" />
     <Compile Include="Commons\I4Rect.cs" />
-    <Compile Include="Commons\P4Poly.cs" />
     <Compile Include="Commons\ProcMain.cs" />
     <Compile Include="Commons\RandomUnit.cs" />
     <Compile Include="Commons\SCommon.cs" />
@@ -146,7 +144,7 @@
     <Compile Include="GameCommons\DDTaskList.cs" />
     <Compile Include="GameCommons\DDUtils.cs" />
     <Compile Include="GameCommons\DDWin32.cs" />
-    <Compile Include="GameCommons\MaskGZDataUtils\MaskGZDataEng.cs" />
+    <Compile Include="GameTools\MaskGZDataEng.cs" />
     <Compile Include="GameCommons\DDCCResource.cs" />
     <Compile Include="GameCommons\DDCrash.cs" />
     <Compile Include="GameCommons\DDCrashUtils.cs" />

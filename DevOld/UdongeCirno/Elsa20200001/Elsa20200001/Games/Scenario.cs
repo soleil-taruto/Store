@@ -34,7 +34,7 @@ namespace Charlotte.Games
 				if (index == -1)
 					throw new DDError("シナリオデータの最初のページが見つかりません。");
 
-				lines = SCommon.E_InsertRange(lines, index + 1, new string[] { "#Include/Startup" }).ToArray();
+				lines = SCommon.A_InsertRange(lines, index + 1, new string[] { "#Include/Startup" });
 			}
 
 			// memo: lines タブスペース除去済み
@@ -48,13 +48,13 @@ namespace Charlotte.Games
 
 				if (line[0] == '#') // ? 外部ファイル参照
 				{
-					line = line.Substring(1); // # 除去
+					line = line.Substring(1); // '#' 除去
 
 					string includeName = line.Trim();
 					string[] includeLines = ReadScenarioLines(includeName);
 
-					lines = SCommon.E_RemoveRange(lines, index, 1).ToArray();
-					lines = SCommon.E_InsertRange(lines, index, includeLines).ToArray();
+					lines = SCommon.A_RemoveRange(lines, index, 1);
+					lines = SCommon.A_InsertRange(lines, index, includeLines);
 				}
 			}
 
@@ -70,7 +70,7 @@ namespace Charlotte.Games
 
 					if (line[0] == '^') // ? 定義
 					{
-						line = line.Substring(1); // ^ 除去
+						line = line.Substring(1); // '^' 除去
 
 						string[] tokens = SCommon.Tokenize(line, " ", false, true, 2);
 						string def_name = tokens[0];

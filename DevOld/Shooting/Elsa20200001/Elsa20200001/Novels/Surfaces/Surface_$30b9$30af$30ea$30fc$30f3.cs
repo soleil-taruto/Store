@@ -30,6 +30,16 @@ namespace Charlotte.Novels.Surfaces
 			{
 				DDUtils.Approach(ref this.SlideRate, this.DestSlideRate, 0.9999);
 
+#if true
+				DDPicture picture = DDCCResource.GetPicture(this.ImageFile);
+
+				DDDraw.SetAlpha(this.A);
+				DDDraw.DrawRect(
+					picture,
+					DDUtils.AdjustRectExterior(picture.GetSize().ToD2Size(), new D4Rect(0, 0, DDConsts.Screen_W, DDConsts.Screen_H), 1.0 - this.SlideRate, 1.0 - this.SlideRate)
+					);
+				DDDraw.Reset();
+#else // old
 				DDPicture picture = DDCCResource.GetPicture(this.ImageFile);
 				D2Size size = DDUtils.AdjustRectExterior(picture.GetSize().ToD2Size(), new D4Rect(0, 0, DDConsts.Screen_W, DDConsts.Screen_H)).Size;
 
@@ -42,6 +52,7 @@ namespace Charlotte.Novels.Surfaces
 					size.H
 					);
 				DDDraw.Reset();
+#endif
 			}
 		}
 
@@ -181,7 +192,6 @@ namespace Charlotte.Novels.Surfaces
 			{
 				if (NovelAct.IsFlush)
 				{
-					//this.FrontEndImage.A = 0.0; // 不要
 					this.Remove前面(); // フェードアウトした前面を除去
 					yield break;
 				}

@@ -467,7 +467,7 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		public static D4Rect AdjustRectInterior(D2Size size, D4Rect rect)
+		private static D4Rect Prv_AdjustRectInterior(D2Size size, D4Rect rect)
 		{
 			D4Rect interior;
 			D4Rect exterior;
@@ -488,6 +488,36 @@ namespace Charlotte.GameCommons
 		}
 
 		/// <summary>
+		/// サイズを(アスペクト比を維持して)矩形領域(入力)の内側に張り付く矩形領域(出力)を生成する。
+		/// スライドレート：
+		/// -- 0.0 ～ 1.0
+		/// -- 0.0 == 矩形領域(出力)を最も左・上側に寄せる == 矩形領域(出力)の左・上側と矩形領域(入力)の左・上側が重なる
+		/// -- 0.5 == 中央
+		/// -- 1.0 == 矩形領域(出力)を最も右・下側に寄せる == 矩形領域(出力)の右・下側と矩形領域(入力)の右・下側が重なる
+		/// </summary>
+		/// <param name="size">サイズ</param>
+		/// <param name="rect">矩形領域(入力)</param>
+		/// <param name="xRate">スライドレート(X-方向)</param>
+		/// <param name="yRate">スライドレート(Y-方向)</param>
+		/// <param name="extraZoom">倍率(内側に張り付くサイズからの倍率)</param>
+		/// <returns>矩形領域(出力)</returns>
+		public static D4Rect AdjustRectInterior(D2Size size, D4Rect rect, double xRate = 0.5, double yRate = 0.5, double extraZoom = 1.0)
+		{
+			D4Rect interior = Prv_AdjustRectInterior(size, rect);
+
+			interior.W *= extraZoom;
+			interior.H *= extraZoom;
+
+			double rangeX = rect.W - interior.W;
+			double rangeY = rect.H - interior.H;
+
+			interior.L = rect.L + rangeX * xRate;
+			interior.T = rect.T + rangeY * yRate;
+
+			return interior;
+		}
+
+		/// <summary>
 		/// サイズを(アスペクト比を維持して)矩形領域(入力)の外側に張り付く矩形領域(出力)を生成する。
 		/// スライドレート：
 		/// -- 0.0 ～ 1.0
@@ -497,8 +527,8 @@ namespace Charlotte.GameCommons
 		/// </summary>
 		/// <param name="size">サイズ</param>
 		/// <param name="rect">矩形領域(入力)</param>
-		/// <param name="xRate">スライドレート(X_方向)</param>
-		/// <param name="yRate">スライドレート(Y_方向)</param>
+		/// <param name="xRate">スライドレート(X-方向)</param>
+		/// <param name="yRate">スライドレート(Y-方向)</param>
 		/// <param name="extraZoom">倍率(外側に張り付くサイズからの倍率)</param>
 		/// <returns>矩形領域(出力)</returns>
 		public static D4Rect AdjustRectExterior(D2Size size, D4Rect rect, double xRate = 0.5, double yRate = 0.5, double extraZoom = 1.0)
@@ -511,8 +541,8 @@ namespace Charlotte.GameCommons
 			double rangeX = exterior.W - rect.W;
 			double rangeY = exterior.H - rect.H;
 
-			exterior.L = rect.L + rangeX * (xRate - 1.0);
-			exterior.T = rect.T + rangeY * (yRate - 1.0);
+			exterior.L = rect.L - rangeX * (1.0 - xRate);
+			exterior.T = rect.T - rangeY * (1.0 - yRate);
 
 			return exterior;
 		}

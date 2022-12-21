@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading;
 using DxLibDLL;
 using Charlotte.Commons;
-using Charlotte.GameCommons.MaskGZDataUtils;
+using Charlotte.GameTools;
 
 namespace Charlotte.GameCommons
 {

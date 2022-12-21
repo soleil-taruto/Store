@@ -66,7 +66,7 @@ namespace Charlotte.Games
 					}
 					el.ExecuteAllTask_Reverse();
 
-					double titleX = 720.0 + dx * 0.4;
+					double titleX = 670.0 + dx * 0.4;
 					double titleY = 270.0 + dy * 0.4;
 
 					double tba = 0.5 + Math.Sin(frame / 103.0) * 0.185 + Math.Sin(frame / 3.0) * 0.015 * Math.Sin(frame / 107.0);

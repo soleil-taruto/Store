@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using Charlotte.Commons;
 using Charlotte.GameCommons;
+using Charlotte.Utilities;
 
 namespace Charlotte.Games
 {
@@ -27,6 +28,13 @@ namespace Charlotte.Games
 				using (CsvFileReader reader = new CsvFileReader(file))
 				{
 					this.MapNameTableRows = reader.ReadToEnd();
+				}
+				if (ProcMain.DEBUG)
+				{
+					using (CsvFileWriter writer = new CsvFileWriter(@"C:\temp\GameLog_World.csv"))
+					{
+						writer.WriteRows(this.MapNameTableRows);
+					}
 				}
 			}
 			this.CurrPoint = this.GetPoint(startMapName);

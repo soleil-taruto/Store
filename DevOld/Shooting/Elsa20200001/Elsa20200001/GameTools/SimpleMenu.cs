@@ -441,7 +441,9 @@ namespace Charlotte.GameTools
 								return;
 						}
 						else
+						{
 							DDPrint.PrintLine("スペースキーを押すとキャンセルします。");
+						}
 
 						DDPrint.Reset();
 

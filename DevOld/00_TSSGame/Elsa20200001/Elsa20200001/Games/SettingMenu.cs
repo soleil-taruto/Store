@@ -520,7 +520,9 @@ namespace Charlotte.Games
 				this.LastButtonHoveringFlag = true;
 			}
 			else
+			{
 				this.LastButtonHoveringFlag = false;
+			}
 		}
 
 		private void DrawTrackBar(int x, int y, string lwLabel, string hiLabel, double rate, Action<double> changed, Action pulse = null)

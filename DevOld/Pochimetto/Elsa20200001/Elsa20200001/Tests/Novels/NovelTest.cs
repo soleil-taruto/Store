@@ -31,8 +31,8 @@ namespace Charlotte.Tests.Novels
 
 			// ---- choose one ----
 
-			name = "Tests/テスト0001";
-			//name = "Start";
+			//name = "Tests/テスト0001";
+			name = "Start";
 
 			// ----
 

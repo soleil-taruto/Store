@@ -566,9 +566,9 @@ namespace Charlotte.Games
 
 				if (this.当たり判定表示)
 				{
-					// 最後に描画されるように DDGround.EL.Add() する。
+					// 最後に描画されるように DDGround.EL に追加する。
 
-					DDGround.EL.Add(() =>
+					DDGround.EL.Once(() =>
 					{
 						DDCurtain.DrawCurtain(-0.7);
 
@@ -605,8 +605,6 @@ namespace Charlotte.Games
 						DDCrashView.Draw(new DDCrash[] { this.Player.Crash }, new I3Color(255, 0, 0), 1.0);
 						DDCrashView.Draw(this.Enemies.Iterate().Select(v => v.Crash), new I3Color(255, 255, 255), A);
 						DDCrashView.Draw(this.Shots.Iterate().Select(v => v.Crash), new I3Color(0, 255, 255), A);
-
-						return false;
 					});
 				}
 

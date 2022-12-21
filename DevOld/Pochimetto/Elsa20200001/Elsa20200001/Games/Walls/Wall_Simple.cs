@@ -36,8 +36,8 @@ namespace Charlotte.Games.Walls
 
 			for (; ; )
 			{
-				double x = cam_w == 0 ? 0.0 : DDGround.RealCamera.X / cam_w;
-				double y = cam_h == 0 ? 0.0 : DDGround.RealCamera.Y / cam_h;
+				double x = cam_w == 0 ? 0.0 : (double)DDGround.Camera.X / cam_w;
+				double y = cam_h == 0 ? 0.0 : (double)DDGround.Camera.Y / cam_h;
 
 				x *= slide_w;
 				y *= slide_h;

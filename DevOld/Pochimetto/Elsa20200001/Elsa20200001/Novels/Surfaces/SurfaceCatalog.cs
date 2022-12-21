@@ -33,6 +33,7 @@ namespace Charlotte.Novels.Surfaces
 			new Info("エフェクト", () => new Surface_エフェクト(_tn, _in)),
 			new Info("キャラクタ", () => new Surface_キャラクタ(_tn, _in)),
 			new Info("スクリーン", () => new Surface_スクリーン(_tn, _in)),
+			new Info("ポチットさん", () => new Surface_ポチットさん(_tn, _in)),
 			new Info("音楽", () => new Surface_音楽(_tn, _in)),
 			new Info("効果音", () => new Surface_効果音(_tn, _in)),
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Charlotte.GameCommons.MaskGZDataUtils
+namespace Charlotte.GameTools
 {
 	public class MaskGZDataEng
 	{
@@ -88,7 +88,7 @@ namespace Charlotte.GameCommons.MaskGZDataUtils
 
 		public void Transpose(byte[] data)
 		{
-			this.Transpose(data, "2022032707"); // 難読化貢献のため seed を文字列化しておく
+			this.Transpose(data, "2022103525"); // 難読化貢献のため seed を文字列化しておく
 		}
 	}
 }

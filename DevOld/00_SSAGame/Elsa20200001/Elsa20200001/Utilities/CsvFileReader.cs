@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Charlotte.Commons;
 
-namespace Charlotte.Commons
+namespace Charlotte.Utilities
 {
 	public class CsvFileReader : IDisposable
 	{
