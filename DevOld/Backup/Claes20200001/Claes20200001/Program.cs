@@ -113,6 +113,9 @@ namespace Charlotte
 			string[] rDirs = Directory.GetDirectories(Consts.SRC_DIR);
 			string[] wDirs = Directory.GetDirectories(Consts.DEST_DIR);
 
+			Array.Sort(rDirs, SCommon.Comp); // 2bs
+			Array.Sort(wDirs, SCommon.Comp); // 2bs
+
 			string[] rNames = rDirs.Select(dir => SCommon.ChangeRoot(dir, Consts.SRC_DIR)).ToArray();
 			string[] wNames = wDirs.Select(dir => SCommon.ChangeRoot(dir, Consts.DEST_DIR)).ToArray();
 
