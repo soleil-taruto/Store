@@ -36,7 +36,9 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { "C" }));
+			//Main4(new ArgsReader(new string[] { "C" }));
+			//Main4(new ArgsReader(new string[] { "P" }));
+			Main4(new ArgsReader(new string[] { "E" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -137,6 +139,8 @@ namespace Charlotte
 
 					// ----
 
+					CopyResourceDir(projectDir, "doc", true); // ドキュメント etc.
+
 					if (srcLocalDir[0] == 'E') // Game
 					{
 						CopyResourceDir(projectDir, @"dat\dat", true); // 画像・音楽 etc.
@@ -144,7 +148,7 @@ namespace Charlotte
 					}
 					else if (srcLocalDir[0] == 'G') // GameJS
 					{
-						CopyResourceDir(projectDir, @"res", true); // 画像・音楽 etc.
+						CopyResourceDir(projectDir, "res", true); // 画像・音楽 etc.
 					}
 				}
 			}

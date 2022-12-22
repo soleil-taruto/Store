@@ -19,6 +19,10 @@ CopyDevGameGameJSToStoreP.exe C
 
 	-- 2022.10.12 à»ç~
 
+CopyDevGameGameJSToStoreP.exe E
+
+	-- 2022.11.29 à»ç~
+
 
 ----
 ï‚ë´
