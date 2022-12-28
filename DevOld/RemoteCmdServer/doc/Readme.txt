@@ -61,3 +61,9 @@ RemoteCmdServer
 
 		(ファイル送受信-DIR)\aaa\bbb\ccc.xxx を削除する。
 
+
+----
+補足
+
+送信ファイル最大サイズ = 100 TB
+
