@@ -996,15 +996,33 @@ namespace Charlotte.CSSolutions
 
 		private static IEnumerable<string> SLS2_ToYR(string code)
 		{
-			if (code.Length % 6 != 0)
-				throw null;
+			string[] trueYRChrs = SLS2_ToYR_NoDummy(code).ToArray();
+
+			List<bool> truePosList =
+				Enumerable.Repeat(true, trueYRChrs.Length).Concat(
+				Enumerable.Repeat(false, trueYRChrs.Length / 2)
+				).ToList();
+
+			while (truePosList.Count < 7)
+				truePosList.Add(false);
+
+			SCommon.CRandom.Shuffle(truePosList);
 
 			{
-				int dmyYRNum = SCommon.CRandom.GetRange(3, 7);
+				int index = 0;
 
-				for (int c = 0; c < dmyYRNum; c++)
-					yield return SLS2_MakeYR(-1);
+				foreach (bool truePos in truePosList)
+					yield return truePos ? trueYRChrs[index++] : SLS2_MakeYR(-1);
+
+				if (index != trueYRChrs.Length) // 2bs
+					throw null;
 			}
+		}
+
+		private static IEnumerable<string> SLS2_ToYR_NoDummy(string code)
+		{
+			if (code.Length % 6 != 0)
+				throw null;
 
 			for (int index = 0; index < code.Length; index += 6)
 			{
@@ -1017,9 +1035,6 @@ namespace Charlotte.CSSolutions
 					!CSCommon.IsHexadecimal(code[index + 5])
 					)
 					throw null;
-
-				if (SCommon.CRandom.GetInt(2) == 0) // ランダムにダミー値を差し込む
-					yield return SLS2_MakeYR(-1);
 
 				yield return SLS2_MakeYR((int)Convert.ToUInt16(code.Substring(index + 2, 4), 16));
 			}

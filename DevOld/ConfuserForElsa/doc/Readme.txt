@@ -13,7 +13,7 @@ ConfuserForElsa.exe 難読化対象ソリューションファイル 作業フォルダ
 ----
 実行例
 
-ConfuserForElsa.exe C:\Dev\Template\Games\Dungeon\Elsa20200001\Elsa20200001.sln C:\temp
+ConfuserForElsa.exe C:\Dev\Game\00_MSSAGame\Elsa20200001\Elsa20200001.sln C:\temp
 
 
 ----

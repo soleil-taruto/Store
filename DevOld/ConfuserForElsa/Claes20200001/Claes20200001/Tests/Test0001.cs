@@ -14,7 +14,9 @@ namespace Charlotte.Tests
 			// -- choose one --
 
 			Test01_a(@"C:\Dev\Game\00_MSSAGame\Elsa20200001\Elsa20200001.sln");
+			//Test01_a(@"C:\Dev\Game\00_Shooting\Elsa20200001\Elsa20200001.sln");
 			//Test01_a(@"C:\Dev\Game\00_SSAGame\Elsa20200001\Elsa20200001.sln");
+			//Test01_a(@"C:\Dev\Game\00_TSSGame\Elsa20200001\Elsa20200001.sln");
 			//Test01_a(@"C:\Dev\Game\00_TVAGame\Elsa20200001\Elsa20200001.sln");
 
 			// --

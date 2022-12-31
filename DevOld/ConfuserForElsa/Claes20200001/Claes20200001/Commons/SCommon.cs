@@ -489,6 +489,11 @@ namespace Charlotte.Commons
 			return list.Take(index).Concat(list.Skip(index + count));
 		}
 
+		public static IEnumerable<T> E_RemoveTrail<T>(IEnumerable<T> list, int count)
+		{
+			return SCommon.E_RemoveRange(list, list.Count() - count, count);
+		}
+
 		public static IEnumerable<T> E_InsertRange<T>(IEnumerable<T> list, int index, IEnumerable<T> listForInsert)
 		{
 			if (
@@ -504,6 +509,51 @@ namespace Charlotte.Commons
 		public static IEnumerable<T> E_AddRange<T>(IEnumerable<T> list, IEnumerable<T> listForAdd)
 		{
 			return SCommon.E_InsertRange(list, list.Count(), listForAdd);
+		}
+
+		public static T[] A_RemoveRange<T>(T[] arr, int index, int count)
+		{
+			if (
+				arr == null ||
+				index < 0 || arr.Length < index ||
+				count < 0 || arr.Length - index < count
+				)
+				throw new ArgumentException();
+
+			T[] dest = new T[arr.Length - count];
+
+			Array.Copy(arr, 0, dest, 0, index);
+			Array.Copy(arr, index + count, dest, index, arr.Length - (index + count));
+
+			return dest;
+		}
+
+		public static T[] A_RemoveTrail<T>(T[] arr, int count)
+		{
+			return SCommon.A_RemoveRange(arr, arr.Length - count, count);
+		}
+
+		public static T[] A_InsertRange<T>(T[] arr, int index, T[] arrForInsert)
+		{
+			if (
+				arr == null ||
+				arrForInsert == null ||
+				index < 0 || arr.Length < index
+				)
+				throw new ArgumentException();
+
+			T[] dest = new T[arr.Length + arrForInsert.Length];
+
+			Array.Copy(arr, 0, dest, 0, index);
+			Array.Copy(arrForInsert, 0, dest, index, arrForInsert.Length);
+			Array.Copy(arr, index, dest, index + arrForInsert.Length, arr.Length - index);
+
+			return dest;
+		}
+
+		public static T[] A_AddRange<T>(T[] arr, T[] arrForAdd)
+		{
+			return SCommon.A_InsertRange(arr, arr.Length, arrForAdd);
 		}
 
 		private const int IO_TRY_MAX = 10;
@@ -819,6 +869,22 @@ namespace Charlotte.Commons
 		public static bool IsFairRelPath(string path, int dirSize)
 		{
 			return ToFairRelPath(path, dirSize) == path;
+		}
+
+		public static string ToCreatablePath(string path)
+		{
+			string newPath = path;
+			int n = 1;
+
+			while (File.Exists(newPath) || Directory.Exists(newPath))
+			{
+				if (n % 100 == 0)
+					ProcMain.WriteLog("パス名の衝突回避に時間が掛かっています。" + n);
+
+				newPath = SCommon.EraseExt(path) + "_" + n + Path.GetExtension(path);
+				n++;
+			}
+			return newPath;
 		}
 
 		#region ReadPart, WritePart
@@ -1567,10 +1633,10 @@ namespace Charlotte.Commons
 			S_GetString_SJISHalfCodeRange(0x5b, 0x60) +
 			S_GetString_SJISHalfCodeRange(0x7b, 0x7e);
 
-		public static string ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == GetString_SJISHalfCodeRange(0x21, 0x7e)
+		public static string ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == GetString_SJISHalfCodeRange(0x21, 0x7e) // 空白(0x20)を含まないことに注意
 		public static string KANA = S_GetString_SJISHalfCodeRange(0xa1, 0xdf);
 
-		public static string HALF = ASCII + KANA;
+		public static string HALF = ASCII + KANA; // 空白(0x20)を含まないことに注意
 
 		private static string S_GetString_SJISHalfCodeRange(int codeMin, int codeMax)
 		{
@@ -1758,7 +1824,10 @@ namespace Charlotte.Commons
 			return false;
 		}
 
-		public static bool HasSame<T>(IList<T> list, Comparison<T> comp)
+		// memo: @ 2022.10.31
+		// HasSame_Comp, HasSame を同じ名前にすると Comparision<T>, Func<T, T, bool> の型推論の失敗を誘発する。
+
+		public static bool HasSame_Comp<T>(IList<T> list, Comparison<T> comp)
 		{
 			return HasSame(list, (a, b) => comp(a, b) == 0);
 		}
@@ -2209,8 +2278,9 @@ namespace Charlotte.Commons
 					ret += m * 31;
 				}
 				else
+				{
 					ret += (m - 1) * 31;
-
+				}
 				ret += d - 1;
 				ret *= 24;
 				ret += h;
