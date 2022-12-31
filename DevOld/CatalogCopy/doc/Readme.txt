@@ -2,6 +2,17 @@
 CatalogCopy
 ===========
 
+
+·•ªƒRƒs[‚ð‚R’iŠK‚É•ª‚¯‚Äs‚¤B
+
+1. ƒRƒs[æƒfƒBƒŒƒNƒgƒŠ‚Ìî•ñ(ƒJƒ^ƒƒO)‚ð¶¬‚·‚éB
+2. ƒJƒ^ƒƒO‚ðŒ³‚ÉƒRƒs[Œ³ƒfƒBƒŒƒNƒgƒŠ‚©‚ç·•ª‚ð¶¬‚·‚éB
+3. ƒRƒs[æƒfƒBƒŒƒNƒgƒŠ‚É·•ª‚ð“K—p‚·‚éB
+
+•ÊX‚ÌŠÂ‹«‚É‚ ‚é•¡”‚ÌƒfƒBƒŒƒNƒgƒŠ‚ð“¯Šú‚·‚é‚½‚ß‚ÉŽg—p‚·‚é‚±‚Æ‚ð‘z’è‚µ‚Ä‚¢‚éB
+·•ª‚ª­‚È‚¯‚ê‚ÎAŽå]—¼ŠÂ‹«ŠÔ‚Å‚â‚èŽæ‚è‚·‚éî•ñ—Ê‚Í­‚È‚­‚È‚é‚Í‚¸B
+
+
 ----
 ƒRƒ}ƒ“ƒh
 
@@ -15,16 +26,16 @@ CatalogCopy.exe /B ƒRƒs[Œ³ƒfƒBƒŒƒNƒgƒŠ “ü—ÍƒJƒ^ƒƒOƒtƒ@ƒCƒ‹ o—Í·•ªƒfƒBƒŒƒNƒgƒ
 	·•ªƒfƒBƒŒƒNƒgƒŠ¶¬
 
 
-CatalogCopy.exe /C o—Í·•ªƒfƒBƒŒƒNƒgƒŠ ƒRƒs[æƒfƒBƒŒƒNƒgƒŠ
+CatalogCopy.exe /C “ü—Í·•ªƒfƒBƒŒƒNƒgƒŠ ƒRƒs[æƒfƒBƒŒƒNƒgƒŠ
 
 	·•ª“K—p
 
 
-CatalogCopy.exe /D o—Í·•ªƒfƒBƒŒƒNƒgƒŠ ƒRƒs[æƒfƒBƒŒƒNƒgƒŠ
+CatalogCopy.exe /D “ü—Í·•ªƒfƒBƒŒƒNƒgƒŠ ƒRƒs[æƒfƒBƒŒƒNƒgƒŠ
 
 	·•ª“K—pEˆÚ“®ƒ‚[ƒh
-	o—Í·•ªƒfƒBƒŒƒNƒgƒŠ‚ÆƒRƒs[æƒfƒBƒŒƒNƒgƒŠ‚ª“¯‚¶ƒhƒ‰ƒCƒu‚É‚ ‚é‚Æ‚«‚‘¬‚É“®ì‚·‚é‚ªA
-	o—Í·•ªƒfƒBƒŒƒNƒgƒŠ‚Ì’†g‚Í”j‰ó‚³‚ê‚éB
+	·•ªƒfƒBƒŒƒNƒgƒŠ‚ÆƒRƒs[æƒfƒBƒŒƒNƒgƒŠ‚ª“¯‚¶ƒhƒ‰ƒCƒu‚É‚ ‚é‚Æ‚«‚‘¬‚É“®ì‚·‚é‚ªA
+	·•ªƒfƒBƒŒƒNƒgƒŠ‚Ì’†g‚Í”j‰ó‚³‚ê‚éB
 
 
 ----
@@ -42,9 +53,9 @@ CatalogCopy.exe /D o—Í·•ªƒfƒBƒŒƒNƒgƒŠ ƒRƒs[æƒfƒBƒŒƒNƒgƒŠ
 ----
 ŽÀs—á
 
-CatalogCopy.exe /A C:\Output C:\Data\Catalog.cata
+CatalogCopy.exe /A C:\Output C:\temp\Catalog.cata
 
-CatalogCopy.exe /B C:\Input C:\Data\Catalog.cata C:\Data\Difference.diff
+CatalogCopy.exe /B C:\Input C:\temp\Catalog.cata C:\temp\Difference.diff
 
-CatalogCopy.exe /C C:\Data\Difference.diff C:\Output
+CatalogCopy.exe /C C:\temp\Difference.diff C:\Output
 
