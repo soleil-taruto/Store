@@ -73,7 +73,7 @@ namespace Charlotte.WebServices
 			{
 				int? recvSize = null;
 
-				foreach (int relay in this.TryRecv(data, offset, size, ret => recvSize = ret))
+				foreach (var relay in this.TryRecv(data, offset, size, ret => recvSize = ret))
 					yield return relay;
 
 				size -= recvSize.Value;
@@ -88,7 +88,7 @@ namespace Charlotte.WebServices
 
 			for (; ; )
 			{
-				foreach (int relay in this.PreRecvSend())
+				foreach (var relay in this.PreRecvSend())
 					yield return relay;
 
 				try
@@ -146,7 +146,7 @@ namespace Charlotte.WebServices
 
 				int? sentSize = null;
 
-				foreach (int relay in this.TrySend(data, offset, vSize, ret => sentSize = ret))
+				foreach (var relay in this.TrySend(data, offset, vSize, ret => sentSize = ret))
 					yield return relay;
 
 				size -= sentSize.Value;
@@ -160,7 +160,7 @@ namespace Charlotte.WebServices
 
 			for (; ; )
 			{
-				foreach (int relay in this.PreRecvSend())
+				foreach (var relay in this.PreRecvSend())
 					yield return relay;
 
 				try

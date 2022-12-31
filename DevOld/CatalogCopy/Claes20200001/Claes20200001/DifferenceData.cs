@@ -330,7 +330,8 @@ namespace Charlotte
 		/// 差分を適用する。
 		/// </summary>
 		/// <param name="outputDir">出力ディレクトリ</param>
-		public void Patching(string outputDir)
+		/// <param name="moveFlag">移動フラグ</param>
+		public void Patching(string outputDir, bool moveFlag)
 		{
 			outputDir = SCommon.MakeFullPath(outputDir);
 
@@ -369,7 +370,10 @@ namespace Charlotte
 
 				SCommon.DeletePath(wFile);
 
-				File.Copy(rFile, wFile);
+				if (moveFlag)
+					File.Move(rFile, wFile);
+				else
+					File.Copy(rFile, wFile);
 
 				new FileInfo(wFile).LastWriteTime = SCommon.SimpleDateTime.FromTimeStamp(wFileTimeStamp).ToDateTime();
 

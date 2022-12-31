@@ -49,7 +49,9 @@ namespace Charlotte.WebServices
 						retval = -1;
 					}
 					else
+					{
 						retval = 1;
+					}
 				}
 
 				SockCommon.NB("svlg", () =>
@@ -74,7 +76,9 @@ namespace Charlotte.WebServices
 						retval = -1;
 					}
 					else
+					{
 						retval = 1;
+					}
 				}
 
 				if (!hsChannel.KeepAlive)

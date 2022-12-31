@@ -233,7 +233,9 @@ namespace Charlotte.WebServices
 					this.NextRotateTime = GetNextRotateTime();
 				}
 				else
+				{
 					this.TWCounters[this.TWCounterIndex] += twAdd;
+				}
 
 				SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "TIME-WAIT-MONITOR: " + twAdd + ", " + this.ConnectedCount + " + " + this.TWCounters.Sum() + " = " + (ConnectedCount + TWCounters.Sum()));
 			}

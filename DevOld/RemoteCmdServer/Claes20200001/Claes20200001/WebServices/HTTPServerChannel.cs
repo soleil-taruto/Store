@@ -50,7 +50,7 @@ namespace Charlotte.WebServices
 
 			this.Channel.FirstLineRecving = true;
 
-			foreach (int relay in this.RecvLine(ret => this.FirstLine = ret))
+			foreach (var relay in this.RecvLine(ret => this.FirstLine = ret))
 				yield return relay;
 
 			this.Channel.FirstLineRecving = false;
@@ -65,18 +65,18 @@ namespace Charlotte.WebServices
 
 			this.Channel.P_IdleTimeoutMillis = IdleTimeoutMillis;
 
-			foreach (int relay in this.RecvHeader())
+			foreach (var relay in this.RecvHeader())
 				yield return relay;
 
 			this.CheckHeader();
 
 			if (this.Expect100Continue)
 			{
-				foreach (int relay in this.SendLine("HTTP/1.1 100 Continue")
+				foreach (var relay in this.SendLine("HTTP/1.1 100 Continue")
 					.Concat(this.Channel.Send(CRLF)))
 					yield return relay;
 			}
-			foreach (int relay in this.RecvBody())
+			foreach (var relay in this.RecvBody())
 				yield return relay;
 		}
 
@@ -149,7 +149,7 @@ namespace Charlotte.WebServices
 			{
 				byte[] chrs = null;
 
-				foreach (int relay in this.Channel.Recv(1, ret => chrs = ret))
+				foreach (var relay in this.Channel.Recv(1, ret => chrs = ret))
 					yield return relay;
 
 				byte chr = chrs[0];
@@ -182,7 +182,7 @@ namespace Charlotte.WebServices
 			{
 				string line = null;
 
-				foreach (int relay in this.RecvLine(ret => line = ret))
+				foreach (var relay in this.RecvLine(ret => line = ret))
 					yield return relay;
 
 				if (line == null)
@@ -273,7 +273,7 @@ namespace Charlotte.WebServices
 				{
 					string line = null;
 
-					foreach (int relay in this.RecvLine(ret => line = ret))
+					foreach (var relay in this.RecvLine(ret => line = ret))
 						yield return relay;
 
 					if (line == null)
@@ -309,7 +309,7 @@ namespace Charlotte.WebServices
 					{
 						byte[] data = null;
 
-						foreach (int relay in this.Channel.Recv((int)Math.Min((long)READ_SIZE_MAX, chunkEnd - buff.Count), ret => data = ret))
+						foreach (var relay in this.Channel.Recv((int)Math.Min((long)READ_SIZE_MAX, chunkEnd - buff.Count), ret => data = ret))
 							yield return relay;
 
 						if (data == null)
@@ -317,7 +317,7 @@ namespace Charlotte.WebServices
 
 						buff.Write(data);
 					}
-					foreach (int relay in this.Channel.Recv(2, ret => { })) // CR-LF
+					foreach (var relay in this.Channel.Recv(2, ret => { })) // CR-LF
 						yield return relay;
 				}
 
@@ -325,7 +325,7 @@ namespace Charlotte.WebServices
 				{
 					string line = null;
 
-					foreach (int relay in this.RecvLine(ret => line = ret))
+					foreach (var relay in this.RecvLine(ret => line = ret))
 						yield return relay;
 
 					if (line == null)
@@ -347,7 +347,7 @@ namespace Charlotte.WebServices
 				{
 					byte[] data = null;
 
-					foreach (int relay in this.Channel.Recv((int)Math.Min((long)READ_SIZE_MAX, this.ContentLength - buff.Count), ret => data = ret))
+					foreach (var relay in this.Channel.Recv((int)Math.Min((long)READ_SIZE_MAX, this.ContentLength - buff.Count), ret => data = ret))
 						yield return relay;
 
 					if (data == null)
@@ -372,16 +372,16 @@ namespace Charlotte.WebServices
 			this.Body = null;
 			this.Channel.SessionTimeoutTime = TimeoutMillisToDateTime(ResponseTimeoutMillis);
 
-			foreach (int relay in this.SendLine("HTTP/1.1 " + this.ResStatus + " Happy Tea Time"))
+			foreach (var relay in this.SendLine("HTTP/1.1 " + this.ResStatus + " Happy Tea Time"))
 				yield return relay;
 
 			foreach (string[] pair in this.ResHeaderPairs)
-				foreach (int relay in this.SendLine(pair[0] + ": " + pair[1]))
+				foreach (var relay in this.SendLine(pair[0] + ": " + pair[1]))
 					yield return relay;
 
 			if (this.ResBody == null)
 			{
-				foreach (int relay in this.EndHeader())
+				foreach (var relay in this.EndHeader())
 					yield return relay;
 			}
 			else
@@ -394,25 +394,25 @@ namespace Charlotte.WebServices
 
 					if (SockCommon.NB("chu2", () => resBodyIterator.MoveNext()))
 					{
-						foreach (int relay in this.SendLine("Transfer-Encoding: chunked")
+						foreach (var relay in this.SendLine("Transfer-Encoding: chunked")
 							.Concat(this.EndHeader())
 							.Concat(this.SendChunk(first)))
 							yield return relay;
 
 						do
 						{
-							foreach (int relay in this.SendChunk(resBodyIterator.Current))
+							foreach (var relay in this.SendChunk(resBodyIterator.Current))
 								yield return relay;
 						}
 						while (SockCommon.NB("chux", () => resBodyIterator.MoveNext()));
 
-						foreach (int relay in this.SendLine("0")
+						foreach (var relay in this.SendLine("0")
 							.Concat(this.Channel.Send(CRLF)))
 							yield return relay;
 					}
 					else
 					{
-						foreach (int relay in this.SendLine("Content-Length: " + first.Length)
+						foreach (var relay in this.SendLine("Content-Length: " + first.Length)
 							.Concat(this.EndHeader())
 							.Concat(this.Channel.Send(first)))
 							yield return relay;
@@ -420,7 +420,7 @@ namespace Charlotte.WebServices
 				}
 				else
 				{
-					foreach (int relay in this.SendLine("Content-Length: 0")
+					foreach (var relay in this.SendLine("Content-Length: 0")
 						.Concat(this.EndHeader()))
 						yield return relay;
 				}
@@ -429,7 +429,7 @@ namespace Charlotte.WebServices
 
 		private IEnumerable<int> EndHeader()
 		{
-			foreach (int relay in this.SendLine("Connection: " + (this.KeepAlive ? "keep-alive" : "close"))
+			foreach (var relay in this.SendLine("Connection: " + (this.KeepAlive ? "keep-alive" : "close"))
 				.Concat(this.Channel.Send(CRLF)))
 				yield return relay;
 		}
@@ -438,7 +438,7 @@ namespace Charlotte.WebServices
 		{
 			if (1 <= chunk.Length)
 			{
-				foreach (int relay in this.SendLine(chunk.Length.ToString("x"))
+				foreach (var relay in this.SendLine(chunk.Length.ToString("x"))
 					.Concat(this.Channel.Send(chunk))
 					.Concat(this.Channel.Send(CRLF)))
 					yield return relay;
@@ -447,7 +447,7 @@ namespace Charlotte.WebServices
 
 		private IEnumerable<int> SendLine(string line)
 		{
-			foreach (int relay in this.Channel.Send(Encoding.ASCII.GetBytes(line))
+			foreach (var relay in this.Channel.Send(Encoding.ASCII.GetBytes(line))
 				.Concat(this.Channel.Send(CRLF)))
 				yield return relay;
 		}

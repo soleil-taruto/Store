@@ -93,7 +93,16 @@ namespace Charlotte
 
 				ar.End();
 
-				PatchingDifferenceData(differenceDir, outputDir);
+				PatchingDifferenceData(differenceDir, outputDir, false);
+			}
+			else if (ar.ArgIs("/D"))
+			{
+				string differenceDir = ar.NextArg();
+				string outputDir = ar.NextArg();
+
+				ar.End();
+
+				PatchingDifferenceData(differenceDir, outputDir, true);
 			}
 			else
 			{
@@ -153,7 +162,7 @@ namespace Charlotte
 			ProcMain.WriteLog("done!");
 		}
 
-		private void PatchingDifferenceData(string differenceDir, string outputDir)
+		private void PatchingDifferenceData(string differenceDir, string outputDir, bool moveFlag)
 		{
 			differenceDir = SCommon.MakeFullPath(differenceDir);
 			outputDir = SCommon.MakeFullPath(outputDir);
@@ -168,10 +177,11 @@ namespace Charlotte
 
 			ProcMain.WriteLog("< " + differenceDir);
 			ProcMain.WriteLog("> " + outputDir);
+			ProcMain.WriteLog("M " + moveFlag);
 
 			DifferenceData difference = DifferenceData.LoadFromDiffDir(differenceDir);
 
-			difference.Patching(outputDir);
+			difference.Patching(outputDir, moveFlag);
 
 			ProcMain.WriteLog("done!");
 		}
