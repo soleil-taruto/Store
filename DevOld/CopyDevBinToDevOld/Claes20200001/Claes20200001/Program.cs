@@ -63,8 +63,7 @@ namespace Charlotte
 			}
 		}
 
-		private static readonly string INPUT_ROOT_DIR_01 = @"C:\Chest";
-		private static readonly string INPUT_ROOT_DIR_02 = @"C:\DevBin";
+		private static readonly string INPUT_ROOT_DIR = @"C:\DevBin";
 		private static readonly string OUTPUT_ROOT_DIR = @"C:\home\GitHub\Store\DevOld";
 
 		private class ProjectInfo
@@ -117,36 +116,29 @@ namespace Charlotte
 
 		private void Main5(ArgsReader ar)
 		{
-			if (!Directory.Exists(INPUT_ROOT_DIR_01))
-				throw new Exception("no INPUT_ROOT_DIR_01");
-
-			if (!Directory.Exists(INPUT_ROOT_DIR_02))
-				throw new Exception("no INPUT_ROOT_DIR_02");
+			if (!Directory.Exists(INPUT_ROOT_DIR))
+				throw new Exception("no INPUT_ROOT_DIR");
 
 			if (!Directory.Exists(OUTPUT_ROOT_DIR))
 				throw new Exception("no OUTPUT_ROOT_DIR");
 
 			Queue<string> q = new Queue<string>();
 
-			foreach (string rootDir in Directory.GetDirectories(INPUT_ROOT_DIR_01))
-				if (SCommon.EqualsIgnoreCase(Common.LiteFormatDIG(Path.GetFileName(rootDir)), "99999999_DevBin"))
-					foreach (string dir in Directory.GetDirectories(rootDir))
-						q.Enqueue(dir);
-
-			foreach (string dir in Directory.GetDirectories(INPUT_ROOT_DIR_02))
+			foreach (string dir in Directory.GetDirectories(INPUT_ROOT_DIR))
 				q.Enqueue(dir);
 
 			while (1 <= q.Count)
 			{
 				string dir = q.Dequeue();
 
-				// ゲームのリソースフォルダは除外する。
+				// 検索除外フォルダ
 				{
 					string localName = Path.GetFileName(dir);
 
 					if (
-						SCommon.EqualsIgnoreCase(localName, "dat") ||
-						SCommon.EqualsIgnoreCase(localName, "res")
+						SCommon.EqualsIgnoreCase(localName, "dat") || // ゲーム・データ
+						SCommon.EqualsIgnoreCase(localName, "res") || // ゲーム・リソース
+						SCommon.EqualsIgnoreCase(localName, "doc") // ドキュメント
 						)
 						continue;
 				}
@@ -164,9 +156,6 @@ namespace Charlotte
 
 			q = null;
 
-			SCommon.DeletePath(OUTPUT_ROOT_DIR);
-			SCommon.CreateDir(OUTPUT_ROOT_DIR);
-
 			ProcMain.WriteLog("COPY-ST");
 
 			string[] titles = Projects.Select(v => v.Title).DistinctOrderBy(SCommon.CompIgnoreCase).ToArray();
@@ -180,13 +169,17 @@ namespace Charlotte
 				ProjectInfo lastProject = titleProjects[titleProjects.Length - 1];
 
 				string rDir = lastProject.SourceDir;
-				string wDir = Path.Combine(OUTPUT_ROOT_DIR, lastProject.Title, Path.GetFileName(lastProject.SourceDir));
+				string wDirParent = Path.Combine(OUTPUT_ROOT_DIR, lastProject.Title);
+				string wDir = Path.Combine(wDirParent, Path.GetFileName(lastProject.SourceDir));
 
 				ProcMain.WriteLog("< " + rDir);
+				ProcMain.WriteLog("P " + wDirParent);
 				ProcMain.WriteLog("> " + wDir);
 
 				Logs.Add("< " + rDir);
 				Logs.Add("> " + wDir);
+
+				SCommon.DeletePath(wDirParent);
 
 				SCommon.CopyDir(rDir, wDir);
 
