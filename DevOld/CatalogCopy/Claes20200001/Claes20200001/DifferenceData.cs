@@ -95,7 +95,7 @@ namespace Charlotte
 					CatalogData.FileData cfd1 = both1[index];
 					CatalogData.FileData cfd2 = both2[index];
 
-					if (IsDifference(cfd1, cfd2))
+					if (IsDifferent(cfd1, cfd2))
 					{
 						difference.UpdatedFiles.Add(FileData.Create(cfd1, inputDir));
 					}
@@ -105,7 +105,7 @@ namespace Charlotte
 			return difference;
 		}
 
-		private static bool IsDifference(CatalogData.FileData a, CatalogData.FileData b)
+		private static bool IsDifferent(CatalogData.FileData a, CatalogData.FileData b)
 		{
 			if (a.Size != b.Size)
 				return true;
@@ -340,6 +340,17 @@ namespace Charlotte
 
 			// ----
 
+			// ファイル作成を最後にやれば順番前後しても問題無いけど、
+			// 念のため...
+			// ファイル削除 -> ディレクトリ削除(逆順=配下から) -> ディレクトリ作成 -> ファイル作成・更新
+			// ...の順で実行する。
+
+			foreach (string file in this.LostFiles.Select(v => Path.Combine(outputDir, v)))
+			{
+				ProcMain.WriteLog("D " + file);
+
+				SCommon.DeletePath(file);
+			}
 			foreach (string dir in this.LostDirs.Select(v => Path.Combine(outputDir, v)).Reverse())
 			{
 				ProcMain.WriteLog("R " + dir);
@@ -351,12 +362,6 @@ namespace Charlotte
 				ProcMain.WriteLog("M " + dir);
 
 				SCommon.CreateDir(dir);
-			}
-			foreach (string file in this.LostFiles.Select(v => Path.Combine(outputDir, v)))
-			{
-				ProcMain.WriteLog("D " + file);
-
-				SCommon.DeletePath(file);
 			}
 			foreach (FileData file in this.AddedFiles.Concat(this.UpdatedFiles))
 			{
