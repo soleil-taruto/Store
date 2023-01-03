@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.IO;
 using System.IO.Compression;
-using System.Threading;
 using System.Diagnostics;
 using System.Security.Cryptography;
 
@@ -477,83 +477,73 @@ namespace Charlotte.Commons
 			}
 		}
 
-		public static IEnumerable<T> E_RemoveRange<T>(IEnumerable<T> list, int index, int count)
+		public static class Arrays
 		{
-			if (
-				list == null ||
-				index < 0 || list.Count() < index ||
-				count < 0 || list.Count() - index < count
-				)
-				throw new ArgumentException();
+			public static T[] GetRange<T>(T[] arr, int index, int count)
+			{
+				if (
+					arr == null ||
+					index < 0 || arr.Length < index ||
+					count < 0 || arr.Length - index < count
+					)
+					throw new ArgumentException();
 
-			return list.Take(index).Concat(list.Skip(index + count));
-		}
+				T[] dest = new T[count];
 
-		public static IEnumerable<T> E_RemoveTrail<T>(IEnumerable<T> list, int count)
-		{
-			return SCommon.E_RemoveRange(list, list.Count() - count, count);
-		}
+				Array.Copy(arr, index, dest, 0, count);
 
-		public static IEnumerable<T> E_InsertRange<T>(IEnumerable<T> list, int index, IEnumerable<T> listForInsert)
-		{
-			if (
-				list == null ||
-				listForInsert == null ||
-				index < 0 || list.Count() < index
-				)
-				throw new ArgumentException();
+				return dest;
+			}
 
-			return list.Take(index).Concat(listForInsert).Concat(list.Skip(index));
-		}
+			public static T[] GetTrail<T>(T[] arr, int index)
+			{
+				return GetRange(arr, index, arr.Length - index);
+			}
 
-		public static IEnumerable<T> E_AddRange<T>(IEnumerable<T> list, IEnumerable<T> listForAdd)
-		{
-			return SCommon.E_InsertRange(list, list.Count(), listForAdd);
-		}
+			public static T[] RemoveRange<T>(T[] arr, int index, int count)
+			{
+				if (
+					arr == null ||
+					index < 0 || arr.Length < index ||
+					count < 0 || arr.Length - index < count
+					)
+					throw new ArgumentException();
 
-		public static T[] A_RemoveRange<T>(T[] arr, int index, int count)
-		{
-			if (
-				arr == null ||
-				index < 0 || arr.Length < index ||
-				count < 0 || arr.Length - index < count
-				)
-				throw new ArgumentException();
+				T[] dest = new T[arr.Length - count];
 
-			T[] dest = new T[arr.Length - count];
+				Array.Copy(arr, 0, dest, 0, index);
+				Array.Copy(arr, index + count, dest, index, arr.Length - (index + count));
 
-			Array.Copy(arr, 0, dest, 0, index);
-			Array.Copy(arr, index + count, dest, index, arr.Length - (index + count));
+				return dest;
+			}
 
-			return dest;
-		}
+			public static T[] RemoveTrail<T>(T[] arr, int index)
+			{
+				return RemoveRange(arr, index, arr.Length - index);
+			}
 
-		public static T[] A_RemoveTrail<T>(T[] arr, int count)
-		{
-			return SCommon.A_RemoveRange(arr, arr.Length - count, count);
-		}
+			public static T[] InsertRange<T>(T[] arr, int index, T[] arrForInsert)
+			{
+				if (
+					arr == null ||
+					arrForInsert == null ||
+					index < 0 || arr.Length < index
+					)
+					throw new ArgumentException();
 
-		public static T[] A_InsertRange<T>(T[] arr, int index, T[] arrForInsert)
-		{
-			if (
-				arr == null ||
-				arrForInsert == null ||
-				index < 0 || arr.Length < index
-				)
-				throw new ArgumentException();
+				T[] dest = new T[arr.Length + arrForInsert.Length];
 
-			T[] dest = new T[arr.Length + arrForInsert.Length];
+				Array.Copy(arr, 0, dest, 0, index);
+				Array.Copy(arrForInsert, 0, dest, index, arrForInsert.Length);
+				Array.Copy(arr, index, dest, index + arrForInsert.Length, arr.Length - index);
 
-			Array.Copy(arr, 0, dest, 0, index);
-			Array.Copy(arrForInsert, 0, dest, index, arrForInsert.Length);
-			Array.Copy(arr, index, dest, index + arrForInsert.Length, arr.Length - index);
+				return dest;
+			}
 
-			return dest;
-		}
-
-		public static T[] A_AddRange<T>(T[] arr, T[] arrForAdd)
-		{
-			return SCommon.A_InsertRange(arr, arr.Length, arrForAdd);
+			public static T[] AddRange<T>(T[] arr, T[] arrForAdd)
+			{
+				return InsertRange(arr, arr.Length, arrForAdd);
+			}
 		}
 
 		private const int IO_TRY_MAX = 10;

@@ -8,6 +8,16 @@ namespace Charlotte
 	public static class Consts
 	{
 		/// <summary>
+		/// 入力ルートDIR
+		/// </summary>
+		public const string R_ROOT_DIR = @"C:\DevBin";
+
+		/// <summary>
+		/// 出力ルートDIR の フォーマット
+		/// </summary>
+		public const string W_ROOT_DIR_FORMAT = @"C:\home\GitHub\Store{0}\DevOld";
+
+		/// <summary>
 		/// ソースDIR の ローカル名
 		/// </summary>
 		public static readonly string[] SRC_LOCAL_DIRS = new string[]

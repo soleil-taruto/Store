@@ -5,7 +5,17 @@ CopyDevBinToDevOld
 ----
 コマンド
 
-CopyDevBinToDevOld.exe
+CopyDevBinToDevOld.exe DEST-ALPHA
+
+
+----
+実行例
+
+CopyDevBinToDevOld.exe A
+
+CopyDevBinToDevOld.exe B
+
+CopyDevBinToDevOld.exe C
 
 
 ----

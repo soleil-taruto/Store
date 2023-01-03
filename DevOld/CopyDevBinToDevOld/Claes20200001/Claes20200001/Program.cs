@@ -36,7 +36,7 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { }));
+			Main4(new ArgsReader(new string[] { "H" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -63,8 +63,8 @@ namespace Charlotte
 			}
 		}
 
-		private static readonly string INPUT_ROOT_DIR = @"C:\DevBin";
-		private static readonly string OUTPUT_ROOT_DIR = @"C:\home\GitHub\Store\DevOld";
+		private static string InputRootDir;
+		private static string OutputRootDir;
 
 		private class ProjectInfo
 		{
@@ -116,15 +116,31 @@ namespace Charlotte
 
 		private void Main5(ArgsReader ar)
 		{
-			if (!Directory.Exists(INPUT_ROOT_DIR))
-				throw new Exception("no INPUT_ROOT_DIR");
+			string alpha = ar.NextArg();
 
-			if (!Directory.Exists(OUTPUT_ROOT_DIR))
-				throw new Exception("no OUTPUT_ROOT_DIR");
+			ar.End();
+
+			if (alpha.Length != 1)
+				throw new Exception("Bad alpha (Length)");
+
+			if (!SCommon.ALPHA.Contains(alpha[0]))
+				throw new Exception("Bad alpha (not A-Z)");
+
+			InputRootDir = Consts.R_ROOT_DIR;
+			OutputRootDir = string.Format(Consts.W_ROOT_DIR_FORMAT, alpha);
+
+			ProcMain.WriteLog("< " + InputRootDir);
+			ProcMain.WriteLog("> " + OutputRootDir);
+
+			if (!Directory.Exists(InputRootDir))
+				throw new Exception("no InputRootDir");
+
+			if (!Directory.Exists(OutputRootDir))
+				throw new Exception("no OutputRootDir");
 
 			Queue<string> q = new Queue<string>();
 
-			foreach (string dir in Directory.GetDirectories(INPUT_ROOT_DIR))
+			foreach (string dir in Directory.GetDirectories(InputRootDir))
 				q.Enqueue(dir);
 
 			while (1 <= q.Count)
@@ -169,7 +185,7 @@ namespace Charlotte
 				ProjectInfo lastProject = titleProjects[titleProjects.Length - 1];
 
 				string rDir = lastProject.SourceDir;
-				string wDirParent = Path.Combine(OUTPUT_ROOT_DIR, lastProject.Title);
+				string wDirParent = Path.Combine(OutputRootDir, lastProject.Title);
 				string wDir = Path.Combine(wDirParent, Path.GetFileName(lastProject.SourceDir));
 
 				ProcMain.WriteLog("< " + rDir);
@@ -190,7 +206,7 @@ namespace Charlotte
 				CopyResourceDir(rDir, wDir, "doc", false);
 			}
 
-			File.WriteAllLines(Path.Combine(OUTPUT_ROOT_DIR, "Copy.log"), Logs, Encoding.UTF8);
+			File.WriteAllLines(Path.Combine(OutputRootDir, "Copy.log"), Logs, Encoding.UTF8);
 
 			ProcMain.WriteLog("COPY-ED");
 		}
